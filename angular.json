@@ -32,7 +32,9 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/noty/lib/noty.css",
+              "node_modules/noty/lib/themes/mint.css"
             ],
             "scripts": []
           },

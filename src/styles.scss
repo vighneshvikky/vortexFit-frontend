@@ -2,3 +2,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Green success */
+.noty_type__success {
+    background-color: #28a745 !important;  /* Bootstrap green */
+    color: #fff !important;
+  }
+  
+  /* Red error */
+  .noty_type__error {
+    background-color: #dc3545 !important;  /* Bootstrap red */
+    color: #fff !important;
+  }
+  
+  /* Info (optional, blue) */
+  .noty_type__info {
+    background-color: #17a2b8 !important;  /* Bootstrap cyan/blue */
+    color: #fff !important;
+  }
+  
+  /* Optional: white progress bar */
+  .noty_bar .noty_progressbar {
+    background-color: white !important;
+    height: 4px;
+  }
+  

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import {
   FormBuilder,
@@ -12,28 +12,34 @@ import {
 } from '../../../core/validators/password.validators';
 import { CommonModule } from '@angular/common';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NotyService } from '../../../core/services/noty.service';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, SpinnerComponent],
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss']
+  styleUrls: ['./signup.component.scss'],
 })
 export class SignupComponent implements OnInit {
-  @Input() role: 'user' | 'trainer' = 'user';
   isLoading = false;
   errorMessage: string | null = null;
   registerForm!: FormGroup;
-
+  role: 'user' | 'trainer' = 'user';
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
+    private notiService: NotyService,
+    private router: Router,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.role = params['role'] === 'trainer' ? 'trainer' : 'user';
+    });
+
     this.registerForm = this.fb.group(
       {
         name: [
@@ -64,14 +70,16 @@ export class SignupComponent implements OnInit {
 
     this.isLoading = true;
     const formData = this.registerForm.value;
-
     this.authService.registerUser(formData).subscribe({
       next: (response) => {
         console.log('✅ Registration Success:', response);
         this.isLoading = false;
+        this.notiService.showSuccess('OTP sent successfully');
+        this.router.navigate(['/auth/otp'], { queryParams: { role: response.data.role } });
       },
       error: (error) => {
         console.error('❌ Registration Failed:', error);
+        this.notiService.showError(error?.error?.message);
         this.errorMessage = error?.error?.message || 'Registration failed.';
         this.isLoading = false;
       },

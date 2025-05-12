@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ToastService } from '../../../core/services/toast.service';
+// import { ToastService } from '../../../core/services/noty.service';
+import { NotyService } from '../../../core/services/noty.service';
 
 @Component({
   selector: 'app-role-selection',
@@ -13,18 +14,14 @@ import { ToastService } from '../../../core/services/toast.service';
 export class RoleSelectionComponent {
   constructor(
     private router: Router,
-    private toastService: ToastService
+    private notyService: NotyService
   ) {}
 
   selectRole(role: 'user' | 'trainer') {
-    this.toastService.show({
-      message: `Redirecting to ${role} signup...`,
-      type: 'info',
-      duration: 2000
-    });
+    this.notyService.showSuccess( `Redirecting to ${role} signup...`);
     
     setTimeout(() => {
       this.router.navigate(['auth/signup'], { queryParams: { role } });
-    }, 1000);
+    }, 3000);
   }
-}
+ }

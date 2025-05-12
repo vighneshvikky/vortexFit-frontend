@@ -1,30 +1,44 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { RegisterRequest } from '../models/user.model';
+import { SignupRequest } from '../interfaces/auth/signup-request.model';
+import { ApiResponse } from '../models/api-response.model';
+import { SignupResponse } from '../interfaces/auth/signup-response.model';
+import { OtpVerificationResponse } from '../interfaces/auth/otp-verification-response.model';
+import { OtpVerificationRequest } from '../interfaces/auth/otp-verification-request.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-    private api = 'http://localhost:3000/auth'
+  private api = 'http://localhost:3000/auth';
   constructor(private http: HttpClient) {}
 
-  registerUser(data: RegisterRequest): Observable<any> {
-    console.log('data', data    )
-    return this.http.post(`${this.api}/signup`, data).pipe(
-      catchError(this.handleError)
+  registerUser(data: SignupRequest): Observable<ApiResponse<SignupResponse>> {
+    console.log('data', data);
+    return this.http
+      .post<ApiResponse<SignupResponse>>(`${this.api}/signup`, data)
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+  }
+
+  verifyOtp(email: string, otp: string, role: string) {
+    console.log('email', email)
+    return this.http.post<ApiResponse<OtpVerificationResponse>>(
+      `${this.api}/verify-otp`,
+      { email, otp, role }
     );
   }
 
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Unknown error occurred!';
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      errorMessage = `Server returned code: ${error.status}, error message is: ${error.message}`;
-    }
-    return throwError(() => new Error(errorMessage));
+  resendOtp(email: string, role: string) {
+    console.log(email)
+    return this.http.post<ApiResponse<OtpVerificationRequest>>(
+      `${this.api}/resend-otp`,
+      { email, role }
+    );
   }
 }
