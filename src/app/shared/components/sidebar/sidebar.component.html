@@ -1,0 +1,55 @@
+<div class="sidebar bg-gray-800 h-full overflow-y-auto" [class.w-64]="sidebarOpen" [class.w-20]="!sidebarOpen">
+    <div class="flex flex-col h-full">
+        <!-- Logo -->
+        <div class="px-4 py-6 flex items-center justify-between border-b border-gray-700">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center">
+                    <i class="fas fa-dumbbell text-white text-lg"></i>
+                </div>
+                <span class="ml-3 text-xl font-bold text-white" *ngIf="sidebarOpen">VortexFit</span>
+            </div>
+            <button (click)="onToggleSidebar()" class="text-gray-400 hover:text-white">
+                <i class="fas" [class.fa-chevron-left]="sidebarOpen" [class.fa-chevron-right]="!sidebarOpen"></i>
+            </button>
+        </div>
+
+        <!-- User Info -->
+        <div class="px-4 py-4 border-b border-gray-700" *ngIf="sidebarOpen">
+            <div class="flex items-center">
+                <img [src]="userInfo.avatar" [alt]="userInfo.name" class="w-10 h-10 rounded-full">
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-white">{{ userInfo.name }}</p>
+                    <p class="text-xs text-gray-400">{{ userInfo.email }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-2 py-4">
+            <div class="space-y-1">
+                <a *ngFor="let item of menuItems"
+                   (click)="onMenuItemClick(item.id)" 
+                   class="flex items-center px-4 py-3 text-sm rounded-lg cursor-pointer"
+                   [class.bg-red-600]="activeMenuItem === item.id"
+                   [class.text-white]="activeMenuItem === item.id"
+                   [class.text-gray-400]="activeMenuItem !== item.id"
+                   [class.hover:bg-gray-700]="activeMenuItem !== item.id">
+                    <i [class]="'fas ' + item.icon + ' w-5 text-center'"></i>
+                    <span *ngIf="sidebarOpen" class="ml-3">{{ item.label }}</span>
+                    <span *ngIf="sidebarOpen && item.badge" 
+                          class="ml-auto bg-red-500 text-white text-xs py-1 px-2 rounded-full">
+                        {{ item.badge }}
+                    </span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Logout -->
+        <div class="px-4 py-4 border-t border-gray-700">
+            <a (click)="onLogout()" class="flex items-center px-4 py-3 text-sm text-gray-400 rounded-lg hover:bg-gray-700 cursor-pointer">
+                <i class="fas fa-sign-out-alt w-5 text-center"></i>
+                <span *ngIf="sidebarOpen" class="ml-3">Logout</span>
+            </a>
+        </div>
+    </div>
+</div> 

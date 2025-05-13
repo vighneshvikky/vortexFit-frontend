@@ -15,6 +15,10 @@ export const routes: Routes = [
     loadChildren: () => import('../app/features/trainer/trainer.routes').then((m) => m.trainerRoutes)
   },
   {
+    path: 'admin',
+    loadChildren: () => import('../app/features/admin/admin.routes').then((m) => m.adminRoutes)
+  },
+  {
     path: '',
     redirectTo: 'auth/role',
     pathMatch: 'full',

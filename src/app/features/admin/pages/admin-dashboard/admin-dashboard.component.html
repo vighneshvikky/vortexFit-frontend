@@ -1,0 +1,77 @@
+<div class="flex h-screen bg-gray-100">
+    <!-- Sidebar -->
+    <app-sidebar
+        [sidebarOpen]="sidebarOpen"
+        [activeMenuItem]="activeMenuItem"
+        (menuItemClick)="onMenuItemClick($event)"
+        (toggleSidebar)="onToggleSidebar()"
+        (logout)="onLogout()">
+    </app-sidebar>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Top Navigation -->
+        <header class="bg-white shadow-sm">
+            <div class="px-4 py-4 flex items-center justify-between">
+                <h1 class="text-2xl font-semibold text-gray-800">Dashboard</h1>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="p-2 text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div *ngFor="let stat of stats" 
+                     class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">{{ stat.label }}</p>
+                            <p class="text-2xl font-semibold text-gray-800 mt-1">{{ stat.value }}</p>
+                        </div>
+                        <div [class]="'p-3 rounded-full ' + stat.color">
+                            <i [class]="'fas ' + stat.icon + ' text-white'"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span [class]="'text-sm font-medium ' + (stat.change.startsWith('+') ? 'text-green-600' : 'text-red-600')">
+                            {{ stat.change }}
+                        </span>
+                        <span class="text-sm text-gray-600 ml-2">from last month</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-800">Recent Activity</h2>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div *ngFor="let activity of recentActivities" 
+                             class="flex items-start space-x-4">
+                            <div [class]="'p-2 rounded-full ' + (activity.type === 'user' ? 'bg-blue-100' : 'bg-green-100')">
+                                <i [class]="'fas ' + (activity.type === 'user' ? 'fa-user' : 'fa-dumbbell') + ' ' + (activity.type === 'user' ? 'text-blue-600' : 'text-green-600')"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-800">
+                                    <span class="font-semibold">{{ activity.user }}</span>
+                                    {{ activity.action }}
+                                </p>
+                                <p class="text-sm text-gray-600">{{ activity.time }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>

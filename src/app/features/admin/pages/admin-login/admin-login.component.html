@@ -1,0 +1,128 @@
+<div class="min-h-screen flex flex-col md:flex-row bg-black text-gray-200">
+    <!-- Left Side - Image/Logo -->
+    <div class="w-full md:w-1/2 flex flex-col justify-center items-center p-8 bg-gradient-to-br from-gray-900 to-black bg-pattern">
+        <div class="max-w-md flex flex-col items-center text-center">
+            <div class="mb-8">
+                <!-- Logo using FontAwesome icon -->
+                <div class="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center mb-4 shadow-custom mx-auto">
+                    <i class="fas fa-dumbbell text-white text-3xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-red-600">VortexFit</h1>
+                <p class="text-gray-400 mt-2">Fitness Management System</p>
+            </div>
+            
+            <div class="w-full mb-8">
+                <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
+                     alt="Fitness Admin" 
+                     class="rounded-lg shadow-custom mx-auto object-cover"
+                     style="filter: grayscale(30%) contrast(120%);">
+            </div>
+            
+            <div class="space-y-4">
+                <div class="flex items-center text-gray-400">
+                    <i class="fas fa-shield-alt mr-3 text-red-600"></i>
+                    <p>Secure admin management platform</p>
+                </div>
+                <div class="flex items-center text-gray-400">
+                    <i class="fas fa-chart-line mr-3 text-red-600"></i>
+                    <p>Comprehensive analytics dashboard</p>
+                </div>
+                <div class="flex items-center text-gray-400">
+                    <i class="fas fa-users mr-3 text-red-600"></i>
+                    <p>Trainer and client management</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Side - Login Form -->
+    <div class="w-full md:w-1/2 flex justify-center items-center p-8 bg-black bg-pattern">
+        <div class="max-w-md w-full shadow-custom bg-gray-900/20 p-8 rounded-lg backdrop-blur-sm">
+            <div class="text-center mb-8">
+                <div class="inline-flex justify-center items-center w-14 h-14 rounded-full bg-red-600 mb-4 shadow-custom">
+                    <i class="fas fa-lock text-2xl text-white"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-white">Admin Portal</h2>
+                <p class="text-gray-500 mt-1">Sign in to access your dashboard</p>
+            </div>
+            
+            <!-- Alert for errors -->
+            <div *ngIf="loginError" class="mb-4 p-3 bg-red-900/50 border border-red-700 rounded-md text-sm text-red-200">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    <span>{{ loginError }}</span>
+                </div>
+            </div>
+            
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-400 mb-1">Email Address</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-envelope text-gray-600"></i>
+                        </div>
+                        <input type="email" 
+                               id="email" 
+                               formControlName="email"
+                               placeholder="admin@vortexfit.com" 
+                               class="block w-full pl-10 pr-4 py-3 border border-gray-700 rounded-md bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                               [ngClass]="{'border-red-600': email?.invalid && (email?.dirty || email?.touched)}">
+                    </div>
+                    <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="mt-1 text-sm text-red-400">
+                        <span *ngIf="email?.errors?.['required']">Email is required</span>
+                        <span *ngIf="email?.errors?.['email']">Please enter a valid email address</span>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <label for="password" class="block text-sm font-medium text-gray-400">Password</label>
+                        <a href="#" class="text-sm text-red-500 hover:text-red-400">Forgot password?</a>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-lock text-gray-600"></i>
+                        </div>
+                        <input type="password" 
+                               id="password" 
+                               formControlName="password"
+                               placeholder="••••••••" 
+                               class="block w-full pl-10 pr-4 py-3 border border-gray-700 rounded-md bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
+                               [ngClass]="{'border-red-600': password?.invalid && (password?.dirty || password?.touched)}">
+                    </div>
+                    <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="mt-1 text-sm text-red-400">
+                        <span *ngIf="password?.errors?.['required']">Password is required</span>
+                        <span *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center">
+                    <input id="remember" 
+                           formControlName="remember"
+                           type="checkbox" 
+                           class="h-4 w-4 text-red-600 focus:ring-red-600 border-gray-700 rounded bg-gray-900">
+                    <label for="remember" class="ml-2 block text-sm text-gray-400">
+                        Remember me
+                    </label>
+                </div>
+                
+                <button type="submit" 
+                        [disabled]="loginForm.invalid || isSubmitting"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 disabled:opacity-70 disabled:cursor-not-allowed shadow-custom">
+                    <i class="fas fa-spinner fa-spin mr-2" *ngIf="isSubmitting"></i>
+                    <i class="fas fa-sign-in-alt mr-2" *ngIf="!isSubmitting"></i>
+                    {{ isSubmitting ? 'Signing In...' : 'Sign In' }}
+                </button>
+            </form>
+            
+            <div class="mt-6 border-t border-gray-800 pt-6">
+                <p class="text-center text-sm text-gray-500">
+                    Need assistance? Contact <a href="#" class="text-red-500 hover:text-red-400">IT Support</a>
+                </p>
+                <p class="text-center text-xs text-gray-600 mt-4">
+                    &copy; {{ currentYear }} VortexFit. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+</div> 

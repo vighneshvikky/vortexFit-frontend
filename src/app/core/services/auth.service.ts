@@ -45,7 +45,7 @@ export class AuthService {
 
   login(credentials: { email: string; password: string }) {
     return this.http
-      .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials)
+      .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials, {withCredentials: true})
       .pipe(map((res) => res.data));
   }
 
