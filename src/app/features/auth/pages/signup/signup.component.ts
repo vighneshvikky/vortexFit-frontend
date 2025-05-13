@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import {
   FormBuilder,
   FormGroup,
@@ -9,11 +9,11 @@ import {
 import {
   matchPassword,
   passwordStrengthValidator,
-} from '../../../core/validators/password.validators';
+} from '../../../../core/validators/password.validators';
 import { CommonModule } from '@angular/common';
-import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NotyService } from '../../../core/services/noty.service';
+import { NotyService } from '../../../../core/services/noty.service';
 
 @Component({
   selector: 'app-signup',

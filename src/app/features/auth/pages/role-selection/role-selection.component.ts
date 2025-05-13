@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 // import { ToastService } from '../../../core/services/noty.service';
-import { NotyService } from '../../../core/services/noty.service';
+import { NotyService } from '../../../../core/services/noty.service';
 
 @Component({
   selector: 'app-role-selection',

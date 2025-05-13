@@ -1,10 +1,7 @@
-export interface LoginResponse {
-    accessToken: string;
-    user: {
-      id: string;
-      name: string;
-      email: string;
-      role: 'user' | 'trainer';
-    };
-  }
+import { Trainer } from "../../../features/trainer/models/trainer.interface";
+import { User } from "../../../features/user/models/user.interface";
+
+export type LoginResponse = User | Trainer
+  
+
   

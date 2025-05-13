@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NotyService } from '../../../core/services/noty.service';
-import { AuthService } from '../../../core/services/auth.service';
+import { NotyService } from '../../../../core/services/noty.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -40,10 +40,12 @@ export class OtpComponent implements OnInit {
   verifyOtp() {
     this.authService.verifyOtp(this.email, this.otp, this.role).subscribe({
       next: (res) => {
+        console.log('res from otp verfication', res)
         this.message = res.message;
         this.errorMessage = '';
         this.notyService.showSuccess('Login successfully.');
-        this.router.navigate(['/auth/login'])
+        console.log('res.role', res.data.role)
+        this.router.navigate(['/auth/login'], {queryParams: {role: res.data.role}})
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'OTP verification failed.';
