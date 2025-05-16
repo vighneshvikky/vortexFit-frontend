@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+
+input[type="file"] {
+  cursor: pointer;
+}
+
+.border-dashed {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    border-color: #dc2626;
+    background-color: #fef2f2;
+  }
+}
+
+// Custom focus styles
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #dc2626;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+}
+
+// Disabled state styles
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+// Transition for step changes
+.relative {
+  transition: opacity 0.3s ease-in-out;
+}
+

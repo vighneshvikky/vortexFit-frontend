@@ -33,7 +33,7 @@ export class AdminDashboardComponent {
 
   onMenuItemClick(itemId: string): void {
     this.activeMenuItem = itemId;
-    // Handle navigation based on menu item
+    
     switch (itemId) {
       case 'dashboard':
         this.router.navigate(['/admin/dashboard']);
@@ -41,7 +41,7 @@ export class AdminDashboardComponent {
       case 'users':
         this.router.navigate(['/admin/users']);
         break;
-      // Add other cases as needed
+     
     }
   }
 
@@ -50,7 +50,6 @@ export class AdminDashboardComponent {
   }
 
   onLogout(): void {
-    // Handle logout
     this.router.navigate(['/admin/login']);
   }
 }

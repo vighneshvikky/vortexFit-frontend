@@ -18,20 +18,7 @@
                      style="filter: grayscale(30%) contrast(120%);">
             </div>
             
-            <div class="space-y-4">
-                <div class="flex items-center text-gray-400">
-                    <i class="fas fa-shield-alt mr-3 text-red-600"></i>
-                    <p>Secure admin management platform</p>
-                </div>
-                <div class="flex items-center text-gray-400">
-                    <i class="fas fa-chart-line mr-3 text-red-600"></i>
-                    <p>Comprehensive analytics dashboard</p>
-                </div>
-                <div class="flex items-center text-gray-400">
-                    <i class="fas fa-users mr-3 text-red-600"></i>
-                    <p>Trainer and client management</p>
-                </div>
-            </div>
+        
         </div>
     </div>
     
@@ -43,7 +30,7 @@
                     <i class="fas fa-lock text-2xl text-white"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-white">Admin Portal</h2>
-                <p class="text-gray-500 mt-1">Sign in to access your dashboard</p>
+               
             </div>
             
             <!-- Alert for errors -->
@@ -75,10 +62,6 @@
                 </div>
                 
                 <div>
-                    <div class="flex items-center justify-between mb-1">
-                        <label for="password" class="block text-sm font-medium text-gray-400">Password</label>
-                        <a href="#" class="text-sm text-red-500 hover:text-red-400">Forgot password?</a>
-                    </div>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-lock text-gray-600"></i>
@@ -96,15 +79,6 @@
                     </div>
                 </div>
                 
-                <div class="flex items-center">
-                    <input id="remember" 
-                           formControlName="remember"
-                           type="checkbox" 
-                           class="h-4 w-4 text-red-600 focus:ring-red-600 border-gray-700 rounded bg-gray-900">
-                    <label for="remember" class="ml-2 block text-sm text-gray-400">
-                        Remember me
-                    </label>
-                </div>
                 
                 <button type="submit" 
                         [disabled]="loginForm.invalid || isSubmitting"
@@ -116,9 +90,6 @@
             </form>
             
             <div class="mt-6 border-t border-gray-800 pt-6">
-                <p class="text-center text-sm text-gray-500">
-                    Need assistance? Contact <a href="#" class="text-red-500 hover:text-red-400">IT Support</a>
-                </p>
                 <p class="text-center text-xs text-gray-600 mt-4">
                     &copy; {{ currentYear }} VortexFit. All rights reserved.
                 </p>

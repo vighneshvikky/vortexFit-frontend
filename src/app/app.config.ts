@@ -8,6 +8,9 @@ import { authReducer } from './features/auth/store/reducers/auth.reducer';
 import { provideEffects } from '@ngrx/effects';
 import { AuthEffects } from './features/auth/store/effects/auth.effects';
 
+import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
+import { environment } from '../enviorments/environment';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -16,5 +19,6 @@ export const appConfig: ApplicationConfig = {
     provideStore({ auth: authReducer }),
     provideEffects([AuthEffects]),
     provideAnimations(),
+
   ],
 };

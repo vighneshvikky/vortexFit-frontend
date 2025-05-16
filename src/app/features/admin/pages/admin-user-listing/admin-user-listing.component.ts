@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AdminService, User, PaginatedResponse } from '../../services/admin.service';
+import { AdminService, User, PaginatedResponse, GetUsersParams } from '../../services/admin.service';
 import { SidebarComponent } from '../../../../shared/components/sidebar/sidebar.component';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
@@ -48,7 +48,7 @@ export class AdminUserListingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Subscribe to query params to handle refresh
+    
     this.route.queryParams.subscribe(params => {
       if (params['page']) {
         this.currentPage = +params['page'];
@@ -66,14 +66,14 @@ export class AdminUserListingComponent implements OnInit {
   loadUsers(): void {
     this.loading = true;
     this.error = '';
-    const params = {
-      search: this.searchTerm,
-      role: this.selectedRole !== 'all' ? this.selectedRole : undefined,
-      page: this.currentPage,
-      limit: this.itemsPerPage
-    };
+const params: GetUsersParams = {
+  search: this.searchTerm,
+  role: this.selectedRole !== 'all' ? this.selectedRole as 'user' | 'trainer' : undefined,
+  page: this.currentPage,
+  limit: this.itemsPerPage
+};
 
-    // Update URL with current filters
+   
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {

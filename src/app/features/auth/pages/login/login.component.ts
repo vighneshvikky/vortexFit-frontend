@@ -1,24 +1,32 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-// import { Store, StoreModule } from '@ngrx/store';
-//  import { login } from '../state/auth.actions';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { login } from '../../store/actions/auth.actions';
-// import { AppState } from '../../state/app.state';
 import { AuthState } from '../../store/auth.state';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
 import { Store } from '@ngrx/store';
-import { selectAuthError, selectIsLoading } from '../../store/selectors/auth.selectors';
+import {
+  selectAuthError,
+  selectIsLoading,
+} from '../../store/selectors/auth.selectors';
 import { Subscription } from 'rxjs';
 import { NotyService } from '../../../../core/services/noty.service';
+import { AuthService } from '../../../../core/services/auth.service';
+
+import { environment } from '../../../../../enviorments/environment';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, SpinnerComponent],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
@@ -32,29 +40,28 @@ export class LoginComponent implements OnInit, OnDestroy {
     private store: Store<AuthState>,
     private router: Router,
     private route: ActivatedRoute,
-    private notyService: NotyService
+    private notyService: NotyService,
+    private authService: AuthService,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.role = params['role'] || 'user';
     });
 
-    // Subscribe to loading state
     this.subscriptions.add(
-      this.store.select(selectIsLoading).subscribe(loading => {
+      this.store.select(selectIsLoading).subscribe((loading) => {
         this.isLoading = loading;
       })
     );
 
-    // Subscribe to error state
     this.subscriptions.add(
-      this.store.select(selectAuthError).subscribe(error => {
+      this.store.select(selectAuthError).subscribe((error) => {
         if (error) {
           this.errorMessage = error;
           this.notyService.showError(error);
@@ -63,6 +70,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     );
   }
 
+
+
+
+
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
   }
@@ -70,16 +81,20 @@ export class LoginComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.loginForm.valid) {
       this.errorMessage = null;
-      this.store.dispatch(login({ 
-        credentials: {
-          ...this.loginForm.value,
-          role: this.role
-        }
-      }));
+      this.store.dispatch(
+        login({
+          credentials: {
+            ...this.loginForm.value,
+            role: this.role,
+          },
+        })
+      );
     }
   }
 
   navigateToForgotPassword(): void {
-    this.router.navigate(['/auth/forgot-password'], { queryParams: { role: this.role } });
+    this.router.navigate(['/auth/forgot-password'], {
+      queryParams: { role: this.role },
+    });
   }
 }

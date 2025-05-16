@@ -66,5 +66,18 @@ export class AuthService {
       newPassword,
     });
   }
+
+  authenticateWithGoogle(idToken: string, role: string): Observable<ApiResponse<LoginResponse>> {
+    return this.http.post<ApiResponse<LoginResponse>>(
+      `${this.api}/google`,
+      { idToken, role },
+      { withCredentials: true }
+    ).pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
   
 }

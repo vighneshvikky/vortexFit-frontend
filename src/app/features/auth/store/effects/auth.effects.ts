@@ -1,4 +1,4 @@
-// auth.effects.ts
+
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -22,7 +22,7 @@ export class AuthEffects {
           catchError((error) => {
   let errorMsg = 'Login failed';
   if (error.error?.message) {
-    errorMsg = error.error.message; // Get "Invalid email or password"
+    errorMsg = error.error.message; 
   } else if (error.message) {
     errorMsg = error.message;
   }
@@ -41,7 +41,7 @@ export class AuthEffects {
           if (user.role === 'user') {
             this.router.navigate(['/user/dashboard']);
           } else if (user.role === 'trainer') {
-            this.router.navigate(['/trainer/dashboard']);
+            this.router.navigate(['/trainer/trainer-requests']);
           }
         })
       ),

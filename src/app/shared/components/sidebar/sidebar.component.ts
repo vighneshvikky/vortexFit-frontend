@@ -26,7 +26,6 @@ export class SidebarComponent {
   @Input() menuItems: SidebarMenuItem[] = [
     { id: 'dashboard', label: 'Dashboard', icon: 'fa-tachometer-alt' },
     { id: 'users', label: 'Users', icon: 'fa-users' },
-    { id: 'trainers', label: 'Trainers', icon: 'fa-dumbbell' },
     { id: 'verifications', label: 'Verifications', icon: 'fa-check-circle', badge: 3 },
     { id: 'plans', label: 'Plans', icon: 'fa-list-alt' },
     { id: 'earnings', label: 'Earnings', icon: 'fa-dollar-sign' },

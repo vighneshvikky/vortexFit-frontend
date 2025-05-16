@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { AdminLoginComponent } from './pages/admin-login/admin-login.component';
-import { roleGuard } from '../../core/guards/role.guard';
+
 
 export const adminRoutes: Routes = [
   {

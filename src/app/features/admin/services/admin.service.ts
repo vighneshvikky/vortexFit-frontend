@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-// import { environment } from '../../../../environments/environment';
 import { environment } from '../../../../enviorments/environment';
 
 export interface AdminLoginRequest {
@@ -13,8 +12,6 @@ export interface AdminLoginResponse {
   id: string;
   email: string;
   name: string;
-  accessToken: string;
-  refreshToken: string;
 }
 
 export interface User {
@@ -43,24 +40,38 @@ export interface PaginatedResponse<T> {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AdminService {
-  private apiUrl = `${environment.api}`;
+  private apiUrl = `${environment.api}/admin`;
 
   constructor(private http: HttpClient) {}
 
   login(credentials: AdminLoginRequest): Observable<AdminLoginResponse> {
-    return this.http.post<AdminLoginResponse>(`${this.apiUrl}/login`, credentials);
+    return this.http.post<AdminLoginResponse>(
+      `${this.apiUrl}/login`,
+      credentials
+    );
   }
 
   getUsers(params: GetUsersParams): Observable<PaginatedResponse<User>> {
-    return this.http.get<PaginatedResponse<User>>(`${this.apiUrl}/users`, { params: params as any });
-  }
-
-  toggleBlockStatus(userId: string, role: 'user' | 'trainer'): Observable<User> {
-    return this.http.patch<User>(`${this.apiUrl}/users/${userId}/toggle-block`, null, {
-      params: { role }
+    return this.http.get<PaginatedResponse<User>>(`${this.apiUrl}/users`, {
+      params: params as any,
     });
   }
-} 
+
+
+
+  toggleBlockStatus(
+    userId: string,
+    role: 'user' | 'trainer'
+  ): Observable<User> {
+    return this.http.patch<User>(
+      `${this.apiUrl}/users/${userId}/toggle-block`,
+      null,
+      {
+        params: { role },
+      }
+    );
+  }
+}

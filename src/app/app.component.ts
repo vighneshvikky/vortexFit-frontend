@@ -12,5 +12,5 @@ import { RouterOutlet } from '@angular/router';
   styles: []
 })
 export class AppComponent {
-  title = 'second-project-frontend';
+  title = 'vortexfit';
 }

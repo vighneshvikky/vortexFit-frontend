@@ -13,6 +13,11 @@ export const selectIsTrainer = createSelector(
   user => user?.role === 'trainer'
 );
 
+export const selectTrainerId = createSelector(
+  selectCurrentUser,
+  user => user?.role === 'trainer'? user.id || user.id : null
+)
+
 export const selectIsUser = createSelector(
   selectCurrentUser,
   user => user?.role === 'user'

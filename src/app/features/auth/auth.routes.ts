@@ -12,5 +12,6 @@ export const authRoutes: Routes = [
   { path: 'otp', component: OtpComponent },
   { path: 'login', component: LoginComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
-  { path: 'forgot-password', component: ForgotPasswordComponent }
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  
 ];

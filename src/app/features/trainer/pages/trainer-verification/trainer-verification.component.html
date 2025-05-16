@@ -1,0 +1,185 @@
+<div class="min-h-screen py-8 bg-gray-50">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Trainer Verification</h2>
+      
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Personal Information -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-medium text-gray-900">Personal Information</h3>
+          
+          <!-- Name -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              [ngClass]="{'border-red-300': form.get('name')?.invalid && form.get('name')?.touched}"
+            >
+            <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="mt-1 text-sm text-red-600">
+              Name is required
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              [ngClass]="{'border-red-300': form.get('email')?.invalid && form.get('email')?.touched}"
+            >
+            <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="mt-1 text-sm text-red-600">
+              Please enter a valid email address
+            </div>
+          </div>
+
+          <!-- Phone Number -->
+          <div>
+            <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              formControlName="phoneNumber"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              [ngClass]="{'border-red-300': form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched}"
+            >
+            <div *ngIf="form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched" class="mt-1 text-sm text-red-600">
+              Phone number is required
+            </div>
+          </div>
+        </div>
+
+        <!-- Professional Information -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-medium text-gray-900">Professional Information</h3>
+          
+          <!-- Specialization -->
+          <div>
+            <label for="specialization" class="block text-sm font-medium text-gray-700">Specialization</label>
+            <select
+              id="specialization"
+              formControlName="specialization"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              [ngClass]="{'border-red-300': form.get('specialization')?.invalid && form.get('specialization')?.touched}"
+            >
+              <option value="">Select specialization</option>
+              <option value="yoga">Yoga</option>
+              <option value="fitness">Fitness</option>
+              <option value="nutrition">Nutrition</option>
+              <option value="wellness">Wellness</option>
+            </select>
+            <div *ngIf="form.get('specialization')?.invalid && form.get('specialization')?.touched" class="mt-1 text-sm text-red-600">
+              Please select a specialization
+            </div>
+          </div>
+
+          <!-- Experience -->
+          <div>
+            <label for="experience" class="block text-sm font-medium text-gray-700">Years of Experience</label>
+            <input
+              type="number"
+              id="experience"
+              formControlName="experience"
+              min="0"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              [ngClass]="{'border-red-300': form.get('experience')?.invalid && form.get('experience')?.touched}"
+            >
+            <div *ngIf="form.get('experience')?.invalid && form.get('experience')?.touched" class="mt-1 text-sm text-red-600">
+              Please enter valid years of experience
+            </div>
+          </div>
+
+          <!-- Bio -->
+          <div>
+            <label for="bio" class="block text-sm font-medium text-gray-700">Bio</label>
+            <textarea
+              id="bio"
+              formControlName="bio"
+              rows="4"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-medium text-gray-900">Required Documents</h3>
+          
+          <!-- ID Proof -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">ID Proof</label>
+            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+              <div class="space-y-1 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="flex text-sm text-gray-600">
+                  <label for="idProof" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                    <span>Upload ID Proof</span>
+                    <input
+                      id="idProof"
+                      type="file"
+                      class="sr-only"
+                      (change)="onFileSelected($event, 'idProof')"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                    >
+                  </label>
+                  <p class="pl-1">or drag and drop</p>
+                </div>
+                <p class="text-xs text-gray-500">PDF, JPG, PNG up to 10MB</p>
+              </div>
+            </div>
+            <div *ngIf="idProofFile" class="mt-2 text-sm text-gray-600">
+              Selected file: {{ idProofFile.name }}
+            </div>
+          </div>
+
+          <!-- Certification -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Certification (Optional)</label>
+            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+              <div class="space-y-1 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="flex text-sm text-gray-600">
+                  <label for="certification" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                    <span>Upload Certification</span>
+                    <input
+                      id="certification"
+                      type="file"
+                      class="sr-only"
+                      (change)="onFileSelected($event, 'certification')"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                    >
+                  </label>
+                  <p class="pl-1">or drag and drop</p>
+                </div>
+                <p class="text-xs text-gray-500">PDF, JPG, PNG up to 10MB</p>
+              </div>
+            </div>
+            <div *ngIf="certificationFile" class="mt-2 text-sm text-gray-600">
+              Selected file: {{ certificationFile.name }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-4">
+          <button
+            type="submit"
+            [disabled]="form.invalid || !idProofFile"
+            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Submit Verification
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
