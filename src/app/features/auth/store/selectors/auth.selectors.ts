@@ -20,6 +20,12 @@ export const selectAuthError = createSelector(
 );
 
 
+export const selectCurrentUserVerificationStatus = createSelector(
+  selectCurrentUser,
+  (currentUser) => currentUser?.verificationStatus
+);
+
+
 
 
 

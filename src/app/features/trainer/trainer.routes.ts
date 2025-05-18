@@ -14,9 +14,9 @@ export const trainerRoutes: Routes = [
         component: TrainerVerificationComponent,
         data: { role: 'trainer' }
     },
-    // {
-    //     path: 'trainer-status',
-    //     component: TrainerStatusComponent,
-    //     data: { role: 'trainer' }
-    // }
+    {
+        path: 'trainer-status',
+        component: TrainerStatusComponent,
+        data: { role: 'trainer' }
+    }
 ]

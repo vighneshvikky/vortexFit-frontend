@@ -2,6 +2,8 @@ export interface Admin {
   id: string;
   email: string;
   role: 'admin';
+    verificationStatus?: 'not_submitted' | 'pending' | 'rejected' | 'approved';
+    rejectionReason?: string;
 }
 
 

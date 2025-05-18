@@ -24,6 +24,8 @@ export interface User {
   createdAt: string;
   isBlocked: boolean;
   isVerified?: boolean;
+  rejectionReason?: string;
+  verificationStatus?: 'not_submitted' | 'pending' | 'rejected' | 'approved';
   password?: string;
 }
 
@@ -88,10 +90,11 @@ export class AdminService {
   }
 
   acceptTrainer(trainerId: string): Observable<Trainer> {
-    return this.http.patch<Trainer>(`${this.apiUrl}/trainers/${trainerId}/accept`, {});
+    return this.http.patch<Trainer>(`${this.apiUrl}/verify-trainer/${trainerId}`, {});
   }
 
   rejectTrainer(trainerId: string, reason: string): Observable<Trainer> {
-    return this.http.patch<Trainer>(`${this.apiUrl}/trainers/${trainerId}/reject`, { reason });
+    console.log('trainerid', trainerId)
+    return this.http.patch<Trainer>(`${this.apiUrl}/reject-trainer/${trainerId}`, { reason });
   }
 }

@@ -1,64 +1,185 @@
-<!-- <div class="status-container">
-  <ng-container *ngIf="trainer$ | async as trainer">
-    <div class="status-card">
-      <div class="status-header">
-        <h2>Verification Status</h2>
-      </div>
-
-      <div class="status-content">
-        <div class="trainer-info">
-          <h3>{{ trainer.name }}</h3>
-          <p><strong>Email:</strong> {{ trainer.email }}</p>
-          <p><strong>Phone:</strong> {{ trainer.phone }}</p>
-          <p><strong>Specialties:</strong> {{ trainer.specialties?.join(', ') }}</p>
+<div class="status-container">
+  <div class="status-card">
+    <ng-container [ngSwitch]="verificationStatus">
+      <!-- Pending -->
+      <div *ngSwitchCase="'pending'" class="status-section pending">
+        <div class="status-icon">
+          <i class="fas fa-clock"></i>
         </div>
-
-        <div class="status-section" [ngClass]="trainer.verificationStatus">
-          <div class="status-badge">
-            {{ trainer.verificationStatus | titlecase }}
-          </div>
-
-          <div *ngIf="trainer.verificationStatus === 'rejected'" class="rejection-reason">
-            <h4>Reason for Rejection</h4>
-            <p>{{ trainer.rejectionReason || 'No specific reason provided' }}</p>
-            <button class="btn btn-primary" (click)="resubmitForm()">
-              Resubmit Application
-            </button>
-          </div>
-
-          <div *ngIf="trainer.verificationStatus === 'approved'" class="approval-message">
-            <h4>Congratulations!</h4>
-            <p>Your trainer account has been approved. You can now access your dashboard.</p>
-            <button class="btn btn-primary" (click)="navigateToDashboard()">
-              Go to Dashboard
-            </button>
-          </div>
-
-          <div *ngIf="trainer.verificationStatus === 'pending'" class="pending-message">
-            <h4>Application Under Review</h4>
-            <p>Your application is currently being reviewed. We'll notify you once the review is complete.</p>
-          </div>
-        </div>
-
-        <div class="documents" *ngIf="trainer.documents">
-          <h4>Submitted Documents</h4>
-          <div class="document-list">
-            <div class="document-item" *ngIf="trainer.documents.idProof">
-              <strong>ID Proof:</strong>
-              <a [href]="trainer.documents.idProof" target="_blank" class="link">View Document</a>
-            </div>
-            <div class="document-item" *ngIf="trainer.documents.certification">
-              <strong>Certification:</strong>
-              <a [href]="trainer.documents.certification" target="_blank" class="link">View Document</a>
-            </div>
-          </div>
+        <h2 class="status-title">Under Review</h2>
+        <p class="status-message">Your profile is currently being reviewed by our team. We'll notify you once the review is complete.</p>
+        <div class="loading-indicator">
+          <div class="spinner"></div>
         </div>
       </div>
-    </div>
-  </ng-container>
 
-  <div *ngIf="!(trainer$ | async)" class="loading-state">
-    <div class="spinner"></div>
-    <p>Loading trainer information...</p>
+      <!-- Approved -->
+      <div *ngSwitchCase="'approved'" class="status-section approved">
+        <div class="status-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h2 class="status-title">Profile Approved!</h2>
+        <p class="status-message">Congratulations! Your profile has been approved. You can now access your trainer dashboard.</p>
+        <button class="action-button success" (click)="redirectToDashboard()">
+          <i class="fas fa-arrow-right"></i>
+          Go to Dashboard
+        </button>
+      </div>
+
+      <!-- Rejected -->
+      <div *ngSwitchCase="'rejected'" class="status-section rejected">
+        <div class="status-icon">
+          <i class="fas fa-times-circle"></i>
+        </div>
+        <h2 class="status-title">Profile Rejected</h2>
+        <p class="status-message">We're sorry, but your profile has been rejected.</p>
+        <div class="rejection-reason" *ngIf="rejectionReason">
+          <h3>Reason for Rejection:</h3>
+          <p>{{ rejectionReason }}</p>
+        </div>
+        <button class="action-button retry" (click)="submitFormAgain()">
+          <i class="fas fa-redo"></i>
+          Resubmit Application
+        </button>
+      </div>
+
+      <!-- Default -->
+      <div *ngSwitchDefault class="status-section default">
+        <div class="status-icon">
+          <i class="fas fa-question-circle"></i>
+        </div>
+        <h2 class="status-title">Status Unknown</h2>
+        <p class="status-message">Unable to determine your verification status. Please contact support if this persists.</p>
+      </div>
+    </ng-container>
   </div>
-</div> -->
+</div>
+
+<style>
+.status-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #1a1a1a;
+}
+
+.status-card {
+  background-color: #2d2d2d;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #dc2626;
+}
+
+.status-section {
+  text-align: center;
+  color: #ffffff;
+}
+
+.status-icon {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.status-icon i {
+  color: #dc2626;
+}
+
+.status-title {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.status-message {
+  color: #b3b3b3;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.action-button.success {
+  background-color: #dc2626;
+  color: white;
+}
+
+.action-button.retry {
+  background-color: #dc2626;
+  color: white;
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+}
+
+.rejection-reason {
+  background-color: rgba(220, 38, 38, 0.1);
+  border: 1px solid #dc2626;
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+}
+
+.rejection-reason h3 {
+  color: #dc2626;
+  margin-bottom: 0.5rem;
+}
+
+.rejection-reason p {
+  color: #b3b3b3;
+  margin: 0;
+}
+
+.loading-indicator {
+  margin-top: 2rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(220, 38, 38, 0.1);
+  border-left-color: #dc2626;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Status-specific colors */
+.pending .status-icon i {
+  color: #f59e0b;
+}
+
+.approved .status-icon i {
+  color: #10b981;
+}
+
+.rejected .status-icon i {
+  color: #dc2626;
+}
+
+.default .status-icon i {
+  color: #6b7280;
+}
+</style>

@@ -1,56 +1,241 @@
-<div class="otp-container">
-  <div class="otp-card">
-    <h2 class="title">Verify Your Email</h2>
-    <p class="subtitle">Please enter the OTP sent to your email address</p>
-
-    <form (ngSubmit)="verifyOtp()" class="otp-form">
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input 
-          type="email" 
-          id="email" 
-          [(ngModel)]="email" 
-          name="email" 
-          class="form-control" 
-          required 
-          placeholder="Enter your email"
-        />
+<div class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md mx-auto">
+    <div class="bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-red-500/20">
+      <!-- Header -->
+      <div class="bg-red-600 px-6 py-8 text-center">
+        <h2 class="text-2xl font-bold text-white">Verify Your Email</h2>
+        <p class="text-red-100 mt-2">Please enter the OTP sent to your email address</p>
       </div>
 
-      <div class="form-group">
-        <label for="otp">OTP Code</label>
-        <input 
-          type="text" 
-          id="otp" 
-          [(ngModel)]="otp" 
-          name="otp" 
-          class="form-control" 
-          required 
-          placeholder="Enter OTP"
-          maxlength="6"
-        />
-      </div>
+      <!-- Form -->
+      <form (ngSubmit)="verifyOtp()" class="p-6 space-y-6">
+        <!-- Email Input -->
+        <div class="space-y-2">
+          <label for="email" class="block text-sm font-medium text-gray-200">Email Address</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-envelope text-red-500"></i>
+            </div>
+            <input 
+              type="email" 
+              id="email" 
+              [(ngModel)]="email" 
+              name="email" 
+              class="block w-full pl-10 pr-3 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-150"
+              required 
+              placeholder="Enter your email"
+            />
+          </div>
+        </div>
 
-      <button type="submit" class="btn btn-primary">
-        <i class="fas fa-check"></i>
-        Verify OTP
-      </button>
-    </form>
+        <!-- OTP Input -->
+        <div class="space-y-2">
+          <label for="otp" class="block text-sm font-medium text-gray-200">OTP Code</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-key text-red-500"></i>
+            </div>
+            <input 
+              type="text" 
+              id="otp" 
+              [(ngModel)]="otp" 
+              name="otp" 
+              class="block w-full pl-10 pr-3 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-150"
+              required 
+              placeholder="Enter OTP"
+              maxlength="6"
+            />
+          </div>
+        </div>
 
-    <div class="resend-section">
-      <button 
-        (click)="resendOtp()" 
-        class="btn btn-secondary" 
-        [disabled]="isResendDisabled"
-      >
-        <i class="fas fa-redo"></i>
-        Resend OTP
-      </button>
+        <!-- Verify Button -->
+        <button 
+          type="submit" 
+          class="w-full flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 transform hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          <i class="fas fa-check mr-2"></i>
+          Verify OTP
+        </button>
 
-      <div *ngIf="isResendDisabled" class="timer">
-        <i class="fas fa-clock"></i>
-        Resend available in: {{ timer }} seconds
-      </div>
+        <!-- Resend Section -->
+        <div class="mt-6 text-center space-y-4">
+          <button 
+            (click)="resendOtp()" 
+            [disabled]="isResendDisabled"
+            class="inline-flex items-center px-4 py-2 border border-gray-600 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150"
+          >
+            <i class="fas fa-redo mr-2"></i>
+            Resend OTP
+          </button>
+
+          <!-- Timer -->
+          <div *ngIf="isResendDisabled" class="flex items-center justify-center space-x-2 text-sm text-gray-400">
+            <i class="fas fa-clock text-red-500"></i>
+            <span>Resend available in: {{ timer }} seconds</span>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
+
+<style>
+.otp-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #1a1a1a;
+}
+
+.otp-card {
+  background-color: #2d2d2d;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #dc2626;
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  color: #ffffff;
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #b3b3b3;
+  font-size: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper i {
+  position: absolute;
+  left: 1rem;
+  color: #dc2626;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid #404040;
+  border-radius: 6px;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #dc2626;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+}
+
+.form-control::placeholder {
+  color: #666666;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn i {
+  font-size: 1.1rem;
+}
+
+.btn-primary {
+  background-color: #dc2626;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+}
+
+.btn-secondary {
+  background-color: #404040;
+  color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #505050;
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.resend-section {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.timer {
+  margin-top: 1rem;
+  color: #b3b3b3;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.timer i {
+  color: #dc2626;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .otp-card {
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .btn {
+    padding: 0.625rem 1.25rem;
+  }
+}
+</style>

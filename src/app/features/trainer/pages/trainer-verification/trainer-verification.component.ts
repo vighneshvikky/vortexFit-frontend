@@ -15,6 +15,7 @@ import { TrainerService } from '../../services/trainer.service';
 import { NotyService } from '../../../../core/services/noty.service';
 import { Router } from '@angular/router';
 import { selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';
+import { Trainer } from '../../models/trainer.interface';
 
 @Component({
   selector: 'app-trainer-verification',
@@ -67,8 +68,8 @@ export class TrainerVerificationComponent implements OnInit {
       ]],
       bio: ['', [
         Validators.required,
-        Validators.minLength(50),
-        Validators.maxLength(500),
+        Validators.minLength(1),
+        Validators.maxLength(10),
         this.minWords(2)
       ]],
       specialization: ['', [
@@ -144,7 +145,7 @@ export class TrainerVerificationComponent implements OnInit {
         next: (response) => {
           this.isLoading = false;
           this.notyService.showSuccess('Verification request submitted successfully');
-          this.router.navigate(['/trainer/status']);
+          this.router.navigate(['/trainer/trainer-status']);
         },
         error: (error) => {
           this.isLoading = false;

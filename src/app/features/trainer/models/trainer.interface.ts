@@ -1,6 +1,7 @@
 import { BaseAccount } from '../../auth/model/baseAccount.interface';
 
 export interface Trainer extends BaseAccount {
+  _id: string;
   role: 'trainer';
   name: string;
   phoneNumber: string;

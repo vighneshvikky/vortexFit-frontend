@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../enviorments/environment';
+
 import { Trainer } from '../models/trainer.interface';
+import { environment } from '../../../../enviorments/environment';
+
+interface TrainerVerificationResponse {
+  status: 'pending' | 'approved' | 'rejected';
+  rejectionReason?: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -27,5 +33,7 @@ updateProfile(trainerId: string, formData: FormData): Observable<any> {
     formData 
   );
 }
+
+
 
 }
