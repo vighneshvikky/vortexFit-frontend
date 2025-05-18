@@ -11,10 +11,6 @@ import { Admin } from '../../../admin/models/admin.interface';
 import { LoginResponse } from '../../../../core/interfaces/auth/login-response.model';
 import { ApiResponse } from '../../../../core/models/api-response.model';
 
-// Assuming you have these interfaces somewhere:
-// import { User } from '../../../models/user.model';
-// import { Trainer } from '../../../models/trainer.model';
-// import { Admin } from '../../../models/admin.model';
 
 type UserRole = 'user' | 'trainer' | 'admin';
 
@@ -30,8 +26,7 @@ export class AuthEffects {
       ofType(login),
       switchMap((action) => {
         const { email, password, role } = action;
-        console.log('login data from fe action', action)
-        // For admin, use admin service directly
+        console.log('login data from fe action', action)  
         if (role === 'admin') {
           return this.adminService.login({ email, password }).pipe(
             map((response: AdminLoginResponse) => {

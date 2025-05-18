@@ -1,0 +1,192 @@
+<div class="min-h-screen bg-gradient-to-br from-red-50 to-red-100 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-3xl mx-auto">
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+      <!-- Header -->
+      <div class="bg-red-600 px-6 py-4">
+        <h2 class="text-2xl font-bold text-white">Trainer Verification</h2>
+        <p class="text-red-100 mt-1">Complete your profile to become a verified trainer</p>
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()" class="p-6 space-y-6">
+        <!-- Personal Information -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Name -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
+              [ngClass]="{'border-red-500': name?.invalid && name?.touched}"
+            />
+            <div *ngIf="name?.invalid && name?.touched" class="mt-1 text-sm text-red-600">
+              <p *ngIf="name?.errors?.['required']">Name is required</p>
+              <p *ngIf="name?.errors?.['pattern']">Only letters and spaces are allowed</p>
+              <p *ngIf="name?.errors?.['minlength']">Name must be at least 2 characters</p>
+              <p *ngIf="name?.errors?.['maxlength']">Name must not exceed 50 characters</p>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
+              [ngClass]="{'border-red-500': email?.invalid && email?.touched}"
+            />
+            <div *ngIf="email?.invalid && email?.touched" class="mt-1 text-sm text-red-600">
+              <p *ngIf="email?.errors?.['required']">Email is required</p>
+              <p *ngIf="email?.errors?.['email']">Please enter a valid email address</p>
+            </div>
+          </div>
+
+          <!-- Phone Number -->
+          <div>
+            <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              formControlName="phoneNumber"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
+              [ngClass]="{'border-red-500': phoneNumber?.invalid && phoneNumber?.touched}"
+            />
+            <div *ngIf="phoneNumber?.invalid && phoneNumber?.touched" class="mt-1 text-sm text-red-600">
+              <p *ngIf="phoneNumber?.errors?.['required']">Phone number is required</p>
+              <p *ngIf="phoneNumber?.errors?.['pattern']">Please enter a valid 10-digit phone number</p>
+            </div>
+          </div>
+
+          <!-- Experience -->
+          <div>
+            <label for="experience" class="block text-sm font-medium text-gray-700">Years of Experience</label>
+            <input
+              type="number"
+              id="experience"
+              formControlName="experience"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
+              [ngClass]="{'border-red-500': experience?.invalid && experience?.touched}"
+            />
+            <div *ngIf="experience?.invalid && experience?.touched" class="mt-1 text-sm text-red-600">
+              <p *ngIf="experience?.errors?.['required']">Experience is required</p>
+              <p *ngIf="experience?.errors?.['min'] || experience?.errors?.['max']">Experience must be between 0 and 100 years</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Specialization -->
+        <div>
+          <label for="specialization" class="block text-sm font-medium text-gray-700">Specialization</label>
+          <select
+            id="specialization"
+            formControlName="specialization"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
+            [ngClass]="{'border-red-500': specialization?.invalid && specialization?.touched}"
+          >
+            <option value="">Select your specialization</option>
+            <option *ngFor="let spec of specializations" [value]="spec.value">
+              {{spec.label}}
+            </option>
+          </select>
+          <div *ngIf="specialization?.invalid && specialization?.touched" class="mt-1 text-sm text-red-600">
+            <p *ngIf="specialization?.errors?.['required']">Please select a specialization</p>
+          </div>
+        </div>
+
+        <!-- Bio -->
+        <div>
+          <label for="bio" class="block text-sm font-medium text-gray-700">Bio</label>
+          <textarea
+            id="bio"
+            formControlName="bio"
+            rows="4"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
+            [ngClass]="{'border-red-500': bio?.invalid && bio?.touched}"
+            placeholder="Tell us about your experience, achievements, and training philosophy..."
+          ></textarea>
+          <div *ngIf="bio?.invalid && bio?.touched" class="mt-1 text-sm text-red-600">
+            <p *ngIf="bio?.errors?.['required']">Bio is required</p>
+            <p *ngIf="bio?.errors?.['minlength']">Bio must be at least 50 characters</p>
+            <p *ngIf="bio?.errors?.['maxlength']">Bio must not exceed 500 characters</p>
+            <p *ngIf="bio?.errors?.['minWords']">Bio must contain at least 2 words</p>
+          </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Certificate -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Certification Document</label>
+            <div class="mt-1 flex items-center">
+              <input
+                #certificateInput
+                type="file"
+                (change)="onFileSelected($event, 'certification')"
+                accept="image/*,.pdf"
+                class="hidden"
+              />
+              <button
+                type="button"
+                (click)="triggerFileInput('certification')"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                <i class="fas fa-upload mr-2"></i>
+                Upload Certification
+              </button>
+              <span *ngIf="certification?.value" class="ml-3 text-sm text-gray-500">
+                {{certification?.value?.name}}
+              </span>
+            </div>
+            <div *ngIf="certification?.invalid && certification?.touched" class="mt-1 text-sm text-red-600">
+              <p *ngIf="certification?.errors?.['required']">Certification is required</p>
+            </div>
+          </div>
+
+          <!-- ID Proof -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">ID Proof</label>
+            <div class="mt-1 flex items-center">
+              <input
+                #idProofInput
+                type="file"
+                (change)="onFileSelected($event, 'idProof')"
+                accept="image/*,.pdf"
+                class="hidden"
+              />
+              <button
+                type="button"
+                (click)="triggerFileInput('idProof')"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                <i class="fas fa-upload mr-2"></i>
+                Upload ID Proof
+              </button>
+              <span *ngIf="idProof?.value" class="ml-3 text-sm text-gray-500">
+                {{idProof?.value?.name}}
+              </span>
+            </div>
+            <div *ngIf="idProof?.invalid && idProof?.touched" class="mt-1 text-sm text-red-600">
+              <p *ngIf="idProof?.errors?.['required']">ID Proof is required</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end">
+          <button
+            type="submit"
+            [disabled]="verificationForm.invalid || isLoading"
+            class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i class="fas fa-spinner fa-spin mr-2" *ngIf="isLoading"></i>
+            {{ isLoading ? 'Submitting...' : 'Submit for Verification' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -7,7 +7,7 @@ import { AdminService } from '../../../features/admin/services/admin.service';
 
 @Injectable()
 export class UsersEffects {
-//   constructor(private actions$: Actions, private userService: UserService) {}
+
  private actions$ = inject(Actions);
  private adminService = inject(AdminService)
   loadUsers$ = createEffect(() =>

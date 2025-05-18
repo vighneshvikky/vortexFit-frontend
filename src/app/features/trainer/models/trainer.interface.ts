@@ -7,7 +7,8 @@ export interface Trainer extends BaseAccount {
   specialization: string;
   experience: number;
   bio?: string;
-  isBlocked?: boolean
+  isBlocked?: boolean;
+  isVerified?: boolean;
   idProofUrl?: string;
   certificationUrl?: string;
   verificationStatus: 'not_submitted' | 'pending' | 'rejected' | 'approved';

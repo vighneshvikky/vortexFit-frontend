@@ -23,6 +23,7 @@ export interface User {
   role: 'user' | 'trainer';
   createdAt: string;
   isBlocked: boolean;
+  isVerified?: boolean;
   password?: string;
 }
 
@@ -66,6 +67,7 @@ export class AdminService {
     userId: string,
     role: 'user' | 'trainer'
   ): Observable<User> {
+    console.log('userId', userId);
     return this.http.patch<User>(
       `${this.apiUrl}/users/${userId}/toggle-block`,
       null,

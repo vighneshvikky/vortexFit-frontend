@@ -7,7 +7,6 @@ import { provideStore } from '@ngrx/store';
 import { authReducer } from './features/auth/store/reducers/auth.reducer';
 import { provideEffects } from '@ngrx/effects';
 import { AuthEffects } from './features/auth/store/effects/auth.effects';
-import { trainersReducer } from './store/admin/trainers/trainers.reducer';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { environment } from '../enviorments/environment';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';

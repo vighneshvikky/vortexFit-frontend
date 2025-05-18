@@ -21,6 +21,7 @@ updateProfile(trainerId: string, formData: FormData): Observable<any> {
   for (const [key, value] of formData.entries()) {
     console.log(`${key}:`, value);
   }
+  console.log('trainerId', trainerId);
   return this.http.patch(
     `http://localhost:3000/trainers/profile/${trainerId}`,
     formData 

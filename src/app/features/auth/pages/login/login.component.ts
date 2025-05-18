@@ -6,8 +6,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { AppState } from '../../../../store/app.state';
+import { Observable, map } from 'rxjs';
 import * as AuthActions from '../../store/actions/auth.actions';
 import {
   selectAuthError,
@@ -36,31 +35,31 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private store: Store<AppState>,
+    private store: Store,
     private router: Router,
     private notyService: NotyService,
     private authService: AuthService,
     private route: ActivatedRoute
   ) {
-
     const roleParam = this.route.snapshot.queryParamMap.get('role');
-  this.role = roleParam === 'trainer' ? 'trainer' : 'user';
+    this.role = roleParam === 'trainer' ? 'trainer' : 'user';
 
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
 
-    this.loading$ = this.store.select(selectAuthLoading);
+    this.loading$ = this.store.select(selectAuthLoading).pipe(
+      map(loading => loading ?? false)
+    );
     this.error$ = this.store.select(selectAuthError);
   }
 
-ngOnInit(): void {
-  
-  this.route.queryParams.subscribe((params) => {
-    this.role = params['role'] === 'trainer' ? 'trainer' : 'user';
-  });
-}
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.role = params['role'] === 'trainer' ? 'trainer' : 'user';
+    });
+  }
 
   onSubmit(): void {
     if (this.loginForm.valid) {

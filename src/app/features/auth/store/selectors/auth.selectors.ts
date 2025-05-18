@@ -9,23 +9,6 @@ export const selectCurrentUser = createSelector(
   (state: AuthState) => state.currentUser
 );
 
-export const selectIsAuthenticated = createSelector(
-  selectCurrentUser,
-  (user) => !!user
-);
-
-export const selectIsTrainer = createSelector(
-  selectCurrentUser,
-  (user) => user?.role === 'trainer'
-);
-
-
-
-export const selectIsUser = createSelector(
-  selectCurrentUser,
-  (user) => user?.role === 'user'
-);
-
 export const selectAuthLoading = createSelector(
   selectAuthState,
   (state: AuthState) => state.loading
@@ -38,15 +21,7 @@ export const selectAuthError = createSelector(
 
 
 
-export const selectTrainerStatus = createSelector(
-  selectAuthState,
-  (state): Trainer | null => {
-    if (state.currentUser?.role === 'trainer') {
-      return state.currentUser as Trainer;
-    }
-    return null;
-  }
-);
+
 
 
 
