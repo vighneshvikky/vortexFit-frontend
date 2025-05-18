@@ -57,20 +57,21 @@
         </div>
       </div>
 
-      <div class="relative">
-        <app-spinner [isLoading]="isLoading" [role]="role"></app-spinner>
-        <button
-          type="submit"
-          [disabled]="isLoading"
-          class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          [ngClass]="{
-            'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500': role === 'user',
-            'bg-red-600 hover:bg-red-700 focus:ring-red-500': role === 'trainer'
-          }"
-        >
-          Sign In
-        </button>
-      </div>
+   <div class="relative">
+  <!-- <app-spinner [isLoading]="loading$ | async" [role]="role"></app-spinner> -->
+  <button
+    type="submit"
+    [disabled]="loading$ | async"
+    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+    [ngClass]="{
+      'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500': role === 'user',
+      'bg-red-600 hover:bg-red-700 focus:ring-red-500': role === 'trainer'
+    }"
+  >
+    Sign In
+  </button>
+</div>
+
 
  
 

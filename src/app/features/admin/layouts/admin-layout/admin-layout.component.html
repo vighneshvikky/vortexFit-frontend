@@ -1,0 +1,11 @@
+<div class="admin-layout">
+  <app-sidebar
+    [sidebarOpen]="sidebarOpen"
+    (toggleSidebar)="onToggleSidebar()"
+  ></app-sidebar>
+  <main class="content">
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div> 

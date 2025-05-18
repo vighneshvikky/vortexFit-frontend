@@ -1,5 +1,16 @@
+:root {
+  --primary-red: #dc2626;
+  --primary-red-light: #ef4444;
+  --primary-red-dark: #b91c1c;
+  --secondary-red: #fef2f2;
+  --text-dark: #1f2937;
+  --text-light: #6b7280;
+  --border-color: #fecaca;
+}
+
 :host {
   display: block;
+  background-color: var(--secondary-red);
 }
 
 input[type="file"] {
@@ -9,18 +20,83 @@ input[type="file"] {
 .border-dashed {
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  border-color: var(--border-color) !important;
 
   &:hover {
-    border-color: #dc2626;
-    background-color: #fef2f2;
+    border-color: var(--primary-red) !important;
+    background-color: var(--secondary-red);
   }
 }
 
 // Custom focus styles
 input:focus, select:focus, textarea:focus {
   outline: none;
-  border-color: #dc2626;
+  border-color: var(--primary-red) !important;
   box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+}
+
+// Form elements styling
+input, select, textarea {
+  border-color: var(--border-color);
+  
+  &:focus {
+    border-color: var(--primary-red);
+  }
+}
+
+// Labels
+label {
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+// Headings
+h2, h3 {
+  color: var(--text-dark);
+}
+
+// Submit button
+button[type="submit"] {
+  background-color: var(--primary-red) !important;
+  border-color: var(--primary-red) !important;
+  
+  &:hover:not(:disabled) {
+    background-color: var(--primary-red-dark) !important;
+    border-color: var(--primary-red-dark) !important;
+  }
+  
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+// File upload labels
+.text-indigo-600 {
+  color: var(--primary-red) !important;
+}
+
+.hover\:text-indigo-500:hover {
+  color: var(--primary-red-light) !important;
+}
+
+.focus-within\:ring-indigo-500:focus-within {
+  --tw-ring-color: var(--primary-red) !important;
+}
+
+// Error states
+.border-red-300 {
+  border-color: var(--primary-red) !important;
+}
+
+.text-red-600 {
+  color: var(--primary-red) !important;
+}
+
+// Card styling
+.bg-white {
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.1), 0 2px 4px -1px rgba(220, 38, 38, 0.06);
 }
 
 // Disabled state styles

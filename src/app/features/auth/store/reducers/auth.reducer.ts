@@ -1,30 +1,48 @@
 import { createReducer, on } from '@ngrx/store';
-import { login, loginSuccess, loginFailure } from '../actions/auth.actions';
-import { AuthState } from '../auth.state';
+import { Trainer } from '../../../trainer/models/trainer.interface';
+import * as AuthActions from '../actions/auth.actions';
+import { User } from '../../../admin/services/admin.service';
+import { Admin } from '../../../admin/models/admin.interface';
+import { AuthenticatedUser } from '../actions/auth.actions';
+
+export interface AuthState {
+  currentUser: AuthenticatedUser | null;
+  loading: boolean;
+  error: string | null;
+}
 
 export const initialState: AuthState = {
   currentUser: null,
-  isLoggedIn: false,
   loading: false,
-  error: null
+  error: null,
 };
 
 export const authReducer = createReducer(
   initialState,
-  on(login, state => ({
+  on(AuthActions.login, (state) => ({
     ...state,
     loading: true,
-    error: null
+    error: null,
   })),
-  on(loginSuccess, (state, { user }) => ({
+  on(AuthActions.loginSuccess, (state, { user }) => ({
     ...state,
     currentUser: user,
-    isLoggedIn: true,
-    loading: false
+    loading: false,
   })),
-  on(loginFailure, (state, { error }) => ({
+  on(AuthActions.loginFailure, (state, { error }) => ({
     ...state,
     loading: false,
-    error
+    error,
+  })),
+  on(AuthActions.logout, (state) => ({
+    ...state,
+    currentUser: null,
+  })),
+  on(AuthActions.updateTrainerProfileSuccess, (state, { updatedTrainer }) => ({
+    ...state,
+    currentUser: {
+      ...state.currentUser,
+      ...updatedTrainer 
+    }
   }))
 );

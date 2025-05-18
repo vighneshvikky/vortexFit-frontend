@@ -1,29 +1,31 @@
-// import { inject } from '@angular/core';
-// import { CanActivateFn, Router } from '@angular/router';
-// import { Store } from '@ngrx/store';
-// import { map, take } from 'rxjs/operators';
-// import { selectCurrentUser } from '../../features/auth/store/selectors/auth.selectors';
+// role.guard.ts
+import {
+  CanActivateFn,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router,
+} from '@angular/router';
+import { inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AuthState } from '../../features/auth/store/auth.state';
+import { selectCurrentUser } from '../../features/auth/store/selectors/auth.selectors';
+import { map, take } from 'rxjs/operators';
 
-// export const roleGuard: CanActivateFn = (route) => {
-//   const store = inject(Store);
-//   const router = inject(Router);
-//   const requiredRole = route.data['role'];
+export function RoleGuard(allowedRoles: string[]): CanActivateFn {
+  return (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+    const store = inject(Store<AuthState>);
+    const router = inject(Router);
 
-//   return store.select(selectCurrentUser).pipe(
-//     take(1),
-//     map(user => {
-//       if (user && user.role === requiredRole) {
-//         return true;
-//       }
-      
-      
-//       router.navigate(['/auth/login'], { 
-//         queryParams: { 
-//           role: requiredRole,
-//           returnUrl: router.url 
-//         }
-//       });
-//       return false;
-//     })
-//   );
-// }; 
+    return store.select(selectCurrentUser).pipe(
+      take(1),
+      map((user) => {
+        if (user && allowedRoles.includes(user.role)) {
+          return true;
+        } else {
+          router.navigate(['']);
+          return false;
+        }
+      })
+    );
+  };
+}

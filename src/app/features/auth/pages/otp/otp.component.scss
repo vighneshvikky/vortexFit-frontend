@@ -18,3 +18,171 @@ button {
   font-size: 14px;
   color: red;
 }
+
+:root {
+  --primary-red: #dc2626;
+  --primary-red-light: #ef4444;
+  --primary-red-dark: #b91c1c;
+  --secondary-red: #fef2f2;
+  --text-dark: #1f2937;
+  --text-light: #6b7280;
+  --border-color: #fecaca;
+}
+
+.otp-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondary-red);
+  padding: 1rem;
+
+  .otp-card {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.1), 0 2px 4px -1px rgba(220, 38, 38, 0.06);
+
+    .title {
+      color: var(--text-dark);
+      font-size: 1.875rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: var(--text-light);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .otp-form {
+      .form-group {
+        margin-bottom: 1.5rem;
+
+        label {
+          display: block;
+          color: var(--text-dark);
+          font-weight: 500;
+          margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border: 2px solid var(--border-color);
+          border-radius: 0.5rem;
+          font-size: 1rem;
+          transition: all 0.2s;
+
+          &:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+          }
+
+          &::placeholder {
+            color: var(--text-light);
+          }
+        }
+      }
+
+      .btn-primary {
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        background-color: var(--primary-red);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+
+        &:hover {
+          background-color: var(--primary-red-dark);
+        }
+
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+
+        i {
+          font-size: 1rem;
+        }
+      }
+    }
+
+    .resend-section {
+      margin-top: 2rem;
+      text-align: center;
+
+      .btn-secondary {
+        padding: 0.75rem 1.5rem;
+        background-color: white;
+        color: var(--primary-red);
+        border: 2px solid var(--primary-red);
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        &:hover:not(:disabled) {
+          background-color: var(--secondary-red);
+        }
+
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+          border-color: var(--text-light);
+          color: var(--text-light);
+        }
+
+        i {
+          font-size: 1rem;
+        }
+      }
+
+      .timer {
+        margin-top: 1rem;
+        color: var(--text-light);
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+
+        i {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 640px) {
+  .otp-container {
+    padding: 1rem;
+
+    .otp-card {
+      padding: 1.5rem;
+
+      .title {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}

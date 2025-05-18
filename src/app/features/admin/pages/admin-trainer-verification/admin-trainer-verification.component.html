@@ -1,0 +1,128 @@
+<div class="verification-container">
+  <div class="header">
+    <h2 class="title">Trainer Applications</h2>
+    <div class="actions">
+      <button class="btn-primary" (click)="loadTrainers()">
+        <i class="fas fa-sync-alt mr-2"></i>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- Loading State -->
+    <div *ngIf="loading$ | async" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading trainers...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="(trainers$ | async)?.length === 0 && !(loading$ | async)" class="empty-state">
+      <i class="fas fa-check-circle text-gray-400 text-4xl mb-4"></i>
+      <p class="text-gray-400">No pending applications at the moment.</p>
+    </div>
+
+    <!-- Trainers List -->
+    <div *ngFor="let trainer of trainers$ | async" class="trainer-card">
+      <div class="trainer-info">
+        <!-- <img class="trainer-avatar" [src]="trainer.profileImage || 'assets/images/default-avatar.png'" alt="Trainer avatar" /> -->
+        <div class="trainer-details">
+          <div class="trainer-header">
+            <span class="trainer-name">{{ trainer.name }}</span>
+            <span
+              class="status-badge"
+              [ngClass]="{
+                'pending': trainer.verificationStatus === 'pending',
+                'rejected': trainer.verificationStatus === 'rejected',
+                'approved': trainer.verificationStatus === 'approved'
+              }"
+            >
+              {{ trainer.verificationStatus | titlecase }}
+            </span>
+          </div>
+          <div class="trainer-email">{{ trainer.email }}</div>
+          <div class="trainer-phone">{{ trainer.phoneNumber }}</div>
+          <div class="trainer-meta">
+            <div>
+              <span class="meta-label">Specialization:</span>
+              <span class="specialty-tag">{{ trainer.specialization }}</span>
+            </div>
+            <div>
+              <span class="meta-label">Experience:</span>
+              <span>{{ trainer.experience }} years</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="trainer-actions">
+        <button class="btn-secondary" (click)="openDetails(trainer)">View Details</button>
+        <button class="btn-success" *ngIf="trainer.verificationStatus === 'pending'" (click)="onVerifyTrainer(trainer.id)">Approve</button>
+        <button class="btn-danger" *ngIf="trainer.verificationStatus === 'pending'" (click)="openRejectionModal(trainer)">Reject</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Trainer Details Modal -->
+<div class="modal-backdrop" *ngIf="selectedTrainer">
+  <div class="modal">
+    <h2 class="modal-title">Trainer Details</h2>
+    <div class="modal-content">
+      <div class="modal-avatar">
+        <img [src]="selectedTrainer.profileImage || 'assets/images/default-avatar.png'" alt="Trainer avatar" />
+      </div>
+      <div class="modal-fields">
+        <p><strong>Name:</strong> {{ selectedTrainer.name }}</p>
+        <p><strong>Email:</strong> {{ selectedTrainer.email }}</p>
+        <p><strong>Phone:</strong> {{ selectedTrainer.phoneNumber }}</p>
+        <p><strong>Experience:</strong> {{ selectedTrainer.experience }} years</p>
+        <p><strong>Specialization:</strong> {{ selectedTrainer.specialization }}</p>
+        <p><strong>Bio:</strong> {{ selectedTrainer.bio }}</p>
+        <p><strong>Verification Status:</strong> 
+          <span class="status-badge"
+            [ngClass]="{
+              'pending': selectedTrainer.verificationStatus === 'pending',
+              'rejected': selectedTrainer.verificationStatus === 'rejected',
+              'approved': selectedTrainer.verificationStatus === 'approved'
+            }"
+          >
+            {{ selectedTrainer.verificationStatus | titlecase }}
+          </span>
+        </p>
+        <p><strong>Certification:</strong> 
+          <a [href]="selectedTrainer.certificationUrl" target="_blank" class="link">View</a>
+        </p>
+        <p><strong>ID Proof:</strong> 
+          <a [href]="selectedTrainer.idProofUrl" target="_blank" class="link">View</a>
+        </p>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-success" (click)="acceptTrainer(selectedTrainer.id)">Accept</button>
+      <button class="btn-danger" (click)="openRejectionModal(selectedTrainer)">Reject</button>
+      <button class="btn-secondary" (click)="closeDetails()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Rejection Reason Modal -->
+<div *ngIf="showRejectionModal" class="modal">
+  <h3>Reject Trainer</h3>
+
+  <label for="reason">Select a reason for rejection:</label>
+  <select id="reason" [(ngModel)]="selectedRejectionReason">
+    <option value="" disabled selected>Select a reason</option>
+    <option *ngFor="let reason of rejectionReasons" [value]="reason">
+      {{ reason }}
+    </option>
+  </select>
+
+  <div class="modal-actions">
+    <button (click)="submitRejection()" [disabled]="!selectedRejectionReason">Submit</button>
+    <button (click)="closeRejectionModal()">Cancel</button>
+  </div>
+</div>
+
+
+
+  

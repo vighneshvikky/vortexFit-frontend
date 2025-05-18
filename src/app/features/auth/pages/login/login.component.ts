@@ -1,24 +1,24 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { login } from '../../store/actions/auth.actions';
-import { AuthState } from '../../store/auth.state';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { AppState } from '../../../../store/app.state';
+import * as AuthActions from '../../store/actions/auth.actions';
 import {
   selectAuthError,
-  selectIsLoading,
+  selectAuthLoading,
 } from '../../store/selectors/auth.selectors';
-import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
 import { NotyService } from '../../../../core/services/noty.service';
 import { AuthService } from '../../../../core/services/auth.service';
-
+import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../../../../enviorments/environment';
 
 @Component({
@@ -28,67 +28,45 @@ import { environment } from '../../../../../enviorments/environment';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
   role: 'user' | 'trainer' = 'user';
-  isLoading = false;
-  errorMessage: string | null = null;
-  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private fb: FormBuilder,
-    private store: Store<AuthState>,
+    private store: Store<AppState>,
     private router: Router,
-    private route: ActivatedRoute,
     private notyService: NotyService,
     private authService: AuthService,
+    private route: ActivatedRoute
   ) {
+
+    const roleParam = this.route.snapshot.queryParamMap.get('role');
+  this.role = roleParam === 'trainer' ? 'trainer' : 'user';
+
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-    });
-  }
-
-  ngOnInit() {
-    this.route.queryParams.subscribe((params) => {
-      this.role = params['role'] || 'user';
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
 
-    this.subscriptions.add(
-      this.store.select(selectIsLoading).subscribe((loading) => {
-        this.isLoading = loading;
-      })
-    );
-
-    this.subscriptions.add(
-      this.store.select(selectAuthError).subscribe((error) => {
-        if (error) {
-          this.errorMessage = error;
-          this.notyService.showError(error);
-        }
-      })
-    );
+    this.loading$ = this.store.select(selectAuthLoading);
+    this.error$ = this.store.select(selectAuthError);
   }
 
-
-
-
-
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe();
-  }
+ngOnInit(): void {
+  
+  this.route.queryParams.subscribe((params) => {
+    this.role = params['role'] === 'trainer' ? 'trainer' : 'user';
+  });
+}
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      this.errorMessage = null;
-      this.store.dispatch(
-        login({
-          credentials: {
-            ...this.loginForm.value,
-            role: this.role,
-          },
-        })
-      );
+      console.log('role', this.role)
+      const { email, password } = this.loginForm.value;
+      this.store.dispatch(AuthActions.login({ email, password, role: this.role }));
     }
   }
 

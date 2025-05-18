@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 export interface SidebarMenuItem {
   id: string;
@@ -8,12 +9,19 @@ export interface SidebarMenuItem {
   badge?: number;
 }
 
+export interface GetUsersQuery {
+  page?: number;
+  limit?: number;
+  
+}
+
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
-  
+  styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent {
   @Input() sidebarOpen = true;
@@ -26,10 +34,10 @@ export class SidebarComponent {
   @Input() menuItems: SidebarMenuItem[] = [
     { id: 'dashboard', label: 'Dashboard', icon: 'fa-tachometer-alt' },
     { id: 'users', label: 'Users', icon: 'fa-users' },
-    { id: 'verifications', label: 'Verifications', icon: 'fa-check-circle', badge: 3 },
+    { id: 'verifications', label: 'Verifications', icon: 'fa-check-circle' },
     { id: 'plans', label: 'Plans', icon: 'fa-list-alt' },
     { id: 'earnings', label: 'Earnings', icon: 'fa-dollar-sign' },
-    { id: 'notifications', label: 'Notifications', icon: 'fa-bell', badge: 5 },
+    { id: 'notifications', label: 'Notifications', icon: 'fa-bell'},
     { id: 'settings', label: 'Settings', icon: 'fa-cog' }
   ];
 
@@ -39,6 +47,7 @@ export class SidebarComponent {
 
   onMenuItemClick(itemId: string): void {
     this.activeMenuItem = itemId;
+    console.log('itemId', itemId);
     this.menuItemClick.emit(itemId);
   }
 

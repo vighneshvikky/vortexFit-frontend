@@ -19,7 +19,7 @@ export class OtpComponent implements OnInit {
   message = '';
   errorMessage = '';
 
-  timer = 30;
+  timer = 60;
   isResendDisabled = true;
   interval: any;
 

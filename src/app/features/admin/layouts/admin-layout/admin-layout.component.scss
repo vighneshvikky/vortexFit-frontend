@@ -1,0 +1,28 @@
+.admin-layout {
+  @apply flex h-screen bg-gray-900 text-gray-100;
+
+  .content {
+    @apply flex-1 overflow-hidden;
+    
+    .content-wrapper {
+      @apply h-full overflow-y-auto p-6;
+      
+      // Custom scrollbar for dark theme
+      &::-webkit-scrollbar {
+        @apply w-2;
+      }
+      
+      &::-webkit-scrollbar-track {
+        @apply bg-gray-800;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        @apply bg-gray-600 rounded-full;
+        
+        &:hover {
+          @apply bg-gray-500;
+        }
+      }
+    }
+  }
+} 

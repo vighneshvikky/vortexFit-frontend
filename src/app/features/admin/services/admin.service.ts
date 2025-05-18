@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../enviorments/environment';
+import { GetUsersQuery } from '../../../shared/components/sidebar/sidebar.component';
+import { Trainer } from '../../trainer/models/trainer.interface';
 
 export interface AdminLoginRequest {
   email: string;
@@ -60,8 +62,6 @@ export class AdminService {
     });
   }
 
-
-
   toggleBlockStatus(
     userId: string,
     role: 'user' | 'trainer'
@@ -73,5 +73,23 @@ export class AdminService {
         params: { role },
       }
     );
+  }
+
+  getUnverifiedTrainers(query: GetUsersQuery): Observable<PaginatedResponse<Trainer>> {
+    return this.http.get<PaginatedResponse<Trainer>>(`${this.apiUrl}/listTrainers`, {
+      params: query as any,
+    });
+  }
+
+  getTrainers(): Observable<Trainer[]> {
+    return this.http.get<Trainer[]>(`${this.apiUrl}/trainers`);
+  }
+
+  acceptTrainer(trainerId: string): Observable<Trainer> {
+    return this.http.patch<Trainer>(`${this.apiUrl}/trainers/${trainerId}/accept`, {});
+  }
+
+  rejectTrainer(trainerId: string, reason: string): Observable<Trainer> {
+    return this.http.patch<Trainer>(`${this.apiUrl}/trainers/${trainerId}/reject`, { reason });
   }
 }

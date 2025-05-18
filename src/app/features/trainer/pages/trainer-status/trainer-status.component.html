@@ -1,0 +1,64 @@
+<!-- <div class="status-container">
+  <ng-container *ngIf="trainer$ | async as trainer">
+    <div class="status-card">
+      <div class="status-header">
+        <h2>Verification Status</h2>
+      </div>
+
+      <div class="status-content">
+        <div class="trainer-info">
+          <h3>{{ trainer.name }}</h3>
+          <p><strong>Email:</strong> {{ trainer.email }}</p>
+          <p><strong>Phone:</strong> {{ trainer.phone }}</p>
+          <p><strong>Specialties:</strong> {{ trainer.specialties?.join(', ') }}</p>
+        </div>
+
+        <div class="status-section" [ngClass]="trainer.verificationStatus">
+          <div class="status-badge">
+            {{ trainer.verificationStatus | titlecase }}
+          </div>
+
+          <div *ngIf="trainer.verificationStatus === 'rejected'" class="rejection-reason">
+            <h4>Reason for Rejection</h4>
+            <p>{{ trainer.rejectionReason || 'No specific reason provided' }}</p>
+            <button class="btn btn-primary" (click)="resubmitForm()">
+              Resubmit Application
+            </button>
+          </div>
+
+          <div *ngIf="trainer.verificationStatus === 'approved'" class="approval-message">
+            <h4>Congratulations!</h4>
+            <p>Your trainer account has been approved. You can now access your dashboard.</p>
+            <button class="btn btn-primary" (click)="navigateToDashboard()">
+              Go to Dashboard
+            </button>
+          </div>
+
+          <div *ngIf="trainer.verificationStatus === 'pending'" class="pending-message">
+            <h4>Application Under Review</h4>
+            <p>Your application is currently being reviewed. We'll notify you once the review is complete.</p>
+          </div>
+        </div>
+
+        <div class="documents" *ngIf="trainer.documents">
+          <h4>Submitted Documents</h4>
+          <div class="document-list">
+            <div class="document-item" *ngIf="trainer.documents.idProof">
+              <strong>ID Proof:</strong>
+              <a [href]="trainer.documents.idProof" target="_blank" class="link">View Document</a>
+            </div>
+            <div class="document-item" *ngIf="trainer.documents.certification">
+              <strong>Certification:</strong>
+              <a [href]="trainer.documents.certification" target="_blank" class="link">View Document</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <div *ngIf="!(trainer$ | async)" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading trainer information...</p>
+  </div>
+</div> -->

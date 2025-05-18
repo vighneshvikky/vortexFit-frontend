@@ -1,21 +1,56 @@
-<form (ngSubmit)="verifyOtp()">
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input type="email" id="email" [(ngModel)]="email" name="email" class="form-control" required />
+<div class="otp-container">
+  <div class="otp-card">
+    <h2 class="title">Verify Your Email</h2>
+    <p class="subtitle">Please enter the OTP sent to your email address</p>
+
+    <form (ngSubmit)="verifyOtp()" class="otp-form">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input 
+          type="email" 
+          id="email" 
+          [(ngModel)]="email" 
+          name="email" 
+          class="form-control" 
+          required 
+          placeholder="Enter your email"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="otp">OTP Code</label>
+        <input 
+          type="text" 
+          id="otp" 
+          [(ngModel)]="otp" 
+          name="otp" 
+          class="form-control" 
+          required 
+          placeholder="Enter OTP"
+          maxlength="6"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-check"></i>
+        Verify OTP
+      </button>
+    </form>
+
+    <div class="resend-section">
+      <button 
+        (click)="resendOtp()" 
+        class="btn btn-secondary" 
+        [disabled]="isResendDisabled"
+      >
+        <i class="fas fa-redo"></i>
+        Resend OTP
+      </button>
+
+      <div *ngIf="isResendDisabled" class="timer">
+        <i class="fas fa-clock"></i>
+        Resend available in: {{ timer }} seconds
+      </div>
+    </div>
   </div>
-
-  <div class="form-group">
-    <label for="otp">OTP</label>
-    <input type="text" id="otp" [(ngModel)]="otp" name="otp" class="form-control" required />
-  </div>
-
-  <button type="submit" class="btn btn-primary">Verify OTP</button>
-</form>
-
-<button (click)="resendOtp()" class="btn btn-secondary mt-2" [disabled]="isResendDisabled">
-  Resend OTP
-</button>
-
-<div *ngIf="isResendDisabled" class="timer">
-  Resend OTP available in: {{ timer }} seconds
 </div>

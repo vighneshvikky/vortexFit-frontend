@@ -3,6 +3,5 @@ export interface BaseAccount {
     name: string;
     role: 'user' | 'trainer'; 
     email: string;
-    isBlocked: boolean;
   }
   
