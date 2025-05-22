@@ -7,21 +7,26 @@ import { provideStore } from '@ngrx/store';
 import { authReducer } from './features/auth/store/reducers/auth.reducer';
 import { provideEffects } from '@ngrx/effects';
 import { AuthEffects } from './features/auth/store/effects/auth.effects';
-import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
-import { environment } from '../enviorments/environment';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { usersReducer } from './store/admin/users/users.reducer';
 import { UsersEffects } from './store/admin/users/users.effects';
+import { metaReducers } from '../meta-reducers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(),
-    provideStore({
+    provideStore(
+      {
       auth: authReducer,
       users: usersReducer,
-    }),
+    },
+    {
+      metaReducers,
+    }
+  ),
+
     provideEffects([AuthEffects, UsersEffects]),
     provideAnimations(),
     {

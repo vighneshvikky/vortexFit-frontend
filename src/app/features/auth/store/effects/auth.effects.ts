@@ -1,16 +1,24 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from '../../../../core/services/auth.service';
-import { AdminService, User, AdminLoginResponse } from '../../../admin/services/admin.service';
-import { login, loginSuccess, loginFailure, AuthenticatedUser } from '../actions/auth.actions';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { of, Observable } from 'rxjs';
+import {
+  AdminService,
+  User,
+  AdminLoginResponse,
+} from '../../../admin/services/admin.service';
+import {
+  login,
+  loginSuccess,
+  loginFailure,
+  googleLogin,
+} from '../actions/auth.actions';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { Router } from '@angular/router';
-import { Trainer } from '../../../trainer/models/trainer.interface';
 import { Admin } from '../../../admin/models/admin.interface';
-import { LoginResponse } from '../../../../core/interfaces/auth/login-response.model';
-import { ApiResponse } from '../../../../core/models/api-response.model';
 
+import { NotyService } from '../../../../core/services/noty.service';
+import { Trainer } from '../../../trainer/models/trainer.interface';
 
 type UserRole = 'user' | 'trainer' | 'admin';
 
@@ -20,20 +28,20 @@ export class AuthEffects {
   private authService = inject(AuthService);
   private adminService = inject(AdminService);
   private router = inject(Router);
+  private notyService = inject(NotyService);
 
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(login),
       switchMap((action) => {
         const { email, password, role } = action;
-        console.log('login data from fe action', action)  
         if (role === 'admin') {
           return this.adminService.login({ email, password }).pipe(
             map((response: AdminLoginResponse) => {
               const admin: Admin = {
                 id: response.id,
                 email: response.email,
-                role: 'admin'
+                role: 'admin',
               };
               return loginSuccess({ user: admin });
             }),
@@ -44,57 +52,82 @@ export class AuthEffects {
               } else if (error.message) {
                 errorMsg = error.message;
               }
+              this.notyService.showError(errorMsg);
               return of(loginFailure({ error: errorMsg }));
             })
           );
         }
 
-        // For user/trainer
-        return this.authService.login({ email, password, role: role as 'user' | 'trainer' }).pipe(
-          map((response: LoginResponse) => {
-            if (!response) {
-              throw new Error('No response received');
-            }
-            return loginSuccess({ user: response });
-          }),
-          catchError((error) => {
-            let errorMsg = 'Login failed';
-            if (error.error?.message) {
-              errorMsg = error.error.message;
-            } else if (error.message) {
-              errorMsg = error.message;
-            }
-            return of(loginFailure({ error: errorMsg }));
-          })
-        );
+        return this.authService
+          .login({ email, password, role: role as 'user' | 'trainer' })
+          .pipe(
+            map((response) => {
+              console.log('response', response);
+              if (!response) {
+                throw new Error('No response received');
+              }
+              return loginSuccess({ user: response.user });
+            }),
+            catchError((error) => {
+              let errorMsg = 'Login failed';
+              if (error.error?.message) {
+                errorMsg = error.error.message;
+              } else if (error.message) {
+                errorMsg = error.message;
+              }
+              this.notyService.showError(errorMsg);
+              return of(loginFailure({ error: errorMsg }));
+            })
+          );
       })
     )
+  );
+
+  googleLogin$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(googleLogin),
+        tap(({ role }) => {
+          window.location.href = `http://localhost:3000/auth/google/redirect?role=${role}`;
+        })
+      ),
+    { dispatch: false }
   );
 
   redirectAfterLogin$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(loginSuccess),
-        map(({ user }) => {
+        tap(({ user }) => {
           if (!user || !user.role) {
-            console.error('User or role is undefined:', user);
+            console.log('User or role is undefined:', user);
+            this.notyService.showError('Invalid user data received');
             return;
           }
 
           const role = user.role as UserRole;
-          switch (role) {
-            case 'user':
-              this.router.navigate(['/user/dashboard']);
-              break;
-            case 'trainer':
-              this.router.navigate(['/trainer/trainer-requests']);
-              break;
-            case 'admin':
-              this.router.navigate(['/admin/dashboard']);
-              break;
-            default:
-              console.error('Unknown role:', role);
-              break;
+          console.log('role', role);
+          if (role === 'trainer' || role === 'user') {
+            const verifiedUser = user as User | Trainer;
+            console.log('verification', verifiedUser.isVerified);
+            console.log('verifiedUser', verifiedUser);
+            if (verifiedUser.isVerified) {
+              const dashboardRoute =
+                role === 'trainer' ? '/trainer/dashboard' : '/user/dashboard';
+              this.router.navigate([dashboardRoute]);
+            } else {
+              console.log('i am user')
+              const requestRoute =
+                role === 'trainer'
+                  ? '/trainer/trainer-requests'
+                  : '/user/user-details';
+              this.router.navigate([requestRoute]);
+            }
+          } else if (role === 'admin') {
+            this.router.navigate(['/admin/dashboard']);
+          } else {
+            console.error('Unknow role:', role);
+            this.notyService.showError('Invalid user role');
           }
         })
       ),

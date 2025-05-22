@@ -1,25 +1,25 @@
-<div class="min-h-screen bg-gradient-to-br from-red-50 to-red-100 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-3xl mx-auto">
-    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+<div class="min-h-screen bg-gradient-to-br from-red-50 via-red-100 to-red-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-red-100">
       <!-- Header -->
-      <div class="bg-red-600 px-6 py-4">
-        <h2 class="text-2xl font-bold text-white">Trainer Verification</h2>
-        <p class="text-red-100 mt-1">Complete your profile to become a verified trainer</p>
+      <div class="bg-gradient-to-r from-red-600 to-red-700 px-8 py-6">
+        <h2 class="text-3xl font-bold text-white tracking-tight">Trainer Verification</h2>
+        <p class="text-red-100 mt-2 text-lg">Complete your profile to become a verified trainer</p>
       </div>
 
       <!-- Form -->
-      <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()" class="p-6 space-y-6">
+      <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()" class="p-8 space-y-8">
         <!-- Personal Information -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- Name -->
-          <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+          <div class="space-y-2">
+            <label for="name" class="block text-sm font-semibold text-gray-700">Full Name</label>
             <input
               type="text"
               id="name"
               formControlName="name"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-              [ngClass]="{'border-red-500': name?.invalid && name?.touched}"
+              class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 transition duration-150"
+              [ngClass]="{'border-red-500 ring-1 ring-red-500': name?.invalid && name?.touched}"
             />
             <div *ngIf="name?.invalid && name?.touched" class="mt-1 text-sm text-red-600">
               <p *ngIf="name?.errors?.['required']">Name is required</p>
@@ -30,14 +30,14 @@
           </div>
 
           <!-- Email -->
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+          <div class="space-y-2">
+            <label for="email" class="block text-sm font-semibold text-gray-700">Email Address</label>
             <input
               type="email"
               id="email"
               formControlName="email"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-              [ngClass]="{'border-red-500': email?.invalid && email?.touched}"
+              class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 transition duration-150"
+              [ngClass]="{'border-red-500 ring-1 ring-red-500': email?.invalid && email?.touched}"
             />
             <div *ngIf="email?.invalid && email?.touched" class="mt-1 text-sm text-red-600">
               <p *ngIf="email?.errors?.['required']">Email is required</p>
@@ -46,14 +46,14 @@
           </div>
 
           <!-- Phone Number -->
-          <div>
-            <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
+          <div class="space-y-2">
+            <label for="phoneNumber" class="block text-sm font-semibold text-gray-700">Phone Number</label>
             <input
               type="tel"
               id="phoneNumber"
               formControlName="phoneNumber"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-              [ngClass]="{'border-red-500': phoneNumber?.invalid && phoneNumber?.touched}"
+              class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 transition duration-150"
+              [ngClass]="{'border-red-500 ring-1 ring-red-500': phoneNumber?.invalid && phoneNumber?.touched}"
             />
             <div *ngIf="phoneNumber?.invalid && phoneNumber?.touched" class="mt-1 text-sm text-red-600">
               <p *ngIf="phoneNumber?.errors?.['required']">Phone number is required</p>
@@ -62,14 +62,14 @@
           </div>
 
           <!-- Experience -->
-          <div>
-            <label for="experience" class="block text-sm font-medium text-gray-700">Years of Experience</label>
+          <div class="space-y-2">
+            <label for="experience" class="block text-sm font-semibold text-gray-700">Years of Experience</label>
             <input
               type="number"
               id="experience"
               formControlName="experience"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-              [ngClass]="{'border-red-500': experience?.invalid && experience?.touched}"
+              class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 transition duration-150"
+              [ngClass]="{'border-red-500 ring-1 ring-red-500': experience?.invalid && experience?.touched}"
             />
             <div *ngIf="experience?.invalid && experience?.touched" class="mt-1 text-sm text-red-600">
               <p *ngIf="experience?.errors?.['required']">Experience is required</p>
@@ -79,13 +79,13 @@
         </div>
 
         <!-- Specialization -->
-        <div>
-          <label for="specialization" class="block text-sm font-medium text-gray-700">Specialization</label>
+        <div class="space-y-2">
+          <label for="specialization" class="block text-sm font-semibold text-gray-700">Specialization</label>
           <select
             id="specialization"
             formControlName="specialization"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-            [ngClass]="{'border-red-500': specialization?.invalid && specialization?.touched}"
+            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 transition duration-150"
+            [ngClass]="{'border-red-500 ring-1 ring-red-500': specialization?.invalid && specialization?.touched}"
           >
             <option value="">Select your specialization</option>
             <option *ngFor="let spec of specializations" [value]="spec.value">
@@ -98,29 +98,29 @@
         </div>
 
         <!-- Bio -->
-        <div>
-          <label for="bio" class="block text-sm font-medium text-gray-700">Bio</label>
+        <div class="space-y-2">
+          <label for="bio" class="block text-sm font-semibold text-gray-700">Bio</label>
           <textarea
             id="bio"
             formControlName="bio"
             rows="4"
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-            [ngClass]="{'border-red-500': bio?.invalid && bio?.touched}"
+            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 transition duration-150"
+            [ngClass]="{'border-red-500 ring-1 ring-red-500': bio?.invalid && bio?.touched}"
             placeholder="Tell us about your experience, achievements, and training philosophy..."
           ></textarea>
           <div *ngIf="bio?.invalid && bio?.touched" class="mt-1 text-sm text-red-600">
             <p *ngIf="bio?.errors?.['required']">Bio is required</p>
-            <p *ngIf="bio?.errors?.['minlength']">Bio must be at least 10 characters</p>
-            <p *ngIf="bio?.errors?.['maxlength']">Bio must not exceed 500 characters</p>
+            <p *ngIf="bio?.errors?.['minlength']">Bio must be at least 2 characters</p>
+            <p *ngIf="bio?.errors?.['maxlength']">Bio must not exceed 10 characters</p>
             <p *ngIf="bio?.errors?.['minWords']">Bio must contain at least 2 words</p>
           </div>
         </div>
 
         <!-- Documents -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- Certificate -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Certification Document</label>
+          <div class="space-y-2">
+            <label class="block text-sm font-semibold text-gray-700">Certification Document</label>
             <div class="mt-1 flex items-center">
               <input
                 #certificateInput
@@ -132,7 +132,7 @@
               <button
                 type="button"
                 (click)="triggerFileInput('certification')"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                class="inline-flex items-center px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150"
               >
                 <i class="fas fa-upload mr-2"></i>
                 Upload Certification
@@ -147,8 +147,8 @@
           </div>
 
           <!-- ID Proof -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700">ID Proof</label>
+          <div class="space-y-2">
+            <label class="block text-sm font-semibold text-gray-700">ID Proof</label>
             <div class="mt-1 flex items-center">
               <input
                 #idProofInput
@@ -160,7 +160,7 @@
               <button
                 type="button"
                 (click)="triggerFileInput('idProof')"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                class="inline-flex items-center px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150"
               >
                 <i class="fas fa-upload mr-2"></i>
                 Upload ID Proof
@@ -176,11 +176,11 @@
         </div>
 
         <!-- Submit Button -->
-        <div class="flex justify-end mt-8">
+        <div class="flex justify-end mt-10">
           <button
             type="submit"
             [disabled]="verificationForm.invalid || isLoading"
-            class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-lg min-w-[200px]"
+            class="inline-flex items-center justify-center px-8 py-3.5 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-lg min-w-[200px]"
           >
             <i class="fas fa-spinner fa-spin mr-2" *ngIf="isLoading"></i>
             {{ isLoading ? 'Submitting...' : 'Submit for Verification' }}
@@ -192,7 +192,7 @@
 </div>
 
 <style>
-/* Add these styles for better button visibility */
+/* Enhanced styles for better visual appeal */
 button[type="submit"] {
   box-shadow: 0 4px 6px rgba(220, 38, 38, 0.2);
 }
@@ -202,13 +202,25 @@ button[type="submit"]:hover:not(:disabled) {
 }
 
 button[type="submit"]:disabled {
-  background-color: #ef4444;
+  background: linear-gradient(to right, #ef4444, #dc2626);
   opacity: 0.7;
+}
+
+input, select, textarea {
+  transition: all 0.2s ease-in-out;
+}
+
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
 @media (max-width: 640px) {
   button[type="submit"] {
     width: 100%;
+  }
+  
+  .p-8 {
+    padding: 1.5rem;
   }
 }
 </style>

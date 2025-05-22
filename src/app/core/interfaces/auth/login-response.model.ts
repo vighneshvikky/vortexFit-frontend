@@ -3,7 +3,9 @@ import { User } from "../../../features/admin/services/admin.service";
 import { Trainer } from "../../../features/trainer/models/trainer.interface";
 
 
-export type LoginResponse = User | Trainer
+export interface LoginResponse {
+  user: User | Trainer;
+}
 
 export type AdminResponse = Admin
   

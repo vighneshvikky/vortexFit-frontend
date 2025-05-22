@@ -18,7 +18,6 @@ import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.
 import { NotyService } from '../../../../core/services/noty.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ActivatedRoute } from '@angular/router';
-import { environment } from '../../../../../enviorments/environment';
 
 @Component({
   selector: 'app-login',
@@ -46,26 +45,46 @@ export class LoginComponent implements OnInit {
 
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
 
-    this.loading$ = this.store.select(selectAuthLoading).pipe(
-      map(loading => loading ?? false)
-    );
+    this.loading$ = this.store
+      .select(selectAuthLoading)
+      .pipe(map((loading) => loading ?? false));
     this.error$ = this.store.select(selectAuthError);
   }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.role = params['role'] === 'trainer' ? 'trainer' : 'user';
+
+      if (this.router.url.startsWith('/auth/callback')) {
+        const userJson = params['user'];
+        console.log('userJson', userJson)
+        if (userJson) {
+          try {
+            const user: AuthActions.AuthenticatedUser = JSON.parse(userJson);
+            console.log('user before dispaching', user)
+            this.store.dispatch(AuthActions.loginSuccess({ user }));
+          } catch (error) {
+            this.notyService.showError('Invalid user data format');
+            this.router.navigate(['/login']);
+          }
+        } else {
+          this.notyService.showError('No user data received');
+          this.router.navigate(['/login']);
+        }
+      }
     });
   }
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      console.log('role', this.role)
+      console.log('role', this.role);
       const { email, password } = this.loginForm.value;
-      this.store.dispatch(AuthActions.login({ email, password, role: this.role }));
+      this.store.dispatch(
+        AuthActions.login({ email, password, role: this.role })
+      );
     }
   }
 
@@ -73,5 +92,9 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/auth/forgot-password'], {
       queryParams: { role: this.role },
     });
+  }
+
+  onGoogleLogin() {
+    this.store.dispatch(AuthActions.googleLogin({ role: this.role }));
   }
 }

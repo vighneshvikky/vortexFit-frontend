@@ -26,7 +26,6 @@ export interface User {
   isVerified?: boolean;
   rejectionReason?: string;
   verificationStatus?: 'not_submitted' | 'pending' | 'rejected' | 'approved';
-  password?: string;
 }
 
 export interface GetUsersParams {

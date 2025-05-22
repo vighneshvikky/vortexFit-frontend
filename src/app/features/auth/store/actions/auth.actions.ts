@@ -7,8 +7,10 @@ export type AuthenticatedUser = User | Trainer | Admin;
 
 export const login = createAction(
   '[Auth] Login',
-  props<{ email: string; password: string, role: string }>()
+  props<{ email: string; password: string; role: string }>()
 );
+
+
 
 export const loginSuccess = createAction(
   '[Auth] Login Success',
@@ -19,6 +21,11 @@ export const loginFailure = createAction(
   '[Auth] Login Failure',
   props<{ error: string }>()
 );
+
+export const googleLogin = createAction(
+'[Auth] Google Login',
+props<{role: 'user' | 'trainer'}>()
+)
 
 export const logout = createAction('[Auth] Logout');
 

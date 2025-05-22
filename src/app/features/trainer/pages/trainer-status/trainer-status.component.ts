@@ -16,31 +16,31 @@ import { Router } from '@angular/router';
   imports: [CommonModule],
 })
 export class TrainerStatusComponent implements OnInit, OnDestroy {
-  currentUser$: Observable<any>;
-  verificationStatus: 'pending' | 'approved' | 'rejected' | 'not_submitted' | undefined;
+  currentUserStatus$: Observable<any>;
+  verificationStatus:
+    | 'pending'
+    | 'approved'
+    | 'rejected'
+    | 'not_submitted'
+    | undefined;
   trainerId: string | null = null;
   rejectionReason: string | null = null;
   private subscription: Subscription = new Subscription();
 
   constructor(private store: Store, private router: Router) {
-    this.currentUser$ = this.store.select(selectCurrentUser);
+    this.currentUserStatus$ = this.store.select(
+      selectCurrentUserVerificationStatus
+    );
   }
 
   ngOnInit(): void {
-    const userSubscription = this.currentUser$.pipe(
-      tap(user => {
-        console.log('Current User:', user);
-        if (user && user.role === 'trainer') {
-          this.trainerId = user.id;
-          this.verificationStatus = user.verificationStatus;
-          this.rejectionReason = user.rejectionReason || null;
-          console.log('Verification Status:', this.verificationStatus);
-        } else {
-          console.warn('No trainer data available');
-          this.verificationStatus = undefined;
-        }
-      })
-    ).subscribe();
+    const userSubscription = this.currentUserStatus$
+      .pipe(
+        tap((user) => {
+          console.log('user', user);
+        })
+      )
+      .subscribe();
 
     this.subscription.add(userSubscription);
   }

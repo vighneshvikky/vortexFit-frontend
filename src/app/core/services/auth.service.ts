@@ -48,14 +48,33 @@ export class AuthService {
     );
   }
 
+  // login(credentials: LoginRequest): Observable<LoginResponse> {
+  //   console.log('login data froom fe', credentials)
+  //   return this.http
+  //     .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials, {
+  //       withCredentials: true,
+  //     })
+  //     .pipe(map((res) => res.data));
+  // }
+
+
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    console.log('login data froom fe', credentials)
-    return this.http
-      .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials, {
-        withCredentials: true,
-      })
-      .pipe(map((res) => res.data));
-  }
+  console.log('login data from FE', credentials);
+
+  const data$ = this.http
+    .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials, {
+      withCredentials: true,
+    })
+    .pipe(map((res) => res.data));
+
+  // Subscribe here to actually log the response
+  data$.subscribe({
+    next: (data) => console.log('data from BE', data),
+    error: (err) => console.error('error from BE', err),
+  });
+
+  return data$;
+}
 
   forgotPassword(email: string, role: string): Observable<ApiResponse<null>> {
     return this.http.post<ApiResponse<null>>(`${this.api}/forgot-password`, {
@@ -104,4 +123,12 @@ export class AuthService {
       { withCredentials: true }
     );
   }
+
+  googleLogin(idToken: string, role: string){
+    return this.http.post<{user: any}>(
+      `${this.http}/google-login`,
+      {idToken, role}
+    )
+  }
+
 }
