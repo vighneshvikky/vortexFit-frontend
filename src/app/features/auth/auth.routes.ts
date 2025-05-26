@@ -6,7 +6,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { UserDashboardComponent } from '../user/pages/user-dashboard/user-dashboard.component';
-import { UserDetailsComponent } from '../../user-details/user-details.component';
+import { UserDetailsComponent } from '../user/pages/user-details/user-details.component';
 
 export const authRoutes: Routes = [
   { path: 'role', component: RoleSelectionComponent },

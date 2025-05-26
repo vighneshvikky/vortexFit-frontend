@@ -97,4 +97,8 @@ export class LoginComponent implements OnInit {
   onGoogleLogin() {
     this.store.dispatch(AuthActions.googleLogin({ role: this.role }));
   }
+  redirectTosignup(){
+    this.router.navigate(['/auth/signup'], {queryParams: {role: this.role}})
+  }
+
 }

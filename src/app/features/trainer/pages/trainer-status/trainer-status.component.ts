@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { map, Observable, tap, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
@@ -7,13 +7,14 @@ import {
   selectCurrentUserVerificationStatus,
 } from '../../../auth/store/selectors/auth.selectors';
 import { Router } from '@angular/router';
+import { fetchCurrentUser, fetchCurrentUserSuccess } from '../../../auth/store/actions/auth.actions';
 
 @Component({
   selector: 'app-trainer-status',
   standalone: true,
   templateUrl: './trainer-status.component.html',
   styleUrls: ['./trainer-status.component.scss'],
-  imports: [CommonModule],
+  imports: [CommonModule, AsyncPipe],
 })
 export class TrainerStatusComponent implements OnInit, OnDestroy {
   currentUserStatus$: Observable<any>;
@@ -28,20 +29,26 @@ export class TrainerStatusComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   constructor(private store: Store, private router: Router) {
-    this.currentUserStatus$ = this.store.select(
-      selectCurrentUserVerificationStatus
-    );
+this.currentUserStatus$ = this.store.select(selectCurrentUser).pipe(
+  tap(user => console.log('[Selector] Current User:', user))
+);
+
+
   }
 
   ngOnInit(): void {
-    const userSubscription = this.currentUserStatus$
-      .pipe(
-        tap((user) => {
-          console.log('user', user);
-        })
-      )
-      .subscribe();
+    this.store.dispatch(fetchCurrentUser());
 
+    const userSubscription = this.currentUserStatus$
+    .pipe(
+      tap((user) => {
+        console.log('user', user);
+        this.verificationStatus = user?.verificationStatus;
+        this.rejectionReason = user?.rejectionReason ?? null
+      })
+    )
+    .subscribe()
+ console.log('userScub=', userSubscription  )
     this.subscription.add(userSubscription);
   }
 

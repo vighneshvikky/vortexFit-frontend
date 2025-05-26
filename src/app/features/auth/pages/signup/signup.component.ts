@@ -101,4 +101,8 @@ export class SignupComponent implements OnInit {
   get confirmPassword() {
     return this.registerForm.get('confirmPassword');
   }
+
+  redirectToLogin(){
+    this.router.navigate(['/auth/login'], {queryParams: {role: this.role}})
+  }
 }

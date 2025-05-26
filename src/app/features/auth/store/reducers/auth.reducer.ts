@@ -42,7 +42,27 @@ export const authReducer = createReducer(
     ...state,
     currentUser: {
       ...state.currentUser,
-      ...updatedTrainer 
-    }
-  }))
+      ...updatedTrainer,
+    },
+  })),
+  on(AuthActions.updateCurrentUserVerificationStatus, (state, { status }) => ({
+    ...state,
+    currentUser: state.currentUser
+      ? { ...state.currentUser, verificationStatus: status }
+      : null,
+  })),
+  on(AuthActions.updateCurrentUserRejectionReason, (state, { reason }) => ({
+    ...state,
+    currentUser: state.currentUser
+      ? { ...state.currentUser, rejectionReason: reason }
+      : null,
+  })),
+
+on(AuthActions.setUser, (state, { user }) => ({
+  ...state,
+  currentUser: user,
+  loading: false,
+  error: null,
+})),
+
 );

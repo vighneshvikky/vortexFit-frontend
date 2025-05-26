@@ -86,7 +86,6 @@ export class TrainerVerificationComponent implements OnInit {
       .pipe(
         tap((user) => {
           if (user) {
-            console.log('user', user)
             this.trainerId = user._id;
             console.log('trainerId', this.trainerId);
             this.verificationForm.patchValue({
@@ -97,6 +96,8 @@ export class TrainerVerificationComponent implements OnInit {
         })
       )
       .subscribe();
+
+      
   }
 
   private minWords(min: number) {

@@ -18,8 +18,8 @@ export interface AdminLoginResponse {
 
 export interface User {
   _id: string;
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   role: 'user' | 'trainer';
   createdAt: string;
   isBlocked: boolean;
@@ -54,13 +54,15 @@ export class AdminService {
   login(credentials: AdminLoginRequest): Observable<AdminLoginResponse> {
     return this.http.post<AdminLoginResponse>(
       `${this.apiUrl}/login`,
-      credentials
+      credentials,
+      {withCredentials: true}
     );
   }
 
   getUsers(params: GetUsersParams): Observable<PaginatedResponse<User>> {
     return this.http.get<PaginatedResponse<User>>(`${this.apiUrl}/users`, {
       params: params as any,
+      withCredentials: true
     });
   }
 
@@ -74,6 +76,7 @@ export class AdminService {
       null,
       {
         params: { role },
+        withCredentials: true
       }
     );
   }
@@ -81,19 +84,20 @@ export class AdminService {
   getUnverifiedTrainers(query: GetUsersQuery): Observable<PaginatedResponse<Trainer>> {
     return this.http.get<PaginatedResponse<Trainer>>(`${this.apiUrl}/listTrainers`, {
       params: query as any,
+      withCredentials: true
     });
   }
 
   getTrainers(): Observable<Trainer[]> {
-    return this.http.get<Trainer[]>(`${this.apiUrl}/trainers`);
+    return this.http.get<Trainer[]>(`${this.apiUrl}/trainers`, {withCredentials: true});
   }
 
   acceptTrainer(trainerId: string): Observable<Trainer> {
-    return this.http.patch<Trainer>(`${this.apiUrl}/verify-trainer/${trainerId}`, {});
+    return this.http.patch<Trainer>(`${this.apiUrl}/verify-trainer/${trainerId}`, {}, {withCredentials: true});
   }
 
   rejectTrainer(trainerId: string, reason: string): Observable<Trainer> {
     console.log('trainerid', trainerId)
-    return this.http.patch<Trainer>(`${this.apiUrl}/reject-trainer/${trainerId}`, { reason });
+    return this.http.patch<Trainer>(`${this.apiUrl}/reject-trainer/${trainerId}`, { reason }, {withCredentials: true});
   }
 }

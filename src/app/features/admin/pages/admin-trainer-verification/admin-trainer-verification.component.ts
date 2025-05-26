@@ -8,6 +8,8 @@ import { selectUnverifiedTrainers, selectUsersLoaded } from '../../../../store/a
 import { loadUsers } from '../../../../store/admin/users/users.actions';
 import { AdminService } from '../../services/admin.service';
 import { NotyService } from '../../../../core/services/noty.service';
+import { updateCurrentUserRejectionReason, updateCurrentUserVerificationStatus } from '../../../auth/store/actions/auth.actions';
+import { selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';
 
 @Component({
   selector: 'app-admin-trainer-verification',
@@ -60,6 +62,14 @@ export class AdminTrainerVerificationComponent implements OnInit {
   approveTrainer(trainer: Trainer): void {
     
     if (trainer) {
+      if(!trainer) return;
+
+      this.store.select(selectCurrentUser).pipe(take(1)).subscribe((currentUser) => {
+        if(currentUser && currentUser._id === trainer._id){
+          this.store.dispatch(updateCurrentUserVerificationStatus({status: 'approved'}));
+        }
+
+      })
       this.adminService.acceptTrainer(trainer._id).subscribe({
         next: () => {
           this.notyService.showSuccess('Trainer approved successfully');
@@ -74,22 +84,31 @@ export class AdminTrainerVerificationComponent implements OnInit {
     }
   }
 
-  submitRejection(): void {
-    console.log('rejctedTrainer', this.selectedTrainer)
-     if (this.selectedTrainer?._id && this.rejectionReason.trim()) {
-      this.adminService.rejectTrainer(this.selectedTrainer._id, this.rejectionReason).subscribe({
-        next: () => {
-          this.notyService.showSuccess('Trainer rejected successfully');
-          this.closeRejectionModal();
-          this.closeTrainerModal();
-          this.store.dispatch(loadUsers({ params: { role: 'trainer' } }));
-        },
-        error: (error) => {
-          console.error('Error rejecting trainer:', error);
-          this.notyService.showError(error?.error?.message || 'Failed to reject trainer');
-        }
-      
-      });
-     }
-  }
+submitRejection(): void {
+  if (!this.selectedTrainer?._id || !this.rejectionReason.trim()) return;
+
+  // Step 1: Check if the trainer being rejected is the currently logged-in user
+  this.store.select(selectCurrentUser).pipe(take(1)).subscribe((currentUser) => {
+    if (currentUser && currentUser._id === this.selectedTrainer!._id) {
+      // Only update the auth state if the rejected trainer is the logged-in user
+      this.store.dispatch(updateCurrentUserVerificationStatus({ status: 'rejected' }));
+      this.store.dispatch(updateCurrentUserRejectionReason({ reason: this.rejectionReason }));
+    }
+
+    // Step 2: Proceed with rejection API call
+    this.adminService.rejectTrainer(this.selectedTrainer!._id, this.rejectionReason).subscribe({
+      next: () => {
+        this.notyService.showSuccess('Trainer rejected successfully');
+        this.closeRejectionModal();
+        this.closeTrainerModal();
+        this.store.dispatch(loadUsers({ params: { role: 'trainer' } }));
+      },
+      error: (error) => {
+        console.error('Error rejecting trainer:', error);
+        this.notyService.showError(error?.error?.message || 'Failed to reject trainer');
+      }
+    });
+  });
+}
+
 }

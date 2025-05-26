@@ -4,30 +4,48 @@ import {
   HttpInterceptor,
   HttpRequest,
   HttpErrorResponse,
-  HttpResponse
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, switchMap, throwError, BehaviorSubject, filter, take } from 'rxjs';
-import { AuthService } from '../services/auth.service'; // Update path as needed
+import {
+  Observable,
+  catchError,
+  switchMap,
+  throwError,
+  BehaviorSubject,
+  filter,
+  take,
+} from 'rxjs';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject = new BehaviorSubject<boolean>(false);
   private authService = inject(AuthService);
+  private router = inject(Router);
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(req).pipe(
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    console.log('AuthInterceptor intercepted:', req.url);
+    const clonedRequest = req.clone();
+    return next.handle(clonedRequest).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          return this.handle401Error(req, next);
+          return this.handle401Error(clonedRequest, next);
         }
         return throwError(() => error);
       })
     );
   }
 
-  private handle401Error(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  private handle401Error(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    console.log('handling 401 erro');
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(false);
@@ -36,18 +54,18 @@ export class AuthInterceptor implements HttpInterceptor {
         switchMap(() => {
           this.refreshTokenSubject.next(true);
           this.isRefreshing = false;
-          // Clone and retry the original request
           return next.handle(req);
         }),
-        catchError(err => {
+        catchError((err) => {
+          console.error('Token refresh failed', err);
           this.isRefreshing = false;
+          this.router.navigate(['/admin/login'])
           return throwError(() => err);
         })
       );
     } else {
-      // If refresh is already in progress, wait for it to complete
       return this.refreshTokenSubject.pipe(
-        filter(refreshed => refreshed),
+        filter((refreshed) => refreshed),
         take(1),
         switchMap(() => next.handle(req))
       );

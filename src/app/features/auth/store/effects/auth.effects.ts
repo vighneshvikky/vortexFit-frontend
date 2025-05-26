@@ -11,6 +11,9 @@ import {
   loginSuccess,
   loginFailure,
   googleLogin,
+  fetchCurrentUser,
+  fetchCurrentUserSuccess,
+  setUser,
 } from '../actions/auth.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -39,7 +42,7 @@ export class AuthEffects {
           return this.adminService.login({ email, password }).pipe(
             map((response: AdminLoginResponse) => {
               const admin: Admin = {
-                id: response.id,
+                _id: response.id,
                 email: response.email,
                 role: 'admin',
               };
@@ -100,7 +103,6 @@ export class AuthEffects {
         ofType(loginSuccess),
         tap(({ user }) => {
           if (!user || !user.role) {
-            console.log('User or role is undefined:', user);
             this.notyService.showError('Invalid user data received');
             return;
           }
@@ -115,8 +117,10 @@ export class AuthEffects {
               const dashboardRoute =
                 role === 'trainer' ? '/trainer/dashboard' : '/user/dashboard';
               this.router.navigate([dashboardRoute]);
+            } else if (verifiedUser.verificationStatus === 'rejected') {
+              this.router.navigate(['/trainer/trainer-status']);
             } else {
-              console.log('i am user')
+              console.log('i am user');
               const requestRoute =
                 role === 'trainer'
                   ? '/trainer/trainer-requests'
@@ -133,4 +137,37 @@ export class AuthEffects {
       ),
     { dispatch: false }
   );
+
+
+
+fetchCurrentUser$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(fetchCurrentUser),
+    switchMap(() =>
+      this.authService.getCurrentUser().pipe(
+        tap(user => console.log('Fetched current user:', user)),
+        map(user => setUser({ user })), 
+        catchError((error) => {
+          let errorMsg = 'Login failed';
+          if (error.error?.message) {
+            errorMsg = error.error.message;
+          } else if (error.message) {
+            errorMsg = error.message;
+          }
+          this.notyService.showError(errorMsg);
+          return of(loginFailure({ error: errorMsg }));
+        })
+      )
+    )
+  )
+);
+
+
+
 }
+
+
+
+
+
+
