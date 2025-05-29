@@ -1,12 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { GetUsersParams, User, AdminService } from '../../services/admin.service';
+import {
+  GetUsersParams,
+  User,
+  AdminService,
+} from '../../services/admin.service';
 import { Trainer } from '../../../trainer/models/trainer.interface';
 import { Observable, debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUsersList } from '../../../../store/admin/users/user.selector';
-import { loadUsers } from '../../../../store/admin/users/users.actions';
+import {
+  loadUsers,
+  toggleBlockAndLoadUsers,
+} from '../../../../store/admin/users/users.actions';
 import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
 
 type UserOrTrainer = User | Trainer;
@@ -16,7 +23,7 @@ type UserOrTrainer = User | Trainer;
   standalone: true,
   imports: [CommonModule, FormsModule, SpinnerComponent],
   templateUrl: './admin-user-listing.component.html',
-  styleUrls: ['./admin-user-listing.component.scss']
+  styleUrls: ['./admin-user-listing.component.scss'],
 })
 export class AdminUserListingComponent implements OnInit {
   users$!: Observable<UserOrTrainer[]>;
@@ -25,34 +32,29 @@ export class AdminUserListingComponent implements OnInit {
   loading = false;
   isLoadingUsers = false;
 
-  constructor(
-    private store: Store,
-    private adminService: AdminService
-  ) {
+  constructor(private store: Store, private adminService: AdminService) {
     this.setupSearch();
   }
 
   ngOnInit(): void {
+    this.users$ = this.store.select(selectUsersList);
     this.loadUsers();
   }
 
   private setupSearch(): void {
     this.searchSubject
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged()
-      )
-      .subscribe(term => {
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe((term) => {
         this.loadUsers(term);
       });
   }
 
   onSearch(term: string): void {
+    this.searchTerm = term;
     this.searchSubject.next(term);
   }
 
   loadUsers(searchTerm: string = ''): void {
-    this.isLoadingUsers = true;
     const params: GetUsersParams = {
       page: 1,
       limit: 10,
@@ -60,28 +62,24 @@ export class AdminUserListingComponent implements OnInit {
     };
 
     this.store.dispatch(loadUsers({ params }));
-    this.users$ = this.store.select(selectUsersList);
-    this.users$.subscribe(() => {
-      this.isLoadingUsers = false;
-    });
   }
 
   isTrainer(user: User | Trainer): user is Trainer {
     return (user as Trainer).verificationStatus !== undefined;
   }
 
-  toggleBlockStatus(user: User): void {
-    this.loading = true;
-    this.adminService.toggleBlockStatus(user._id, user.role)
-      .subscribe({
-        next: () => {
-          this.loadUsers(this.searchTerm);
-          this.loading = false;
-        },
-        error: (error) => {
-          console.error('Error toggling block status:', error);
-          this.loading = false;
-        }
-      });
+  toggleBlockStatus(user: User | Trainer): void {
+    console.log('user', user)
+  const params: GetUsersParams = {
+    page: 1,
+    limit: 10,
+    search: this.searchTerm
+  };
+
+  this.store.dispatch(toggleBlockAndLoadUsers({
+    userId: user._id,
+    role: user.role,
+    params
+  }))
   }
 }

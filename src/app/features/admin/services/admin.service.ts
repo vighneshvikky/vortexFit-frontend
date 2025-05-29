@@ -54,50 +54,63 @@ export class AdminService {
   login(credentials: AdminLoginRequest): Observable<AdminLoginResponse> {
     return this.http.post<AdminLoginResponse>(
       `${this.apiUrl}/login`,
-      credentials,
-      {withCredentials: true}
+      credentials
     );
   }
 
   getUsers(params: GetUsersParams): Observable<PaginatedResponse<User>> {
     return this.http.get<PaginatedResponse<User>>(`${this.apiUrl}/users`, {
       params: params as any,
-      withCredentials: true
     });
   }
 
-  toggleBlockStatus(
+  toggleBlockStatusAndFetchUsers(
     userId: string,
-    role: 'user' | 'trainer'
-  ): Observable<User> {
-    console.log('userId', userId);
-    return this.http.patch<User>(
+    role: string,
+    params: GetUsersParams
+  ) {
+    const { page = 1, limit = 10, search = '' } = params;
+    return this.http.patch<PaginatedResponse<User | Trainer>>(
       `${this.apiUrl}/users/${userId}/toggle-block`,
       null,
       {
-        params: { role },
-        withCredentials: true
+        params: {
+          role,
+          page: page.toString(),
+          limit: limit.toString(),
+          search,
+        },
       }
     );
   }
 
-  getUnverifiedTrainers(query: GetUsersQuery): Observable<PaginatedResponse<Trainer>> {
-    return this.http.get<PaginatedResponse<Trainer>>(`${this.apiUrl}/listTrainers`, {
-      params: query as any,
-      withCredentials: true
-    });
+  getUnverifiedTrainers(
+    query: GetUsersQuery
+  ): Observable<PaginatedResponse<Trainer>> {
+    return this.http.get<PaginatedResponse<Trainer>>(
+      `${this.apiUrl}/listTrainers`,
+      {
+        params: query as any,
+      }
+    );
   }
 
   getTrainers(): Observable<Trainer[]> {
-    return this.http.get<Trainer[]>(`${this.apiUrl}/trainers`, {withCredentials: true});
+    return this.http.get<Trainer[]>(`${this.apiUrl}/trainers`);
   }
 
   acceptTrainer(trainerId: string): Observable<Trainer> {
-    return this.http.patch<Trainer>(`${this.apiUrl}/verify-trainer/${trainerId}`, {}, {withCredentials: true});
+    return this.http.patch<Trainer>(
+      `${this.apiUrl}/verify-trainer/${trainerId}`,
+      {}
+    );
   }
 
   rejectTrainer(trainerId: string, reason: string): Observable<Trainer> {
-    console.log('trainerid', trainerId)
-    return this.http.patch<Trainer>(`${this.apiUrl}/reject-trainer/${trainerId}`, { reason }, {withCredentials: true});
+    console.log('trainerid', trainerId);
+    return this.http.patch<Trainer>(
+      `${this.apiUrl}/reject-trainer/${trainerId}`,
+      { reason }
+    );
   }
 }

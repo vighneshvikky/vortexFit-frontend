@@ -50,9 +50,7 @@ export class AuthService {
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
     const data$ = this.http
-      .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials, {
-        withCredentials: true,
-      })
+      .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials)
       .pipe(map((res) => res.data));
 
     // Subscribe here to actually log the response
@@ -95,7 +93,6 @@ export class AuthService {
       .post<ApiResponse<LoginResponse>>(
         `${this.api}/google`,
         { idToken, role },
-        { withCredentials: true }
       )
       .pipe(
         catchError((error) => {
@@ -109,7 +106,6 @@ export class AuthService {
     return this.http.post(
       `${this.api}/refresh/token`,
       {},
-      { withCredentials: true }
     );
   }
 
@@ -122,7 +118,7 @@ export class AuthService {
 
 getCurrentUser(): Observable<User | Trainer> {
   console.log('hai'); 
-  return this.http.get<User | Trainer>(`${this.api}/getUser`, { withCredentials: true });
+  return this.http.get<User | Trainer>(`${this.api}/getUser`);
 }
 
 }

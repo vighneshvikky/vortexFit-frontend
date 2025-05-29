@@ -15,6 +15,7 @@ import { TrainerService } from '../../services/trainer.service';
 import { NotyService } from '../../../../core/services/noty.service';
 import { Router } from '@angular/router';
 import { selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-trainer-verification',
@@ -31,6 +32,7 @@ export class TrainerVerificationComponent implements OnInit {
   currentUser$: Observable<any>;
   trainerId: string | null = null;
   isLoading = false;
+  uploadedFileNames: {[key in 'certification' | 'idProof']?: string} = {}
   specializations = [
     { value: 'cardio', label: 'Cardio' },
     { value: 'yoga', label: 'Yoga' },
@@ -43,7 +45,8 @@ export class TrainerVerificationComponent implements OnInit {
     private store: Store,
     private trainerService: TrainerService,
     private notyService: NotyService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {
     this.verificationForm = this.fb.group({
       name: [
@@ -96,8 +99,6 @@ export class TrainerVerificationComponent implements OnInit {
         })
       )
       .subscribe();
-
-      
   }
 
   private minWords(min: number) {
@@ -111,16 +112,47 @@ export class TrainerVerificationComponent implements OnInit {
   }
 
   onFileSelected(event: Event, type: 'certification' | 'idProof'): void {
+    
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const file = input.files[0];
+
       if (file.size > 5 * 1024 * 1024) {
-        this.notyService.showError('File size should be less than 5MB');
+        this.notyService.showError('File size should be less than 5mb');
         return;
       }
-      this.verificationForm.patchValue({
-        [type]: file,
-      });
+
+      this.trainerService
+        .getSignedUploadUrl(file.name, file.type, type)
+        .subscribe({
+          next: (res) => {
+            const { url, key } = res;
+
+            this.http
+              .put(url, file, {
+                headers: { 'Content-Type': file.type },
+              })
+              .subscribe({
+                next: () => {
+                  this.verificationForm.patchValue({
+                    [type]: key,
+                  });
+
+                  this.uploadedFileNames[type] = file.name
+
+                  this.notyService.showSuccess(
+                    `${type} uploaded successfully.`
+                  );
+                },
+                error: () => {
+                  this.notyService.showError(`Failed to upload ${type}`);
+                },
+              });
+          },
+          error: () => {
+            this.notyService.showError(`Could not get upload URL for ${type}`);
+          },
+        });
     }
   }
 
@@ -135,14 +167,14 @@ export class TrainerVerificationComponent implements OnInit {
   onSubmit(): void {
     if (this.verificationForm.valid && this.trainerId) {
       this.isLoading = true;
-      const formData = new FormData();
-
-      Object.keys(this.verificationForm.value).forEach((key) => {
-        formData.append(key, this.verificationForm.value[key]);
-      });
-
+    const formData = new FormData;
+  Object.entries(this.verificationForm.value).forEach(([key, value]) => {
+    if(value instanceof File || typeof value === 'string'){
+      formData.append(key, value)
+    }
+  })
       this.trainerService.updateProfile(this.trainerId, formData).subscribe({
-        next: (response) => {
+        next: () => {
           this.isLoading = false;
           this.notyService.showSuccess(
             'Verification request submitted successfully'
@@ -156,13 +188,6 @@ export class TrainerVerificationComponent implements OnInit {
           );
         },
       });
-    } else {
-      if (!this.trainerId) {
-        this.notyService.showError(
-          'Trainer ID not found. Please try logging in again.'
-        );
-      }
-      this.verificationForm.markAllAsTouched();
     }
   }
 

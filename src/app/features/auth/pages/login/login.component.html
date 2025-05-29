@@ -133,8 +133,17 @@
           signup
         </button>
       </div>
-    
-<button (click)="onGoogleLogin()">Continue with Google</button>
+    <div class="ml-20">
+<button 
+  (click)="onGoogleLogin()" 
+  class="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-700 font-medium rounded-xl shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-200"
+>
+  <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5">
+  Continue with Google
+</button>
+    </div>
+
+
 
     </form>
   </div>

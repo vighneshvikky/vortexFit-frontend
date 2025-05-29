@@ -1,7 +1,10 @@
 import { createReducer, on } from '@ngrx/store';
 import * as UsersActions from './users.actions';
 import { Trainer } from '../../../features/trainer/models/trainer.interface';
-import { PaginatedResponse, User } from '../../../features/admin/services/admin.service';
+import {
+  PaginatedResponse,
+  User,
+} from '../../../features/admin/services/admin.service';
 
 export interface UsersState {
   users: (User | Trainer)[];
@@ -35,5 +38,22 @@ export const usersReducer = createReducer(
     loading: false,
     loaded: false,
     error,
+  })),
+  on(UsersActions.toggleBlockAndLoadUsers, (state) => ({
+    ...state,
+    loading: true,
+  })),
+  on(UsersActions.toggleBlockAndLoadUsersSuccess, (state, { response }) => ({
+    ...state,
+    users: response.data,
+    total: response.total,
+    loading: false,
+    loaded: true,
+    error: null,
+  })),
+  on(UsersActions.toggleBlockAndLoadUsersFailure, (state, {error}) => ({
+    ...state,
+    loading: false,
+    error
   }))
 );

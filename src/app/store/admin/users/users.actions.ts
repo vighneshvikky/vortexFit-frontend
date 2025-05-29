@@ -1,5 +1,8 @@
 import { createAction, props } from '@ngrx/store';
-import { GetUsersParams, User } from '../../../features/admin/services/admin.service';
+import {
+  GetUsersParams,
+  User,
+} from '../../../features/admin/services/admin.service';
 import { PaginatedResponse } from '../../../features/admin/services/admin.service';
 import { Trainer } from '../../../features/trainer/models/trainer.interface';
 
@@ -15,5 +18,20 @@ export const loadUsersSuccess = createAction(
 
 export const loadUsersFailure = createAction(
   '[User] Load Users Failure',
+  props<{ error: any }>()
+);
+
+export const toggleBlockAndLoadUsers = createAction(
+  '[User] Toggle Block And Load Users',
+  props<{ userId: string; role: string; params: GetUsersParams }>()
+);
+
+export const toggleBlockAndLoadUsersSuccess = createAction(
+  '[User] Toggle Block And Load Users Success',
+  props<{ response: PaginatedResponse<User | Trainer> }>()
+);
+
+export const toggleBlockAndLoadUsersFailure = createAction(
+  '[User] Toggle Block And Load Users Failure',
   props<{ error: any }>()
 );

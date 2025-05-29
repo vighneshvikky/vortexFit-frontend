@@ -1,4 +1,4 @@
-// src/app/core/init/app.initializer.ts
+
 import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { setUser } from '../../features/auth/store/actions/auth.actions';
@@ -13,12 +13,11 @@ export function initializeApp(): () => Promise<void> {
 
     try {
       const user = await firstValueFrom(
-        authService.getCurrentUser().pipe( // This should call your `/auth/me` route
+        authService.getCurrentUser().pipe( 
           tap(user => {
             store.dispatch(setUser({ user }));
           }),
           catchError(() => {
-            // Handle unauthenticated or error state
             return of(null);
           })
         )

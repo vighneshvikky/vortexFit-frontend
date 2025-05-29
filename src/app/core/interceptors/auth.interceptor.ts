@@ -30,7 +30,9 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     console.log('AuthInterceptor intercepted:', req.url);
-    const clonedRequest = req.clone();
+    const clonedRequest = req.clone({
+      withCredentials: true,
+    });
     return next.handle(clonedRequest).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
@@ -59,7 +61,7 @@ export class AuthInterceptor implements HttpInterceptor {
         catchError((err) => {
           console.error('Token refresh failed', err);
           this.isRefreshing = false;
-          this.router.navigate(['/admin/login'])
+          this.router.navigate(['/admin/login']);
           return throwError(() => err);
         })
       );

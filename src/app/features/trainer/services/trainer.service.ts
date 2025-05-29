@@ -34,6 +34,15 @@ updateProfile(trainerId: string, formData: FormData): Observable<any> {
   );
 }
 
+getSignedUploadUrl(fileName: string, contentType: string, type: 'certification' | 'idProof'){
+
+  return this.http.post<{url: string, key: string}>('http://localhost:3000/s3/generate-upload-url',{
+    folder: `trainer-verification/${type}`,
+    fileName,
+    contentType
+  })
+}
+
 
 
 }

@@ -1,4 +1,4 @@
-  import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+  import { APP_INITIALIZER, ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
   import { provideRouter } from '@angular/router';
   import { provideAnimations } from '@angular/platform-browser/animations';
   import { routes } from './app.routes';
@@ -11,6 +11,7 @@
   import { usersReducer } from './store/admin/users/users.reducer';
   import { UsersEffects } from './store/admin/users/users.effects';
   import { metaReducers } from '../meta-reducers';
+import { initializeApp } from './core/init/app.initializer';
 
 
 
@@ -38,4 +39,5 @@
         multi: true,
       },
     ],
+
   };

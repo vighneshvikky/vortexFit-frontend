@@ -1,16 +1,25 @@
-<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4 py-12">
+<div
+  class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4 py-12"
+>
   <div class="max-w-md w-full space-y-8">
     <div class="text-center">
       <h1 class="text-3xl font-extrabold text-gray-900">
-        Create your {{ role === 'user' ? 'Fitness Enthusiast' : 'Trainer' }} Account
+        Create your
+        {{ role === "user" ? "Fitness Enthusiast" : "Trainer" }} Account
       </h1>
       <p class="mt-2 text-gray-600">Join our fitness community today</p>
     </div>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
+    <form
+      [formGroup]="registerForm"
+      (ngSubmit)="onSubmit()"
+      class="mt-8 space-y-6"
+    >
       <div class="rounded-md shadow-sm space-y-4">
         <div>
-          <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+          <label for="name" class="block text-sm font-medium text-gray-700"
+            >Full Name</label
+          >
           <input
             id="name"
             type="text"
@@ -22,15 +31,22 @@
             }"
             placeholder="John Doe"
           />
-          <div *ngIf="name?.invalid && (name?.touched || name?.dirty)" class="mt-1 text-sm text-red-600">
+          <div
+            *ngIf="name?.invalid && (name?.touched || name?.dirty)"
+            class="mt-1 text-sm text-red-600"
+          >
             <p *ngIf="name?.errors?.['required']">Name is required.</p>
-            <p *ngIf="name?.errors?.['minlength']">Name must be at least 2 characters.</p>
+            <p *ngIf="name?.errors?.['minlength']">
+              Name must be at least 2 characters.
+            </p>
             <p *ngIf="name?.errors?.['pattern']">Enter a valid name.</p>
           </div>
         </div>
 
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+          <label for="email" class="block text-sm font-medium text-gray-700"
+            >Email Address</label
+          >
           <input
             id="email"
             type="email"
@@ -42,14 +58,19 @@
             }"
             placeholder="john@example.com"
           />
-          <div *ngIf="email?.touched && email?.errors" class="mt-1 text-sm text-red-600">
+          <div
+            *ngIf="email?.touched && email?.errors"
+            class="mt-1 text-sm text-red-600"
+          >
             <p *ngIf="email?.errors?.['required']">Email is required.</p>
             <p *ngIf="email?.errors?.['invalidEmail']">Invalid email format.</p>
           </div>
         </div>
 
         <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <label for="password" class="block text-sm font-medium text-gray-700"
+            >Password</label
+          >
           <input
             id="password"
             type="password"
@@ -61,16 +82,24 @@
             }"
             placeholder="••••••••"
           />
-          <div *ngIf="password?.touched && password?.errors" class="mt-1 text-sm text-red-600">
+          <div
+            *ngIf="password?.touched && password?.errors"
+            class="mt-1 text-sm text-red-600"
+          >
             <p *ngIf="password?.errors?.['required']">Password is required.</p>
             <p *ngIf="password?.errors?.['weakPassword']">
-              Password must include uppercase, lowercase, number, symbol, and be 8+ characters long.
+              Password must include uppercase, lowercase, number, symbol, and be
+              8+ characters long.
             </p>
           </div>
         </div>
 
         <div>
-          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+          <label
+            for="confirmPassword"
+            class="block text-sm font-medium text-gray-700"
+            >Confirm Password</label
+          >
           <input
             id="confirmPassword"
             type="password"
@@ -82,9 +111,16 @@
             }"
             placeholder="••••••••"
           />
-          <div *ngIf="confirmPassword?.touched && confirmPassword?.errors" class="mt-1 text-sm text-red-600">
-            <p *ngIf="confirmPassword?.errors?.['required']">Confirm password is required.</p>
-            <p *ngIf="confirmPassword?.errors?.['passwordMismatch']">Passwords do not match.</p>
+          <div
+            *ngIf="confirmPassword?.touched && confirmPassword?.errors"
+            class="mt-1 text-sm text-red-600"
+          >
+            <p *ngIf="confirmPassword?.errors?.['required']">
+              Confirm password is required.
+            </p>
+            <p *ngIf="confirmPassword?.errors?.['passwordMismatch']">
+              Passwords do not match.
+            </p>
           </div>
         </div>
       </div>
@@ -96,24 +132,27 @@
           [disabled]="isLoading"
           class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           [ngClass]="{
-            'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500': role === 'user',
+            'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500':
+              role === 'user',
             'bg-red-600 hover:bg-red-700 focus:ring-red-500': role === 'trainer'
           }"
         >
           Create Account
         </button>
       </div>
-         <button
-          type="button"
-          (click)="redirectToLogin()"
-          class="text-sm font-medium focus:outline-none focus:underline transition-colors"
-          [ngClass]="{
-            'text-blue-600 hover:text-blue-500': role === 'user',
-            'text-red-600 hover:text-red-500': role === 'trainer'
-          }"
-        >
-          login
-        </button>
     </form>
+    <div class="ml-44">
+      <button
+        type="button"
+        (click)="redirectToLogin()"
+        class="text-sm font-medium focus:outline-none focus:underline transition-colors"
+        [ngClass]="{
+          'text-blue-600 hover:text-blue-500': role === 'user',
+          'text-red-600 hover:text-red-500': role === 'trainer'
+        }"
+      >
+        login
+      </button>
+    </div>
   </div>
 </div>
