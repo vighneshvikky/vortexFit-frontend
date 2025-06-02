@@ -108,7 +108,6 @@ export class AuthEffects {
           }
 
           const role = user.role as UserRole;
-          console.log('role', role);
           if (role === 'trainer' || role === 'user') {
             const verifiedUser = user as User | Trainer;
             console.log('verification', verifiedUser.isVerified);
@@ -117,7 +116,7 @@ export class AuthEffects {
               const dashboardRoute =
                 role === 'trainer' ? '/trainer/dashboard' : '/user/dashboard';
               this.router.navigate([dashboardRoute]);
-            } else if (verifiedUser.verificationStatus === 'rejected') {
+            } else if (verifiedUser.verificationStatus === 'rejected' || verifiedUser.verificationStatus === 'pending') {
               this.router.navigate(['/trainer/trainer-status']);
             } else {
               console.log('i am user');

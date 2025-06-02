@@ -1,0 +1,131 @@
+<!-- trainer-layout.component.html -->
+<div class="flex min-h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <div
+    class="w-64 bg-red-900 text-white shadow-lg hidden md:block flex-shrink-0"
+  >
+    <!-- Your sidebar HTML pasted here -->
+    <div class="w-64 bg-red-900 text-white shadow-lg hidden md:block">
+      <!-- Logo Section -->
+      <div class="p-6 border-b border-red-800">
+        <div class="flex items-center">
+          <i class="fas fa-dumbbell text-2xl mr-3"></i>
+          <h1 class="text-xl font-bold">VortexFit Trainer</h1>
+        </div>
+      </div>
+
+      <!-- Trainer Profile -->
+      <div class="p-4 border-b border-red-800">
+        <div class="flex items-center space-x-3">
+          <div class="relative">
+            <img
+              src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+              alt="Trainer Profile"
+              class="w-10 h-10 rounded-full object-cover border-2 border-red-600"
+            />
+            <span
+              class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-red-900"
+            ></span>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold">Alex Johnson</h3>
+            <p class="text-xs text-red-300">Strength Trainer</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="px-4 py-6">
+        <ul class="space-y-1">
+          <li>
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 bg-red-800 rounded-lg"
+            >
+              <i class="fas fa-tachometer-alt w-5 text-center mr-3"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
+            >
+              <i class="fas fa-calendar-check w-5 text-center mr-3"></i>
+              <span>Sessions</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
+            >
+              <i class="fas fa-dumbbell w-5 text-center mr-3"></i>
+              <span>Workout Plan</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
+            >
+              <i class="fas fa-chart-line w-5 text-center mr-3"></i>
+              <span>Client Progress</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
+            >
+              <i class="fas fa-comment-alt w-5 text-center mr-3"></i>
+              <span>Messaging</span>
+              <span
+                class="ml-auto bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full"
+                >8</span
+              >
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
+            >
+              <i class="fas fa-bell w-5 text-center mr-3"></i>
+              <span>Notifications</span>
+              <span
+                class="ml-auto bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full"
+                >5</span
+              >
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
+            >
+              <i class="fas fa-dollar-sign w-5 text-center mr-3"></i>
+              <span>Revenue</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="pt-8 mt-8 border-t border-red-800">
+          <a
+            href="#"
+            class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
+          >
+            <i class="fas fa-sign-out-alt w-5 text-center mr-3"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+    <!-- ... your sidebar code exactly as it is ... -->
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 p-6">
+    <ng-content></ng-content>
+  </div>
+</div>

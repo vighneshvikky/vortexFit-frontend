@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../enviorments/environment';
-import { GetUsersQuery } from '../../../shared/components/sidebar/sidebar.component';
+import { GetUsersQuery } from '../../../shared/components/admin/sidebar/sidebar.component';
 import { Trainer } from '../../trainer/models/trainer.interface';
 
 export interface AdminLoginRequest {

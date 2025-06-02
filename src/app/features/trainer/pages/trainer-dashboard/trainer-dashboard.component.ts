@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
+import { TrainerSidebarComponent } from '../../../../shared/components/trainer/trainer-sidebar/trainer-sidebar.component';
 
 @Component({
   selector: 'app-trainer-dashboard',
-  imports: [],
+  imports: [TrainerSidebarComponent],
   templateUrl: './trainer-dashboard.component.html',
-  styleUrl: './trainer-dashboard.component.scss'
+  styleUrl: './trainer-dashboard.component.scss',
 })
-export class TrainerDashboardComponent {
-
-}
+export class TrainerDashboardComponent {}

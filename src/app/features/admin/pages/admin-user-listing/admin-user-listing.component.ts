@@ -57,7 +57,7 @@ export class AdminUserListingComponent implements OnInit {
   loadUsers(searchTerm: string = ''): void {
     const params: GetUsersParams = {
       page: 1,
-      limit: 10,
+      limit: 6,
       search: searchTerm,
     };
 
@@ -69,17 +69,19 @@ export class AdminUserListingComponent implements OnInit {
   }
 
   toggleBlockStatus(user: User | Trainer): void {
-    console.log('user', user)
-  const params: GetUsersParams = {
-    page: 1,
-    limit: 10,
-    search: this.searchTerm
-  };
+    console.log('user', user);
+    const params: GetUsersParams = {
+      page: 1,
+      limit: 10,
+      search: this.searchTerm,
+    };
 
-  this.store.dispatch(toggleBlockAndLoadUsers({
-    userId: user._id,
-    role: user.role,
-    params
-  }))
+    this.store.dispatch(
+      toggleBlockAndLoadUsers({
+        userId: user._id,
+        role: user.role,
+        params,
+      })
+    );
   }
 }

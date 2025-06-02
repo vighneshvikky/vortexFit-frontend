@@ -6,12 +6,10 @@ import { of } from 'rxjs';
 import { AdminService } from '../../../features/admin/services/admin.service';
 import { Store } from '@ngrx/store';
 
-
 @Injectable()
 export class UsersEffects {
   private actions$ = inject(Actions);
   private adminService = inject(AdminService);
-  private store = inject(Store);
   loadUsers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UsersActions.loadUsers),
@@ -24,28 +22,21 @@ export class UsersEffects {
     )
   );
 
-  toggleBlockAndLoadUsers$ = createEffect(() => 
-  this.actions$.pipe(
-    ofType(UsersActions.toggleBlockAndLoadUsers),
-    switchMap(({userId, role, params}) => 
-    this.adminService.toggleBlockStatusAndFetchUsers(userId, role, params).pipe(
-      map(response  => 
-        UsersActions.toggleBlockAndLoadUsersSuccess({response})
-      ),
-      catchError(error => 
-        of(UsersActions.toggleBlockAndLoadUsersFailure({error}))
+  toggleBlockAndLoadUsers$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UsersActions.toggleBlockAndLoadUsers),
+      switchMap(({ userId, role, params }) =>
+        this.adminService
+          .toggleBlockStatusAndFetchUsers(userId, role, params)
+          .pipe(
+            map((response) =>
+              UsersActions.toggleBlockAndLoadUsersSuccess({ response })
+            ),
+            catchError((error) =>
+              of(UsersActions.toggleBlockAndLoadUsersFailure({ error }))
+            )
+          )
       )
     )
-  )
-  )
-)
-
-
-
-
-
-
-
-
-
+  );
 }
