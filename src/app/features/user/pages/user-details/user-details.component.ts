@@ -55,7 +55,6 @@ export class UserDetailsComponent implements OnInit {
       fitnessLevel: ['', Validators.required],
       fitnessGoals: [[], Validators.required],
       trainingTypes: [[], Validators.required],
-      workoutsPerWeek: ['3-4', Validators.required],
       preferredTime: ['flexible', Validators.required],
       equipments: [[], Validators.required],
     });
@@ -74,7 +73,6 @@ export class UserDetailsComponent implements OnInit {
             fitnessLevel: user.fitnessLevel || '',
             fitnessGoals: user.fitnessGoals || [],
             trainingTypes: user.trainingTypes || [],
-            workoutsPerWeek: user.workoutsPerWeek || '3-4',
             preferredTime: user.preferredTime || 'flexible',
             equipments: user.equipments || [],
           });

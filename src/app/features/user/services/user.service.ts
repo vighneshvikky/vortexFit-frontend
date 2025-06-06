@@ -10,6 +10,7 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   updateProfile(data: any) {
-    return this.http.patch(`${this.apiUrl}/update-profile`, data, {withCredentials: true});
+    console.log('data from user profile', data);
+    return this.http.patch(`${this.apiUrl}/update-profile`, data);
   }
 }

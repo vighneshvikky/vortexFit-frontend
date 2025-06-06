@@ -34,7 +34,6 @@ export interface User {
   fitnessLevel: string;
   fitnessGoals: string[];
   trainingTypes: string[];
-  workoutsPerWeek: string;
   preferredTime: string;
   equipments: string[];
   verificationStatus: string;
