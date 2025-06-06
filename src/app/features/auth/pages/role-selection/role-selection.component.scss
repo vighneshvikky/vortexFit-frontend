@@ -1,411 +1,55 @@
-// role-selection.component.scss
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
-// Variables
-:root {
-  --primary-blue: #3b82f6;
-  --primary-blue-dark: #2563eb;
-  --primary-emerald: #10b981;
-  --primary-emerald-dark: #059669;
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --text-muted: #94a3b8;
-  --background-primary: #f8fafc;
-  --background-secondary: #f1f5f9;
-  --glass-bg: rgba(255, 255, 255, 0.9);
-  --shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --shadow-heavy: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  --border-radius: 1.5rem;
-  --border-radius-lg: 2rem;
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-// Base Styles
-.role-selection-container {
-  min-height: 100vh;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
-  background: linear-gradient(135deg, var(--background-primary) 0%, var(--background-secondary) 100%);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  overflow: hidden;
-
-  // Background Elements
-  .background-elements {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-
-    .bg-element {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.6;
+ @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    
+    :host {
+      font-family: 'Inter', sans-serif;
+      display: block;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      33% { transform: translateY(-10px) rotate(1deg); }
+      66% { transform: translateY(-5px) rotate(-1deg); }
+    }
+    
+    @keyframes float-delayed {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      33% { transform: translateY(-8px) rotate(-1deg); }
+      66% { transform: translateY(-3px) rotate(1deg); }
+    }
+    
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+    }
+    
+    .animate-float {
       animation: float 6s ease-in-out infinite;
-
-      &.bg-element-1 {
-        top: -10rem;
-        right: -10rem;
-        width: 20rem;
-        height: 20rem;
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%);
-        animation-delay: 0s;
-      }
-
-      &.bg-element-2 {
-        bottom: -10rem;
-        left: -10rem;
-        width: 20rem;
-        height: 20rem;
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%);
-        animation-delay: 2s;
-      }
-
-      &.bg-element-3 {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 24rem;
-        height: 24rem;
-        background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
-        animation-delay: 4s;
-      }
     }
-  }
-
-  // Content Wrapper
-  .content-wrapper {
-    position: relative;
-    z-index: 10;
-    max-width: 32rem;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  // Header Section
-  .header-section {
-    text-align: center;
-    margin-bottom: 1rem;
-
-    .brand-logo {
-      margin-bottom: 1.5rem;
-
-      .logo-icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 5rem;
-        height: 5rem;
-        background: linear-gradient(135deg, var(--primary-blue) 0%, #9333ea 100%);
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow-medium);
-        margin: 0 auto 1rem;
-
-        svg {
-          width: 2.5rem;
-          height: 2.5rem;
-          color: white;
-        }
-      }
+    
+    .animate-float-delayed {
+      animation: float-delayed 6s ease-in-out infinite;
+      animation-delay: -2s;
     }
-
-    .welcome-content {
-      .main-title {
-        font-size: 3rem;
-        font-weight: 800;
-        line-height: 1.1;
-        margin-bottom: 0.5rem;
-
-        .gradient-text {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-      }
-
-      .subtitle {
-        font-size: 1.125rem;
-        font-weight: 600;
-        color: var(--text-secondary);
-        margin-bottom: 0.75rem;
-      }
-
-      .description {
-        font-size: 0.875rem;
-        color: var(--text-muted);
-        line-height: 1.6;
-        max-width: 28rem;
-        margin: 0 auto;
-      }
+    
+    .animate-pulse-slow {
+      animation: pulse-slow 4s ease-in-out infinite;
     }
-  }
-
-  // Role Cards
-  .role-cards-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-
-    .role-card {
-      position: relative;
-      width: 100%;
-      background: var(--glass-bg);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: var(--border-radius-lg);
-      padding: 2rem;
-      box-shadow: var(--shadow-medium);
-      transition: var(--transition);
-      cursor: pointer;
-      text-align: left;
-
-      &:hover {
-        transform: translateY(-4px) scale(1.02);
-        box-shadow: var(--shadow-heavy);
-      }
-
-      &:active {
-        transform: translateY(-2px) scale(1.01);
-      }
-
-      &.role-card-user {
-        border-left: 4px solid var(--primary-blue);
-
-        .icon-container {
-          background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
-        }
-
-        .card-action {
-          color: var(--primary-blue);
-        }
-
-        &:hover .card-title {
-          color: var(--primary-blue);
-        }
-      }
-
-      &.role-card-trainer {
-        border-left: 4px solid var(--primary-emerald);
-
-        .icon-container {
-          background: linear-gradient(135deg, var(--primary-emerald) 0%, var(--primary-emerald-dark) 100%);
-        }
-
-        .card-action {
-          color: var(--primary-emerald);
-        }
-
-        &:hover .card-title {
-          color: var(--primary-emerald);
-        }
-      }
-
-      .card-content {
-        display: flex;
-        align-items: flex-start;
-        gap: 1.5rem;
-
-        .icon-container {
-          flex-shrink: 0;
-          width: 4rem;
-          height: 4rem;
-          border-radius: var(--border-radius);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: var(--shadow-light);
-          transition: var(--transition);
-
-          svg {
-            width: 2rem;
-            height: 2rem;
-            color: white;
-          }
-        }
-
-        .text-content {
-          flex-grow: 1;
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-
-          .card-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            transition: var(--transition);
-          }
-
-          .card-description {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 0.75rem;
-          }
-
-          .card-action {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            transition: var(--transition);
-
-            .arrow-icon {
-              width: 1rem;
-              height: 1rem;
-              transition: var(--transition);
-            }
-          }
-        }
-      }
-
-      &:hover {
-        .icon-container {
-          transform: scale(1.1);
-        }
-
-        .arrow-icon {
-          transform: translateX(0.25rem);
-        }
-      }
+    
+    /* Custom scrollbar for better aesthetics */
+    ::-webkit-scrollbar {
+      width: 6px;
     }
-  }
-
-  // Trust Indicators
-  .trust-indicators {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 1rem;
-
-    .trust-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-
-      .trust-icon {
-        width: 1rem;
-        height: 1rem;
-
-        &:first-child {
-          color: #10b981;
-        }
-
-        &:nth-child(2) {
-          color: var(--primary-blue);
-        }
-
-        &:last-child {
-          color: #8b5cf6;
-        }
-      }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
     }
-  }
-
-  .user-count {
-    text-align: center;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    margin-top: 0.5rem;
-  }
-}
-
-// Animations
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-// Responsive Design
-@media (max-width: 768px) {
-  .role-selection-container {
-    padding: 1.5rem 1rem;
-
-    .content-wrapper {
-      gap: 1.5rem;
+    
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
     }
-
-    .header-section {
-      .brand-logo .logo-icon {
-        width: 4rem;
-        height: 4rem;
-
-        svg {
-          width: 2rem;
-          height: 2rem;
-        }
-      }
-
-      .welcome-content {
-        .main-title {
-          font-size: 2.5rem;
-        }
-
-        .subtitle {
-          font-size: 1rem;
-        }
-      }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.5);
     }
-
-    .role-cards-container {
-      .role-card {
-        padding: 1.5rem;
-
-        .card-content {
-          gap: 1rem;
-
-          .icon-container {
-            width: 3rem;
-            height: 3rem;
-
-            svg {
-              width: 1.5rem;
-              height: 1.5rem;
-            }
-          }
-
-          .text-content {
-            .card-title {
-              font-size: 1.125rem;
-            }
-          }
-        }
-      }
-    }
-
-    .trust-indicators {
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .role-selection-container {
-    .trust-indicators {
-      .trust-item {
-        font-size: 0.625rem;
-
-        .trust-icon {
-          width: 0.875rem;
-          height: 0.875rem;
-        }
-      }
-    }
-  }
-}

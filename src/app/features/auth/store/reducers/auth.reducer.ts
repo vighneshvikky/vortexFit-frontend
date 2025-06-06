@@ -38,13 +38,6 @@ export const authReducer = createReducer(
     ...state,
     currentUser: null,
   })),
-  on(AuthActions.updateTrainerProfileSuccess, (state, { updatedTrainer }) => ({
-    ...state,
-    currentUser: {
-      ...state.currentUser,
-      ...updatedTrainer,
-    },
-  })),
   on(AuthActions.updateCurrentUserVerificationStatus, (state, { status }) => ({
     ...state,
     currentUser: state.currentUser
@@ -58,11 +51,17 @@ export const authReducer = createReducer(
       : null,
   })),
 
-on(AuthActions.setUser, (state, { user }) => ({
+  on(AuthActions.setUser, (state, { user }) => ({
+    ...state,
+    currentUser: user,
+    loading: false,
+    error: null,
+  })),
+on(AuthActions.updateCurrentUser, (state, { user }) => ({
   ...state,
-  currentUser: user,
-  loading: false,
-  error: null,
-})),
-
+  currentUser: {
+    ...state.currentUser,
+    ...user,
+  },
+}))
 );

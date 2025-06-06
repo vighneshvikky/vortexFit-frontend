@@ -17,16 +17,29 @@ export interface AdminLoginResponse {
 }
 
 export interface User {
-  _id: string;
-  name?: string;
-  email?: string;
+
+  _id: string; 
+  name: string;
+  email: string;
   role: 'user' | 'trainer';
-  createdAt: string;
   isBlocked: boolean;
-  isVerified?: boolean;
-  rejectionReason?: string;
-  verificationStatus?: 'not_submitted' | 'pending' | 'rejected' | 'approved';
+  isVerified: boolean;
+  googleId?: string;
+  image: string;
+  dob: string;
+  height: string;
+  heightUnit: string;
+  weight: string;
+  weightUnit: string;
+  fitnessLevel: string;
+  fitnessGoals: string[];
+  trainingTypes: string[];
+  workoutsPerWeek: string;
+  preferredTime: string;
+  equipments: string[];
+  verificationStatus: string;
 }
+
 
 export interface GetUsersParams {
   search?: string;

@@ -54,7 +54,7 @@ export class SignupComponent implements OnInit {
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, passwordStrengthValidator()]],
         confirmPassword: ['', [Validators.required]],
-        role: [this.role]
+        role: [this.role],
       },
       {
         validators: matchPassword('password', 'confirmPassword'),
@@ -72,15 +72,16 @@ export class SignupComponent implements OnInit {
     const formData = this.registerForm.value;
     this.authService.registerUser(formData).subscribe({
       next: (response) => {
-        console.log('✅ Registration Success:', response);
         this.isLoading = false;
         this.notiService.showSuccess('OTP sent successfully');
-        this.router.navigate(['/auth/otp'], { queryParams: { role: response.data.role } });
+        this.router.navigate(['/auth/otp'], {
+          queryParams: { role: response.data.role },
+        });
       },
       error: (error) => {
-        console.error('❌ Registration Failed:', error);
-        this.notiService.showError(error?.error?.message);
-        this.errorMessage = error?.error?.message || 'Registration failed.';
+        const errMsg = error?.error?.message || 'Registration failed.';
+        this.notiService.showError(errMsg);
+        this.errorMessage = errMsg;
         this.isLoading = false;
       },
     });
@@ -102,7 +103,7 @@ export class SignupComponent implements OnInit {
     return this.registerForm.get('confirmPassword');
   }
 
-  redirectToLogin(){
-    this.router.navigate(['/auth/login'], {queryParams: {role: this.role}})
+  redirectToLogin() {
+    this.router.navigate(['/auth/login'], { queryParams: { role: this.role } });
   }
 }

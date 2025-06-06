@@ -48,6 +48,7 @@ export class OtpComponent implements OnInit {
         this.router.navigate(['/auth/login'], {queryParams: {role: res.data.role}})
       },
       error: (err) => {
+         console.error('Raw error:', err.error);
         this.errorMessage = err.error?.message || 'OTP verification failed.';
         this.message = '';
         this.notyService.showError(err?.error?.message);

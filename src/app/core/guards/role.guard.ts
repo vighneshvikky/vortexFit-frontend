@@ -22,11 +22,13 @@ export function RoleGuard(): CanActivateFn {
       map((user) => {
         console.log('user from the store', user)
             const rolesArray = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
-
+ 
         if (user && rolesArray.includes(user.role)) {
+          console.log('checking veriffei true')
           return true;
         } else {
           router.navigate(['']);
+           console.log('checking veriffei false')
           return false;
         }
 

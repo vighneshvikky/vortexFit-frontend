@@ -18,7 +18,6 @@ export function localStorageSyncReducer(
           const {
             password,
             provider,
-            certificationUrl,
             idProofUrl,
             ...safeUser
           } = currentUser;

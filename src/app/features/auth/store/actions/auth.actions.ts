@@ -37,18 +37,22 @@ export const updateCurrentUserVerificationStatus = createAction(
   props<{ status: 'pending' | 'approved' | 'rejected' }>()
 );
 
-
 export const updateCurrentUserRejectionReason = createAction(
   '[Auth Update Current User Verification Status]',
-  props<{reason: string}>()
-)
+  props<{ reason: string }>()
+);
 
 export const fetchCurrentUser = createAction('[Auth] Fetch Current User');
 
 export const fetchCurrentUserSuccess = createAction(
   '[Auth]  Fetch Current User Success',
-  props<{user: User | Trainer}>()
-)
+  props<{ user: User | Trainer }>()
+);
+
+export const updateCurrentUser = createAction(
+  '[Auth] Update Current User',
+  props<{ user: User | Trainer }>()
+);
 
 export const setUser = createAction(
   '[Auth] Set User',

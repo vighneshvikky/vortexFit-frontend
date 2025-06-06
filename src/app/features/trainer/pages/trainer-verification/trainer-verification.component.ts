@@ -16,6 +16,7 @@ import { NotyService } from '../../../../core/services/noty.service';
 import { Router } from '@angular/router';
 import { selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';
 import { HttpClient } from '@angular/common/http';
+import { updateCurrentUser } from '../../../auth/store/actions/auth.actions';
 
 @Component({
   selector: 'app-trainer-verification',
@@ -32,7 +33,7 @@ export class TrainerVerificationComponent implements OnInit {
   currentUser$: Observable<any>;
   trainerId: string | null = null;
   isLoading = false;
-  uploadedFileNames: {[key in 'certification' | 'idProof']?: string} = {}
+  uploadedFileNames: { [key in 'certification' | 'idProof']?: string } = {};
   specializations = [
     { value: 'cardio', label: 'Cardio' },
     { value: 'yoga', label: 'Yoga' },
@@ -90,7 +91,6 @@ export class TrainerVerificationComponent implements OnInit {
         tap((user) => {
           if (user) {
             this.trainerId = user._id;
-            console.log('trainerId', this.trainerId);
             this.verificationForm.patchValue({
               name: user.name || '',
               email: user.email || '',
@@ -112,7 +112,6 @@ export class TrainerVerificationComponent implements OnInit {
   }
 
   onFileSelected(event: Event, type: 'certification' | 'idProof'): void {
-    
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const file = input.files[0];
@@ -138,7 +137,7 @@ export class TrainerVerificationComponent implements OnInit {
                     [type]: key,
                   });
 
-                  this.uploadedFileNames[type] = file.name
+                  this.uploadedFileNames[type] = file.name;
 
                   this.notyService.showSuccess(
                     `${type} uploaded successfully.`
@@ -167,18 +166,26 @@ export class TrainerVerificationComponent implements OnInit {
   onSubmit(): void {
     if (this.verificationForm.valid && this.trainerId) {
       this.isLoading = true;
-    const formData = new FormData;
-  Object.entries(this.verificationForm.value).forEach(([key, value]) => {
-    if(value instanceof File || typeof value === 'string'){
-      formData.append(key, value)
-    }
-  })
-      this.trainerService.updateProfile(this.trainerId, formData).subscribe({
+
+      const formValues = this.verificationForm.value;
+
+      const profileData = {
+        name: formValues.name,
+        email: formValues.email,
+        phoneNumber: formValues.phoneNumber,
+        bio: formValues.bio,
+        specialization: formValues.specialization,
+        certification: formValues.certification,
+        idProof: formValues.idProof,
+      };
+
+      this.trainerService.updateProfile(this.trainerId, profileData).subscribe({
         next: () => {
           this.isLoading = false;
           this.notyService.showSuccess(
             'Verification request submitted successfully'
           );
+
           this.router.navigate(['/trainer/trainer-status']);
         },
         error: (error) => {

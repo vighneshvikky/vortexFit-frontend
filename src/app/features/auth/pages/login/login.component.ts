@@ -60,11 +60,9 @@ export class LoginComponent implements OnInit {
 
       if (this.router.url.startsWith('/auth/callback')) {
         const userJson = params['user'];
-        console.log('userJson', userJson)
         if (userJson) {
           try {
             const user: AuthActions.AuthenticatedUser = JSON.parse(userJson);
-            console.log('user before dispaching', user)
             this.store.dispatch(AuthActions.loginSuccess({ user }));
           } catch (error) {
             this.notyService.showError('Invalid user data format');

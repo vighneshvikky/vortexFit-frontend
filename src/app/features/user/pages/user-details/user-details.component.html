@@ -1,2 +1,135 @@
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="form-container">
+  <!-- Name (disabled) -->
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input id="name" formControlName="name"  />
+  </div>
 
-<h1>Welcome to user-details page</h1>
+  <!-- Email (disabled) -->
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input id="email" formControlName="email"  />
+  </div>
+
+  <!-- Date of Birth -->
+  <div class="form-group">
+    <label for="dob">Date of Birth</label>
+    <input type="date" id="dob" formControlName="dob" />
+    <div class="error" *ngIf="profileForm.get('dob')?.invalid && profileForm.get('dob')?.touched">
+      Date of Birth is required.
+    </div>
+  </div>
+
+  <!-- Height -->
+  <div class="form-group">
+    <label for="height">Height</label>
+    <input type="number" id="height" formControlName="height" />
+    <select formControlName="heightUnit">
+      <option value="cm">cm</option>
+      <option value="inch">inch</option>
+    </select>
+    <div class="error" *ngIf="profileForm.get('height')?.invalid && profileForm.get('height')?.touched">
+      Height is required and must be between 30 and 300.
+    </div>
+  </div>
+
+  <!-- Weight -->
+  <div class="form-group">
+    <label for="weight">Weight</label>
+    <input type="number" id="weight" formControlName="weight" />
+    <select formControlName="weightUnit">
+      <option value="kg">kg</option>
+      <option value="lbs">lbs</option>
+    </select>
+    <div class="error" *ngIf="profileForm.get('weight')?.invalid && profileForm.get('weight')?.touched">
+      Weight is required and must be between 10 and 300.
+    </div>
+  </div>
+
+  <!-- Fitness Level -->
+  <div class="form-group">
+    <label for="fitnessLevel">Fitness Level</label>
+    <select id="fitnessLevel" formControlName="fitnessLevel">
+      <option value="">Select level</option>
+      <option value="beginner">Beginner</option>
+      <option value="intermediate">Intermediate</option>
+      <option value="advanced">Advanced</option>
+    </select>
+    <div class="error" *ngIf="profileForm.get('fitnessLevel')?.invalid && profileForm.get('fitnessLevel')?.touched">
+      Fitness level is required.
+    </div>
+  </div>
+
+  <!-- Fitness Goals -->
+  <div class="form-group">
+    <label>Fitness Goals</label>
+    <div *ngFor="let goal of ['fat loss', 'muscle gain', 'endurance', 'general fitness']">
+      <label>
+        <input
+          type="checkbox"
+          [value]="goal"
+          (change)="onCheckboxChange($event, 'fitnessGoals')"
+          [checked]="profileForm.get('fitnessGoals')?.value.includes(goal)"
+        />
+        {{ goal }}
+      </label>
+    </div>
+  </div>
+
+  <!-- Training Types -->
+  <div class="form-group">
+    <label>Training Types</label>
+    <div *ngFor="let type of ['cardio', 'strength', 'yoga', 'crossfit']">
+      <label>
+        <input
+          type="checkbox"
+          [value]="type"
+          (change)="onCheckboxChange($event, 'trainingTypes')"
+          [checked]="profileForm.get('trainingTypes')?.value.includes(type)"
+        />
+        {{ type }}
+      </label>
+    </div>
+  </div>
+
+  <!-- Workouts Per Week -->
+  <div class="form-group">
+    <label for="workoutsPerWeek">Workouts Per Week</label>
+    <select formControlName="workoutsPerWeek">
+      <option value="1-2">1-2</option>
+      <option value="3-4">3-4</option>
+      <option value="5-6">5-6</option>
+      <option value="7+">7+</option>
+    </select>
+  </div>
+
+  <!-- Preferred Time -->
+  <div class="form-group">
+    <label for="preferredTime">Preferred Time</label>
+    <select formControlName="preferredTime">
+      <option value="morning">Morning</option>
+      <option value="afternoon">Afternoon</option>
+      <option value="evening">Evening</option>
+      <option value="flexible">Flexible</option>
+    </select>
+  </div>
+
+  <!-- Equipments -->
+  <div class="form-group">
+    <label>Equipments</label>
+    <div *ngFor="let equipment of ['dumbbells', 'resistance bands', 'yoga mat', 'treadmill']">
+      <label>
+        <input
+          type="checkbox"
+          [value]="equipment"
+          (change)="onCheckboxChange($event, 'equipments')"
+          [checked]="profileForm.get('equipments')?.value.includes(equipment)"
+        />
+        {{ equipment }}
+      </label>
+    </div>
+  </div>
+
+  <!-- Submit -->
+  <button type="submit" [disabled]="profileForm.invalid">Update Profile</button>
+</form>

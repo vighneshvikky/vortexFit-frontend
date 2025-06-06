@@ -1,19 +1,22 @@
 import { BaseAccount } from '../../auth/model/baseAccount.interface';
 
-export interface Trainer  {
-  _id: string;
-  role: 'trainer';
-  name?: string;
-  email?: string;
+export interface Trainer {
+  _id: string; 
+  name: string;
+  email: string;
+  role: 'user' | 'trainer' | 'admin';
+  isBlocked: boolean;
+  isVerified: boolean;
+  verificationStatus: 'pending' | 'approved' | 'rejected' | 'requested';
   phoneNumber: string;
   specialization: string;
   experience: number;
   bio?: string;
-  isBlocked?: boolean;
-  isVerified?: boolean;
-  idProofUrl?: string;
   certificationUrl?: string;
-  verificationStatus:  'pending' | 'rejected' | 'approved';
+  idProofUrl?: string;
   rejectionReason?: string;
-  previousData?: any;
+  rejectedAt?: Date;
+  image: string;
+
 }
+

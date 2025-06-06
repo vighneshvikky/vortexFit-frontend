@@ -42,13 +42,11 @@ this.currentUserStatus$ = this.store.select(selectCurrentUser).pipe(
     const userSubscription = this.currentUserStatus$
     .pipe(
       tap((user) => {
-        console.log('user', user);
         this.verificationStatus = user?.verificationStatus;
         this.rejectionReason = user?.rejectionReason ?? null
       })
     )
     .subscribe()
- console.log('userScub=', userSubscription  )
     this.subscription.add(userSubscription);
   }
 

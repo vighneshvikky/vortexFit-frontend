@@ -12,7 +12,6 @@ import {
   loginFailure,
   googleLogin,
   fetchCurrentUser,
-  fetchCurrentUserSuccess,
   setUser,
 } from '../actions/auth.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -116,10 +115,9 @@ export class AuthEffects {
               const dashboardRoute =
                 role === 'trainer' ? '/trainer/dashboard' : '/user/dashboard';
               this.router.navigate([dashboardRoute]);
-            } else if (verifiedUser.verificationStatus === 'rejected' || verifiedUser.verificationStatus === 'pending') {
+            } else if (verifiedUser.verificationStatus === 'rejected') {
               this.router.navigate(['/trainer/trainer-status']);
             } else {
-              console.log('i am user');
               const requestRoute =
                 role === 'trainer'
                   ? '/trainer/trainer-requests'

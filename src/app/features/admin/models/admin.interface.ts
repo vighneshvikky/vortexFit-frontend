@@ -1,13 +1,10 @@
 export interface Admin {
-  _id: string;
+  _id?: string;
   email: string;
   role: 'admin';
     verificationStatus?: 'not_submitted' | 'pending' | 'rejected' | 'approved';
     rejectionReason?: string;
 }
-
-
-
 
 export interface AdminLoginDto {
     email: string;

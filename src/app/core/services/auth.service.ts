@@ -53,7 +53,6 @@ export class AuthService {
       .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials)
       .pipe(map((res) => res.data));
 
-    // Subscribe here to actually log the response
     data$.subscribe({
       next: (data) => console.log('data from BE', data),
       error: (err) => console.error('error from BE', err),
@@ -117,7 +116,6 @@ export class AuthService {
   }
 
 getCurrentUser(): Observable<User | Trainer> {
-  console.log('hai'); 
   return this.http.get<User | Trainer>(`${this.api}/getUser`);
 }
 

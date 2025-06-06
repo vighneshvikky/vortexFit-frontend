@@ -81,26 +81,29 @@
         </p>
         <p><strong>Bio:</strong> {{ selectedTrainer.bio || "Not provided" }}</p>
       </div>
-      <div
-        class="detail-group"
-        *ngIf="selectedTrainer.idProofUrl || selectedTrainer.certificationUrl"
-      >
-        <h3>Documents</h3>
-        <p *ngIf="selectedTrainer.idProofUrl">
-          <strong>ID Proof:</strong>
-          <a [href]="selectedTrainer.idProofUrl" [attr.download]="'id-proof'"
-            >Download ID Proof</a
-          >
-        </p>
-        <p *ngIf="selectedTrainer.certificationUrl">
-          <strong>Certification:</strong>
-          <a
-            [href]="selectedTrainer.certificationUrl"
-            [attr.download]="'id-certificationUrl'"
-            >View Document</a
-          >
-        </p>
-      </div>
+<div class="detail-group" *ngIf="selectedTrainer?.idProofUrl || selectedTrainer?.certificationUrl">
+  <h3>Documents</h3>
+
+  <div *ngIf="selectedTrainer?.idProofUrl">
+    <strong>ID Proof:</strong><br />
+    <img
+      [src]="selectedTrainer.idProofUrl"
+      alt="ID Proof"
+      style="max-width: 100%; max-height: 300px; border: 1px solid #ccc; border-radius: 8px; margin-top: 8px;"
+    />
+  </div>
+
+  <div *ngIf="selectedTrainer?.certificationUrl">
+    <strong>Certification:</strong><br />
+    <img
+      [src]="selectedTrainer.certificationUrl"
+      alt="Certification"
+      style="max-width: 100%; max-height: 300px; border: 1px solid #ccc; border-radius: 8px; margin-top: 8px;"
+    />
+  </div>
+</div>
+
+
     </div>
   </div>
 </div>

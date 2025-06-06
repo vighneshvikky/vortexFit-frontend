@@ -1,14 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-import { Trainer } from '../models/trainer.interface';
 import { environment } from '../../../../enviorments/environment';
 
-interface TrainerVerificationResponse {
-  status: 'pending' | 'approved' | 'rejected';
-  rejectionReason?: string;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -18,19 +12,13 @@ export class TrainerService {
 
   constructor(private http: HttpClient) {}
 
-// updateProfile(trainerId: string, formData: FormData): Observable<Trainer> {
-//   console.log('formData', formData);
-//   return this.http.patch<Trainer>(`${this.apiUrl}/profile/${trainerId}`, formData);
-// }
 
-updateProfile(trainerId: string, formData: FormData): Observable<any> {
-  for (const [key, value] of formData.entries()) {
-    console.log(`${key}:`, value);
-  }
-  console.log('trainerId', trainerId);
+
+updateProfile(trainerId: string, profileData: any): Observable<any> {
+ console.log('profileData', profileData)
   return this.http.patch(
     `http://localhost:3000/trainers/profile/${trainerId}`,
-    formData 
+    profileData 
   );
 }
 
