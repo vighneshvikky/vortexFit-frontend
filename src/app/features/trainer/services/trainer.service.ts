@@ -14,15 +14,16 @@ export class TrainerService {
 
 
 
-updateProfile(trainerId: string, profileData: any): Observable<any> {
+updateProfile( profileData: any): Observable<any> {
  console.log('profileData', profileData)
   return this.http.patch(
-    `http://localhost:3000/trainers/profile/${trainerId}`,
+    `http://localhost:3000/trainers/update-trainer-profile`,
     profileData 
   );
 }
 
-getSignedUploadUrl(fileName: string, contentType: string, type: 'certification' | 'idProof'){
+getSignedUploadUrl(fileName: string, contentType: string, type: string
+){
 
   return this.http.post<{url: string, key: string}>('http://localhost:3000/s3/generate-upload-url',{
     folder: `trainer-verification/${type}`,

@@ -7,9 +7,10 @@ export function isUser(user: AuthenticatedUser): user is User {
   return user.role === 'user';
 }
 
-export function isTrainer(user: AuthenticatedUser): user is Trainer {
-  return user.role === 'trainer';
+export function isTrainer(user: AuthenticatedUser | null | undefined): user is Trainer {
+  return !!user && user.role === 'trainer';
 }
+
 
 export function isAdmin(user: AuthenticatedUser): user is Admin {
   return user.role === 'admin';

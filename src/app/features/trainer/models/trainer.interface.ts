@@ -4,7 +4,7 @@ export interface Trainer {
   _id: string; 
   name: string;
   email: string;
-  role: 'user' | 'trainer' | 'admin';
+  role: 'trainer' 
   isBlocked: boolean;
   isVerified: boolean;
   verificationStatus: 'pending' | 'approved' | 'rejected' | 'requested';

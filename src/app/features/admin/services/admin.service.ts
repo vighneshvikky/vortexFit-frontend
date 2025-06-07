@@ -21,7 +21,7 @@ export interface User {
   _id: string; 
   name: string;
   email: string;
-  role: 'user' | 'trainer';
+  role: 'user' 
   isBlocked: boolean;
   isVerified: boolean;
   googleId?: string;
