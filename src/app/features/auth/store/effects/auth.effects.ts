@@ -119,9 +119,8 @@ export class AuthEffects {
               this.router.navigate(['/trainer/trainer-status']);
             } else {
               const requestRoute =
-                role === 'trainer'
-                  ? '/trainer/trainer-requests'
-                  : '/user/user-details';
+                role === 'trainer' ? '/auth/trainer-requests' : '/auth/user-details';
+              console.log('trainer req', requestRoute);
               this.router.navigate([requestRoute]);
             }
           } else if (role === 'admin') {
@@ -135,36 +134,25 @@ export class AuthEffects {
     { dispatch: false }
   );
 
-
-
-fetchCurrentUser$ = createEffect(() =>
-  this.actions$.pipe(
-    ofType(fetchCurrentUser),
-    switchMap(() =>
-      this.authService.getCurrentUser().pipe(
-        tap(user => console.log('Fetched current user:', user)),
-        map(user => setUser({ user })), 
-        catchError((error) => {
-          let errorMsg = 'Login failed';
-          if (error.error?.message) {
-            errorMsg = error.error.message;
-          } else if (error.message) {
-            errorMsg = error.message;
-          }
-          this.notyService.showError(errorMsg);
-          return of(loginFailure({ error: errorMsg }));
-        })
+  fetchCurrentUser$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fetchCurrentUser),
+      switchMap(() =>
+        this.authService.getCurrentUser().pipe(
+          tap((user) => console.log('Fetched current user:', user)),
+          map((user) => setUser({ user })),
+          catchError((error) => {
+            let errorMsg = 'Login failed';
+            if (error.error?.message) {
+              errorMsg = error.error.message;
+            } else if (error.message) {
+              errorMsg = error.message;
+            }
+            this.notyService.showError(errorMsg);
+            return of(loginFailure({ error: errorMsg }));
+          })
+        )
       )
     )
-  )
-);
-
-
-
+  );
 }
-
-
-
-
-
-
