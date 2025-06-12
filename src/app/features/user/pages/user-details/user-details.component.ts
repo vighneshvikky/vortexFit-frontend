@@ -75,6 +75,7 @@ export class UserDetailsComponent implements OnInit {
             trainingTypes: user.trainingTypes || [],
             preferredTime: user.preferredTime || 'flexible',
             equipments: user.equipments || [],
+          
           });
         }
       })

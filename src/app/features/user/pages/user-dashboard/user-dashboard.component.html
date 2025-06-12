@@ -1,1 +1,21 @@
-<p>user-dashboard works!</p>
+<section class="category-section">
+  <div class="bg-white rounded-xl p-8 shadow-lg border-2 border-purple-200">
+    <div class="text-center">
+      <h2
+        class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 tracking-tight leading-tight"
+      >
+        What Are You Looking For?
+      </h2>
+      <div
+        class="w-16 h-1 bg-gradient-to-r from-purple-600 to-purple-700 rounded-full mx-auto"
+      ></div>
+    </div>
+  </div>
+  <div class="category-grid">
+    <app-category-card
+      *ngFor="let category of categories"
+      [label]="category.label"
+      [value]="category.value"
+    ></app-category-card>
+  </div>
+</section>

@@ -33,12 +33,28 @@ export class TrainerVerificationComponent implements OnInit {
   trainerId: string | null = null;
   isLoading = false;
   uploadedFileNames: { [key in 'certification' | 'idProof']?: string } = {};
-  specializations = [
+  availableSpecializations: string[] = [];
+
+  // specializations = [
+  //   { value: 'cardio', label: 'Cardio' },
+  //   { value: 'yoga', label: 'Yoga' },
+  //   { value: 'martial_arts', label: 'Martial Arts' },
+  //   { value: 'fitness', label: 'Fitness' },
+  // ];
+
+  categories = [
     { value: 'cardio', label: 'Cardio' },
     { value: 'yoga', label: 'Yoga' },
     { value: 'martial_arts', label: 'Martial Arts' },
     { value: 'fitness', label: 'Fitness' },
   ];
+
+  categoryToSpecializations: { [category: string]: string[] } = {
+    cardio: ['HIIT', 'Zumba', 'Endurance Training'],
+    yoga: ['Hatha Yoga', 'Vinyasa', 'Power Yoga'],
+    martial_arts: ['Karate', 'Taekwondo', 'Kickboxing'],
+    fitness: ['Weight Lifting', 'CrossFit', 'Bodybuilding'],
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -76,7 +92,8 @@ export class TrainerVerificationComponent implements OnInit {
           this.minWords(2),
         ],
       ],
-      specialization: ['', [Validators.required]],
+      category: ['', [Validators.required]],
+      specialization: [[], [Validators.required]],
       certification: [null, [Validators.required]],
       idProof: [null, [Validators.required]],
     });
@@ -98,6 +115,12 @@ export class TrainerVerificationComponent implements OnInit {
         })
       )
       .subscribe();
+
+      this.verificationForm.get('category')?.valueChanges.subscribe((selectedCategory) => {
+  this.availableSpecializations = this.categoryToSpecializations[selectedCategory] || [];
+  this.verificationForm.get('specializations')?.setValue([]); 
+});
+
   }
 
   private minWords(min: number) {
@@ -173,6 +196,7 @@ export class TrainerVerificationComponent implements OnInit {
         email: formValues.email,
         phoneNumber: formValues.phoneNumber,
         bio: formValues.bio,
+        category: formValues.category,
         specialization: formValues.specialization,
         certificationUrl: formValues.certification,
         idProofUrl: formValues.idProof,
@@ -185,7 +209,7 @@ export class TrainerVerificationComponent implements OnInit {
             'Verification request submitted successfully'
           );
 
-          this.router.navigate(['/trainer/trainer-status']);
+          this.router.navigate(['/auth/trainer-status']);
         },
         error: (error) => {
           this.isLoading = false;
@@ -220,5 +244,9 @@ export class TrainerVerificationComponent implements OnInit {
   }
   get idProof() {
     return this.verificationForm.get('idProof');
+  }
+
+  get category() {
+    return this.verificationForm.get('categorgy');
   }
 }

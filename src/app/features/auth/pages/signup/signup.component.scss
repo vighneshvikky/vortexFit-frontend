@@ -1,0 +1,219 @@
+/* Professional animations and transitions */
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+/* Glass morphism effect */
+.glass-effect {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Gradient borders */
+.gradient-border {
+  position: relative;
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(135deg, #3b82f6, #1d4ed8) border-box;
+  border: 2px solid transparent;
+}
+
+.trainer-border {
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(135deg, #dc2626, #991b1b) border-box;
+}
+
+/* Input focus effects */
+.input-focus-shadow {
+  transition: all 0.3s ease;
+}
+
+.input-focus-shadow:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Role indicator */
+.role-indicator {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Professional button effects */
+.btn-professional {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-professional::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-professional:hover::before {
+  left: 100%;
+}
+
+.btn-professional:disabled::before {
+  display: none;
+}
+
+/* Error message styling enhancements */
+.border-red-300 {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* Form group hover effects */
+.group:hover label {
+  color: #374151;
+  transition: color 0.2s ease;
+}
+
+/* Enhanced focus states */
+input:focus + div svg {
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+/* Background animation for floating elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-pulse:nth-child(1) {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse:nth-child(2) {
+  animation: float 8s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.animate-pulse:nth-child(3) {
+  animation: float 7s ease-in-out infinite;
+  animation-delay: 4s;
+}
+
+/* Loading state for form */
+.relative:has(.spinner-active) {
+  pointer-events: none;
+}
+
+/* Professional spacing and typography */
+h1 {
+  letter-spacing: -0.025em;
+}
+
+label {
+  letter-spacing: 0.025em;
+}
+
+/* Enhanced shadow effects */
+.shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Responsive improvements */
+@media (max-width: 640px) {
+  .glass-effect {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+  
+  h1 {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+  
+  .w-16.h-16 {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .w-16.h-16 svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  .glass-effect {
+    background: rgba(17, 24, 39, 0.9);
+  }
+  
+  h1, label {
+    color: #f9fafb;
+  }
+  
+  p {
+    color: #d1d5db;
+  }
+  
+  input {
+    background: rgba(55, 65, 81, 0.8);
+    color: #f9fafb;
+    border-color: #4b5563;
+  }
+  
+  input::placeholder {
+    color: #9ca3af;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .animate-pulse,
+  .btn-professional::before,
+  .input-focus-shadow {
+    animation: none;
+    transition: none;
+  }
+  
+  .input-focus-shadow:focus {
+    transform: none;
+  }
+  
+  .btn-professional:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .glass-effect {
+    background: white;
+    border: 2px solid black;
+  }
+  
+  input {
+    border: 2px solid black;
+  }
+  
+  button {
+    border: 2px solid black;
+  }
+}

@@ -1,18 +1,17 @@
 import { Routes } from '@angular/router';
 import { UserDashboardComponent } from './pages/user-dashboard/user-dashboard.component';
-import { UserDetailsComponent } from './pages/user-details/user-details.component';
 import { RoleGuard } from '../../core/guards/role.guard';
+import { UserLayoutComponent } from '../../shared/components/user/user-layout/user-layout.component';
+import { UserTrainerListComponent } from './pages/user-trainer-list/user-trainer-list.component';
 export const userRoutes: Routes = [
   {
-    path: 'dashboard',
-    component: UserDashboardComponent,
-   canActivate: [RoleGuard()],
-    data: { role: 'user' },
-  },
-  {
-    path: 'user-details',
-    component: UserDetailsComponent,
+    path: '',
+    component: UserLayoutComponent,
     canActivate: [RoleGuard()],
-    data: {role: 'user'}
-  },
+    data: {role: 'user'},
+    children: [
+      {path: 'dashboard', component: UserDashboardComponent},
+      {path: 'trainers', component: UserTrainerListComponent}
+    ]
+  }
 ];

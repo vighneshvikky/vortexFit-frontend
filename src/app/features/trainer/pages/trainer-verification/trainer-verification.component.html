@@ -1,118 +1,225 @@
-<div class="min-h-screen bg-gradient-to-br from-red-50 via-red-100 to-red-50 py-12 px-4 sm:px-6 lg:px-8">
+<div
+  class="min-h-screen bg-gradient-to-br from-red-50 via-red-100 to-red-50 py-12 px-4 sm:px-6 lg:px-8"
+>
   <div class="max-w-4xl mx-auto">
-    <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-red-100">
+    <div
+      class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-red-100"
+    >
       <!-- Header -->
       <div class="bg-gradient-to-r from-red-600 to-red-700 px-8 py-6">
-        <h2 class="text-3xl font-bold text-white tracking-tight">Trainer Verification</h2>
-        <p class="text-red-100 mt-2 text-lg">Complete your profile to become a verified trainer</p>
+        <h2 class="text-3xl font-bold text-white tracking-tight">
+          Trainer Verification
+        </h2>
+        <p class="text-red-100 mt-2 text-lg">
+          Complete your profile to become a verified trainer
+        </p>
       </div>
 
       <!-- Form -->
-      <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()" class="p-8 space-y-8">
+      <form
+        [formGroup]="verificationForm"
+        (ngSubmit)="onSubmit()"
+        class="p-8 space-y-8"
+      >
         <!-- Personal Information -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- Name -->
           <div class="space-y-2">
-            <label for="name" class="block text-sm font-semibold text-gray-700">Full Name</label>
+            <label for="name" class="block text-sm font-semibold text-gray-700"
+              >Full Name</label
+            >
             <input
               type="text"
               id="name"
               formControlName="name"
               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 transition duration-150"
-              [ngClass]="{'border-red-500 ring-1 ring-red-500': name?.invalid && name?.touched}"
+              [ngClass]="{
+                'border-red-500 ring-1 ring-red-500':
+                  name?.invalid && name?.touched
+              }"
             />
-            <div *ngIf="name?.invalid && name?.touched" class="mt-1 text-sm text-red-600">
+            <div
+              *ngIf="name?.invalid && name?.touched"
+              class="mt-1 text-sm text-red-600"
+            >
               <p *ngIf="name?.errors?.['required']">Name is required</p>
-              <p *ngIf="name?.errors?.['pattern']">Only letters and spaces are allowed</p>
-              <p *ngIf="name?.errors?.['minlength']">Name must be at least 2 characters</p>
-              <p *ngIf="name?.errors?.['maxlength']">Name must not exceed 50 characters</p>
+              <p *ngIf="name?.errors?.['pattern']">
+                Only letters and spaces are allowed
+              </p>
+              <p *ngIf="name?.errors?.['minlength']">
+                Name must be at least 2 characters
+              </p>
+              <p *ngIf="name?.errors?.['maxlength']">
+                Name must not exceed 50 characters
+              </p>
             </div>
           </div>
 
           <!-- Email -->
           <div class="space-y-2">
-            <label for="email" class="block text-sm font-semibold text-gray-700">Email Address</label>
+            <label for="email" class="block text-sm font-semibold text-gray-700"
+              >Email Address</label
+            >
             <input
               type="email"
               id="email"
               formControlName="email"
               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 transition duration-150"
-              [ngClass]="{'border-red-500 ring-1 ring-red-500': email?.invalid && email?.touched}"
+              [ngClass]="{
+                'border-red-500 ring-1 ring-red-500':
+                  email?.invalid && email?.touched
+              }"
             />
-            <div *ngIf="email?.invalid && email?.touched" class="mt-1 text-sm text-red-600">
+            <div
+              *ngIf="email?.invalid && email?.touched"
+              class="mt-1 text-sm text-red-600"
+            >
               <p *ngIf="email?.errors?.['required']">Email is required</p>
-              <p *ngIf="email?.errors?.['email']">Please enter a valid email address</p>
+              <p *ngIf="email?.errors?.['email']">
+                Please enter a valid email address
+              </p>
             </div>
           </div>
 
           <!-- Phone Number -->
           <div class="space-y-2">
-            <label for="phoneNumber" class="block text-sm font-semibold text-gray-700">Phone Number</label>
+            <label
+              for="phoneNumber"
+              class="block text-sm font-semibold text-gray-700"
+              >Phone Number</label
+            >
             <input
               type="tel"
               id="phoneNumber"
               formControlName="phoneNumber"
               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 transition duration-150"
-              [ngClass]="{'border-red-500 ring-1 ring-red-500': phoneNumber?.invalid && phoneNumber?.touched}"
+              [ngClass]="{
+                'border-red-500 ring-1 ring-red-500':
+                  phoneNumber?.invalid && phoneNumber?.touched
+              }"
             />
-            <div *ngIf="phoneNumber?.invalid && phoneNumber?.touched" class="mt-1 text-sm text-red-600">
-              <p *ngIf="phoneNumber?.errors?.['required']">Phone number is required</p>
-              <p *ngIf="phoneNumber?.errors?.['pattern']">Please enter a valid 10-digit phone number</p>
+            <div
+              *ngIf="phoneNumber?.invalid && phoneNumber?.touched"
+              class="mt-1 text-sm text-red-600"
+            >
+              <p *ngIf="phoneNumber?.errors?.['required']">
+                Phone number is required
+              </p>
+              <p *ngIf="phoneNumber?.errors?.['pattern']">
+                Please enter a valid 10-digit phone number
+              </p>
             </div>
           </div>
 
           <!-- Experience -->
           <div class="space-y-2">
-            <label for="experience" class="block text-sm font-semibold text-gray-700">Years of Experience</label>
+            <label
+              for="experience"
+              class="block text-sm font-semibold text-gray-700"
+              >Years of Experience</label
+            >
             <input
               type="number"
               id="experience"
               formControlName="experience"
               class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 transition duration-150"
-              [ngClass]="{'border-red-500 ring-1 ring-red-500': experience?.invalid && experience?.touched}"
+              [ngClass]="{
+                'border-red-500 ring-1 ring-red-500':
+                  experience?.invalid && experience?.touched
+              }"
             />
-            <div *ngIf="experience?.invalid && experience?.touched" class="mt-1 text-sm text-red-600">
-              <p *ngIf="experience?.errors?.['required']">Experience is required</p>
-              <p *ngIf="experience?.errors?.['min'] || experience?.errors?.['max']">Experience must be between 0 and 100 years</p>
+            <div
+              *ngIf="experience?.invalid && experience?.touched"
+              class="mt-1 text-sm text-red-600"
+            >
+              <p *ngIf="experience?.errors?.['required']">
+                Experience is required
+              </p>
+              <p
+                *ngIf="experience?.errors?.['min'] || experience?.errors?.['max']"
+              >
+                Experience must be between 0 and 100 years
+              </p>
             </div>
           </div>
         </div>
+<!-- Category Field -->
+<div class="form-group">
+  <label for="category">Category</label>
+  <select id="category" formControlName="category" required>
+    <option value="" disabled selected>Select a category</option>
+    <option *ngFor="let cat of categories" [value]="cat.value">
+      {{ cat.label }}
+    </option>
+  </select>
+
+  <!-- Error Messages -->
+  <div *ngIf="category?.invalid && category?.touched" class="mt-1 text-sm text-red-600">
+    <p *ngIf="category?.errors?.['required']">Category is required</p>
+    <p *ngIf="category?.errors?.['min'] || category?.errors?.['max']">Enter a valid category</p>
+  </div>
+</div>
 
         <!-- Specialization -->
         <div class="space-y-2">
-          <label for="specialization" class="block text-sm font-semibold text-gray-700">Specialization</label>
+          <label
+            for="specialization"
+            class="block text-sm font-semibold text-gray-700"
+            >Specialization</label
+          >
           <select
             id="specialization"
             formControlName="specialization"
             class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 transition duration-150"
-            [ngClass]="{'border-red-500 ring-1 ring-red-500': specialization?.invalid && specialization?.touched}"
+            [ngClass]="{
+              'border-red-500 ring-1 ring-red-500':
+                specialization?.invalid && specialization?.touched
+            }"
           >
             <option value="">Select your specialization</option>
-            <option *ngFor="let spec of specializations" [value]="spec.value">
-              {{spec.label}}
+            <option *ngFor="let spec of availableSpecializations" [value]="spec">
+              {{ spec }}
             </option>
           </select>
-          <div *ngIf="specialization?.invalid && specialization?.touched" class="mt-1 text-sm text-red-600">
-            <p *ngIf="specialization?.errors?.['required']">Please select a specialization</p>
+          <div
+            *ngIf="specialization?.invalid && specialization?.touched"
+            class="mt-1 text-sm text-red-600"
+          >
+            <p *ngIf="specialization?.errors?.['required']">
+              Please select a specialization
+            </p>
           </div>
         </div>
 
         <!-- Bio -->
         <div class="space-y-2">
-          <label for="bio" class="block text-sm font-semibold text-gray-700">Bio</label>
+          <label for="bio" class="block text-sm font-semibold text-gray-700"
+            >Bio</label
+          >
           <textarea
             id="bio"
             formControlName="bio"
             rows="4"
             class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 transition duration-150"
-            [ngClass]="{'border-red-500 ring-1 ring-red-500': bio?.invalid && bio?.touched}"
+            [ngClass]="{
+              'border-red-500 ring-1 ring-red-500': bio?.invalid && bio?.touched
+            }"
             placeholder="Tell us about your experience, achievements, and training philosophy..."
           ></textarea>
-          <div *ngIf="bio?.invalid && bio?.touched" class="mt-1 text-sm text-red-600">
+          <div
+            *ngIf="bio?.invalid && bio?.touched"
+            class="mt-1 text-sm text-red-600"
+          >
             <p *ngIf="bio?.errors?.['required']">Bio is required</p>
-            <p *ngIf="bio?.errors?.['minlength']">Bio must be at least 2 characters</p>
-            <p *ngIf="bio?.errors?.['maxlength']">Bio must not exceed 10 characters</p>
-            <p *ngIf="bio?.errors?.['minWords']">Bio must contain at least 2 words</p>
+            <p *ngIf="bio?.errors?.['minlength']">
+              Bio must be at least 2 characters
+            </p>
+            <p *ngIf="bio?.errors?.['maxlength']">
+              Bio must not exceed 10 characters
+            </p>
+            <p *ngIf="bio?.errors?.['minWords']">
+              Bio must contain at least 2 words
+            </p>
           </div>
         </div>
 
@@ -120,7 +227,9 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- Certificate -->
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-gray-700">Certification Document</label>
+            <label class="block text-sm font-semibold text-gray-700"
+              >Certification Document</label
+            >
             <div class="mt-1 flex items-center">
               <input
                 #certificateInput
@@ -137,18 +246,20 @@
                 <i class="fas fa-upload mr-2"></i>
                 Upload Certification
               </button>
-            <div *ngIf="uploadedFileNames.certification">
-  Certification File: {{ uploadedFileNames.certification }}
-</div>
+              <div *ngIf="uploadedFileNames.certification">
+                Certification File: {{ uploadedFileNames.certification }}
+              </div>
             </div>
-        <div *ngIf="uploadedFileNames.idProof">
-  ID Proof File: {{ uploadedFileNames.idProof }}
-</div>
+            <div *ngIf="uploadedFileNames.idProof">
+              ID Proof File: {{ uploadedFileNames.idProof }}
+            </div>
           </div>
 
           <!-- ID Proof -->
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-gray-700">ID Proof</label>
+            <label class="block text-sm font-semibold text-gray-700"
+              >ID Proof</label
+            >
             <div class="mt-1 flex items-center">
               <input
                 #idProofInput
@@ -166,10 +277,13 @@
                 Upload ID Proof
               </button>
               <span *ngIf="idProof?.value" class="ml-3 text-sm text-gray-500">
-                {{idProof?.value?.name}}
+                {{ idProof?.value?.name }}
               </span>
             </div>
-            <div *ngIf="idProof?.invalid && idProof?.touched" class="mt-1 text-sm text-red-600">
+            <div
+              *ngIf="idProof?.invalid && idProof?.touched"
+              class="mt-1 text-sm text-red-600"
+            >
               <p *ngIf="idProof?.errors?.['required']">ID Proof is required</p>
             </div>
           </div>
@@ -183,7 +297,7 @@
             class="inline-flex items-center justify-center px-8 py-3.5 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-lg min-w-[200px]"
           >
             <i class="fas fa-spinner fa-spin mr-2" *ngIf="isLoading"></i>
-            {{ isLoading ? 'Submitting...' : 'Submit for Verification' }}
+            {{ isLoading ? "Submitting..." : "Submit for Verification" }}
           </button>
         </div>
       </form>
@@ -192,35 +306,39 @@
 </div>
 
 <style>
-/* Enhanced styles for better visual appeal */
-button[type="submit"] {
-  box-shadow: 0 4px 6px rgba(220, 38, 38, 0.2);
-}
-
-button[type="submit"]:hover:not(:disabled) {
-  box-shadow: 0 6px 12px rgba(220, 38, 38, 0.3);
-}
-
-button[type="submit"]:disabled {
-  background: linear-gradient(to right, #ef4444, #dc2626);
-  opacity: 0.7;
-}
-
-input, select, textarea {
-  transition: all 0.2s ease-in-out;
-}
-
-input:focus, select:focus, textarea:focus {
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
-}
-
-@media (max-width: 640px) {
+  /* Enhanced styles for better visual appeal */
   button[type="submit"] {
-    width: 100%;
+    box-shadow: 0 4px 6px rgba(220, 38, 38, 0.2);
   }
-  
-  .p-8 {
-    padding: 1.5rem;
+
+  button[type="submit"]:hover:not(:disabled) {
+    box-shadow: 0 6px 12px rgba(220, 38, 38, 0.3);
   }
-}
+
+  button[type="submit"]:disabled {
+    background: linear-gradient(to right, #ef4444, #dc2626);
+    opacity: 0.7;
+  }
+
+  input,
+  select,
+  textarea {
+    transition: all 0.2s ease-in-out;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+  }
+
+  @media (max-width: 640px) {
+    button[type="submit"] {
+      width: 100%;
+    }
+
+    .p-8 {
+      padding: 1.5rem;
+    }
+  }
 </style>
