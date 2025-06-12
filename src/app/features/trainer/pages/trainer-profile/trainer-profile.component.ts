@@ -42,36 +42,62 @@ export class TrainerProfileComponent implements OnInit {
   imagePreviewUrl?: string;
 
   ngOnInit(): void {
-
     this.profileForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      name: [
+        '',
+        [
+          
+          Validators.pattern(/^[a-zA-Z\s]*$/),
+          Validators.minLength(2),
+          Validators.maxLength(50),
+        ],
+      ],
+      email: ['', [ Validators.email]],
       phoneNumber: [
         '',
-        [Validators.required, Validators.pattern(/^[0-9]{10}$/)],
+        [ Validators.pattern(/^[0-9]{10}$/)],
       ],
-      specialization: ['', Validators.required],
-      experience: ['', [Validators.required, Validators.min(0)]],
-      bio: ['', Validators.maxLength(1000)],
-      certificationUrl: [''],
-      image: [''],
+      experience: [
+        '',
+        [ Validators.min(0), Validators.max(100)],
+      ],
+      bio: [
+        '',
+        [
+          
+          Validators.minLength(1),
+          Validators.maxLength(10),
+        ],
+      ],
+      oneToOneSessionPrice: [
+        '',
+        [ Validators.min(0), Validators.max(100000)],
+      ],
+      workoutPlanPrice: [
+        '',
+        [ Validators.min(0), Validators.max(100000)],
+      ],
+      category: ['', []],
+      specialization: [[], []],
+      certification: [null, []],
+      idProof: [null, []],
     });
+    this.currentTrainer$ = this.store.select(selectCurrentUser).pipe(
+      map((user) =>
+        isTrainer(user)
+          ? {
+              ...user,
+              certificationUrl: this.formatKey(user.certificationUrl),
+            }
+          : null
+      )
+    );
 
-
-
-  this.currentTrainer$ = this.store.select(selectCurrentUser).pipe(
-    map((user) => (isTrainer(user) ? {
-      ...user,
-      certificationUrl: this.formatKey(user.certificationUrl)
-    } : null))
-  );
-
-  // Patch the form only once, on first value
-  this.currentTrainer$.pipe(take(1)).subscribe((trainer) => {
-    if (trainer) {
-      this.profileForm.patchValue(trainer);
-    }
-  });
+    this.currentTrainer$.pipe(take(1)).subscribe((trainer) => {
+      if (trainer) {
+        this.profileForm.patchValue(trainer);
+      }
+    });
   }
 
   onFileSelect(event: Event, field: string) {
@@ -85,7 +111,6 @@ export class TrainerProfileComponent implements OnInit {
       .getSignedUploadUrl(fileName, contentType, field)
       .subscribe({
         next: ({ url, key }) => {
-          // Upload directly to S3 using signed URL
           this.http
             .put(url, file, {
               headers: { 'Content-Type': contentType },
@@ -96,7 +121,6 @@ export class TrainerProfileComponent implements OnInit {
                 console.log('Full URL:', fullUrl);
                 this.profileForm.patchValue({ [field]: fullUrl });
 
-               
                 if (field === 'image') this.imagePreviewUrl = fullUrl;
                 if (field === 'certificationUrl') this.certPreviewUrl = fullUrl;
               },
@@ -108,14 +132,28 @@ export class TrainerProfileComponent implements OnInit {
   }
 
   private formatKey(key?: string | null): string | undefined {
-  return key ? this.S3_BASE_URL + encodeURIComponent(key).replace(/%2F/g, '/') : undefined;
-}
-
+    return key
+      ? this.S3_BASE_URL + encodeURIComponent(key).replace(/%2F/g, '/')
+      : undefined;
+  }
 
   onSubmit(): void {
-    if (this.profileForm.invalid) return;
+  console.log('Form submitted');
+  console.log('Valid:', this.profileForm.valid);
+  console.log('Values:', this.profileForm.value);
+     if (this.profileForm.invalid) {
+    console.log('Form is invalid, returning');
+    return;
+  }
 
-    const profileData = this.profileForm.value;
+    
+  const profileData = {
+    ...this.profileForm.value,
+    pricing: {
+      oneToOneSession: this.profileForm.value.oneToOneSessionPrice,
+      workoutPlan: this.profileForm.value.workoutPlanPrice,
+    }
+  };
 
     this.trainerService.updateProfile(profileData).subscribe({
       next: (updatedTrainer: Trainer) => {

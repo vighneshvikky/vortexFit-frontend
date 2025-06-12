@@ -143,22 +143,27 @@
             </div>
           </div>
         </div>
-<!-- Category Field -->
-<div class="form-group">
-  <label for="category">Category</label>
-  <select id="category" formControlName="category" required>
-    <option value="" disabled selected>Select a category</option>
-    <option *ngFor="let cat of categories" [value]="cat.value">
-      {{ cat.label }}
-    </option>
-  </select>
+        <!-- Category Field -->
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" formControlName="category" required>
+            <option value="" disabled selected>Select a category</option>
+            <option *ngFor="let cat of categories" [value]="cat.value">
+              {{ cat.label }}
+            </option>
+          </select>
 
-  <!-- Error Messages -->
-  <div *ngIf="category?.invalid && category?.touched" class="mt-1 text-sm text-red-600">
-    <p *ngIf="category?.errors?.['required']">Category is required</p>
-    <p *ngIf="category?.errors?.['min'] || category?.errors?.['max']">Enter a valid category</p>
-  </div>
-</div>
+          <!-- Error Messages -->
+          <div
+            *ngIf="category?.invalid && category?.touched"
+            class="mt-1 text-sm text-red-600"
+          >
+            <p *ngIf="category?.errors?.['required']">Category is required</p>
+            <p *ngIf="category?.errors?.['min'] || category?.errors?.['max']">
+              Enter a valid category
+            </p>
+          </div>
+        </div>
 
         <!-- Specialization -->
         <div class="space-y-2">
@@ -177,7 +182,10 @@
             }"
           >
             <option value="">Select your specialization</option>
-            <option *ngFor="let spec of availableSpecializations" [value]="spec">
+            <option
+              *ngFor="let spec of availableSpecializations"
+              [value]="spec"
+            >
               {{ spec }}
             </option>
           </select>
@@ -220,6 +228,45 @@
             <p *ngIf="bio?.errors?.['minWords']">
               Bio must contain at least 2 words
             </p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="oneToOneSessionPrice">One-to-One Session Price</label>
+          <input
+            type="number"
+            id="oneToOneSessionPrice"
+            formControlName="oneToOneSessionPrice"
+            class="form-control"
+            placeholder="e.g., 1000"
+          />
+          <div
+            *ngIf="
+              verificationForm.get('oneToOneSessionPrice')?.invalid &&
+              verificationForm.get('oneToOneSessionPrice')?.touched
+            "
+            class="text-red-600 text-sm"
+          >
+            Please enter a valid price
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="workoutPlanPrice">Workout Plan Price</label>
+          <input
+            type="number"
+            id="workoutPlanPrice"
+            formControlName="workoutPlanPrice"
+            class="form-control"
+            placeholder="e.g., 500"
+          />
+          <div
+            *ngIf="
+              verificationForm.get('workoutPlanPrice')?.invalid &&
+              verificationForm.get('workoutPlanPrice')?.touched
+            "
+            class="text-red-600 text-sm"
+          >
+            Please enter a valid price
           </div>
         </div>
 

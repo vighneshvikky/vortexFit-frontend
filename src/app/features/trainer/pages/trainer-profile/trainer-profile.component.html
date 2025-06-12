@@ -7,7 +7,9 @@
   <p>Specialization: {{ currentTrainer.specialization }}</p>
   <p>Experience: {{ currentTrainer.experience }} years</p>
   <p *ngIf="currentTrainer.bio">Bio: {{ currentTrainer.bio }}</p>
-   
+  pricing
+    <p *ngIf="currentTrainer.pricing.oneToOneSession">One-to-One Session: {{ currentTrainer.pricing.oneToOneSession }}</p>
+     <p *ngIf="currentTrainer.pricing.workoutPlan">workoutPlan: {{ currentTrainer.pricing.workoutPlan }}</p>
   <div *ngIf="certPreviewUrl || currentTrainer.certificationUrl">
     <strong>Certification:</strong><br />
     <a [href]="certPreviewUrl || currentTrainer.certificationUrl" target="_blank">
@@ -69,7 +71,21 @@
       Bio must be less than 1000 characters.
     </div>
   </div>
+<div>
+  <label>One-to-One Session Price (₹):</label>
+  <input formControlName="oneToOneSessionPrice" type="number" min="0" />
+  <div *ngIf="profileForm.get('oneToOneSessionPrice')?.invalid && profileForm.get('oneToOneSessionPrice')?.touched">
+    Enter a valid price.
+  </div>
+</div>
 
+<div>
+  <label>Workout Plan Price (₹):</label>
+  <input formControlName="workoutPlanPrice" type="number" min="0" />
+  <div *ngIf="profileForm.get('workoutPlanPrice')?.invalid && profileForm.get('workoutPlanPrice')?.touched">
+    Enter a valid price.
+  </div>
+</div>
 <div>
   <label>Certification:</label>
   <input type="file" (change)="onFileSelect($event, 'certificationUrl')" />
@@ -79,6 +95,7 @@
   <label>Profile Image:</label>
   <input type="file" (change)="onFileSelect($event, 'image')" />
 </div>
+
 
 
 <div *ngIf="certPreviewUrl">
@@ -94,4 +111,3 @@
 
   <button type="submit" [disabled]="profileForm.invalid">Update Profile</button>
 </form>
-+

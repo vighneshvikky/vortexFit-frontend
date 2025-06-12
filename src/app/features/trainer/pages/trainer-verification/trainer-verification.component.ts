@@ -35,12 +35,6 @@ export class TrainerVerificationComponent implements OnInit {
   uploadedFileNames: { [key in 'certification' | 'idProof']?: string } = {};
   availableSpecializations: string[] = [];
 
-  // specializations = [
-  //   { value: 'cardio', label: 'Cardio' },
-  //   { value: 'yoga', label: 'Yoga' },
-  //   { value: 'martial_arts', label: 'Martial Arts' },
-  //   { value: 'fitness', label: 'Fitness' },
-  // ];
 
   categories = [
     { value: 'cardio', label: 'Cardio' },
@@ -92,6 +86,14 @@ export class TrainerVerificationComponent implements OnInit {
           this.minWords(2),
         ],
       ],
+      oneToOneSessionPrice: [
+        '',
+        [Validators.required, Validators.min(0), Validators.max(100000)],
+      ],
+      workoutPlanPrice: [
+        '',
+        [Validators.required, Validators.min(0), Validators.max(100000)],
+      ],
       category: ['', [Validators.required]],
       specialization: [[], [Validators.required]],
       certification: [null, [Validators.required]],
@@ -116,11 +118,13 @@ export class TrainerVerificationComponent implements OnInit {
       )
       .subscribe();
 
-      this.verificationForm.get('category')?.valueChanges.subscribe((selectedCategory) => {
-  this.availableSpecializations = this.categoryToSpecializations[selectedCategory] || [];
-  this.verificationForm.get('specializations')?.setValue([]); 
-});
-
+    this.verificationForm
+      .get('category')
+      ?.valueChanges.subscribe((selectedCategory) => {
+        this.availableSpecializations =
+          this.categoryToSpecializations[selectedCategory] || [];
+        this.verificationForm.get('specializations')?.setValue([]);
+      });
   }
 
   private minWords(min: number) {
@@ -200,6 +204,10 @@ export class TrainerVerificationComponent implements OnInit {
         specialization: formValues.specialization,
         certificationUrl: formValues.certification,
         idProofUrl: formValues.idProof,
+        pricing: {
+          oneToOneSession: formValues.oneToOneSessionPrice,
+          workoutPlan: formValues.workoutPlanPrice,
+        },
       };
 
       this.trainerService.updateProfile(profileData).subscribe({

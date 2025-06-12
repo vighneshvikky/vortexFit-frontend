@@ -1,15 +1,15 @@
 import { BaseAccount } from '../../auth/model/baseAccount.interface';
 
 export interface Trainer {
-  _id: string; 
+  _id: string;
   name: string;
   email: string;
-  role: 'trainer' 
+  role: 'trainer';
   isBlocked: boolean;
   isVerified: boolean;
   verificationStatus: 'pending' | 'approved' | 'rejected' | 'requested';
   phoneNumber: string;
-  specialization: string;
+  specialization: string[];
   experience: number;
   bio?: string;
   certificationUrl?: string;
@@ -17,6 +17,8 @@ export interface Trainer {
   rejectionReason?: string;
   rejectedAt?: Date;
   image: string;
-
+  pricing: {
+    oneToOneSession: number;
+    workoutPlan: number;
+  };
 }
-
