@@ -200,6 +200,7 @@ export class TrainerVerificationComponent implements OnInit {
         email: formValues.email,
         phoneNumber: formValues.phoneNumber,
         bio: formValues.bio,
+        experience: formValues.experience,
         category: formValues.category,
         specialization: formValues.specialization,
         certificationUrl: formValues.certification,

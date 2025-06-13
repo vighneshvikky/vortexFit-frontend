@@ -33,6 +33,10 @@ export const usersReducer = createReducer(
     loaded: true,
     error: null,
   })),
+  on(UsersActions.resetUsersLoaded, (state) => ({
+  ...state,
+  usersLoaded: false,
+})),
   on(UsersActions.loadUsersFailure, (state, { error }) => ({
     ...state,
     loading: false,

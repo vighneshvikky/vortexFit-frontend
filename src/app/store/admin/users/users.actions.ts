@@ -11,6 +11,8 @@ export const loadUsers = createAction(
   props<{ params: GetUsersParams }>()
 );
 
+export const resetUsersLoaded = createAction('[Users] Reset Users Loaded');
+
 export const loadUsersSuccess = createAction(
   '[User] Load Users Success',
   props<{ response: PaginatedResponse<User | Trainer> }>()
