@@ -1,4 +1,4 @@
-import { BaseAccount } from '../../auth/model/baseAccount.interface';
+
 
 export interface Trainer {
   _id: string;

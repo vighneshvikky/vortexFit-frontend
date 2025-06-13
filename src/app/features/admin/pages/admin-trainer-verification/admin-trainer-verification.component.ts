@@ -50,6 +50,10 @@ export class AdminTrainerVerificationComponent implements OnInit {
       });
   }
 openTrainerModal(trainer: Trainer): void {
+
+  console.log(
+  'trainer', trainer
+  )
   const formatKey = (key: string | undefined | null): string | undefined =>
     key ? this.S3_BASE_URL + encodeURIComponent(key).replace(/%2F/g, '/') : undefined;
 

@@ -46,37 +46,17 @@ export class TrainerProfileComponent implements OnInit {
       name: [
         '',
         [
-          
           Validators.pattern(/^[a-zA-Z\s]*$/),
           Validators.minLength(2),
           Validators.maxLength(50),
         ],
       ],
-      email: ['', [ Validators.email]],
-      phoneNumber: [
-        '',
-        [ Validators.pattern(/^[0-9]{10}$/)],
-      ],
-      experience: [
-        '',
-        [ Validators.min(0), Validators.max(100)],
-      ],
-      bio: [
-        '',
-        [
-          
-          Validators.minLength(1),
-          Validators.maxLength(10),
-        ],
-      ],
-      oneToOneSessionPrice: [
-        '',
-        [ Validators.min(0), Validators.max(100000)],
-      ],
-      workoutPlanPrice: [
-        '',
-        [ Validators.min(0), Validators.max(100000)],
-      ],
+      phoneNumber: ['', [Validators.pattern(/^[0-9]{10}$/)]],
+      experience: ['', [Validators.min(0), Validators.max(100)]],
+      bio: ['', [Validators.minLength(1), Validators.maxLength(10)]],
+      oneToOneSessionPrice: ['', [Validators.min(0), Validators.max(100000)]],
+      workoutPlanPrice: ['', [Validators.min(0), Validators.max(100000)]],
+      image: [''],
       category: ['', []],
       specialization: [[], []],
       certification: [null, []],
@@ -87,7 +67,7 @@ export class TrainerProfileComponent implements OnInit {
         isTrainer(user)
           ? {
               ...user,
-              certificationUrl: this.formatKey(user.certificationUrl),
+              certification: this.formatKey(user.certificationUrl),
             }
           : null
       )
@@ -95,7 +75,11 @@ export class TrainerProfileComponent implements OnInit {
 
     this.currentTrainer$.pipe(take(1)).subscribe((trainer) => {
       if (trainer) {
-        this.profileForm.patchValue(trainer);
+        this.profileForm.patchValue({
+          ...trainer,
+          oneToOneSessionPrice: trainer.pricing?.oneToOneSession ?? '',
+          workoutPlanPrice: trainer.pricing?.workoutPlan ?? '',
+        });
       }
     });
   }
@@ -120,9 +104,10 @@ export class TrainerProfileComponent implements OnInit {
                 const fullUrl = `https://vortexfit-app-upload.s3.ap-south-1.amazonaws.com/${key}`;
                 console.log('Full URL:', fullUrl);
                 this.profileForm.patchValue({ [field]: fullUrl });
+                this.profileForm.get(field)?.markAsDirty();
 
                 if (field === 'image') this.imagePreviewUrl = fullUrl;
-                if (field === 'certificationUrl') this.certPreviewUrl = fullUrl;
+                if (field === 'certification') this.certPreviewUrl = fullUrl;
               },
               error: (err) => console.error('Upload to S3 failed', err),
             });
@@ -138,32 +123,57 @@ export class TrainerProfileComponent implements OnInit {
   }
 
   onSubmit(): void {
-  console.log('Form submitted');
-  console.log('Valid:', this.profileForm.valid);
-  console.log('Values:', this.profileForm.value);
-     if (this.profileForm.invalid) {
-    console.log('Form is invalid, returning');
-    return;
-  }
-
-    
-  const profileData = {
-    ...this.profileForm.value,
-    pricing: {
-      oneToOneSession: this.profileForm.value.oneToOneSessionPrice,
-      workoutPlan: this.profileForm.value.workoutPlanPrice,
+    console.log('Form submitted');
+    if (this.profileForm.invalid) {
+      console.log('Form is invalid, returning');
+      return;
     }
-  };
 
-    this.trainerService.updateProfile(profileData).subscribe({
+    const changedFields: any = {};
+
+    Object.keys(this.profileForm.controls).forEach((key) => {
+      const control = this.profileForm.get(key);
+      if (control?.dirty) {
+        changedFields[key] = control.value;
+      }
+    });
+
+    // Add pricing object if related fields changed
+    if (
+      this.profileForm.get('oneToOneSessionPrice')?.dirty ||
+      this.profileForm.get('workoutPlanPrice')?.dirty
+    ) {
+      changedFields['pricing'] = {
+        oneToOneSession: this.profileForm.value.oneToOneSessionPrice,
+        workoutPlan: this.profileForm.value.workoutPlanPrice,
+      };
+
+      delete changedFields['oneToOneSessionPrice'];
+      delete changedFields['workoutPlanPrice'];
+    }
+
+    if (changedFields['certification']) {
+      changedFields['certificationUrl'] = changedFields['certification'];
+      delete changedFields['certification'];
+    }
+
+    if (Object.keys(changedFields).length === 0) {
+      this.notify.showInfo('No changes to update');
+      return;
+    }
+
+    console.log('Sending changedFields:', changedFields);
+
+    this.trainerService.updateProfile(changedFields).subscribe({
       next: (updatedTrainer: Trainer) => {
+        console.log('updatedTrainer', updatedTrainer);
         this.store.dispatch(updateCurrentUser({ user: updatedTrainer }));
         this.notify.showSuccess('Profile updated successfully');
         this.router.navigate(['/trainer/profile']);
       },
       error: (err) => {
         console.error(err);
-        this.notify.showError('Profile updation failed');
+        this.notify.showError('Profile update failed');
         this.router.navigate(['/trainer/profile']);
       },
     });

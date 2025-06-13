@@ -35,13 +35,6 @@
     </div>
   </div>
 
-  <div>
-    <label>Email:</label>
-    <input formControlName="email" type="email" />
-    <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
-      Valid email is required.
-    </div>
-  </div>
 
   <div>
     <label>Phone Number:</label>
@@ -73,22 +66,22 @@
   </div>
 <div>
   <label>One-to-One Session Price (₹):</label>
-  <input formControlName="oneToOneSessionPrice" type="number" min="0" />
-  <div *ngIf="profileForm.get('oneToOneSessionPrice')?.invalid && profileForm.get('oneToOneSessionPrice')?.touched">
-    Enter a valid price.
+    <input formControlName="oneToOneSessionPrice" type="number" min="0" />
+    <div *ngIf="profileForm.get('oneToOneSessionPrice')?.invalid && profileForm.get('oneToOneSessionPrice')?.touched">
+      Enter a valid price.
+    </div>
   </div>
-</div>
 
-<div>
-  <label>Workout Plan Price (₹):</label>
-  <input formControlName="workoutPlanPrice" type="number" min="0" />
-  <div *ngIf="profileForm.get('workoutPlanPrice')?.invalid && profileForm.get('workoutPlanPrice')?.touched">
-    Enter a valid price.
-  </div>
+  <div>
+    <label>Workout Plan Price (₹):</label>
+    <input formControlName="workoutPlanPrice" type="number" min="0" />
+    <div *ngIf="profileForm.get('workoutPlanPrice')?.invalid && profileForm.get('workoutPlanPrice')?.touched">
+      Enter a valid price.
+    </div>
 </div>
 <div>
   <label>Certification:</label>
-  <input type="file" (change)="onFileSelect($event, 'certificationUrl')" />
+  <input type="file" (change)="onFileSelect($event, 'certification')" />
 </div>
 
 <div>

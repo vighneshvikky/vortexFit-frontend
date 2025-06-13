@@ -7,7 +7,7 @@ export interface TrainerProfile {
   experience: number;
   bio: string;
   idProofUrl: string;
-  certificationUrl: string;
+  certification: string;
   isVerified: boolean;
   verificationStatus: 'pending' | 'approved' | 'rejected';
   createdAt?: string;  

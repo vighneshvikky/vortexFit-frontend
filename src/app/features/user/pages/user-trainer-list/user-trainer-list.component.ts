@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
-import { Trainer } from '../../../trainer/models/trainer.interface';
 import { CommonModule } from '@angular/common';
 
 @Component({
