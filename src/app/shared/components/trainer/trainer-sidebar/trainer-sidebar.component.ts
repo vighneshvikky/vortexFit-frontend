@@ -18,4 +18,10 @@ export class TrainerSidebarComponent implements OnInit {
   ngOnInit(): void {
     this.$currentTrainer = this.store.select(selectCurrentUser);
   }
+
+
+  onImageError(event: Event) {
+  const target = event.target as HTMLImageElement;
+  target.src = 'assets/images/default-user.png'; 
+}
 }

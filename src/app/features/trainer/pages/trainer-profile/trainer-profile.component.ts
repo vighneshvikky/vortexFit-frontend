@@ -75,6 +75,8 @@ export class TrainerProfileComponent implements OnInit {
 
     this.currentTrainer$.pipe(take(1)).subscribe((trainer) => {
       if (trainer) {
+           this.certPreviewUrl = this.formatKey(trainer.certificationUrl);  
+    this.imagePreviewUrl = trainer.image; 
         this.profileForm.patchValue({
           ...trainer,
           oneToOneSessionPrice: trainer.pricing?.oneToOneSession ?? '',
@@ -83,6 +85,11 @@ export class TrainerProfileComponent implements OnInit {
       }
     });
   }
+
+  onImageError(event: Event) {
+  const target = event.target as HTMLImageElement;
+  target.src = 'assets/images/default-user.png'; // Path to your dummy image
+}
 
   onFileSelect(event: Event, field: string) {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -116,11 +123,11 @@ export class TrainerProfileComponent implements OnInit {
       });
   }
 
-  private formatKey(key?: string | null): string | undefined {
-    return key
-      ? this.S3_BASE_URL + encodeURIComponent(key).replace(/%2F/g, '/')
-      : undefined;
-  }
+private formatKey(key?: string | null): string | undefined {
+  return key
+    ? this.S3_BASE_URL + encodeURIComponent(key).replace(/%2F/g, '/')
+    : undefined;
+}
 
   onSubmit(): void {
     console.log('Form submitted');
