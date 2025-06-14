@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-trainer-list',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './user-trainer-list.component.html',
   styleUrl: './user-trainer-list.component.scss',
 })
