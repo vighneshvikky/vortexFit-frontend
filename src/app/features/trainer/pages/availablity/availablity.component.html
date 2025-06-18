@@ -1,0 +1,19 @@
+<div class="availability-container">
+  <h2 class="text-2xl font-semibold mb-4">Set Your Availability</h2>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Select a date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      (dateChange)="onDateClick($event.value)"
+      placeholder="Choose a date"
+    />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <p class="text-gray-500 mt-2">
+    Select a date to set your available time slots.
+  </p>
+</div>

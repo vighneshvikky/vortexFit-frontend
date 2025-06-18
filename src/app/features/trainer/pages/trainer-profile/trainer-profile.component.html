@@ -18,23 +18,23 @@
   <p *ngIf="currentTrainer.pricing.workoutPlan">
     workoutPlan: {{ currentTrainer.pricing.workoutPlan }}
   </p>
-  <p>{{currentTrainer?.certificationUrl}}</p>
-<div *ngIf="certPreviewUrl">
-  <strong>Certification:</strong><br />
-  <a [href]="certPreviewUrl" target="_blank">
-    <img
-      [src]="certPreviewUrl"
-      alt="Certification"
-      style="
-        max-width: 100%;
-        max-height: 300px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        margin-top: 8px;
-      "
-    />
-  </a>
-</div>
+
+  <div *ngIf="certPreviewUrl">
+    <strong>Certification:</strong><br />
+    <a [href]="certPreviewUrl" target="_blank">
+      <img
+        [src]="certPreviewUrl"
+        alt="Certification"
+        style="
+          max-width: 100%;
+          max-height: 300px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          margin-top: 8px;
+        "
+      />
+    </a>
+  </div>
 </div>
 
 <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
