@@ -34,7 +34,7 @@ setAvailability(payload: { date: string; slots: string[] }): Observable<any> {
 }
 
 
-  getMyAvailability(date: string): Observable<Availability> {
+  getMyAvailability(date: string ): Observable<Availability> {
     const params = new HttpParams().set('date', date);
     return this.http.get<Availability>(`${this.apiUrl}/get-availability-trainer`, { params });
   }
