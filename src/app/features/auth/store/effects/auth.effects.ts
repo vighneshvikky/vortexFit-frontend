@@ -71,6 +71,7 @@ export class AuthEffects {
               return loginSuccess({ user: response.user });
             }),
             catchError((error) => {
+      
               let errorMsg = 'Login failed';
               if (error.error?.message) {
                 errorMsg = error.error.message;

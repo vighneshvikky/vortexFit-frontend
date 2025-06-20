@@ -1,0 +1,277 @@
+// slot-picker-modal.component.scss
+.slot-picker-modal {
+  .modal-header {
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      
+      .header-icon {
+        font-size: 2rem;
+        color: #3b82f6;
+        background: #eff6ff;
+        border-radius: 50%;
+        padding: 0.5rem;
+        width: 3rem;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .header-text {
+        h2 {
+          margin: 0 0 0.25rem 0;
+          font-size: 1.5rem;
+          font-weight: 600;
+          color: #1f2937;
+        }
+        
+        p {
+          margin: 0;
+          color: #6b7280;
+          font-size: 0.875rem;
+        }
+      }
+    }
+  }
+  
+  .modal-content {
+    padding: 1.5rem;
+    min-height: 300px;
+    
+    .loading-state,
+    .error-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      text-align: center;
+      
+      p {
+        margin: 1rem 0;
+        color: #6b7280;
+      }
+      
+      .error-icon {
+        font-size: 3rem;
+        color: #ef4444;
+        margin-bottom: 0.5rem;
+      }
+      
+      .retry-button {
+        margin-top: 1rem;
+      }
+    }
+    
+    .slots-section {
+      .selection-summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: #f9fafb;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        
+        .summary-text {
+          .selected-count {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+          }
+          
+          .total-count {
+            color: #6b7280;
+            font-size: 0.875rem;
+          }
+        }
+        
+        .bulk-actions {
+          display: flex;
+          gap: 0.5rem;
+          
+          .bulk-action-btn {
+            font-size: 0.75rem;
+            padding: 0.5rem 1rem;
+            
+            mat-icon {
+              font-size: 1rem;
+              margin-right: 0.25rem;
+            }
+          }
+        }
+      }
+      
+      .time-slots-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+        
+        .time-slot-button {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 1rem 0.5rem;
+          border: 2px solid #e5e7eb;
+          border-radius: 8px;
+          background: white;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          min-height: 60px;
+          
+          &:hover:not(:disabled) {
+            border-color: #3b82f6;
+            background: #f8fafc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          }
+          
+          &.selected {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+            
+            .slot-time {
+              font-weight: 600;
+            }
+          }
+          
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+          
+          .slot-time {
+            font-size: 1rem;
+            font-weight: 500;
+          }
+          
+          .selected-icon {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            font-size: 1rem;
+            opacity: 0.9;
+          }
+        }
+      }
+      
+      .help-section {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 1rem;
+        background: #fffbeb;
+        border-radius: 8px;
+        border: 1px solid #fbbf24;
+        
+        .help-icon {
+          color: #f59e0b;
+          font-size: 1.125rem;
+          margin-top: 0.125rem;
+        }
+        
+        p {
+          color: #92400e;
+          font-size: 0.875rem;
+          margin: 0;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
+  
+  .modal-actions {
+    padding: 1rem 1.5rem 1.5rem 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    gap: 1rem;
+    
+    .cancel-button {
+      color: #6b7280;
+    }
+    
+    .save-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 140px;
+      
+      .button-spinner {
+        margin-right: 0.5rem;
+      }
+      
+      mat-icon {
+        font-size: 1.125rem;
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 640px) {
+  .slot-picker-modal {
+    .modal-header {
+      padding: 1rem;
+      
+      .header-content {
+        .header-icon {
+          width: 2.5rem;
+          height: 2.5rem;
+          font-size: 1.5rem;
+        }
+        
+        .header-text h2 {
+          font-size: 1.25rem;
+        }
+      }
+    }
+    
+    .modal-content {
+      padding: 1rem;
+      
+      .slots-section {
+        .selection-summary {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 1rem;
+          
+          .bulk-actions {
+            justify-content: center;
+          }
+        }
+        
+        .time-slots-grid {
+          grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+          gap: 0.5rem;
+          
+          .time-slot-button {
+            padding: 0.75rem 0.5rem;
+            min-height: 50px;
+            
+            .slot-time {
+              font-size: 0.875rem;
+            }
+          }
+        }
+      }
+    }
+    
+    .modal-actions {
+      padding: 1rem;
+      
+      .save-button {
+        min-width: 120px;
+      }
+    }
+  }
+}

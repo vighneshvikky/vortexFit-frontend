@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotyService } from '../../../../core/services/noty.service';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './otp.component.html',
   styleUrl: './otp.component.scss',
 })
-export class OtpComponent implements OnInit {
+export class OtpComponent implements OnInit ,OnDestroy{
   email = '';
   otp = '';
   role: 'user' | 'trainer' = 'user';
@@ -21,7 +21,8 @@ export class OtpComponent implements OnInit {
 
   timer = 60;
   isResendDisabled = true;
-  interval: any;
+  interval: number | undefined;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -72,19 +73,28 @@ export class OtpComponent implements OnInit {
       },
     });
   }
-
-  startTimer() {
-    this.isResendDisabled = true;
-    this.timer = 60;
+  ngOnDestroy(): void {
     if (this.interval) {
       clearInterval(this.interval);
     }
-    this.interval = setInterval(() => {
-      this.timer--;
-      if (this.timer <= 0) {
-        this.isResendDisabled = false;
-        clearInterval(this.interval);
-      }
-    }, 1000);
   }
+startTimer() {
+  this.isResendDisabled = true;
+  this.timer = 60;
+
+  if (this.interval !== undefined) {
+    clearInterval(this.interval);
+  }
+
+this.interval = window.setInterval(() => {
+  this.timer--;
+  if (this.timer <= 0) {
+    this.isResendDisabled = false;
+    if (this.interval !== undefined) {
+      clearInterval(this.interval);
+    }
+  }
+}, 1000);
+}
+
 }

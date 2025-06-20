@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../enviorments/environment';
 import { GetUsersQuery } from '../../../shared/components/admin/sidebar/sidebar.component';
@@ -17,11 +17,10 @@ export interface AdminLoginResponse {
 }
 
 export interface User {
-
-  _id: string; 
+  _id: string;
   name: string;
   email: string;
-  role: 'user' 
+  role: 'user';
   isBlocked: boolean;
   isVerified: boolean;
   googleId?: string;
@@ -38,7 +37,6 @@ export interface User {
   equipments: string[];
   verificationStatus: string;
 }
-
 
 export interface GetUsersParams {
   search?: string;
@@ -66,14 +64,26 @@ export class AdminService {
   login(credentials: AdminLoginRequest): Observable<AdminLoginResponse> {
     return this.http.post<AdminLoginResponse>(
       `${this.apiUrl}/login`,
-      credentials
+      credentials,
+      { withCredentials: true }
     );
   }
 
-  getUsers(params: GetUsersParams): Observable<PaginatedResponse<User>> {
-    return this.http.get<PaginatedResponse<User>>(`${this.apiUrl}/users`, {
-      params: params as any,
+  getUsers(
+    params: GetUsersParams
+  ): Observable<PaginatedResponse<User | Trainer>> {
+    let httpParams = new HttpParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        httpParams = httpParams.set(key, value.toString());
+      }
     });
+    return this.http.get<PaginatedResponse<User | Trainer>>(
+      `${this.apiUrl}/users`,
+      {
+        params: httpParams,
+      }
+    );
   }
 
   toggleBlockStatusAndFetchUsers(
@@ -99,10 +109,18 @@ export class AdminService {
   getUnverifiedTrainers(
     query: GetUsersQuery
   ): Observable<PaginatedResponse<Trainer>> {
+    let params = new HttpParams();
+
+    Object.entries(query).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        params = params.set(key, value.toString());
+      }
+    });
+
     return this.http.get<PaginatedResponse<Trainer>>(
       `${this.apiUrl}/listTrainers`,
       {
-        params: query as any,
+        params,
       }
     );
   }

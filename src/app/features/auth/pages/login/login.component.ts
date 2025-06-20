@@ -66,11 +66,11 @@ export class LoginComponent implements OnInit {
             this.store.dispatch(AuthActions.loginSuccess({ user }));
           } catch (error) {
             this.notyService.showError('Invalid user data format');
-            this.router.navigate(['/login']);
+            this.router.navigate(['/auth/login']);
           }
         } else {
           this.notyService.showError('No user data received');
-          this.router.navigate(['/login']);
+          this.router.navigate(['/auth/login']);
         }
       }
     });

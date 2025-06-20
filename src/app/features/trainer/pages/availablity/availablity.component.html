@@ -1,19 +1,95 @@
-<div class="availability-container">
-  <h2 class="text-2xl font-semibold mb-4">Set Your Availability</h2>
+<div class="schedule-container">
+      <div class="header">
+        <h1>Schedule Management</h1>
+      </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Select a date</mat-label>
-    <input
-      matInput
-      [matDatepicker]="picker"
-      (dateChange)="onDateClick($event.value)"
-      placeholder="Choose a date"
-    />
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
+      <!-- Calendar -->
+      <div class="calendar-section">
+        <div class="calendar-header">
+          <button class="nav-btn" (click)="previousMonth()">&lt;</button>
+          <h2>{{ currentMonthYear }}</h2>
+          <button class="nav-btn" (click)="nextMonth()">&gt;</button>
+        </div>
 
-  <p class="text-gray-500 mt-2">
-    Select a date to set your available time slots.
-  </p>
-</div>
+        <div class="calendar-grid">
+          <div class="day-header" *ngFor="let day of dayHeaders">{{ day }}</div>
+          <div 
+            *ngFor="let day of calendarDays"
+            class="calendar-cell"
+            [class.other-month]="!day.isCurrentMonth"
+            [class.selected]="day.isSelected"
+            [class.today]="day.isToday"
+            (click)="selectDate(day)">
+            {{ day.date }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Selected Date Info -->
+      <div class="date-info" *ngIf="selectedDate">
+        <h3>{{ formatSelectedDate() }}</h3>
+        
+        <!-- Add Availability Button -->
+        <button class="add-availability-btn" (click)="toggleAvailabilityForm()">
+          {{ showAvailabilityForm ? 'Cancel' : 'Add Availability' }}
+        </button>
+
+        <!-- Availability Form -->
+        <div class="availability-form" *ngIf="showAvailabilityForm">
+          <h4>Set Available Time Slots</h4>
+          <div class="time-slots">
+            <div class="time-slot-input" *ngFor="let slot of newTimeSlots; let i = index">
+              <input 
+                type="time" 
+                [(ngModel)]="slot.start" 
+                placeholder="Start time">
+              <span>to</span>
+              <input 
+                type="time" 
+                [(ngModel)]="slot.end" 
+                placeholder="End time">
+              <button class="remove-slot-btn" (click)="removeTimeSlot(i)">×</button>
+            </div>
+          </div>
+          <button class="add-slot-btn" (click)="addTimeSlot()">+ Add Time Slot</button>
+          <div class="form-actions">
+            <button class="save-btn" (click)="saveAvailability()">Save Availability</button>
+            <button class="cancel-btn" (click)="toggleAvailabilityForm()">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Current Availability -->
+        <div class="current-availability" *ngIf="currentAvailability && currentAvailability.slots.length > 0">
+          <h4>Current Availability</h4>
+          <div class="availability-slots">
+            <div class="slot-item" *ngFor="let slot of currentAvailability.slots">
+              {{ formatTime(slot.start) }} - {{ formatTime(slot.end) }}
+            </div>
+          </div>
+          <button class="delete-availability-btn" (click)="deleteAvailability()">
+            Delete All Availability
+          </button>
+        </div>
+
+        <!-- Today's Sessions (only show if selected date is today) -->
+        <!-- <div class="sessions-section" *ngIf="isSelectedDateToday()">
+          <h4>Today's Sessions</h4>
+          <div class="sessions-list" *ngIf="todaySessions.length > 0; else noSessions">
+            <div class="session-item" *ngFor="let session of todaySessions">
+              <div class="session-info">
+                <h5>{{ session.clientName }}</h5>
+                <p>{{ formatTime(session.startTime) }} - {{ formatTime(session.endTime) }}</p>
+                <span class="session-status" [class]="session.status">{{ session.status }}</span>
+              </div>
+            </div>
+          </div>
+          <ng-template #noSessions>
+            <p class="no-sessions">No sessions scheduled for today</p>
+          </ng-template>
+        </div> -->
+      </div>
+
+      <!-- Loading and Error States -->
+      <div class="loading" *ngIf="loading">Loading...</div>
+      <div class="error" *ngIf="error">{{ error }}</div>
+    </div>

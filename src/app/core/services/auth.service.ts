@@ -49,8 +49,9 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
+    console.log('hai')
     const data$ = this.http
-      .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials)
+      .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials, {withCredentials: true})
       .pipe(map((res) => res.data));
 
     data$.subscribe({
@@ -109,7 +110,7 @@ export class AuthService {
   }
 
   googleLogin(idToken: string, role: string) {
-    return this.http.post<{ user: any }>(`${this.http}/google-login`, {
+    return this.http.post<{ user: User | Trainer }>(`${this.http}/google-login`, {
       idToken,
       role,
     });

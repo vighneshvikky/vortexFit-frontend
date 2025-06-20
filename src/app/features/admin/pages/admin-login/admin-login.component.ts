@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -9,9 +9,11 @@ import {
 import { Router } from '@angular/router';
 import { AdminService } from '../../services/admin.service';
 import { NotyService } from '../../../../core/services/noty.service';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { AuthState } from '../../../auth/store/auth.state';
 import { login } from '../../../auth/store/actions/auth.actions';
+import { Subject, takeUntil } from 'rxjs';
+import { selectAuthError, selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';
 
 @Component({
   selector: 'app-admin-login',
@@ -20,7 +22,8 @@ import { login } from '../../../auth/store/actions/auth.actions';
   templateUrl: './admin-login.component.html',
   styleUrls: ['./admin-login.component.scss'],
 })
-export class AdminLoginComponent {
+export class AdminLoginComponent implements OnDestroy{
+   private destroy$ = new Subject<void>();
   loginForm: FormGroup;
   isSubmitting = false;
   loginError: string | null = null;
@@ -31,13 +34,32 @@ export class AdminLoginComponent {
     private store: Store<AuthState>,
     private adminService: AdminService,
     private router: Router,
-    private notyService: NotyService
+    private notyService: NotyService,
+
   ) {
+
+    this.store.pipe(select(selectAuthError), takeUntil(this.destroy$)).subscribe(error => {
+      if (error) {
+        this.isSubmitting = false;
+        this.loginError = error;
+      }
+    });
+
+    
+    this.store.pipe(select(selectCurrentUser), takeUntil(this.destroy$)).subscribe(auth => {
+      if (auth) {
+        this.isSubmitting = false;
+      }
+    });
+
+    
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       remember: [false],
     });
+
+
   }
 
   get email() {
@@ -48,11 +70,16 @@ export class AdminLoginComponent {
     return this.loginForm.get('password');
   }
 
+    ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
 onSubmit(): void {
   if (this.loginForm.valid) {
     this.isSubmitting = true;
     this.loginError = null;
-
+   console.log('hai for admin login')
     const { email, password } = this.loginForm.value;
     this.store.dispatch(
       login({

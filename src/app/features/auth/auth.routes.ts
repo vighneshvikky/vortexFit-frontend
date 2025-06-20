@@ -17,7 +17,7 @@ export const authRoutes: Routes = [
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'callback', component: LoginComponent },
-  { path: 'trainer-requests', component: TrainerVerificationComponent},
-  {path: 'user-details', component: UserDetailsComponent},
-  {path: 'trainer-status', component: TrainerStatusComponent}
+  { path: 'trainer-requests', component: TrainerVerificationComponent },
+  { path: 'user-details', component: UserDetailsComponent },
+  { path: 'trainer-status', component: TrainerStatusComponent },
 ];

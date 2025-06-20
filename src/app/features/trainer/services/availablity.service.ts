@@ -3,11 +3,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../enviorments/environment';
 export interface Availability {
-  date: string;        // 'YYYY-MM-DD'
-  slots: string[];     // ['07:00', '08:00']
+  date: string;        
+  slots: {start: string, end: string}[];     
+
 }
-
-
 
 @Injectable({
     providedIn: 'root'
@@ -17,9 +16,23 @@ export class AvailablityService {
     private apiUrl = `${environment.api}/availability`
     private http = inject(HttpClient);
 
-      setAvailability(payload: { date: string; slots: string[] }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/set-availability`, payload);
-  }
+
+setAvailability(payload: { date: string; slots: string[] }): Observable<any> {
+  console.log('🟡 Original payload:', payload);
+
+  const formattedPayload = {
+    date: payload.date,
+    slots: payload.slots.map(slot => {
+      const [start, end] = slot.split('-');
+      return { start, end };
+    }),
+  };
+
+  console.log('✅ Formatted payload sent to backend:', formattedPayload);
+
+  return this.http.post(`${this.apiUrl}/set-availability`, formattedPayload);
+}
+
 
   getMyAvailability(date: string): Observable<Availability> {
     const params = new HttpParams().set('date', date);
@@ -34,7 +47,7 @@ export class AvailablityService {
     return this.http.get<Availability>(`${this.apiUrl}/by-trainer`, { params });
   }
 
-  // Optional: delete all slots for a given date
+ 
   deleteAvailability(date: string): Observable<any> {
     const params = new HttpParams().set('date', date);
     return this.http.delete(`${this.apiUrl}`, { params });
