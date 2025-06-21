@@ -10,7 +10,6 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { firstValueFrom } from 'rxjs';
-import { SlotPickerModalComponent } from '../../modals/slot-picker-modal/slot-picker-modal.component';
 import { Availability, AvailablityService } from '../../services/availablity.service';
 import { FormsModule } from '@angular/forms';
 import { NotyService } from '../../../../core/services/noty.service';
@@ -156,8 +155,7 @@ export class AvailabilityComponent implements OnInit {
     this.selectedDate = day.fullDate;
     this.showAvailabilityForm = false;
     this.resetForm();
-    
-    console.log('🔵 Selected date:', this.selectedDate);
+   
     this.loadAvailability();
   }
 
@@ -220,10 +218,10 @@ export class AvailabilityComponent implements OnInit {
     this.error = null;
 
     try {
-      console.log('🔵 Slots before formatting:', validSlots);
+    
 
       const slotsFormatted = validSlots.map(slot => `${slot.start}-${slot.end}`);
-      console.log('🔷 Formatted slot strings:', slotsFormatted);
+  
 
       const payload = {
         date: this.selectedDate,
@@ -242,17 +240,18 @@ export class AvailabilityComponent implements OnInit {
       
       // Update monthly availability cache
       this.monthlyAvailability.set(this.selectedDate, newAvailabilityData);
-      console.log('🟢 Saved and cached availability for:', this.selectedDate);
+    
       
       // Force full calendar regeneration to ensure colors update
-      console.log('🔄 Forcing calendar regeneration after save...');
+      
       this.generateCalendar();
       
       this.showAvailabilityForm = false;
+      this.loadAvailability()
       this.resetForm();
       
     } catch (err: any) {
-      console.log('error saving availability', err);
+    
       const errMsg = err?.error?.message || 'Failed to save availability';
       this.notyfy.showError(errMsg);
     } finally {
@@ -260,12 +259,13 @@ export class AvailabilityComponent implements OnInit {
     }
   }
 
+  
   async loadAvailability() {
     if (!this.selectedDate) return;
     
     this.availabilityService.getMyAvailability(this.selectedDate).subscribe({
       next: (response) => {
-        console.log('🟢 Availability response for', this.selectedDate, ':', response);
+      
         this.availabilityData = response;
         
         // Update monthly availability cache
@@ -273,18 +273,18 @@ export class AvailabilityComponent implements OnInit {
         
         if (hasSlots) {
           this.monthlyAvailability.set(this.selectedDate!, response);
-          console.log('🟢 Added to cache:', this.selectedDate, response);
+          
         } else {
           this.monthlyAvailability.delete(this.selectedDate!);
-          console.log('🔴 Removed from cache:', this.selectedDate);
+          
         }
         
         // Force regenerate calendar to update visual indicators
-        console.log('🔄 Forcing calendar regeneration...');
+       
         this.generateCalendar();
       },
       error: (err) => {
-        console.log('🔴 Error loading availability', err);
+      
         this.availabilityData = null;
         this.monthlyAvailability.delete(this.selectedDate!);
         this.generateCalendar();
@@ -292,26 +292,8 @@ export class AvailabilityComponent implements OnInit {
     });
   }
 
-  // Helper method to update calendar availability without full regeneration
-  private updateCalendarAvailability() {
-    console.log('🔄 BEFORE update - Calendar days with availability:', this.calendarDays.filter(d => d.hasAvailability).length);
-    
-    this.calendarDays.forEach(day => {
-      const hadAvailability = day.hasAvailability;
-      day.hasAvailability = this.monthlyAvailability.has(day.fullDate);
-      
-      if (hadAvailability !== day.hasAvailability) {
-        console.log(`🔄 Changed availability for ${day.fullDate}: ${hadAvailability} -> ${day.hasAvailability}`);
-      }
-    });
-    
-    console.log('🔄 AFTER update - Calendar days with availability:', this.calendarDays.filter(d => d.hasAvailability).length);
-    console.log('🔄 Updated calendar availability. Cache size:', this.monthlyAvailability.size);
-    console.log('🔄 Cache contents:', Array.from(this.monthlyAvailability.keys()));
-    
-    // Force Angular change detection
-    this.calendarDays = [...this.calendarDays];
-  }
+
+
 
   // Load availability for all days in the current month
   async loadMonthlyAvailability() {
@@ -341,7 +323,7 @@ export class AvailabilityComponent implements OnInit {
       // You can implement this with Promise.all or use a batch API endpoint
       
       // For now, this will be populated as we load individual dates
-      console.log('Monthly availability loading for dates:', dates);
+     
       
     } catch (error) {
       console.error('Error loading monthly availability:', error);

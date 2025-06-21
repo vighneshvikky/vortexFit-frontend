@@ -106,6 +106,7 @@ export class AuthService {
     return this.http.post(
       `${this.api}/refresh/token`,
       {},
+      {withCredentials: true}
     );
   }
 

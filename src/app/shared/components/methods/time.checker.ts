@@ -5,3 +5,10 @@ export function formatTime(time: string): string {
   hour = hour % 12 || 12;
   return `${hour}:${minute} ${ampm}`;
 }
+
+
+// export function isSlotInPast(date: string, startTime: string): boolean {
+//   const now = new Date();
+//   const slotStart = new Date(`${date}T${startTime}`);
+//   return slotStart < now && isSameDay(now, slotStart);
+// }
