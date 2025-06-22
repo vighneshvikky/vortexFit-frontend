@@ -9,7 +9,10 @@ import {
 export interface UsersState {
   users: (User | Trainer)[];
   total: number;
+   page: number;
+  limit: number;
   loading: boolean;
+  totalPages: number;
   loaded: boolean;
   error: any;
 }
@@ -17,6 +20,9 @@ export interface UsersState {
 export const initialState: UsersState = {
   users: [],
   total: 0,
+   page: 1,
+  limit: 2,
+  totalPages: 0,
   loading: false,
   loaded: false,
   error: null,
@@ -29,6 +35,9 @@ export const usersReducer = createReducer(
     ...state,
     users: response.data,
     total: response.total,
+    page: response.page,
+    limit: response.limit,
+    totalPages: response.totalPages,
     loading: false,
     loaded: true,
     error: null,

@@ -9,19 +9,20 @@ import {
 import { Trainer } from '../../../trainer/models/trainer.interface';
 import { Observable, debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectUsersList } from '../../../../store/admin/users/user.selector';
+import { selectUsersList, selectUsersMeta } from '../../../../store/admin/users/user.selector';
 import {
   loadUsers,
   toggleBlockAndLoadUsers,
 } from '../../../../store/admin/users/users.actions';
 import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
+import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 
 type UserOrTrainer = User | Trainer;
 
 @Component({
   selector: 'app-admin-user-listing',
   standalone: true,
-  imports: [CommonModule, FormsModule, SpinnerComponent],
+  imports: [CommonModule, FormsModule, SpinnerComponent, PaginationComponent],
   templateUrl: './admin-user-listing.component.html',
   styleUrls: ['./admin-user-listing.component.scss'],
 })
@@ -31,14 +32,25 @@ export class AdminUserListingComponent implements OnInit {
   private searchSubject = new Subject<string>();
   loading = false;
   isLoadingUsers = false;
+  currentPage = 1;
+  totalPages = 1;
+  limit = 6;
 
   constructor(private store: Store, private adminService: AdminService) {
     this.setupSearch();
   }
 
   ngOnInit(): void {
-    this.users$ = this.store.select(selectUsersList);
-    this.loadUsers();
+     this.users$ = this.store.select(selectUsersList);
+
+     this.store.select(selectUsersMeta).subscribe(meta => {
+      this.totalPages = meta.totalPages;
+      this.limit = meta.limit;
+      this.currentPage = meta.page;
+     })
+    this.loadUsers(this.searchTerm, this.currentPage);
+
+
   }
 
   private setupSearch(): void {
@@ -54,13 +66,14 @@ export class AdminUserListingComponent implements OnInit {
     this.searchSubject.next(term);
   }
 
-  loadUsers(searchTerm: string = ''): void {
+  loadUsers(searchTerm: string = '', page: number = 1): void {
+    this.currentPage = page;
     const params: GetUsersParams = {
-      page: 1,
-      limit: 6,
+      page,
+      limit: this.limit,
       search: searchTerm,
     };
-
+ console.log('Loading users with params:', params); 
     this.store.dispatch(loadUsers({ params }));
   }
 
@@ -68,11 +81,17 @@ export class AdminUserListingComponent implements OnInit {
     return (user as Trainer).verificationStatus !== undefined;
   }
 
+  onPageChange(page: number): void {
+     console.log('Page changed to:', page); 
+  this.loadUsers(this.searchTerm, page);
+}
+
+
   toggleBlockStatus(user: User | Trainer): void {
-    console.log('user', user);
+    
     const params: GetUsersParams = {
-      page: 1,
-      limit: 10,
+      page: this.currentPage,
+      limit: this.limit,
       search: this.searchTerm,
     };
 
@@ -84,4 +103,9 @@ export class AdminUserListingComponent implements OnInit {
       })
     );
   }
+
+    onImageError(event: Event) {
+  const target = event.target as HTMLImageElement;
+  target.src = 'assets/images/default-user.png'; 
+}
 }

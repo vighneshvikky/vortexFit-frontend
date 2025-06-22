@@ -88,7 +88,7 @@ export class TrainerProfileComponent implements OnInit {
 
   onImageError(event: Event) {
   const target = event.target as HTMLImageElement;
-  target.src = 'assets/images/default-user.png'; // Path to your dummy image
+  target.src = 'assets/images/default-user.png'; 
 }
 
   onFileSelect(event: Event, field: string) {

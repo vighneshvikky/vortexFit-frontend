@@ -9,10 +9,16 @@ export const selectUsersList = createSelector(
   (state) => state.users
 );
 
-export const selectUsersTotal = createSelector(
+export const selectUsersMeta = createSelector(
   selectUsersFeature,
-  (state) => state.total
+  (state) => ({
+    total: Number(state.total),
+    totalPages: Number(state.totalPages),
+    page: Number(state.page),
+    limit: Number(state.limit)
+  })
 );
+
 
 export const selectUsersLoading = createSelector(
   selectUsersFeature,

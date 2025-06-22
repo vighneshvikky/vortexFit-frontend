@@ -1,0 +1,31 @@
+<div class="flex items-center gap-2">
+  <button 
+    (click)="prev()" 
+    [disabled]="currentPage === 1"
+    class="bg-gray-700 text-white px-3 py-1 rounded disabled:opacity-50"
+  >
+    Prev
+  </button>
+
+  <ng-container *ngFor="let page of paginationRange">
+    <button 
+      *ngIf="page !== '...'; else dots"
+      (click)="goToPage(page)" 
+      [class.bg-blue-500]="page === currentPage"
+      class="px-3 py-1 rounded text-white hover:bg-blue-600 bg-gray-600"
+    >
+      {{ page }}
+    </button>
+    <ng-template #dots>
+      <span class="px-2 text-gray-400">...</span>
+    </ng-template>
+  </ng-container>
+
+  <button 
+    (click)="next()" 
+    [disabled]="currentPage === totalPages"
+    class="bg-gray-700 text-white px-3 py-1 rounded disabled:opacity-50"
+  >
+    Next
+  </button>
+</div>

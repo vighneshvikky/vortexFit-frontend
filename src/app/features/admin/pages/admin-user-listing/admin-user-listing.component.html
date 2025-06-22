@@ -1,87 +1,138 @@
-<div class="min-h-screen bg-gray-900 text-gray-100 p-6">
-  <!-- Header Section -->
-  <div class="mb-8">
-    <h1 class="text-2xl font-bold text-white mb-2">User Management</h1>
-    <p class="text-gray-400">Manage and monitor user accounts</p>
-  </div>
-
-  <!-- Search Section -->
-  <div class="mb-6">
-    <div class="relative">
-      <input
-        type="text"
-        [(ngModel)]="searchTerm"
-        (ngModelChange)="onSearch($event)"
-        placeholder="Search users..."
-        class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-100 placeholder-gray-400"
-      />
-      <i class="fas fa-search absolute right-3 top-3.5 text-gray-400"></i>
+<div class="min-h-screen bg-gray-900 text-gray-100">
+  <div class="container mx-auto px-4 py-6 max-w-6xl">
+    <!-- Header Section -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-white mb-2">User Management</h1>
+      <p class="text-gray-400 text-lg">Manage and monitor user accounts</p>
     </div>
-  </div>
 
-  <!-- Loading Spinner -->
-  <app-spinner [isLoading]="isLoadingUsers" role="user"></app-spinner>
+    <!-- Search Section -->
+    <div class="mb-8">
+      <div class="relative max-w-md">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearch($event)"
+          placeholder="Search users..."
+          class="w-full px-4 py-3 pl-10 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-100 placeholder-gray-400 transition-all duration-200"
+        />
+        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+    </div>
 
-  <!-- Users List -->
-  <div class="grid gap-4" *ngIf="!isLoadingUsers">
-    <div *ngFor="let user of users$ | async" 
-         class="bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-700 hover:border-gray-600 transition-colors duration-200">
-      <div class="flex items-center justify-between">
-        <div class="flex-1">
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
-              <i class="fas" [ngClass]="isTrainer(user) ? 'fa-dumbbell text-red-500' : 'fa-user text-blue-500'"></i>
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold text-white">{{ user.name }}</h3>
-              <p class="text-gray-400">{{ user.email }}</p>
-            </div>
-          </div>
-          
-          <div class="mt-2 flex items-center space-x-2">
-            <span *ngIf="isTrainer(user)" 
-                  class="px-2 py-1 text-xs rounded-full"
+    <!-- Loading Spinner -->
+    <app-spinner [isLoading]="isLoadingUsers" role="user"></app-spinner>
+
+    <!-- Users List -->
+    <div class="space-y-4" *ngIf="!isLoadingUsers">
+      <div
+        *ngFor="let user of users$ | async"
+        class="bg-gray-800 rounded-xl border border-gray-700 hover:border-gray-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+      >
+        <div class="p-6">
+          <div class="flex items-center justify-between">
+            <!-- User Info Section -->
+            <div class="flex items-center space-x-4 flex-1">
+              <!-- Avatar with Status -->
+              <div class="relative flex-shrink-0">
+                <img
+                  class="w-16 h-16 rounded-full object-cover border-2 border-gray-600"
+                  [ngClass]="{ 'opacity-60': user.isBlocked }"
+                  [src]="user.image"
+                  (error)="onImageError($event)"
+                  alt="User Image"
+                />
+                <span
+                  class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-gray-800"
                   [ngClass]="{
-                    'bg-green-900 text-green-300': user.verificationStatus === 'approved',
-                    'bg-yellow-900 text-yellow-300': user.verificationStatus === 'pending',
-                    'bg-red-900 text-red-300': user.verificationStatus === 'rejected'
-                  }">
-              Trainer - {{ user.verificationStatus | titlecase }}
-            </span>
-            <span *ngIf="!isTrainer(user)" 
-                  class="px-2 py-1 text-xs rounded-full bg-blue-900 text-blue-300">
-              User
-            </span>
-            <span *ngIf="user.isBlocked" 
-                  class="px-2 py-1 text-xs rounded-full bg-red-900 text-red-300">
-              Blocked
-            </span>
-          </div>
-        </div>
+                    'bg-green-500': !user.isBlocked,
+                    'bg-gray-500': user.isBlocked
+                  }"
+                  [title]="user.isBlocked ? 'Offline' : 'Online'"
+                ></span>
+              </div>
+              
+              <!-- User Details -->
+              <div class="flex-1 min-w-0">
+                <h3 class="text-lg font-semibold text-white truncate">{{ user.name }}</h3>
+                <p class="text-sm text-gray-400 truncate">{{ user.email }}</p>
+                
+                <!-- Status Badges -->
+                <div class="flex items-center space-x-2 mt-3">
+                  <span
+                    *ngIf="isTrainer(user)"
+                    class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full"
+                    [ngClass]="{
+                      'bg-green-900 text-green-300': user.verificationStatus === 'approved',
+                      'bg-yellow-900 text-yellow-300': user.verificationStatus === 'pending',
+                      'bg-red-900 text-red-300': user.verificationStatus === 'rejected'
+                    }"
+                  >
+                    <i class="fas fa-dumbbell mr-1"></i>
+                    Trainer - {{ user.verificationStatus | titlecase }}
+                  </span>
+                  <span
+                    *ngIf="!isTrainer(user)"
+                    class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-blue-900 text-blue-300"
+                  >
+                    <i class="fas fa-user mr-1"></i>
+                    User
+                  </span>
+                  <span
+                    *ngIf="user.isBlocked"
+                    class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-red-900 text-red-300"
+                  >
+                    <i class="fas fa-ban mr-1"></i>
+                    Blocked
+                  </span>
+                </div>
+              </div>
+            </div>
 
-        <div class="flex items-center space-x-3">
-          <button
-            (click)="toggleBlockStatus(user)"
-            [disabled]="loading"
-            class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-            [ngClass]="{
-              'bg-red-600 hover:bg-red-700 text-white': !user.isBlocked,
-              'bg-green-600 hover:bg-green-700 text-white': user.isBlocked,
-              'opacity-50 cursor-not-allowed': loading 
-            }"
-          >
-            <i class="fas" [ngClass]="user.isBlocked ? 'fa-unlock' : 'fa-lock'"></i>
-            {{ user.isBlocked ? 'Unblock' : 'Block' }}
-          </button>
+            <!-- Action Buttons -->
+            <div class="flex items-center space-x-3 ml-4">
+              <button
+                (click)="toggleBlockStatus(user)"
+                [disabled]="loading"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800"
+                [ngClass]="{
+                  'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500': !user.isBlocked,
+                  'bg-green-600 hover:bg-green-700 text-white focus:ring-green-500': user.isBlocked,
+                  'opacity-50 cursor-not-allowed': loading
+                }"
+              >
+                <i
+                  class="fas mr-2"
+                  [ngClass]="user.isBlocked ? 'fa-unlock' : 'fa-lock'"
+                ></i>
+                {{ user.isBlocked ? "Unblock" : "Block" }}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Empty State -->
-  <div *ngIf="(users$ | async)?.length === 0 && !isLoadingUsers" 
-       class="text-center py-12">
-    <i class="fas fa-users text-4xl text-gray-600 mb-4"></i>
-    <p class="text-gray-400">No users found</p>
+    <!-- Empty State -->
+    <div
+      *ngIf="(users$ | async)?.length === 0 && !isLoadingUsers"
+      class="text-center py-16"
+    >
+      <div class="max-w-md mx-auto">
+        <i class="fas fa-users text-6xl text-gray-600 mb-6"></i>
+        <h3 class="text-xl font-semibold text-gray-300 mb-2">No users found</h3>
+        <p class="text-gray-500">Try adjusting your search criteria</p>
+      </div>
+    </div>
+
+    <!-- Pagination Section -->
+    <div class="mt-12 flex justify-center" *ngIf="!isLoadingUsers && (users$ | async)?.length">
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalPages]="totalPages"
+        (pageChanged)="onPageChange($event)"
+        class="flex items-center space-x-2"
+      ></app-pagination>
+    </div>
   </div>
 </div>

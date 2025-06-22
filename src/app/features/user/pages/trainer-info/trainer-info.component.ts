@@ -4,7 +4,7 @@ import { Trainer } from '../../../trainer/models/trainer.interface';
 import { UserService } from '../../services/user.service';
 import { NotyService } from '../../../../core/services/noty.service';
 import { CommonModule } from '@angular/common';
-import { onImageError } from '../../../../shared/components/methods/image-checker';
+import { onImageError } from '../../../../shared/methods/image-checker';
 
 @Component({
   selector: 'app-trainer-info',

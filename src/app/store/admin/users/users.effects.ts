@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as UsersActions from './users.actions';
-import { catchError, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AdminService } from '../../../features/admin/services/admin.service';
 import { Store } from '@ngrx/store';
@@ -15,6 +15,7 @@ export class UsersEffects {
       ofType(UsersActions.loadUsers),
       switchMap(({ params }) =>
         this.adminService.getUsers(params).pipe(
+          tap((response) => console.log('response for user listing', response)),
           map((response) => UsersActions.loadUsersSuccess({ response })),
           catchError((error) => of(UsersActions.loadUsersFailure({ error })))
         )

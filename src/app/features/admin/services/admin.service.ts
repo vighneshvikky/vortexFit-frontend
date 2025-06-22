@@ -78,6 +78,8 @@ export class AdminService {
         httpParams = httpParams.set(key, value.toString());
       }
     });
+        console.log('query', params);
+console.log('typeof page', typeof params.page);
     return this.http.get<PaginatedResponse<User | Trainer>>(
       `${this.apiUrl}/users`,
       {
