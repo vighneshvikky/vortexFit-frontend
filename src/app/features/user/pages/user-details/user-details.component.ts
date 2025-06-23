@@ -29,6 +29,14 @@ import { NotyService } from '../../../../core/services/noty.service';
 export class UserDetailsComponent implements OnInit {
   profileForm!: FormGroup;
   currentUser$!: Observable<AuthenticatedUser | null>;
+  fitnessGoalOptions = [
+    'fat loss',
+    'muscle gain',
+    'endurance',
+    'general fitness',
+  ];
+  trainingTypeOptions = ['cardio', 'strength', 'yoga', 'crossfit'];
+  equipmentOptions = ['dumbbells', 'resistance bands', 'yoga mat', 'treadmill'];
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
@@ -53,10 +61,10 @@ export class UserDetailsComponent implements OnInit {
       ],
       weightUnit: ['kg', Validators.required],
       fitnessLevel: ['', Validators.required],
-      fitnessGoals: [[], Validators.required],
-      trainingTypes: [[], Validators.required],
+      fitnessGoals: [[], [this.minArrayLengthValidator(1)]],
+      trainingTypes: [[], [this.minArrayLengthValidator(1)]],
       preferredTime: ['flexible', Validators.required],
-      equipments: [[], Validators.required],
+      equipments: [[]],
     });
 
     this.currentUser$ = this.store.select(selectCurrentUser).pipe(
@@ -75,7 +83,6 @@ export class UserDetailsComponent implements OnInit {
             trainingTypes: user.trainingTypes || [],
             preferredTime: user.preferredTime || 'flexible',
             equipments: user.equipments || [],
-          
           });
         }
       })
@@ -83,17 +90,46 @@ export class UserDetailsComponent implements OnInit {
 
     this.currentUser$.subscribe();
   }
+  private minArrayLengthValidator(minLength: number) {
+    return (control: any) => {
+      if (control.value && control.value.length >= minLength) {
+        return null;
+      }
+      return {
+        minArrayLength: {
+          requiredLength: minLength,
+          actualLength: control.value ? control.value.length : 0,
+        },
+      };
+    };
+  }
+
+  // onCheckboxChange(event: any, controlName: string) {
+  //   const control = this.profileForm.get(controlName);
+  //   if (!control) return;
+
+  //   const current = control.value as string[];
+  //   if (event.target.checked) {
+  //     control.setValue([...current, event.target.value]);
+  //   } else {
+  //     control.setValue(current.filter((val) => val !== event.target.value));
+  //   }
+  // }
 
   onCheckboxChange(event: any, controlName: string) {
     const control = this.profileForm.get(controlName);
-    if (!control) return;
+    const currentValue = control?.value || [];
 
-    const current = control.value as string[];
     if (event.target.checked) {
-      control.setValue([...current, event.target.value]);
+      control?.setValue([...currentValue, event.target.value]);
     } else {
-      control.setValue(current.filter((val) => val !== event.target.value));
+      control?.setValue(
+        currentValue.filter((item: string) => item !== event.target.value)
+      );
     }
+
+    // Mark as touched for validation
+    control?.markAsTouched();
   }
 
   onSubmit(): void {
@@ -115,5 +151,45 @@ export class UserDetailsComponent implements OnInit {
         console.error('❌ Failed to update profile', err);
       },
     });
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.profileForm.get(fieldName);
+    return !!(field?.invalid && field?.touched);
+  }
+
+  getFieldError(fieldName: string): string {
+    const field = this.profileForm.get(fieldName);
+    if (field?.errors) {
+      if (field.errors['required']) {
+        return `${this.getFieldLabel(fieldName)} is required.`;
+      }
+      if (field.errors['min']) {
+        return `${this.getFieldLabel(fieldName)} must be at least ${
+          field.errors['min'].min
+        }.`;
+      }
+      if (field.errors['max']) {
+        return `${this.getFieldLabel(fieldName)} must not exceed ${
+          field.errors['max'].max
+        }.`;
+      }
+      if (field.errors['minArrayLength']) {
+        return `Please select at least ${field.errors['minArrayLength'].requiredLength} option(s).`;
+      }
+    }
+    return '';
+  }
+
+  private getFieldLabel(fieldName: string): string {
+    const labels: { [key: string]: string } = {
+      dob: 'Date of Birth',
+      height: 'Height',
+      weight: 'Weight',
+      fitnessLevel: 'Fitness Level',
+      fitnessGoals: 'Fitness Goals',
+      trainingTypes: 'Training Types',
+    };
+    return labels[fieldName] || fieldName;
   }
 }
