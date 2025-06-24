@@ -5,7 +5,7 @@ import {
   HttpRequest,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, NgZone, inject } from '@angular/core';
 import {
   Observable,
   catchError,
@@ -14,6 +14,7 @@ import {
   BehaviorSubject,
   filter,
   take,
+  EMPTY,
 } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
@@ -24,18 +25,17 @@ export class AuthInterceptor implements HttpInterceptor {
   private refreshTokenSubject = new BehaviorSubject<boolean>(false);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private zone = inject(NgZone);
 
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    const excludedUrls = ['/auth', '/login', '/signup', '/otp'];
 
-    const excludedUrls = ['/auth', '/login', '/signup', '/otp']; 
-
-
-     if (excludedUrls.some((url) => req.url.includes(url))) {
-    return next.handle(req); // Don't attach credentials or refresh token logic
-  }
+    if (excludedUrls.some((url) => req.url.includes(url))) {
+      return next.handle(req); // Don't attach credentials or refresh token logic
+    }
     console.log('AuthInterceptor intercepted:', req.url);
     const clonedRequest = req.clone({
       withCredentials: true,
@@ -45,7 +45,20 @@ export class AuthInterceptor implements HttpInterceptor {
         if (error.status === 401) {
           return this.handle401Error(clonedRequest, next);
         }
-        return throwError(() => error);
+        if (
+          error.status === 403 &&
+          (error.error?.message === 'User is blocked or not found' ||
+            error.error?.message === 'Trainer is blocked or not found')
+        ) {
+          console.log('Trying to navigate to /blocked');
+          this.zone.run(() => {
+            this.router.navigate(['/blocked']).then((success) => {
+              console.log('Navigation success:', success);
+            });
+          });
+        }
+
+        return EMPTY;
       })
     );
   }

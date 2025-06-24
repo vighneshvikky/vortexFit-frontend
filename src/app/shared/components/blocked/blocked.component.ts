@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-blocked',
@@ -8,6 +9,7 @@ import { Component, Input } from '@angular/core';
   styleUrl: './blocked.component.scss'
 })
 export class BlockedComponent {
+  private router = inject(Router)
 @Input() title?: string;
   @Input() message?: string;
   @Input() reasons?: string[];
@@ -18,8 +20,7 @@ export class BlockedComponent {
   }
 
   onGoBack() {
-    // Handle go back logic
-    window.history.back();
+  this.router.navigate(['/'])
   }
 
   onContactSupport() {

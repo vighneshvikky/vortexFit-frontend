@@ -9,7 +9,7 @@ import {
 export interface UsersState {
   users: (User | Trainer)[];
   total: number;
-   page: number;
+  page: number;
   limit: number;
   loading: boolean;
   totalPages: number;
@@ -20,7 +20,7 @@ export interface UsersState {
 export const initialState: UsersState = {
   users: [],
   total: 0,
-   page: 1,
+  page: 1,
   limit: 2,
   totalPages: 0,
   loading: false,
@@ -43,9 +43,9 @@ export const usersReducer = createReducer(
     error: null,
   })),
   on(UsersActions.resetUsersLoaded, (state) => ({
-  ...state,
-  usersLoaded: false,
-})),
+    ...state,
+    usersLoaded: false,
+  })),
   on(UsersActions.loadUsersFailure, (state, { error }) => ({
     ...state,
     loading: false,
@@ -56,17 +56,26 @@ export const usersReducer = createReducer(
     ...state,
     loading: true,
   })),
-  on(UsersActions.toggleBlockAndLoadUsersSuccess, (state, { response }) => ({
+  // on(UsersActions.toggleBlockAndLoadUsersSuccess, (state, { response }) => ({
+  //   ...state,
+  //   users: response.data,
+  //   total: response.total,
+  //   loading: false,
+  //   loaded: true,
+  //   error: null,
+  // })),
+  on(UsersActions.toggleBlockStatusSuccess, (state, { updatedUser }) => ({
     ...state,
-    users: response.data,
-    total: response.total,
+    users: state.users.map((user) =>
+      user._id === updatedUser._id ? updatedUser : user
+    ),
     loading: false,
-    loaded: true,
     error: null,
   })),
-  on(UsersActions.toggleBlockAndLoadUsersFailure, (state, {error}) => ({
+
+  on(UsersActions.toggleBlockAndLoadUsersFailure, (state, { error }) => ({
     ...state,
     loading: false,
-    error
+    error,
   }))
 );

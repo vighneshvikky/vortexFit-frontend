@@ -23,21 +23,38 @@ export class UsersEffects {
     )
   );
 
-  toggleBlockAndLoadUsers$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(UsersActions.toggleBlockAndLoadUsers),
-      switchMap(({ userId, role, params }) =>
-        this.adminService
-          .toggleBlockStatusAndFetchUsers(userId, role, params)
-          .pipe(
-            map((response) =>
-              UsersActions.toggleBlockAndLoadUsersSuccess({ response })
-            ),
-            catchError((error) =>
-              of(UsersActions.toggleBlockAndLoadUsersFailure({ error }))
-            )
-          )
+  // toggleBlockAndLoadUsers$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(UsersActions.toggleBlockAndLoadUsers),
+  //     switchMap(({ userId, role, params }) =>
+  //       this.adminService
+  //         .toggleBlockStatusAndFetchUsers(userId, role, params)
+  //         .pipe(
+  //           map((response) =>
+  //             UsersActions.toggleBlockAndLoadUsersSuccess({ response })
+  //           ),
+  //           catchError((error) =>
+  //             of(UsersActions.toggleBlockAndLoadUsersFailure({ error }))
+  //           )
+  //         )
+  //     )
+  //   )
+  // );
+
+  toggleBlockStatus$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(UsersActions.toggleBlockAndLoadUsers),
+    switchMap(({ userId, role }) =>
+      this.adminService.toggleBlockStatus(userId, role).pipe(
+        map((updatedUser) =>
+          UsersActions.toggleBlockStatusSuccess({ updatedUser })
+        ),
+        catchError((error) =>
+          of(UsersActions.toggleBlockAndLoadUsersFailure({ error }))
+        )
       )
     )
-  );
+  )
+);
+
 }

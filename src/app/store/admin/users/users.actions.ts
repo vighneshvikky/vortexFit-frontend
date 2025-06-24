@@ -28,9 +28,14 @@ export const toggleBlockAndLoadUsers = createAction(
   props<{ userId: string; role: string; params: GetUsersParams }>()
 );
 
-export const toggleBlockAndLoadUsersSuccess = createAction(
-  '[User] Toggle Block And Load Users Success',
-  props<{ response: PaginatedResponse<User | Trainer> }>()
+// export const toggleBlockAndLoadUsersSuccess = createAction(
+//   '[User] Toggle Block And Load Users Success',
+//   props<{ response: PaginatedResponse<User | Trainer> }>()
+// );
+
+export const toggleBlockStatusSuccess = createAction(
+  '[Users] Toggle Block Status Success',
+  props<{ updatedUser: User | Trainer }>()
 );
 
 export const toggleBlockAndLoadUsersFailure = createAction(
