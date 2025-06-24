@@ -8,15 +8,27 @@ export const routes: Routes = [
   },
   {
     path: 'user',
-    loadChildren: () => import('../app/features/user/user.routes').then((m) => m.userRoutes)
+    loadChildren: () =>
+      import('../app/features/user/user.routes').then((m) => m.userRoutes),
   },
   {
     path: 'trainer',
-    loadChildren: () => import('../app/features/trainer/trainer.routes').then((m) => m.trainerRoutes)
+    loadChildren: () =>
+      import('../app/features/trainer/trainer.routes').then(
+        (m) => m.trainerRoutes
+      ),
   },
   {
     path: 'admin',
-    loadChildren: () => import('../app/features/admin/admin.routes').then((m) => m.adminRoutes)
+    loadChildren: () =>
+      import('../app/features/admin/admin.routes').then((m) => m.adminRoutes),
+  },
+  {
+    path: 'blocked',
+    loadComponent: () =>
+      import('../app/shared/components/blocked/blocked.component').then(
+        (m) => m.BlockedComponent
+      ),
   },
   {
     path: '',
@@ -25,6 +37,9 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'auth/role',
+    loadComponent: () =>
+      import('../app/shared/components/not-found/not-found.component').then(
+        (m) => m.NotFoundComponent
+      ),
   },
 ];

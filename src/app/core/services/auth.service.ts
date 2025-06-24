@@ -117,9 +117,9 @@ export class AuthService {
     });
   }
 
-getCurrentUser(): Observable<User | Trainer> {
-  return this.http.get<User | Trainer>(`${this.api}/getUser`);
-}
+// getCurrentUser(): Observable<User | Trainer> {
+//   return this.http.get<User | Trainer>(`${this.api}/getUser`);
+// }
 
 }
 

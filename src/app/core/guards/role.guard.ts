@@ -1,15 +1,16 @@
-// role.guard.ts
+
 import {
   CanActivateFn,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
-  Router, 
+  Router,
 } from '@angular/router';
 import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AuthState } from '../../features/auth/store/auth.state';
 import { selectCurrentUser } from '../../features/auth/store/selectors/auth.selectors';
 import { map, take } from 'rxjs/operators';
+
 
 export function RoleGuard(): CanActivateFn {
   return (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
@@ -20,18 +21,37 @@ export function RoleGuard(): CanActivateFn {
     return store.select(selectCurrentUser).pipe(
       take(1),
       map((user) => {
-        console.log('user from the store', user)
-            const rolesArray = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
- 
-        if (user && rolesArray.includes(user.role)) {
-          console.log('checking veriffei true')
-          return true;
-        } else {
+        if (!user) {
           router.navigate(['']);
-           console.log('checking veriffei false')
           return false;
         }
 
+        const rolesArray = Array.isArray(allowedRoles)
+          ? allowedRoles
+          : [allowedRoles];
+
+        const hasRole = rolesArray.includes(user.role);
+
+        if (!hasRole) {
+          router.navigate(['']);
+          return false;
+        }
+
+        if (
+          (user.role === 'trainer' || user.role === 'user') &&
+          user.isBlocked
+        ) {
+          console.log('User is blocked');
+          router.navigate(['/blocked']);
+          return false;
+        }
+
+        if (user.role === 'trainer' && !user.isVerified) {
+          router.navigate(['/trainer/trainer-requests']);
+          return false;
+        }
+
+        return true;
       })
     );
   };
