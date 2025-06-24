@@ -209,6 +209,7 @@ export class TrainerVerificationComponent implements OnInit {
           oneToOneSession: formValues.oneToOneSessionPrice,
           workoutPlan: formValues.workoutPlanPrice,
         },
+      
       };
 
       this.trainerService.updateProfile(profileData).subscribe({

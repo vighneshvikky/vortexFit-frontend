@@ -23,23 +23,23 @@ export class UsersEffects {
     )
   );
 
-  // toggleBlockAndLoadUsers$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(UsersActions.toggleBlockAndLoadUsers),
-  //     switchMap(({ userId, role, params }) =>
-  //       this.adminService
-  //         .toggleBlockStatusAndFetchUsers(userId, role, params)
-  //         .pipe(
-  //           map((response) =>
-  //             UsersActions.toggleBlockAndLoadUsersSuccess({ response })
-  //           ),
-  //           catchError((error) =>
-  //             of(UsersActions.toggleBlockAndLoadUsersFailure({ error }))
-  //           )
-  //         )
-  //     )
-  //   )
-  // );
+loadUnverifiedTrainers$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(UsersActions.loadUnverifiedTrainers),
+    switchMap(({ query }) =>
+      this.adminService.getUnverifiedTrainers(query).pipe(
+        map((response) =>
+          UsersActions.loadUnverifiedTrainersSuccess({ response })
+        ),
+        catchError((error) =>
+          of(UsersActions.loadUnverifiedTrainersFailure({ error }))
+        )
+      )
+    )
+  )
+);
+
+
 
   toggleBlockStatus$ = createEffect(() =>
   this.actions$.pipe(

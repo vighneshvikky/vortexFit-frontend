@@ -6,7 +6,7 @@ import {
   selectCurrentUser,
   selectCurrentUserVerificationStatus,
 } from '../../../auth/store/selectors/auth.selectors';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { fetchCurrentUser, fetchCurrentUserSuccess } from '../../../auth/store/actions/auth.actions';
 
 @Component({
@@ -14,7 +14,7 @@ import { fetchCurrentUser, fetchCurrentUserSuccess } from '../../../auth/store/a
   standalone: true,
   templateUrl: './trainer-status.component.html',
   styleUrls: ['./trainer-status.component.scss'],
-  imports: [CommonModule, AsyncPipe],
+  imports: [CommonModule, AsyncPipe, RouterModule],
 })
 export class TrainerStatusComponent implements OnInit, OnDestroy {
   currentUserStatus$: Observable<any>;
@@ -59,6 +59,10 @@ this.currentUserStatus$ = this.store.select(selectCurrentUser).pipe(
   }
 
   submitFormAgain() {
-    this.router.navigate(['/trainer/trainer-requests']);
+    this.router.navigate(['/auth/trainer-requests']);
+  }
+
+  redirectToLogin(){
+    this.router.navigate(['/auth/login'], {queryParams: {role: 'trainer'}})
   }
 }

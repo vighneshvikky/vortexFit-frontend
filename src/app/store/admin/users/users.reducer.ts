@@ -72,6 +72,17 @@ export const usersReducer = createReducer(
     loading: false,
     error: null,
   })),
+on(UsersActions.loadUnverifiedTrainersSuccess, (state, { response }) => ({
+  ...state,
+  users: response.data,
+  total: response.total,
+  loading: false,
+})),
+on(UsersActions.loadUnverifiedTrainersFailure, (state, { error }) => ({
+  ...state,
+  error,
+  loading: false,
+})),
 
   on(UsersActions.toggleBlockAndLoadUsersFailure, (state, { error }) => ({
     ...state,

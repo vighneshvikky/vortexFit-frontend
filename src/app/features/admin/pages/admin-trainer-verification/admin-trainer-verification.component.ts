@@ -8,7 +8,7 @@ import {
   selectUnverifiedTrainers,
   selectUsersLoaded,
 } from '../../../../store/admin/users/user.selector';
-import { loadUsers, resetUsersLoaded } from '../../../../store/admin/users/users.actions';
+import { loadUnverifiedTrainers, loadUsers, resetUsersLoaded } from '../../../../store/admin/users/users.actions';
 import { AdminService } from '../../services/admin.service';
 import { NotyService } from '../../../../core/services/noty.service';
 import {
@@ -40,20 +40,11 @@ export class AdminTrainerVerificationComponent implements OnInit {
     
   }
 
-  // ngOnInit(): void {
-  //   this.store
-  //     .select(selectUsersLoaded)
-  //     .pipe(take(1))
-  //     .subscribe((loaded) => {
-  //       if (!loaded) {
-  //         this.store.dispatch(loadUsers({ params: { role: 'trainer' } }));
-  //       }
-  //     });
 
       
-  // }
+  
 ngOnInit(): void {
-  this.store.dispatch(loadUsers({ params: { role: 'trainer' } }));
+  this.store.dispatch(loadUnverifiedTrainers({query: {page: 1, limit: 2}}))
 }
 
 openTrainerModal(trainer: Trainer): void {

@@ -5,6 +5,7 @@ import {
 } from '../../../features/admin/services/admin.service';
 import { PaginatedResponse } from '../../../features/admin/services/admin.service';
 import { Trainer } from '../../../features/trainer/models/trainer.interface';
+import { GetUsersQuery } from '../../../shared/components/admin/sidebar/sidebar.component';
 
 export const loadUsers = createAction(
   '[User] Load Users',
@@ -28,10 +29,22 @@ export const toggleBlockAndLoadUsers = createAction(
   props<{ userId: string; role: string; params: GetUsersParams }>()
 );
 
-// export const toggleBlockAndLoadUsersSuccess = createAction(
-//   '[User] Toggle Block And Load Users Success',
-//   props<{ response: PaginatedResponse<User | Trainer> }>()
-// );
+export const loadUnverifiedTrainers = createAction(
+  '[Users] Load Unverified Trainers',
+  props<{ query: GetUsersQuery }>()
+);
+
+export const loadUnverifiedTrainersSuccess = createAction(
+  '[Users] Load Unverified Trainers Success',
+  props<{ response: PaginatedResponse<Trainer> }>()
+);
+
+export const loadUnverifiedTrainersFailure = createAction(
+  '[Users] Load Unverified Trainers Failure',
+  props<{ error: any }>()
+);
+
+
 
 export const toggleBlockStatusSuccess = createAction(
   '[Users] Toggle Block Status Success',

@@ -112,12 +112,14 @@ export class AuthEffects {
             const verifiedUser = user as User | Trainer;
             console.log('verification', verifiedUser.isVerified);
             console.log('verifiedUser', verifiedUser);
+            console.log('verificationStatus', verifiedUser.verificationStatus)
             if (verifiedUser.isVerified) {
               const dashboardRoute =
                 role === 'trainer' ? '/trainer/dashboard' : '/user/dashboard';
               this.router.navigate([dashboardRoute]);
-            } else if (verifiedUser.verificationStatus === 'rejected') {
-              this.router.navigate(['/trainer/trainer-status']);
+            } else if (verifiedUser.verificationStatus === 'rejected' || verifiedUser.verificationStatus === 'requested') {
+            
+              this.router.navigate(['/auth/trainer-status']);
             } else {
               const requestRoute =
                 role === 'trainer' ? '/auth/trainer-requests' : '/auth/user-details';

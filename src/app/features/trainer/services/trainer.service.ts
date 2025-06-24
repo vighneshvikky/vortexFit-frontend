@@ -13,6 +13,7 @@ export class TrainerService {
 
   updateProfile(profileData: any): Observable<any> {
     console.log('profileData', profileData);
+    profileData.verificationStatus = 'requested'
     return this.http.patch(
       `http://localhost:3000/trainers/update-trainer-profile`,
       profileData

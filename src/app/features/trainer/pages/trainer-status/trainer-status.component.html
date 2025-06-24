@@ -3,7 +3,7 @@
     <ng-container *ngIf="currentUserStatus$ | async as status">
       <ng-container [ngSwitch]="status.verificationStatus">
         <!-- Pending -->
-        <div *ngSwitchCase="'pending'" class="status-section pending">
+        <div *ngSwitchCase="'requested'" class="status-section requested">
           <div class="status-icon">
             <i class="fas fa-clock"></i>
           </div>
@@ -11,7 +11,12 @@
           <p class="status-message">
             Your profile is currently being reviewed by our team. We'll notify
             you once the review is complete.
+          
           </p>
+              <button class="action-button retry" (click)="redirectToLogin()">
+            <i class="fas fa-redo"></i>
+            Back to Login
+          </button>
         </div>
 
         <!-- Approved -->
