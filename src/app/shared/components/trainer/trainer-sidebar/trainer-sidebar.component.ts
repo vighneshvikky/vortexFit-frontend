@@ -5,6 +5,7 @@ import { selectCurrentUser } from '../../../../features/auth/store/selectors/aut
 import { AuthenticatedUser } from '../../../../features/auth/store/actions/auth.actions';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AppState } from '../../../../store/app.state';
 
 @Component({
   selector: 'app-trainer-sidebar',
@@ -13,7 +14,7 @@ import { RouterModule } from '@angular/router';
   styleUrl: './trainer-sidebar.component.scss',
 })
 export class TrainerSidebarComponent implements OnInit {
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>) {}
   $currentTrainer!: Observable<AuthenticatedUser | null>;
   ngOnInit(): void {
     this.$currentTrainer = this.store.select(selectCurrentUser);

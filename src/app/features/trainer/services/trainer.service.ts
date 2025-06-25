@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../enviorments/environment';
+import { Trainer } from '../models/trainer.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -11,11 +12,11 @@ export class TrainerService {
 
   constructor(private http: HttpClient) {}
 
-  updateProfile(profileData: any): Observable<any> {
-    console.log('profileData', profileData);
+  updateProfile(profileData: Partial<Trainer>): Observable<Trainer> {
+  
     profileData.verificationStatus = 'requested'
-    return this.http.patch(
-      `http://localhost:3000/trainers/update-trainer-profile`,
+    return this.http.patch<Trainer>(
+      `${this.apiUrl}/update-trainer-profile`,
       profileData
     );
   }

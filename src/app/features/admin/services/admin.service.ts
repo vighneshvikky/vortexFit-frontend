@@ -135,8 +135,8 @@ export class AdminService {
     );
   }
 
-  approveTrainer(trainerId: string): Observable<any> {
-  return this.http.patch(`${this.apiUrl}/verify-trainer/${trainerId}`, {});
+  approveTrainer(trainerId: string): Observable<Trainer> {
+  return this.http.patch<Trainer>(`${this.apiUrl}/verify-trainer/${trainerId}`, {});
 }
 
 

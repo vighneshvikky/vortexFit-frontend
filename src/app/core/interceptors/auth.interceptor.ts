@@ -34,7 +34,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const excludedUrls = ['/auth', '/login', '/signup', '/otp'];
 
     if (excludedUrls.some((url) => req.url.includes(url))) {
-      return next.handle(req); // Don't attach credentials or refresh token logic
+      return next.handle(req); 
     }
     console.log('AuthInterceptor intercepted:', req.url);
     const clonedRequest = req.clone({

@@ -2,7 +2,7 @@
 
 export interface Trainer {
   _id: string;
-  name: string;
+  name?: string;
   email: string;
   role: 'trainer';
   isBlocked: boolean;

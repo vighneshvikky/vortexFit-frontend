@@ -16,6 +16,7 @@ import {
   updateCurrentUserVerificationStatus,
 } from '../../../auth/store/actions/auth.actions';
 import { selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';
+import { AppState } from '../../../../store/app.state';
 
 @Component({
   selector: 'app-admin-trainer-verification',
@@ -32,7 +33,7 @@ export class AdminTrainerVerificationComponent implements OnInit {
   readonly S3_BASE_URL =
     'https://vortexfit-app-upload.s3.ap-south-1.amazonaws.com/';
   constructor(
-    private store: Store,
+    private store: Store<AppState>,
     private adminService: AdminService,
     private notyService: NotyService
   ) {

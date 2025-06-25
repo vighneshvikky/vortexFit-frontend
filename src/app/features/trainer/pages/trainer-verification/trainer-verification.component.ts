@@ -17,7 +17,11 @@ import { Router } from '@angular/router';
 import { selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';
 import { HttpClient } from '@angular/common/http';
 import { Trainer } from '../../models/trainer.interface';
-import { updateCurrentUser } from '../../../auth/store/actions/auth.actions';
+import {
+  AuthenticatedUser,
+  updateCurrentUser,
+} from '../../../auth/store/actions/auth.actions';
+import { AppState } from '../../../../store/app.state';
 
 @Component({
   selector: 'app-trainer-verification',
@@ -31,12 +35,11 @@ export class TrainerVerificationComponent implements OnInit {
   @ViewChild('idProofInput') idProofInput!: ElementRef;
 
   verificationForm: FormGroup;
-  currentUser$: Observable<any>;
+  currentUser$: Observable<AuthenticatedUser | null>;
   trainerId: string | null = null;
   isLoading = false;
   uploadedFileNames: { [key in 'certification' | 'idProof']?: string } = {};
   availableSpecializations: string[] = [];
-
 
   categories = [
     { value: 'cardio', label: 'Cardio' },
@@ -54,7 +57,7 @@ export class TrainerVerificationComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private store: Store,
+    private store: Store<AppState>,
     private trainerService: TrainerService,
     private notyService: NotyService,
     private router: Router,
@@ -65,7 +68,7 @@ export class TrainerVerificationComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern(/^[a-zA-Z\s]*$/),
+          Validators.pattern(/^[a-zA-Z][a-zA-Z\s\-_']*$/),
           Validators.minLength(2),
           Validators.maxLength(50),
         ],
@@ -84,7 +87,7 @@ export class TrainerVerificationComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(1),
-          Validators.maxLength(10),
+          Validators.maxLength(100), // ✅ increase this
           this.minWords(2),
         ],
       ],
@@ -109,11 +112,12 @@ export class TrainerVerificationComponent implements OnInit {
     this.currentUser$
       .pipe(
         tap((user) => {
-          if (user) {
+          if (user && 'name' in user && '_id' in user) {
             this.trainerId = user._id;
+
             this.verificationForm.patchValue({
-              name: user.name || '',
-              email: user.email || '',
+              name: user.name ?? null,
+              email: user.email ?? null,
             });
           }
         })
@@ -194,7 +198,6 @@ export class TrainerVerificationComponent implements OnInit {
   onSubmit(): void {
     if (this.verificationForm.valid && this.trainerId) {
       this.isLoading = true;
-
       const formValues = this.verificationForm.value;
 
       const profileData = {
@@ -211,13 +214,12 @@ export class TrainerVerificationComponent implements OnInit {
           oneToOneSession: formValues.oneToOneSessionPrice,
           workoutPlan: formValues.workoutPlanPrice,
         },
-      
       };
 
       this.trainerService.updateProfile(profileData).subscribe({
         next: (res: Trainer) => {
           console.log('res from be', res);
-          this.store.dispatch(updateCurrentUser({user: res}))
+          this.store.dispatch(updateCurrentUser({ user: res }));
           this.isLoading = false;
           this.notyService.showSuccess(
             'Verification request submitted successfully'
@@ -261,6 +263,6 @@ export class TrainerVerificationComponent implements OnInit {
   }
 
   get category() {
-    return this.verificationForm.get('categorgy');
+    return this.verificationForm.get('category');
   }
 }

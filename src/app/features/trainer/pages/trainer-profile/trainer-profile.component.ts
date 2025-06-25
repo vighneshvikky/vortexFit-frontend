@@ -173,7 +173,7 @@
         return;
       }
 
-      const changedFields: any = {};
+      const changedFields: Record<string, unknown> = {};
 
       Object.keys(this.profileForm.controls).forEach((key) => {
         const control = this.profileForm.get(key);
@@ -182,7 +182,7 @@
         }
       });
 
-      // Add pricing object if related fields changed
+      
       if (
         this.profileForm.get('oneToOneSessionPrice')?.dirty ||
         this.profileForm.get('workoutPlanPrice')?.dirty

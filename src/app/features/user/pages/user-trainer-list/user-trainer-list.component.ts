@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
+import { Trainer } from '../../../trainer/models/trainer.interface';
 
 @Component({
   selector: 'app-user-trainer-list',
@@ -10,7 +11,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './user-trainer-list.component.scss',
 })
 export class UserTrainerListComponent implements OnInit {
-  trainers: any[] = [];
+  trainers: Trainer[] = [];
 
   private route = inject(ActivatedRoute);
   private userService = inject(UserService);

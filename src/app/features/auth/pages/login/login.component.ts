@@ -18,6 +18,7 @@ import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.
 import { NotyService } from '../../../../core/services/noty.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ActivatedRoute } from '@angular/router';
+import { AppState } from '../../../../store/app.state';
 
 @Component({
   selector: 'app-login',
@@ -34,7 +35,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private store: Store,
+    private store: Store<AppState>,
     private router: Router,
     private notyService: NotyService,
     private authService: AuthService,

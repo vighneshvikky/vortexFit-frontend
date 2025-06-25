@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { UserService } from '../../services/user.service';
@@ -90,19 +93,20 @@ export class UserDetailsComponent implements OnInit {
 
     this.currentUser$.subscribe();
   }
-  private minArrayLengthValidator(minLength: number) {
-    return (control: any) => {
-      if (control.value && control.value.length >= minLength) {
-        return null;
-      }
-      return {
-        minArrayLength: {
-          requiredLength: minLength,
-          actualLength: control.value ? control.value.length : 0,
-        },
-      };
+private minArrayLengthValidator(minLength: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (Array.isArray(value) && value.length >= minLength) {
+      return null;
+    }
+    return {
+      minArrayLength: {
+        requiredLength: minLength,
+        actualLength: Array.isArray(value) ? value.length : 0,
+      },
     };
-  }
+  };
+}
 
   // onCheckboxChange(event: any, controlName: string) {
   //   const control = this.profileForm.get(controlName);

@@ -8,6 +8,22 @@ export interface Availability {
 
 }
 
+
+export interface TimeSlot {
+  _id: string;
+  start: string;
+  end: string;
+}
+
+export interface AvailabilityResponse {
+  _id: string;
+  date: string;       
+  trainerId: string;
+  slots: TimeSlot[];
+  __v?: number;      
+}
+
+
 @Injectable({
     providedIn: 'root'
 })
@@ -17,7 +33,7 @@ export class AvailablityService {
     private http = inject(HttpClient);
 
 
-setAvailability(payload: { date: string; slots: string[] }): Observable<any> {
+setAvailability(payload: { date: string; slots: string[] }): Observable<AvailabilityResponse> {
   console.log('🟡 Original payload:', payload);
 
   const formattedPayload = {
@@ -30,7 +46,7 @@ setAvailability(payload: { date: string; slots: string[] }): Observable<any> {
 
   console.log('✅ Formatted payload sent to backend:', formattedPayload);
 
-  return this.http.post(`${this.apiUrl}/set-availability`, formattedPayload);
+  return this.http.post<AvailabilityResponse>(`${this.apiUrl}/set-availability`, formattedPayload);
 }
 
 

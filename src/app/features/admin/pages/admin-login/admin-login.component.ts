@@ -14,6 +14,7 @@ import { AuthState } from '../../../auth/store/auth.state';
 import { login } from '../../../auth/store/actions/auth.actions';
 import { Subject, takeUntil } from 'rxjs';
 import { selectAuthError, selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';
+import { AppState } from '../../../../store/app.state';
 
 @Component({
   selector: 'app-admin-login',
@@ -31,7 +32,7 @@ export class AdminLoginComponent implements OnDestroy{
 
   constructor(
     private fb: FormBuilder,
-    private store: Store<AuthState>,
+    private store: Store<AppState>,
     private adminService: AdminService,
     private router: Router,
     private notyService: NotyService,

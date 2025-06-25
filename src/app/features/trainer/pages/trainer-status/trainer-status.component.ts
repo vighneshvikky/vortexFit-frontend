@@ -8,6 +8,7 @@ import {
 } from '../../../auth/store/selectors/auth.selectors';
 import { Router, RouterModule } from '@angular/router';
 import { fetchCurrentUser, fetchCurrentUserSuccess } from '../../../auth/store/actions/auth.actions';
+import { AppState } from '../../../../store/app.state';
 
 @Component({
   selector: 'app-trainer-status',
@@ -28,7 +29,7 @@ export class TrainerStatusComponent implements OnInit, OnDestroy {
   rejectionReason: string | null = null;
   private subscription: Subscription = new Subscription();
 
-  constructor(private store: Store, private router: Router) {
+  constructor(private store: Store<AppState>, private router: Router) {
 this.currentUserStatus$ = this.store.select(selectCurrentUser).pipe(
   tap(user => console.log('[Selector] Current User:', user))
 );
