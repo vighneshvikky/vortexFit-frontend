@@ -21,4 +21,5 @@ export interface Trainer {
     oneToOneSession: number;
     workoutPlan: number;
   };
+  category: string;
 }

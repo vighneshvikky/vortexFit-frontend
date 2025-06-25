@@ -1,139 +1,324 @@
-<div *ngIf="currentTrainer$ | async as currentTrainer" class="profile-summary">
-  <img
-    [src]="currentTrainer?.image"
-    (error)="onImageError($event)"
-    alt="Trainer Image"
-    width="150"
-  />
-  <h2>{{ currentTrainer.name }}</h2>
-  <p>Email: {{ currentTrainer.email }}</p>
-  <p>Phone: {{ currentTrainer.phoneNumber }}</p>
-  <p>Specialization: {{ currentTrainer.specialization }}</p>
-  <p>Experience: {{ currentTrainer.experience }} years</p>
-  <p *ngIf="currentTrainer.bio">Bio: {{ currentTrainer.bio }}</p>
-  pricing
-  <p *ngIf="currentTrainer.pricing.oneToOneSession">
-    One-to-One Session: {{ currentTrainer.pricing.oneToOneSession }}
-  </p>
-  <p *ngIf="currentTrainer.pricing.workoutPlan">
-    workoutPlan: {{ currentTrainer.pricing.workoutPlan }}
-  </p>
+<!-- Profile Summary Card -->
+<div
+  *ngIf="currentTrainer$ | async as currentTrainer"
+  class="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto border-t-4 border-red-500"
+>
+  <div class="text-center">
+    <img
+      [src]="currentTrainer?.image"
+      (error)="onImageError($event)"
+      alt="Trainer Image"
+      class="w-24 h-24 rounded-full mx-auto border-4 border-red-500 shadow-lg object-cover"
+    />
+    <h2 class="text-2xl font-bold text-gray-800 mt-4">
+      {{ currentTrainer.name }}
+    </h2>
+    <!-- <h1 class="text-2xl font-bold text-gray-800 mt-4">{{ currentTrainer.name }}</h1> -->
+    <h1 class="text-2xl font-light text-gray-800 mt-4">
+      {{ currentTrainer.category }}
+    </h1>
 
-  <div *ngIf="certPreviewUrl">
-    <strong>Certification:</strong><br />
-    <a [href]="certPreviewUrl" target="_blank">
+    <!-- Edit Button -->
+    <button
+      (click)="openEditModal()"
+      class="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 text-sm"
+    >
+      Edit Profile
+    </button>
+  </div>
+
+  <div class="mt-4 space-y-2 text-sm">
+    <p class="flex items-center text-gray-600">
+      <span class="w-16 font-medium">Email:</span> {{ currentTrainer.email }}
+    </p>
+    <p class="flex items-center text-gray-600">
+      <span class="w-16 font-medium">Phone:</span>
+      {{ currentTrainer.phoneNumber }}
+    </p>
+    <p class="flex items-center text-gray-600">
+      <span class="w-16 font-medium">Focus:</span>
+      {{ currentTrainer.specialization }}
+    </p>
+    <p class="flex items-center text-gray-600">
+      <span class="w-16 font-medium">Experience:</span>
+      {{ currentTrainer.experience }} years
+    </p>
+    <p *ngIf="currentTrainer.bio" class="text-gray-600 text-xs">
+      <span class="font-medium">Bio:</span> {{ currentTrainer.bio }}
+    </p>
+  </div>
+
+  <!-- Pricing Section -->
+  <div class="mt-4 bg-red-50 rounded-lg p-3">
+    <h3 class="text-red-800 font-semibold text-sm mb-2">Pricing</h3>
+    <p
+      *ngIf="currentTrainer.pricing.oneToOneSession"
+      class="text-xs text-gray-700"
+    >
+      1-on-1 Session: {{ currentTrainer.pricing.oneToOneSession }}
+    </p>
+    <p *ngIf="currentTrainer.pricing.workoutPlan" class="text-xs text-gray-700">
+      Workout Plan: {{ currentTrainer.pricing.workoutPlan }}
+    </p>
+  </div>
+
+  <!-- Certification -->
+  <div *ngIf="certPreviewUrl" class="mt-4">
+    <p class="text-sm font-medium text-gray-800 mb-2">Certification:</p>
+    <a [href]="certPreviewUrl" target="_blank" class="block">
       <img
         [src]="certPreviewUrl"
         alt="Certification"
-        style="
-          max-width: 100%;
-          max-height: 300px;
-          border: 1px solid #ccc;
-          border-radius: 8px;
-          margin-top: 8px;
-        "
+        class="w-full h-32 object-cover rounded-lg border border-gray-200 hover:opacity-80 transition-opacity"
       />
     </a>
   </div>
 </div>
 
-<form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
-  <div>
-    <label>Name:</label>
-    <input formControlName="name" type="text" />
-    <div
-      *ngIf="
-        profileForm.get('name')?.invalid && profileForm.get('name')?.touched
-      "
-    >
-      Name is required.
+<!-- Edit Profile Modal -->
+<div
+  *ngIf="showEditModal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+  (click)="closeEditModal()"
+>
+  <div
+    class="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="flex justify-between items-center p-4 border-b border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-800">Edit Profile</h3>
+      <button
+        (click)="closeEditModal()"
+        class="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+      >
+        ×
+      </button>
     </div>
-  </div>
 
-  <div>
-    <label>Phone Number:</label>
-    <input formControlName="phoneNumber" type="tel" />
-    <div
-      *ngIf="
-        profileForm.get('phoneNumber')?.invalid &&
-        profileForm.get('phoneNumber')?.touched
-      "
+    <!-- Modal Body -->
+    <form
+      [formGroup]="profileForm"
+      (ngSubmit)="onSubmit()"
+      class="p-4 space-y-4"
     >
-      Enter a valid 10-digit phone number.
-    </div>
-  </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Name:</label
+        >
+        <input
+          formControlName="name"
+          type="text"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+        />
+        <div
+          *ngIf="
+            profileForm.get('name')?.invalid && profileForm.get('name')?.touched
+          "
+          class="text-red-500 text-xs mt-1"
+        >
+          Name is required.
+        </div>
+      </div>
 
-  <div>
-    <label>Specialization:</label>
-    <input formControlName="specialization" type="text" />
-  </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Phone Number:</label
+        >
+        <input
+          formControlName="phoneNumber"
+          type="tel"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+        />
+        <div
+          *ngIf="
+            profileForm.get('phoneNumber')?.invalid &&
+            profileForm.get('phoneNumber')?.touched
+          "
+          class="text-red-500 text-xs mt-1"
+        >
+          Enter a valid 10-digit phone number.
+        </div>
+      </div>
+      <!-- Category -->
+<label for="category" class="block text-sm font-semibold text-gray-700">Category</label>
+<select
+  id="category"
+  formControlName="category"
+  (change)="onCategoryChange($event)"
+  class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 transition duration-150"
+>
+  <option value="" disabled>Select a category</option>
+  <option *ngFor="let cat of categories" [value]="cat.value">
+    {{ cat.label }}
+  </option>
+</select>
 
-  <div>
-    <label>Experience (years):</label>
-    <input formControlName="experience" type="number" />
-    <div
-      *ngIf="
-        profileForm.get('experience')?.invalid &&
-        profileForm.get('experience')?.touched
-      "
-    >
-      Enter a valid experience (>= 0).
-    </div>
-  </div>
+<!-- Specialization -->
+<label for="specialization" class="block text-sm font-semibold text-gray-700 mt-4">Specialization</label>
+<select
+  id="specialization"
+  formControlName="specialization"
+  class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 transition duration-150"
+>
+  <option value="">Select your specialization</option>
+  <option *ngFor="let spec of availableSpecializations" [value]="spec">
+    {{ spec }}
+  </option>
+</select>
 
-  <div>
-    <label>Bio:</label>
-    <textarea formControlName="bio" rows="4"></textarea>
-    <div
-      *ngIf="profileForm.get('bio')?.invalid && profileForm.get('bio')?.touched"
-    >
-      Bio must be less than 1000 characters.
-    </div>
-  </div>
-  <div>
-    <label>One-to-One Session Price (₹):</label>
-    <input formControlName="oneToOneSessionPrice" type="number" min="0" />
-    <div
-      *ngIf="
-        profileForm.get('oneToOneSessionPrice')?.invalid &&
-        profileForm.get('oneToOneSessionPrice')?.touched
-      "
-    >
-      Enter a valid price.
-    </div>
-  </div>
+<!-- Error Message -->
+<div
+  *ngIf="showSpecializationError"
+  class="text-red-500 text-sm mt-1"
+>
+  Please select a specialization.
+</div>
 
-  <div>
-    <label>Workout Plan Price (₹):</label>
-    <input formControlName="workoutPlanPrice" type="number" min="0" />
-    <div
-      *ngIf="
-        profileForm.get('workoutPlanPrice')?.invalid &&
-        profileForm.get('workoutPlanPrice')?.touched
-      "
-    >
-      Enter a valid price.
-    </div>
-  </div>
-  <div>
-    <label>Certification:</label>
-    <input type="file" (change)="onFileSelect($event, 'certification')" />
-  </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Experience (years):</label
+        >
+        <input
+          formControlName="experience"
+          type="number"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+        />
+        <div
+          *ngIf="
+            profileForm.get('experience')?.invalid &&
+            profileForm.get('experience')?.touched
+          "
+          class="text-red-500 text-xs mt-1"
+        >
+          Enter a valid experience (>= 0).
+        </div>
+      </div>
 
-  <div>
-    <label>Profile Image:</label>
-    <input type="file" (change)="onFileSelect($event, 'image')" />
-  </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Bio:</label>
+        <textarea
+          formControlName="bio"
+          rows="3"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+        >
+        </textarea>
+        <div
+          *ngIf="
+            profileForm.get('bio')?.invalid && profileForm.get('bio')?.touched
+          "
+          class="text-red-500 text-xs mt-1"
+        >
+          Bio must be less than 1000 characters.
+        </div>
+      </div>
 
-  <div *ngIf="certPreviewUrl">
-    <strong>Certification Preview:</strong><br />
-    <img [src]="certPreviewUrl" alt="Certification" style="max-width: 200px" />
-  </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >1-on-1 Price (₹):</label
+          >
+          <input
+            formControlName="oneToOneSessionPrice"
+            type="number"
+            min="0"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+          />
+          <div
+            *ngIf="
+              profileForm.get('oneToOneSessionPrice')?.invalid &&
+              profileForm.get('oneToOneSessionPrice')?.touched
+            "
+            class="text-red-500 text-xs mt-1"
+          >
+            Enter a valid price.
+          </div>
+        </div>
 
-  <div *ngIf="imagePreviewUrl">
-    <strong>Profile Image Preview:</strong><br />
-    <img [src]="imagePreviewUrl" alt="Image" style="max-width: 200px" />
-  </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Plan Price (₹):</label
+          >
+          <input
+            formControlName="workoutPlanPrice"
+            type="number"
+            min="0"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+          />
+          <div
+            *ngIf="
+              profileForm.get('workoutPlanPrice')?.invalid &&
+              profileForm.get('workoutPlanPrice')?.touched
+            "
+            class="text-red-500 text-xs mt-1"
+          >
+            Enter a valid price.
+          </div>
+        </div>
+      </div>
 
-  <button type="submit" [disabled]="profileForm.invalid">Update Profile</button>
-</form>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Certification:</label
+        >
+        <input
+          type="file"
+          (change)="onFileSelect($event, 'certification')"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm file:mr-4 file:py-1 file:px-2 file:rounded-md file:border-0 file:bg-red-50 file:text-red-700 hover:file:bg-red-100"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1"
+          >Profile Image:</label
+        >
+        <input
+          type="file"
+          (change)="onFileSelect($event, 'image')"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm file:mr-4 file:py-1 file:px-2 file:rounded-md file:border-0 file:bg-red-50 file:text-red-700 hover:file:bg-red-100"
+        />
+      </div>
+
+      <!-- Preview Images -->
+      <div *ngIf="certPreviewUrl" class="text-center">
+        <p class="text-sm font-medium text-gray-700 mb-1">
+          Certification Preview:
+        </p>
+        <img
+          [src]="certPreviewUrl"
+          alt="Certification"
+          class="max-w-32 mx-auto rounded border"
+        />
+      </div>
+
+      <div *ngIf="imagePreviewUrl" class="text-center">
+        <p class="text-sm font-medium text-gray-700 mb-1">
+          Profile Image Preview:
+        </p>
+        <img
+          [src]="imagePreviewUrl"
+          alt="Image"
+          class="max-w-32 mx-auto rounded border"
+        />
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex gap-3 pt-4 border-t border-gray-200">
+        <button
+          type="button"
+          (click)="closeEditModal()"
+          class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors duration-200"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="profileForm.invalid"
+          class="flex-1 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200"
+        >
+          Update Profile
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
