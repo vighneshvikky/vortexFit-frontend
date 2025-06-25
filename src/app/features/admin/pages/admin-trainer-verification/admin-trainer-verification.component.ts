@@ -91,11 +91,13 @@ openTrainerModal(trainer: Trainer): void {
             );
           }
         });
+
+        
       this.adminService.acceptTrainer(trainer._id).subscribe({
         next: () => {
           this.notyService.showSuccess('Trainer approved successfully');
           this.closeTrainerModal();
-          this.store.dispatch(loadUsers({ params: { role: 'trainer' } }));
+          this.store.dispatch(loadUnverifiedTrainers({query: {page: 1, limit: 2}}))
         },
         error: (error) => {
           console.error('Error approving trainer:', error);

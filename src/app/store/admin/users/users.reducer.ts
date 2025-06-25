@@ -56,14 +56,7 @@ export const usersReducer = createReducer(
     ...state,
     loading: true,
   })),
-  // on(UsersActions.toggleBlockAndLoadUsersSuccess, (state, { response }) => ({
-  //   ...state,
-  //   users: response.data,
-  //   total: response.total,
-  //   loading: false,
-  //   loaded: true,
-  //   error: null,
-  // })),
+
   on(UsersActions.toggleBlockStatusSuccess, (state, { updatedUser }) => ({
     ...state,
     users: state.users.map((user) =>

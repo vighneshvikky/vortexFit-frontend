@@ -29,6 +29,16 @@ export const toggleBlockAndLoadUsers = createAction(
   props<{ userId: string; role: string; params: GetUsersParams }>()
 );
 
+export const toggleBlockStatusSuccess = createAction(
+  '[Users] Toggle Block Status Success',
+  props<{ updatedUser: User | Trainer }>()
+);
+
+export const toggleBlockAndLoadUsersFailure = createAction(
+  '[User] Toggle Block And Load Users Failure',
+  props<{ error: any }>()
+);
+
 export const loadUnverifiedTrainers = createAction(
   '[Users] Load Unverified Trainers',
   props<{ query: GetUsersQuery }>()
@@ -46,12 +56,3 @@ export const loadUnverifiedTrainersFailure = createAction(
 
 
 
-export const toggleBlockStatusSuccess = createAction(
-  '[Users] Toggle Block Status Success',
-  props<{ updatedUser: User | Trainer }>()
-);
-
-export const toggleBlockAndLoadUsersFailure = createAction(
-  '[User] Toggle Block And Load Users Failure',
-  props<{ error: any }>()
-);

@@ -73,7 +73,6 @@ export class AdminUserListingComponent implements OnInit {
       limit: this.limit,
       search: searchTerm,
     };
- console.log('Loading users with params:', params); 
     this.store.dispatch(loadUsers({ params }));
   }
 

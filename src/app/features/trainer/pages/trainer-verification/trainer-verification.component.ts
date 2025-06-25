@@ -16,6 +16,8 @@ import { NotyService } from '../../../../core/services/noty.service';
 import { Router } from '@angular/router';
 import { selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';
 import { HttpClient } from '@angular/common/http';
+import { Trainer } from '../../models/trainer.interface';
+import { updateCurrentUser } from '../../../auth/store/actions/auth.actions';
 
 @Component({
   selector: 'app-trainer-verification',
@@ -213,7 +215,9 @@ export class TrainerVerificationComponent implements OnInit {
       };
 
       this.trainerService.updateProfile(profileData).subscribe({
-        next: () => {
+        next: (res: Trainer) => {
+          console.log('res from be', res);
+          this.store.dispatch(updateCurrentUser({user: res}))
           this.isLoading = false;
           this.notyService.showSuccess(
             'Verification request submitted successfully'
