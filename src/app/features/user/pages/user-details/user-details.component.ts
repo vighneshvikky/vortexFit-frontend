@@ -93,32 +93,20 @@ export class UserDetailsComponent implements OnInit {
 
     this.currentUser$.subscribe();
   }
-private minArrayLengthValidator(minLength: number): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const value = control.value;
-    if (Array.isArray(value) && value.length >= minLength) {
-      return null;
-    }
-    return {
-      minArrayLength: {
-        requiredLength: minLength,
-        actualLength: Array.isArray(value) ? value.length : 0,
-      },
+  private minArrayLengthValidator(minLength: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (Array.isArray(value) && value.length >= minLength) {
+        return null;
+      }
+      return {
+        minArrayLength: {
+          requiredLength: minLength,
+          actualLength: Array.isArray(value) ? value.length : 0,
+        },
+      };
     };
-  };
-}
-
-  // onCheckboxChange(event: any, controlName: string) {
-  //   const control = this.profileForm.get(controlName);
-  //   if (!control) return;
-
-  //   const current = control.value as string[];
-  //   if (event.target.checked) {
-  //     control.setValue([...current, event.target.value]);
-  //   } else {
-  //     control.setValue(current.filter((val) => val !== event.target.value));
-  //   }
-  // }
+  }
 
   onCheckboxChange(event: any, controlName: string) {
     const control = this.profileForm.get(controlName);

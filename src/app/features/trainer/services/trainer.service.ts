@@ -13,8 +13,7 @@ export class TrainerService {
   constructor(private http: HttpClient) {}
 
   updateProfile(profileData: Partial<Trainer>): Observable<Trainer> {
-  
-    profileData.verificationStatus = 'requested'
+    profileData.verificationStatus = 'requested';
     return this.http.patch<Trainer>(
       `${this.apiUrl}/update-trainer-profile`,
       profileData

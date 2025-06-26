@@ -10,7 +10,7 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 export class PaginationComponent implements OnChanges{
   @Input() currentPage: number = 1;
   @Input() totalPages: number = 1;
-  @Input() maxVisiblePages: number = 5; // Adjust based on screen size
+  @Input() maxVisiblePages: number = 5; 
   @Output() pageChanged = new EventEmitter<number>();
 
   paginationRange: (number | string)[] = [];

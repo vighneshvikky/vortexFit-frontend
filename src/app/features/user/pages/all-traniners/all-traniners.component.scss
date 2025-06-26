@@ -1,0 +1,250 @@
+// all-traniners.component.scss
+
+// Custom slider styling
+.slider {
+  background: linear-gradient(to right, #8b5cf6 0%, #a855f7 100%);
+  outline: none;
+  border-radius: 8px;
+  
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #6d28d9;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(109, 40, 217, 0.3);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: #5b21b6;
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(109, 40, 217, 0.4);
+    }
+  }
+  
+  &::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #6d28d9;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(109, 40, 217, 0.3);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: #5b21b6;
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(109, 40, 217, 0.4);
+    }
+  }
+}
+
+// Custom animations
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Filter section animations
+.filter-group {
+  animation: slideInUp 0.6s ease-out;
+  
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+  &:nth-child(5) { animation-delay: 0.5s; }
+}
+
+// Category header styling
+.category-header {
+  position: relative;
+  animation: fadeInScale 0.8s ease-out;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background: linear-gradient(to bottom, #8b5cf6, #a855f7);
+    border-radius: 2px;
+  }
+}
+
+// Trainer card enhancements
+.trainer-card {
+  position: relative;
+  animation: fadeInScale 0.6s ease-out;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #8b5cf6, #a855f7, #c084fc);
+    border-radius: 16px 16px 0 0;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover {
+    &::before {
+      transform: scaleX(1);
+    }
+    
+    .pricing-section {
+      background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
+      transform: translateY(-2px);
+    }
+  }
+  
+  // Stagger animation for cards
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+  &:nth-child(5) { animation-delay: 0.5s; }
+  &:nth-child(6) { animation-delay: 0.6s; }
+}
+
+// Pricing section enhancements
+.pricing-section {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  
+  &:hover {
+    border-color: rgba(139, 92, 246, 0.2);
+  }
+}
+
+// Button hover effects
+button {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  &:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+// Specialization tags
+.specialization-tag {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: #8b5cf6;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(139, 92, 246, 0.3);
+  }
+}
+
+// Line clamp utility
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  .trainer-card {
+    margin-bottom: 1rem;
+  }
+  
+  .filter-group {
+    margin-bottom: 1rem;
+  }
+  
+  .category-header {
+    &::before {
+      display: none;
+    }
+  }
+}
+
+// Loading skeleton (if needed for future enhancement)
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Focus states for accessibility
+input:focus,
+select:focus,
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+}
+
+// Custom scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #8b5cf6, #a855f7);
+  border-radius: 4px;
+  
+  &:hover {
+    background: linear-gradient(to bottom, #7c3aed, #9333ea);
+  }
+}

@@ -16,7 +16,7 @@ export class UserService {
     return this.http.patch(`${this.apiUrl}/update-profile`, data);
   }
 
-  getTrainer(category: string ): Observable<Trainer[]> {
+  getTrainer(category?: string ): Observable<Trainer[]> {
     return this.http.get<Trainer[]>(`${this.apiUrl}/approved-trainer`, {
       params: {
         category: category || '',

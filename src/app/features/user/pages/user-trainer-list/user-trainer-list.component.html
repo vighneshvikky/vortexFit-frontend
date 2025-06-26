@@ -4,131 +4,8 @@
 >
   <div class="max-w-7xl mx-auto">
     <!-- Filter Section -->
-    <div
-      class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8 mb-12"
-    >
-      <div class="flex items-center mb-6">
-        <i class="fas fa-filter text-purple-600 mr-3 text-xl"></i>
-        <h2
-          class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
-        >
-          Filter Trainers
-        </h2>
-      </div>
+   
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Category Filter -->
-        <div class="space-y-2">
-          <label
-            class="block text-gray-700 font-semibold text-sm uppercase tracking-wide"
-          >
-            Category
-          </label>
-          <select
-            class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-200 shadow-sm hover:shadow-md"
-          >
-            <option value="">All Categories</option>
-            <option value="cardio">Cardio Fitness</option>
-            <option value="strength">Strength & Conditioning</option>
-            <option value="yoga">Yoga & Mindfulness</option>
-            <option value="nutrition">Nutrition & Weight Management</option>
-            <option value="rehab">Rehabilitation</option>
-          </select>
-        </div>
-
-        <!-- Rating Filter -->
-        <div class="space-y-2">
-          <label
-            class="block text-gray-700 font-semibold text-sm uppercase tracking-wide"
-          >
-            Minimum Rating
-          </label>
-          <select
-            class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-200 shadow-sm hover:shadow-md"
-          >
-            <option value="">Any Rating</option>
-            <option value="5">5 Stars</option>
-            <option value="4">4+ Stars</option>
-            <option value="3">3+ Stars</option>
-          </select>
-        </div>
-
-        <!-- Price Filter -->
-        <div class="space-y-2">
-          <label
-            class="block text-gray-700 font-semibold text-sm uppercase tracking-wide"
-          >
-            Price Range
-          </label>
-          <select
-            class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-200 shadow-sm hover:shadow-md"
-          >
-            <option value="">Any Price</option>
-            <option value="50">Under $50/session</option>
-            <option value="100">$50-$100/session</option>
-            <option value="150">$100-$150/session</option>
-            <option value="200">Over $150/session</option>
-          </select>
-        </div>
-
-        <!-- Location Filter -->
-        <div class="space-y-2">
-          <label
-            class="block text-gray-700 font-semibold text-sm uppercase tracking-wide"
-          >
-            Location
-          </label>
-          <select
-            class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-500/20 focus:border-purple-500 transition-all duration-200 shadow-sm hover:shadow-md"
-          >
-            <option value="">Any Location</option>
-            <option value="online">Online Only</option>
-            <option value="in-person">In-Person</option>
-            <option value="both">Both</option>
-          </select>
-        </div>
-      </div>
-
-      <div
-        class="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4"
-      >
-        <button
-          class="text-purple-600 font-semibold hover:text-purple-800 transition-colors duration-200 hover:underline"
-        >
-          Reset Filters
-        </button>
-        <button
-          class="bg-gradient-to-r from-purple-600 via-pink-600 to-red-500 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
-        >
-          Apply Filters
-        </button>
-      </div>
-    </div>
-
-    <!-- Results Count and Sort -->
-    <div
-      class="flex flex-col lg:flex-row justify-between items-center mb-8 bg-white/60 backdrop-blur-sm rounded-xl p-6 shadow-lg"
-    >
-      <div class="flex items-center mb-4 lg:mb-0">
-        <i class="fas fa-award text-purple-600 mr-2"></i>
-        <p class="text-gray-700">
-          Showing <span class="font-bold text-purple-700">12</span> trainers
-          matching your criteria
-        </p>
-      </div>
-      <div class="flex items-center space-x-3">
-        <i class="fas fa-sort text-gray-600"></i>
-        <label class="text-gray-600 font-medium">Sort by:</label>
-        <select
-          class="px-4 py-2 bg-white border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 shadow-sm"
-        >
-          <option value="rating">Highest Rated</option>
-          <option value="price-low">Price: Low to High</option>
-          <option value="price-high">Price: High to Low</option>
-          <option value="experience">Most Experienced</option>
-        </select>
-      </div>
-    </div>
 
     <!-- Trainer Cards Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -170,7 +47,7 @@
                 {{ trainer.name }}
               </h3>
               <p class="text-purple-600 font-semibold text-sm">
-                {{ trainer.category }} Fitness Trainer
+                {{ trainer.category }} 
               </p>
             </div>
             <div class="text-right" *ngIf="trainer?.pricing">
