@@ -1,6 +1,6 @@
 
 <div class="flex min-h-screen">
-  <app-trainer-sidebar></app-trainer-sidebar>
+<app-trainer-sidebar [navItems]="navItems" (logout)="onLogout()"></app-trainer-sidebar>
 
   <div class="flex-1 bg-gray-100 p-6">
     <router-outlet></router-outlet>

@@ -3,6 +3,7 @@ import { environment } from '../../../../enviorments/environment';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Trainer } from '../../trainer/models/trainer.interface';
+import { User } from '../../admin/services/admin.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -11,7 +12,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  updateProfile(data: any) {
+  updateProfile(data: User) {
     console.log('data from user profile', data);
     return this.http.patch(`${this.apiUrl}/update-profile`, data);
   }

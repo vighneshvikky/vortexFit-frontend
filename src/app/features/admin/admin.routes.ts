@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { AdminLoginComponent } from './pages/admin-login/admin-login.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
-import { AdminTrainerVerificationComponent } from './pages/admin-trainer-verification/admin-trainer-verification.component';
 import { RoleGuard } from '../../core/guards/role.guard';
 
 export const adminRoutes: Routes = [
@@ -20,7 +19,7 @@ export const adminRoutes: Routes = [
       },
       {
         path: 'dashboard',
-        loadComponent: () =>
+        loadComponent: () =>  
           import('./pages/admin-dashboard/admin-dashboard.component').then(
             (m) => m.AdminDashboardComponent
           ),

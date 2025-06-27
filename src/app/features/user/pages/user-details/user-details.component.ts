@@ -108,21 +108,23 @@ export class UserDetailsComponent implements OnInit {
     };
   }
 
-  onCheckboxChange(event: any, controlName: string) {
-    const control = this.profileForm.get(controlName);
-    const currentValue = control?.value || [];
+onCheckboxChange(event: Event, controlName: string): void {
+  const inputElement = event.target as HTMLInputElement;
+  const control = this.profileForm.get(controlName);
+  const currentValue = control?.value || [];
 
-    if (event.target.checked) {
-      control?.setValue([...currentValue, event.target.value]);
-    } else {
-      control?.setValue(
-        currentValue.filter((item: string) => item !== event.target.value)
-      );
-    }
-
-    // Mark as touched for validation
-    control?.markAsTouched();
+  if (inputElement.checked) {
+    control?.setValue([...currentValue, inputElement.value]);
+  } else {
+    control?.setValue(
+      currentValue.filter((item: string) => item !== inputElement.value)
+    );
   }
+
+  
+  control?.markAsTouched();
+}
+
 
   onSubmit(): void {
     if (this.profileForm.invalid) {

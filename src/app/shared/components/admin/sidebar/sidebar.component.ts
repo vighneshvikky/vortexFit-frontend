@@ -37,8 +37,6 @@ export class SidebarComponent {
     { id: 'verifications', label: 'Verifications', icon: 'fa-check-circle' },
     { id: 'plans', label: 'Plans', icon: 'fa-list-alt' },
     { id: 'earnings', label: 'Earnings', icon: 'fa-dollar-sign' },
-    { id: 'notifications', label: 'Notifications', icon: 'fa-bell'},
-    { id: 'settings', label: 'Settings', icon: 'fa-cog' }
   ];
 
   @Output() menuItemClick = new EventEmitter<string>();
@@ -47,7 +45,6 @@ export class SidebarComponent {
 
   onMenuItemClick(itemId: string): void {
     this.activeMenuItem = itemId;
-    console.log('itemId', itemId);
     this.menuItemClick.emit(itemId);
   }
 

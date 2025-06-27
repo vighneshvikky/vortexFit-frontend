@@ -11,20 +11,27 @@
       </div>
 
       <!-- Center: Search Bar -->
-      <div class="hidden md:flex flex-1 justify-center">
-        <form class="flex items-center bg-white rounded-lg shadow-inner max-w-xl w-full px-3 py-1">
-          <input
-            type="text"
-            placeholder="Search by specialty, name"
-            class="flex-grow px-3 py-2 text-gray-700 focus:outline-none"
-          />
-          <button
-            class="bg-purple-700 hover:bg-purple-800 text-white text-sm font-semibold px-4 py-2 rounded-lg ml-2"
-          >
-            Find Coaches
-          </button>
-        </form>
-      </div>
+<div class="hidden md:flex flex-1 justify-center">
+      <form 
+        class="flex items-center bg-white rounded-lg shadow-inner max-w-xl w-full px-3 py-1"
+        (ngSubmit)="onSearch()"
+      >
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          name="searchTerm"
+          placeholder="Search by specialty, name"
+          class="flex-grow px-3 py-2 text-gray-700 focus:outline-none"
+          (keyup.enter)="onSearch()"
+        />
+        <button
+          type="submit"
+          class="bg-purple-700 hover:bg-purple-800 text-white text-sm font-semibold px-4 py-2 rounded-lg ml-2"
+        >
+          Find Coaches
+        </button>
+      </form>
+    </div>
 
       <!-- Right: Notifications & Profile -->
       <div class="flex items-center space-x-4">

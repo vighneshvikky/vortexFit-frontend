@@ -1,40 +1,63 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { Trainer } from '../../../trainer/models/trainer.interface';
 import { UserService } from '../../services/user.service';
-import {  AsyncPipe, CommonModule } from '@angular/common';
+import { SearchService } from '../../services/search.service'; // Adjust path as needed
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CATEGORIES, CATEGORY_TO_SPECIALIZATIONS } from '../../../../shared/constants/filter-options';
+import { Subject, takeUntil } from 'rxjs';
+
+interface Pricing {
+  _id: string;
+  oneToOneSession: number;
+  workOutPlan: number;
+  package?: number;
+  monthly?: number;
+  hourly?: number;
+  per_month?: number;
+  per_hour: number;
+}
 
 @Component({
   selector: 'app-all-traniners',
-  imports: [ CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './all-traniners.component.html',
   styleUrl: './all-traniners.component.scss',
 })
-export class AllTraninersComponent implements OnInit {
- trainers: Trainer[] = [];
-
+export class AllTraninersComponent implements OnInit, OnDestroy {
+  trainers: Trainer[] = [];
   filteredTrainers: Trainer[] = [];
   groupedTrainers: { [key: string]: Trainer[] } = {};
   
-
   selectedCategory: string = '';
   selectedSpecialization: string = '';
   minPrice: number = 0;
   maxPrice: number = 1000;
   minExperience: number = 0;
+  searchTerm: string = ''; // Add search term property
 
-  categories =  CATEGORIES
-  categoryToSpecializations: { [category: string]: string[] } = CATEGORY_TO_SPECIALIZATIONS
-
+  categories = CATEGORIES;
+  categoryToSpecializations: { [category: string]: string[] } = CATEGORY_TO_SPECIALIZATIONS;
   specializations: string[] = [];
   
   // UI state
   showFilters: boolean = false;
   
   private userService = inject(UserService);
+  private searchService = inject(SearchService);
+  private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
+    // Subscribe to search term changes
+    this.searchService.searchTerm$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(searchTerm => {
+        this.searchTerm = searchTerm;
+        if (this.trainers.length > 0) {
+          this.applyFilters();
+        }
+      });
+
     this.userService.getTrainer().subscribe({
       next: (res) => {
         this.trainers = res;
@@ -46,6 +69,11 @@ export class AllTraninersComponent implements OnInit {
         console.log('err', err);
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   initializeFilterOptions(): void {
@@ -70,7 +98,10 @@ export class AllTraninersComponent implements OnInit {
       const priceMatch = this.isPriceInRange(trainer.pricing);
       const experienceMatch = trainer.experience >= this.minExperience;
       
-      return categoryMatch && specializationMatch && priceMatch && experienceMatch;
+      // Add search functionality
+      const searchMatch = this.matchesSearch(trainer);
+      
+      return categoryMatch && specializationMatch && priceMatch && experienceMatch && searchMatch;
     });
     
     this.groupTrainersByCategory();
@@ -78,6 +109,30 @@ export class AllTraninersComponent implements OnInit {
     // Debug: Log filtered results
     console.log('Filtered trainers:', this.filteredTrainers);
     console.log('Grouped trainers:', this.groupedTrainers);
+  }
+
+  matchesSearch(trainer: Trainer): boolean {
+    if (!this.searchTerm || this.searchTerm.trim() === '') {
+      return true;
+    }
+
+    const searchTerm = this.searchTerm.toLowerCase().trim();
+    
+    // Search in trainer name
+    const nameMatch = trainer.name?.toLowerCase().includes(searchTerm) || false;
+    
+    // Search in specializations
+    const specializationMatch = trainer.specialization && Array.isArray(trainer.specialization) 
+      ? trainer.specialization.some(spec => spec.toLowerCase().includes(searchTerm))
+      : false;
+    
+    // Search in category
+    const categoryMatch = trainer.category?.toLowerCase().includes(searchTerm) || false;
+    
+    // Search in bio/description if available
+    const bioMatch = trainer.bio?.toLowerCase().includes(searchTerm) || false;
+    
+    return nameMatch || specializationMatch || categoryMatch || bioMatch;
   }
 
   isPriceInRange(pricing: any): boolean {
@@ -112,6 +167,15 @@ export class AllTraninersComponent implements OnInit {
     this.minPrice = 0;
     this.maxPrice = 1000;
     this.minExperience = 0;
+    this.searchTerm = '';
+    this.searchService.updateSearchTerm(''); 
+    this.applyFilters();
+  }
+
+  // Method to clear search specifically
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.searchService.updateSearchTerm('');
     this.applyFilters();
   }
 
@@ -124,7 +188,7 @@ export class AllTraninersComponent implements OnInit {
     return categoryObj ? categoryObj.label : category.charAt(0).toUpperCase() + category.slice(1);
   }
 
-  // Helper method to get available specializations for selected category
+
   getSpecializationsForCategory(): string[] {
     if (!this.selectedCategory) {
       return this.specializations;
@@ -132,7 +196,7 @@ export class AllTraninersComponent implements OnInit {
     return this.categoryToSpecializations[this.selectedCategory] || [];
   }
 
-  getObjectKeys(obj: any): string[] {
+  getObjectKeys(obj: Record<string, unknown>): string[] {
     return Object.keys(obj);
   }
 }

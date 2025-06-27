@@ -41,86 +41,32 @@
       </a>
 
       } }
+  <!-- Navigation -->
+  <nav class="px-4 py-6">
+    <ul class="space-y-1">
+      <li *ngFor="let item of navItems">
+        <a
+          [routerLink]="item.route"
+          class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
+          routerLinkActive="bg-red-800"
+        >
+          <i [class]="item.icon + ' w-5 text-center mr-3'"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
 
-      <!-- Navigation -->
-      <nav class="px-4 py-6">
-        <ul class="space-y-1">
-          <li>
-            <a
-              routerLink="/trainer/dashboard"
-              class="flex items-center px-4 py-3 bg-red-800 rounded-lg"
-            >
-              <i class="fas fa-tachometer-alt w-5 text-center mr-3"></i>
-              <span>Dashboard</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
-            >
-              <i class="fas fa-calendar-check w-5 text-center mr-3"></i>
-              <span>Sessions</span>
-            </a>
-          </li>
-          <li>
-            <a
-              routerLink="/trainer/availablity"
-              class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
-            >
-              <i class="fas fa-dumbbell w-5 text-center mr-3"></i>
-              <span>Availabilty</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
-            >
-              <i class="fas fa-chart-line w-5 text-center mr-3"></i>
-              <span>Client Progress</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
-            >
-              <i class="fas fa-comment-alt w-5 text-center mr-3"></i>
-              <span>Messaging</span>
-              
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
-            >
-              <i class="fas fa-bell w-5 text-center mr-3"></i>
-              <span>Notifications</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
-            >
-              <i class="fas fa-dollar-sign w-5 text-center mr-3"></i>
-              <span>Revenue</span>
-            </a>
-          </li>
-        </ul>
-
-        <div class="pt-8 mt-8 border-t border-red-800">
-          <a
-            href="#"
-            class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
-          >
-            <i class="fas fa-sign-out-alt w-5 text-center mr-3"></i>
-            <span>Logout</span>
-          </a>
-        </div>
-      </nav>
+    <!-- Logout -->
+    <div class="pt-8 mt-8 border-t border-red-800">
+      <a
+       (click)="onLogout()"
+        class="flex items-center px-4 py-3 text-red-200 hover:bg-red-800 rounded-lg transition"
+      >
+        <i class="fas fa-sign-out-alt w-5 text-center mr-3"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </nav>
     </div>
   </div>
 

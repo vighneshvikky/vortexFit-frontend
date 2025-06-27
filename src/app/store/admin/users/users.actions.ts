@@ -21,7 +21,7 @@ export const loadUsersSuccess = createAction(
 
 export const loadUsersFailure = createAction(
   '[User] Load Users Failure',
-  props<{ error: any }>()
+  props<{ error: string | null }>()
 );
 
 export const toggleBlockAndLoadUsers = createAction(
@@ -36,7 +36,7 @@ export const toggleBlockStatusSuccess = createAction(
 
 export const toggleBlockAndLoadUsersFailure = createAction(
   '[User] Toggle Block And Load Users Failure',
-  props<{ error: any }>()
+  props<{ error:  string | null  }>()
 );
 
 export const loadUnverifiedTrainers = createAction(
@@ -51,7 +51,7 @@ export const loadUnverifiedTrainersSuccess = createAction(
 
 export const loadUnverifiedTrainersFailure = createAction(
   '[Users] Load Unverified Trainers Failure',
-  props<{ error: any }>()
+  props<{ error:  string | null  }>()
 );
 
 

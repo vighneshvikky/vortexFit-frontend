@@ -25,8 +25,6 @@ export const googleLogin = createAction(
   props<{ role: 'user' | 'trainer' }>()
 );
 
-export const logout = createAction('[Auth] Logout');
-
 export const updateTrainerProfileSuccess = createAction(
   '[Auth] Update Trainer Profile Success',
   props<{ updatedTrainer: Trainer }>()
@@ -57,4 +55,15 @@ export const updateCurrentUser = createAction(
 export const setUser = createAction(
   '[Auth] Set User',
   props<{ user: User | Trainer }>()
+);
+
+export const logout = createAction('[Auth] Logout');
+export const logoutSuccess = createAction(
+  '[Auth] Logout Success',
+  props<{ role: string }>()
+);
+
+export const logoutFailure = createAction(
+  '[Auth] Logout Failure',
+  props<{ error: string }>()
 );

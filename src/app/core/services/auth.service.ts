@@ -49,9 +49,11 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    console.log('hai')
+    console.log('hai');
     const data$ = this.http
-      .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials, {withCredentials: true})
+      .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials, {
+        withCredentials: true,
+      })
       .pipe(map((res) => res.data));
 
     data$.subscribe({
@@ -90,10 +92,7 @@ export class AuthService {
     role: string
   ): Observable<ApiResponse<LoginResponse>> {
     return this.http
-      .post<ApiResponse<LoginResponse>>(
-        `${this.api}/google`,
-        { idToken, role },
-      )
+      .post<ApiResponse<LoginResponse>>(`${this.api}/google`, { idToken, role })
       .pipe(
         catchError((error) => {
           return throwError(() => error);
@@ -101,26 +100,30 @@ export class AuthService {
       );
   }
 
-  refreshToken() {  
-    console.log('calling refresh token')
+  refreshToken() {
+    console.log('calling refresh token');
     return this.http.post(
       `${this.api}/refresh/token`,
       {},
-      {withCredentials: true}
+      { withCredentials: true }
     );
   }
 
   googleLogin(idToken: string, role: string) {
-    return this.http.post<{ user: User | Trainer }>(`${this.http}/google-login`, {
-      idToken,
-      role,
-    });
+    return this.http.post<{ user: User | Trainer }>(
+      `${this.http}/google-login`,
+      {
+        idToken,
+        role,
+      }
+    );
   }
 
-// getCurrentUser(): Observable<User | Trainer> {
-//   return this.http.get<User | Trainer>(`${this.api}/getUser`);
-// }
+  // getCurrentUser(): Observable<User | Trainer> {
+  //   return this.http.get<User | Trainer>(`${this.api}/getUser`);
+  // }
 
+  logout() {
+    return this.http.post(`${this.api}/logout`, {}, { withCredentials: true });
+  }
 }
-
-

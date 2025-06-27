@@ -13,6 +13,9 @@ import {
   googleLogin,
   fetchCurrentUser,
   setUser,
+  logout,
+  logoutSuccess,
+  logoutFailure,
 } from '../actions/auth.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -71,7 +74,6 @@ export class AuthEffects {
               return loginSuccess({ user: response.user });
             }),
             catchError((error) => {
-      
               let errorMsg = 'Login failed';
               if (error.error?.message) {
                 errorMsg = error.error.message;
@@ -112,17 +114,21 @@ export class AuthEffects {
             const verifiedUser = user as User | Trainer;
             console.log('verification', verifiedUser.isVerified);
             console.log('verifiedUser', verifiedUser);
-            console.log('verificationStatus', verifiedUser.verificationStatus)
+            console.log('verificationStatus', verifiedUser.verificationStatus);
             if (verifiedUser.isVerified) {
               const dashboardRoute =
                 role === 'trainer' ? '/trainer/dashboard' : '/user/dashboard';
               this.router.navigate([dashboardRoute]);
-            } else if (verifiedUser.verificationStatus === 'rejected' || verifiedUser.verificationStatus === 'requested') {
-            
+            } else if (
+              verifiedUser.verificationStatus === 'rejected' ||
+              verifiedUser.verificationStatus === 'requested'
+            ) {
               this.router.navigate(['/auth/trainer-status']);
             } else {
               const requestRoute =
-                role === 'trainer' ? '/auth/trainer-requests' : '/auth/user-details';
+                role === 'trainer'
+                  ? '/auth/trainer-requests'
+                  : '/auth/user-details';
               console.log('trainer req', requestRoute);
               this.router.navigate([requestRoute]);
             }
@@ -137,25 +143,37 @@ export class AuthEffects {
     { dispatch: false }
   );
 
-  // fetchCurrentUser$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(fetchCurrentUser),
-  //     switchMap(() =>
-  //       this.authService.getCurrentUser().pipe(
-  //         tap((user) => console.log('Fetched current user:', user)),
-  //         map((user) => setUser({ user })),
-  //         catchError((error) => {
-  //           let errorMsg = 'Login failed';
-  //           if (error.error?.message) {
-  //             errorMsg = error.error.message;
-  //           } else if (error.message) {
-  //             errorMsg = error.message;
-  //           }
-  //           this.notyService.showError(errorMsg);
-  //           return of(loginFailure({ error: errorMsg }));
-  //         })
-  //       )
-  //     )
-  //   )
-  // );
+
+  logout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(logout),
+      switchMap(() =>
+        this.authService.logout().pipe(
+          map((response) => logoutSuccess({ role: (response as { role: string }).role })),
+          catchError((error) => {
+            const errorMsg =
+              error?.error?.message || error?.message || 'Logout failed';
+            this.notyService.showError(errorMsg);
+            return of(logoutFailure({ error: errorMsg }));
+          })
+        )
+      )
+    )
+  );
+
+redirectAfterLogout$ = createEffect(
+  () =>
+    this.actions$.pipe(
+      ofType(logoutSuccess),
+      tap(({ role }) => {
+       if(role === 'admin'){
+        this.router.navigate(['/admin/login'])
+       }else{
+        this.router.navigate(['/auth/login'], {queryParams: {role}})
+       }
+      })
+    ),
+  { dispatch: false }
+);
+
 }

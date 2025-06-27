@@ -20,6 +20,7 @@ export interface Trainer {
   pricing: {
     oneToOneSession: number;
     workoutPlan: number;
+    
   };
   category: string;
 }

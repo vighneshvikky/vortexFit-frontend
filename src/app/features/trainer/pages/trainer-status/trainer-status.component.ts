@@ -4,11 +4,16 @@ import { map, Observable, tap, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
   selectCurrentUser,
-  selectCurrentUserVerificationStatus,
 } from '../../../auth/store/selectors/auth.selectors';
 import { Router, RouterModule } from '@angular/router';
-import { fetchCurrentUser, fetchCurrentUserSuccess } from '../../../auth/store/actions/auth.actions';
+import {
+  AuthenticatedUser,
+  fetchCurrentUser,
+  fetchCurrentUserSuccess,
+} from '../../../auth/store/actions/auth.actions';
 import { AppState } from '../../../../store/app.state';
+import { Trainer } from '../../models/trainer.interface';
+import { isTrainer } from '../../../../core/guards/user-type-guards';
 
 @Component({
   selector: 'app-trainer-status',
@@ -18,36 +23,30 @@ import { AppState } from '../../../../store/app.state';
   imports: [CommonModule, AsyncPipe, RouterModule],
 })
 export class TrainerStatusComponent implements OnInit, OnDestroy {
-  currentUserStatus$: Observable<any>;
-  verificationStatus:
-    | 'pending'
-    | 'approved'
-    | 'rejected'
-    | 'not_submitted'
-    | undefined;
+  currentUserStatus$: Observable<AuthenticatedUser | null>;
+  verificationStatus!: 'pending' | 'approved' | 'rejected' | 'requested';
   trainerId: string | null = null;
   rejectionReason: string | null = null;
   private subscription: Subscription = new Subscription();
 
   constructor(private store: Store<AppState>, private router: Router) {
-this.currentUserStatus$ = this.store.select(selectCurrentUser).pipe(
-  tap(user => console.log('[Selector] Current User:', user))
-);
-
-
+    this.currentUserStatus$ = this.store
+      .select(selectCurrentUser)
   }
 
   ngOnInit(): void {
     this.store.dispatch(fetchCurrentUser());
 
     const userSubscription = this.currentUserStatus$
-    .pipe(
-      tap((user) => {
-        this.verificationStatus = user?.verificationStatus;
-        this.rejectionReason = user?.rejectionReason ?? null
-      })
-    )
-    .subscribe()
+      .pipe(
+        tap((user) => {
+          if (isTrainer(user)) {
+            this.verificationStatus = user?.verificationStatus;
+            this.rejectionReason = user?.rejectionReason ?? null;
+          }
+        })
+      )
+      .subscribe();
     this.subscription.add(userSubscription);
   }
 
@@ -63,7 +62,7 @@ this.currentUserStatus$ = this.store.select(selectCurrentUser).pipe(
     this.router.navigate(['/auth/trainer-requests']);
   }
 
-  redirectToLogin(){
-    this.router.navigate(['/auth/login'], {queryParams: {role: 'trainer'}})
+  redirectToLogin() {
+    this.router.navigate(['/auth/login'], { queryParams: { role: 'trainer' } });
   }
 }

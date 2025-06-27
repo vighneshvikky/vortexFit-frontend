@@ -14,7 +14,7 @@ export interface UsersState {
   loading: boolean;
   totalPages: number;
   loaded: boolean;
-  error: any;
+  error: string | null;
 }
 
 export const initialState: UsersState = {

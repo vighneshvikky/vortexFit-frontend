@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectCurrentUser } from '../../../../features/auth/store/selectors/auth.selectors';
@@ -6,6 +6,7 @@ import { AuthenticatedUser } from '../../../../features/auth/store/actions/auth.
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AppState } from '../../../../store/app.state';
+import { onImageError } from '../../../methods/image-checker';
 
 @Component({
   selector: 'app-trainer-sidebar',
@@ -14,6 +15,9 @@ import { AppState } from '../../../../store/app.state';
   styleUrl: './trainer-sidebar.component.scss',
 })
 export class TrainerSidebarComponent implements OnInit {
+  
+  @Input() navItems: Array<{ icon: string; label: string; route: string }> = [];
+  @Output() logout = new EventEmitter<void>();
   constructor(private store: Store<AppState>) {}
   $currentTrainer!: Observable<AuthenticatedUser | null>;
   ngOnInit(): void {
@@ -22,7 +26,10 @@ export class TrainerSidebarComponent implements OnInit {
 
 
   onImageError(event: Event) {
-  const target = event.target as HTMLImageElement;
-  target.src = 'assets/images/default-user.png'; 
+  onImageError(event)
+}
+
+onLogout(): void{
+  this.logout.emit();
 }
 }
