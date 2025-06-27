@@ -5,6 +5,7 @@ import { UserLayoutComponent } from '../../shared/components/user/user-layout/us
 import { UserTrainerListComponent } from './pages/user-trainer-list/user-trainer-list.component';
 import { TrainerInfoComponent } from './pages/trainer-info/trainer-info.component';
 import { AllTraninersComponent } from './pages/all-traniners/all-traniners.component';
+import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 export const userRoutes: Routes = [
   {
     path: '',
@@ -15,7 +16,8 @@ export const userRoutes: Routes = [
       {path: 'dashboard', component: UserDashboardComponent},
       {path: 'trainers', component: UserTrainerListComponent},
       {path: 'trainer-info/:id', component: TrainerInfoComponent},
-      {path: 'all-trainers', component: AllTraninersComponent}
+      {path: 'all-trainers', component: AllTraninersComponent},
+      {path: 'profile', component: UserProfileComponent}
     ]
   }
 ];

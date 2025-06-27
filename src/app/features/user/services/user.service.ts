@@ -12,9 +12,8 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  updateProfile(data: User) {
-    console.log('data from user profile', data);
-    return this.http.patch(`${this.apiUrl}/update-profile`, data);
+  updateProfile(data: Partial<User>): Observable<User> {
+    return this.http.patch<User>(`${this.apiUrl}/update-profile`, data);
   }
 
   getTrainer(category?: string ): Observable<Trainer[]> {
@@ -27,5 +26,16 @@ export class UserService {
 
   getTrainerData(id: string): Observable<Trainer> {
     return this.http.get<Trainer>(`${this.apiUrl}/getTrainerData/${id}`);
+  }
+
+    getSignedUploadUrl(fileName: string, contentType: string, type: string) {
+    return this.http.post<{ url: string; key: string }>(
+      'http://localhost:3000/s3/generate-upload-url',
+      {
+        folder: `trainer-verification/${type}`,
+        fileName,
+        contentType,
+      }
+    );
   }
 }

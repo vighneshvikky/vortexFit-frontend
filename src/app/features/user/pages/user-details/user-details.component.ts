@@ -22,6 +22,7 @@ import { isUser } from '../../../../core/guards/user-type-guards';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NotyService } from '../../../../core/services/noty.service';
+import { minimumAgeValidator } from '../../../../core/validators/dob.validator';
 
 @Component({
   selector: 'app-user-details',
@@ -52,7 +53,7 @@ export class UserDetailsComponent implements OnInit {
     this.profileForm = this.fb.group({
       name: [{ value: '', disabled: true }],
       email: [{ value: '', disabled: true }],
-      dob: ['', Validators.required],
+      dob: ['', Validators.required, minimumAgeValidator(18)],
       height: [
         '',
         [Validators.required, Validators.min(30), Validators.max(300)],

@@ -1,0 +1,383 @@
+<div class="min-h-screen bg-gradient-to-br from-violet-50 to-purple-100 p-4">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-violet-900 mb-2">Your Profile</h1>
+      <p class="text-violet-600">
+        Update your personal information and fitness preferences
+      </p>
+    </div>
+
+    <!-- Profile Form -->
+    <div class="bg-white rounded-2xl shadow-xl p-6 lg:p-8">
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Profile Picture Section -->
+        <div class="text-center">
+          <div class="relative inline-block">
+            <div
+              class="w-32 h-32 rounded-full bg-violet-100 border-4 border-violet-200 overflow-hidden"
+            >
+              <!-- Show uploaded image preview -->
+              <img
+                *ngIf="imagePreviewUrl"
+                [src]="imagePreviewUrl"
+                alt="Profile Preview"
+                class="w-full h-full object-cover"
+              />
+              <!-- Default avatar when no image -->
+              <div
+                *ngIf="!imagePreviewUrl"
+                class="flex items-center justify-center h-full"
+              >
+                <svg
+                  class="w-12 h-12 text-violet-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+              <!-- Loading overlay during upload -->
+              <div
+                *ngIf="isLoading"
+                class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+              >
+                <svg
+                  class="animate-spin h-8 w-8 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <label
+              class="absolute bottom-0 right-0 bg-violet-600 hover:bg-violet-700 text-white p-2 rounded-full cursor-pointer transition-colors disabled:opacity-50"
+              [class.pointer-events-none]="isLoading"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-5l-2-3H9L7 7H5a2 2 0 00-2 2z"
+                ></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                ></path>
+              </svg>
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onFileSelect($event)"
+                class="hidden"
+                [disabled]="isLoading"
+              />
+            </label>
+          </div>
+          <p class="text-sm text-violet-600 mt-2">
+            <span *ngIf="!isLoading"
+              >Click to upload profile picture (Max 5MB)</span
+            >
+            <span *ngIf="isLoading">Uploading image...</span>
+          </p>
+        </div>
+
+        <!-- Basic Information -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Name -->
+          <div>
+            <label class="block text-sm font-medium text-violet-900 mb-2"
+              >Name *</label
+            >
+            <input
+              type="text"
+              formControlName="name"
+              class="w-full px-4 py-3 border-2 border-violet-200 rounded-xl focus:border-violet-500 focus:outline-none transition-colors"
+              placeholder="Enter your full name"
+            />
+            <div
+              *ngIf="getFieldError('name')"
+              class="text-red-500 text-sm mt-1"
+            >
+              {{ getFieldError("name") }}
+            </div>
+          </div>
+
+          <!-- Email (Disabled) -->
+          <div>
+            <label class="block text-sm font-medium text-violet-900 mb-2"
+              >Email</label
+            >
+            <input
+              type="email"
+              formControlName="email"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-gray-100 text-gray-600 cursor-not-allowed"
+              placeholder="Email address"
+            />
+            <p class="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+          </div>
+
+          <!-- Date of Birth -->
+          <div>
+            <label class="block text-sm font-medium text-violet-900 mb-2"
+              >Date of Birth *</label
+            >
+            <input
+              type="date"
+              formControlName="dob"
+              class="w-full px-4 py-3 border-2 border-violet-200 rounded-xl focus:border-violet-500 focus:outline-none transition-colors"
+            />
+            <div *ngIf="getFieldError('dob')" class="text-red-500 text-sm mt-1">
+              {{ getFieldError("dob") }}
+            </div>
+            <div
+              *ngIf="profileForm.get('dob')?.errors?.['tooYoung'] && profileForm.get('dob')?.touched"
+              class="text-red-500 text-sm mt-1"
+            >
+              You must be at least 18 years old.
+            </div>
+          </div>
+        </div>
+
+        <!-- Physical Measurements -->
+        <div class="bg-violet-50 rounded-xl p-6">
+          <h3 class="text-lg font-semibold text-violet-900 mb-4">
+            Physical Measurements
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Height -->
+    <div class="mb-4">
+  <label for="height" class="block text-sm font-medium text-violet-900 mb-2">
+    Height *
+  </label>
+  <div class="relative flex items-center">
+    <input
+      id="height"
+      type="number"
+      formControlName="height"
+      class="w-full pr-12 px-4 py-3 border-2 border-violet-200 rounded-xl focus:border-violet-500 focus:outline-none transition-colors"
+      placeholder="Enter height"
+    />
+    <span class="absolute right-4 text-gray-700 text-sm font-medium">cm</span>
+  </div>
+  <div *ngIf="getFieldError('height')" class="text-red-500 text-sm mt-1">
+    {{ getFieldError('height') }}
+  </div>
+</div>
+
+
+            <!-- Weight -->
+          <div class="mb-4">
+  <label class="block text-sm font-medium text-violet-900 mb-2">
+    Weight *
+  </label>
+  <div class="relative flex items-center">
+    <input
+      type="number"
+      formControlName="weight"
+      class="w-full pr-12 px-4 py-3 border-2 border-violet-200 rounded-xl focus:border-violet-500 focus:outline-none transition-colors"
+      placeholder="Enter weight"
+    />
+    <span class="absolute right-4 text-gray-700 text-sm font-medium">kg</span>
+  </div>
+  <div *ngIf="getFieldError('weight')" class="text-red-500 text-sm mt-1">
+    {{ getFieldError("weight") }}
+  </div>
+</div>
+
+          </div>
+        </div>
+
+        <!-- Fitness Information -->
+        <div class="bg-purple-50 rounded-xl p-6">
+          <h3 class="text-lg font-semibold text-violet-900 mb-4">
+            Fitness Information
+          </h3>
+
+          <!-- Fitness Level -->
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-violet-900 mb-2"
+              >Fitness Level *</label
+            >
+            <select
+              formControlName="fitnessLevel"
+              class="w-full px-4 py-3 border-2 border-violet-200 rounded-xl focus:border-violet-500 focus:outline-none transition-colors"
+            >
+              <option value="">Select your fitness level</option>
+              <option *ngFor="let level of fitnessLevels" [value]="level">
+                {{ level }}
+              </option>
+            </select>
+            <div
+              *ngIf="getFieldError('fitnessLevel')"
+              class="text-red-500 text-sm mt-1"
+            >
+              {{ getFieldError("fitnessLevel") }}
+            </div>
+          </div>
+
+          <!-- Fitness Goals -->
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-violet-900 mb-2"
+              >Fitness Goals *</label
+            >
+            <div class="flex flex-wrap gap-2">
+              <button
+                *ngFor="let goal of fitnessGoals"
+                type="button"
+                (click)="onGoalToggle(goal)"
+                [class]="
+                  isGoalSelected(goal)
+                    ? 'bg-violet-600 text-white border-violet-600'
+                    : 'bg-white text-violet-600 border-violet-200 hover:border-violet-400'
+                "
+                class="px-4 py-2 rounded-full border-2 text-sm font-medium transition-all duration-200 hover:scale-105"
+              >
+                {{ goal }}
+              </button>
+            </div>
+            <div
+              *ngIf="getFieldError('fitnessGoals')"
+              class="text-red-500 text-sm mt-1"
+            >
+              {{ getFieldError("fitnessGoals") }}
+            </div>
+          </div>
+
+          <!-- Training Types -->
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-violet-900 mb-2"
+              >Preferred Training Types *</label
+            >
+            <div class="flex flex-wrap gap-2">
+              <button
+                *ngFor="let type of trainingTypes"
+                type="button"
+                (click)="onTrainingTypeToggle(type)"
+                [class]="
+                  isTrainingTypeSelected(type)
+                    ? 'bg-purple-600 text-white border-purple-600'
+                    : 'bg-white text-purple-600 border-purple-200 hover:border-purple-400'
+                "
+                class="px-4 py-2 rounded-full border-2 text-sm font-medium transition-all duration-200 hover:scale-105"
+              >
+                {{ type }}
+              </button>
+            </div>
+            <div
+              *ngIf="getFieldError('trainingTypes')"
+              class="text-red-500 text-sm mt-1"
+            >
+              {{ getFieldError("trainingTypes") }}
+            </div>
+          </div>
+
+          <!-- Preferred Time -->
+          <div>
+            <label class="block text-sm font-medium text-violet-900 mb-2"
+              >Preferred Training Time *</label
+            >
+            <select
+              formControlName="preferredTime"
+              class="w-full px-4 py-3 border-2 border-violet-200 rounded-xl focus:border-violet-500 focus:outline-none transition-colors"
+            >
+              <option value="">Select preferred time</option>
+              <option *ngFor="let time of preferredTimes" [value]="time">
+                {{ time }}
+              </option>
+            </select>
+            <div
+              *ngIf="getFieldError('preferredTime')"
+              class="text-red-500 text-sm mt-1"
+            >
+              {{ getFieldError("preferredTime") }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Equipment -->
+        <div class="bg-indigo-50 rounded-xl p-6">
+          <h3 class="text-lg font-semibold text-violet-900 mb-4">
+            Available Equipment
+          </h3>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <label
+              *ngFor="let equipment of equipments"
+              class="flex items-center space-x-2 cursor-pointer p-3 rounded-lg hover:bg-white transition-colors"
+            >
+              <input
+                type="checkbox"
+                [checked]="isEquipmentSelected(equipment)"
+                (change)="onEquipmentToggle(equipment)"
+                class="w-4 h-4 text-violet-600 border-violet-300 rounded focus:ring-violet-500"
+              />
+              <span class="text-sm text-violet-900">{{ equipment }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-center pt-6">
+          <button
+            type="submit"
+            [disabled]="profileForm.invalid || isLoading || !hasChanges()"
+            class="px-8 py-4 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:from-violet-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-violet-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105"
+          >
+            <span *ngIf="!isLoading">
+              {{ hasChanges() ? "Update Profile" : "No Changes to Update" }}
+            </span>
+            <span *ngIf="isLoading" class="flex items-center">
+              <svg
+                class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Updating...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

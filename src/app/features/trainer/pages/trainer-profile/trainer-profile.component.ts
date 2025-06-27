@@ -206,7 +206,7 @@
         return;
       }
 
-      console.log('Sending changedFields:', changedFields);
+     
 
       this.trainerService.updateProfile(changedFields).subscribe({
         next: (updatedTrainer: Trainer) => {

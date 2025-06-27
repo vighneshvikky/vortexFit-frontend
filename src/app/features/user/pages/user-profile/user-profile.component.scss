@@ -1,0 +1,212 @@
+// Custom animations and effects
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// Component styles
+.user-profile-container {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+// Custom input focus effects
+.form-input {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.25);
+  }
+}
+
+// Profile picture upload hover effect
+.profile-picture-container {
+  position: relative;
+  
+  &:hover {
+    .upload-overlay {
+      opacity: 1;
+    }
+  }
+  
+  .upload-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(139, 92, 246, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    
+    .upload-icon {
+      color: white;
+      font-size: 1.5rem;
+    }
+  }
+}
+
+// Custom chip animation
+.fitness-chip {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  }
+  
+  &.selected {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+  }
+}
+
+// Loading state
+.loading {
+  .loading-dots {
+    &::after {
+      content: '';
+      animation: pulse 1.5s infinite;
+    }
+  }
+}
+
+// Form section transitions
+.form-section {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .profile-form {
+    padding: 1rem;
+  }
+  
+  .fitness-goals-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+  }
+  
+  .equipment-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// Custom scrollbar for better UX
+.form-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 92, 246, 0.3) transparent;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.3);
+    border-radius: 3px;
+    
+    &:hover {
+      background: rgba(139, 92, 246, 0.5);
+    }
+  }
+}
+
+// Error message styling
+.error-message {
+  animation: fadeInUp 0.3s ease;
+  
+  &::before {
+    content: '⚠ ';
+    color: #ef4444;
+  }
+}
+
+// Success states
+.form-success {
+  .success-icon {
+    animation: bounce 0.6s ease;
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+// Glassmorphism effect for premium look
+.glass-card {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+// Custom gradient backgrounds
+.gradient-violet {
+  background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+}
+
+.gradient-purple {
+  background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+}
+
+// Focus management for accessibility
+.form-input:focus,
+.form-select:focus,
+.form-button:focus {
+  outline: 2px solid #8b5cf6;
+  outline-offset: 2px;
+}
+
+// Dark mode support (if needed in future)
+@media (prefers-color-scheme: dark) {
+  .dark-mode {
+    .form-section {
+      background: rgba(30, 27, 75, 0.9);
+      color: #e5e7eb;
+    }
+    
+    .form-input {
+      background: rgba(17, 24, 39, 0.8);
+      border-color: rgba(139, 92, 246, 0.3);
+      color: #f3f4f6;
+    }
+  }
+}
