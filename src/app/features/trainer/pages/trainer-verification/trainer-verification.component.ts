@@ -22,6 +22,10 @@ import {
   updateCurrentUser,
 } from '../../../auth/store/actions/auth.actions';
 import { AppState } from '../../../../store/app.state';
+import {
+  CATEGORIES,
+  CATEGORY_TO_SPECIALIZATIONS,
+} from '../../../../shared/constants/filter-options';
 
 @Component({
   selector: 'app-trainer-verification',
@@ -41,19 +45,10 @@ export class TrainerVerificationComponent implements OnInit {
   uploadedFileNames: { [key in 'certification' | 'idProof']?: string } = {};
   availableSpecializations: string[] = [];
 
-  categories = [
-    { value: 'cardio', label: 'Cardio' },
-    { value: 'yoga', label: 'Yoga' },
-    { value: 'martial_arts', label: 'Martial Arts' },
-    { value: 'fitness', label: 'Fitness' },
-  ];
+  categories = CATEGORIES;
 
-  categoryToSpecializations: { [category: string]: string[] } = {
-    cardio: ['HIIT', 'Zumba', 'Endurance Training'],
-    yoga: ['Hatha Yoga', 'Vinyasa', 'Power Yoga'],
-    martial_arts: ['Karate', 'Taekwondo', 'Kickboxing'],
-    fitness: ['Weight Lifting', 'CrossFit', 'Bodybuilding'],
-  };
+  categoryToSpecializations: { [category: string]: string[] } =
+    CATEGORY_TO_SPECIALIZATIONS;
 
   constructor(
     private fb: FormBuilder,

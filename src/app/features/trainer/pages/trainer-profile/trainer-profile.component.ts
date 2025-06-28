@@ -19,6 +19,7 @@
   import { NotyService } from '../../../../core/services/noty.service';
   import { Router } from '@angular/router';
   import { HttpClient } from '@angular/common/http';
+import { CATEGORIES, CATEGORY_TO_SPECIALIZATIONS } from '../../../../shared/constants/filter-options';
 
   @Component({
     selector: 'app-trainer-profile',
@@ -31,19 +32,9 @@
     currentTrainer$!: Observable<Trainer | null>;
     showEditModal = false;
 
-    categories = [
-      { value: 'cardio', label: 'Cardio' },
-      { value: 'yoga', label: 'Yoga' },
-      { value: 'martial_arts', label: 'Martial Arts' },
-      { value: 'fitness', label: 'Fitness' },
-    ];
+    categories = CATEGORIES
 
-    categoryToSpecializations: { [key: string]: string[] } = {
-      cardio: ['HIIT', 'Zumba', 'Endurance Training'],
-      yoga: ['Hatha Yoga', 'Vinyasa', 'Power Yoga'],
-      martial_arts: ['Karate', 'Taekwondo', 'Kickboxing'],
-      fitness: ['Weight Lifting', 'CrossFit', 'Bodybuilding'],
-    };
+    categoryToSpecializations: { [key: string]: string[] } = CATEGORY_TO_SPECIALIZATIONS
 
     availableSpecializations: string[] = [];
 
@@ -73,7 +64,7 @@
         ],
         phoneNumber: ['', [Validators.pattern(/^[0-9]{10}$/)]],
         experience: ['', [Validators.min(0), Validators.max(100)]],
-        bio: ['', [Validators.minLength(1), Validators.maxLength(10)]],
+        bio: ['', [Validators.minLength(1), Validators.maxLength(100)]],
         oneToOneSessionPrice: ['', [Validators.min(0), Validators.max(100000)]],
         workoutPlanPrice: ['', [Validators.min(0), Validators.max(100000)]],
         image: [''],
@@ -162,8 +153,20 @@
     }
 
     onSubmit(): void {
-      console.log('Form submitted');
  if (this.profileForm.invalid) {
+  console.log('Form is invalid. Listing all errors:');
+  Object.keys(this.profileForm.controls).forEach((key) => {
+    const control = this.profileForm.get(key);
+    if (control && control.invalid) {
+      console.log(`${key} has errors:`, control.errors);
+    }
+  });
+  this.profileForm.markAllAsTouched();
+  return;
+}
+
+ if (this.profileForm.invalid) {
+
     this.profileForm.markAllAsTouched(); 
     return;
   }
@@ -229,7 +232,7 @@ onCategoryChange(event: Event): void {
 
   this.availableSpecializations = this.categoryToSpecializations[category] || [];
   this.profileForm.get('specialization')?.setValue('');
-  this.showSpecializationError = true;
+  // this.showSpecializationError = true;
 }
 
     

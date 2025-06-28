@@ -27,10 +27,10 @@ export class AuthInterceptor implements HttpInterceptor {
   private router = inject(Router);
   private zone = inject(NgZone);
 
-  intercept(
-    req: HttpRequest<any>,
+  intercept<T>(
+    req: HttpRequest<T>,
     next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  ): Observable<HttpEvent<T>> {
     const excludedUrls = ['/auth', '/login', '/signup', '/otp'];
 
     if (excludedUrls.some((url) => req.url.includes(url))) {
@@ -63,10 +63,10 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 
-  private handle401Error(
-    req: HttpRequest<any>,
+  private handle401Error<T>(
+    req: HttpRequest<T>,
     next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  ): Observable<HttpEvent<T>> {
     console.log('handling 401 erro');
     if (!this.isRefreshing) {
       this.isRefreshing = true;

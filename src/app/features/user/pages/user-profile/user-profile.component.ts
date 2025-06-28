@@ -34,7 +34,7 @@ export class UserProfileComponent implements OnInit {
   $currentUser!: Observable<AuthenticatedUser | null>;
   profileForm!: FormGroup;
   isLoading = false;
-  originalFormValues: any = {}; // Store original values to detect changes
+  originalFormValues: Record<string, unknown> = {};
 
   readonly S3_BASE_URL =
     'https://vortexfit-app-upload.s3.ap-south-1.amazonaws.com/';
@@ -278,9 +278,9 @@ onEquipmentToggle(equipment: string): void {
     return null;
   }
 
-  private getChangedFields(): any {
+  private getChangedFields(): Record<string, unknown> {
     const currentValues = this.profileForm.getRawValue(); // getRawValue includes disabled fields
-    const changedFields: any = {};
+    const changedFields: Record<string, unknown> = {};
 
     Object.keys(currentValues).forEach((key) => {
       if (key === 'email') return; // Skip email as it's not editable
@@ -320,7 +320,7 @@ onEquipmentToggle(equipment: string): void {
     if (this.profileForm.valid) {
       const changedFields: Record<string, unknown> = {};
 
-      // Check if there are any changes
+      // Check if there are  changes
 
       this.isLoading = true;
       console.log('Updating profile with changes:', changedFields);
