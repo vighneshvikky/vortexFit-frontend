@@ -9,7 +9,7 @@ export interface Trainer {
   isVerified: boolean;
   verificationStatus: 'pending' | 'approved' | 'rejected' | 'requested';
   phoneNumber: string;
-  specialization: string[];
+  specialization: string;
   experience: number;
   bio?: string;
   certificationUrl?: string;

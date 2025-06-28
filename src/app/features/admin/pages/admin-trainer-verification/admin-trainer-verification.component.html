@@ -1,418 +1,282 @@
 <!-- Main Container -->
-<div
-  class="trainer-verification-container"
-  *ngIf="unverifiedTrainers$ | async as trainers; else loading"
->
-  <div class="trainer-list" *ngIf="trainers.length; else noTrainers">
-    <div class="trainer-card" *ngFor="let trainer of trainers">
-      <div class="trainer-info">
-        <h3 class="trainer-name">{{ trainer.name }}</h3>
-        <div class="trainer-details">
-          <p><i class="fas fa-envelope"></i> {{ trainer.email }}</p>
-          <p><i class="fas fa-phone"></i> {{ trainer.phoneNumber }}</p>
-          <p><i class="fas fa-dumbbell"></i> {{ trainer.specialization }}</p>
-          <p>
-            <i class="fas fa-clock"></i> {{ trainer.experience }} years
-            experience
-          </p>
+<div class="min-h-screen bg-gray-900 p-6">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-white mb-2">Trainer Applications</h1>
+      <p class="text-gray-400">Review and manage trainer verification requests</p>
+    </div>
+
+    <!-- Main Content -->
+    <div *ngIf="unverifiedTrainers$ | async as trainers; else loading">
+      <div class="space-y-4" *ngIf="trainers.length; else noTrainers">
+        <div 
+          class="trainer-card bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-300"
+          *ngFor="let trainer of trainers"
+        >
+          <div class="flex items-start justify-between">
+            <!-- Left Section: Profile and Info -->
+            <div class="flex items-start space-x-4 flex-1">
+
+
+              <!-- Trainer Information -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center space-x-3 mb-2">
+                  <h3 class="text-xl font-semibold text-white">{{ trainer.name }}</h3>
+                  <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded-full font-medium">
+                    Pending
+                  </span>
+                </div>
+                
+                <div class="text-sm text-gray-400 space-y-1">
+                  <p class="flex items-center">
+                    <i class="fas fa-envelope w-4 mr-2"></i>
+                    {{ trainer.email }}
+                  </p>
+                  <p class="flex items-center">
+                    <i class="fas fa-phone w-4 mr-2"></i>
+                    {{ trainer.phoneNumber }}
+                  </p>
+                </div>
+
+                <!-- Specialization Tags -->
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <span 
+                    class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-full font-medium"
+                    *ngFor="let spec of trainer.specialization?.split(',') || [trainer.specialization]"
+                  >
+                    {{ spec?.trim() }}
+                  </span>
+                </div>
+
+                <!-- Experience -->
+                <div class="mt-3">
+                  <div class="flex items-center text-sm text-gray-400">
+                    <i class="fas fa-clock w-4 mr-2"></i>
+                    <span class="font-medium text-white">{{ trainer.experience }} years</span>
+                    <span class="ml-1">experience</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Section: Actions -->
+            <div class="flex items-center space-x-3 ml-6">
+              <button 
+                class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded-lg transition-colors duration-200 text-sm font-medium"
+                (click)="openTrainerModal(trainer)"
+              >
+                View Details
+              </button>
+              <button 
+                class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium flex items-center justify-center min-w-[80px]"
+                (click)="approveTrainer(trainer)"
+                [disabled]="isApproving(trainer._id)"
+              >
+                <div *ngIf="isApproving(trainer._id)" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                {{ isApproving(trainer._id) ? 'Approving...' : 'Approve' }}
+              </button>
+              <button 
+                class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium flex items-center justify-center min-w-[70px]"
+                (click)="openRejectionModal(trainer)"
+                [disabled]="isRejecting(trainer._id)"
+              >
+                <div *ngIf="isRejecting(trainer._id)" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                {{ isRejecting(trainer._id) ? 'Rejecting...' : 'Reject' }}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="trainer-actions">
-        <button class="action-btn view-btn" (click)="openTrainerModal(trainer)">
-          <i class="fas fa-eye"></i> View Details
-        </button>
-        <button
-          class="action-btn approve-btn"
-          (click)="approveTrainer(trainer)"
-        >
-          <i class="fas fa-check"></i> Approve
-        </button>
-        <button
-          class="action-btn reject-btn"
-          (click)="openRejectionModal(trainer)"
-        >
-          <i class="fas fa-times"></i> Reject
-        </button>
-      </div>
-    </div>
-  </div>
-  <ng-template #noTrainers>
-    <div class="no-trainers">
-      <i class="fas fa-user-slash"></i>
-      <p>No unverified trainers found.</p>
-    </div>
-  </ng-template>
-</div>
 
-<ng-template #loading>
-  <div class="loading-container">
-    <div class="spinner"></div>
-    <p>Loading trainers...</p>
+      <!-- No Trainers State -->
+      <ng-template #noTrainers>
+        <div class="text-center py-16 bg-gray-800 rounded-xl border border-gray-700">
+          <div class="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-user-slash text-gray-400 text-xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-white mb-2">No pending applications</h3>
+          <p class="text-gray-400">All trainer applications have been reviewed.</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Loading State -->
+    <ng-template #loading>
+      <div class="flex items-center justify-center py-16">
+        <div class="text-center">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mb-4"></div>
+          <p class="text-gray-400">Loading trainers...</p>
+        </div>
+      </div>
+    </ng-template>
   </div>
-</ng-template>
+</div>
 
 <!-- Trainer Details Modal -->
 <div
-  class="modal-overlay"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
   *ngIf="selectedTrainer"
   (click)="closeTrainerModal()"
 >
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>Trainer Details</h2>
-      <button class="close-btn" (click)="closeTrainerModal()">
+  <div 
+    class="bg-gray-800 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-gray-700"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between p-6 border-b border-gray-700">
+      <h2 class="text-2xl font-bold text-white">Trainer Details</h2>
+      <button 
+        class="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-colors duration-200"
+        (click)="closeTrainerModal()"
+      >
         <i class="fas fa-times"></i>
       </button>
     </div>
-    <div class="modal-body">
-      <div class="detail-group">
-        <h3>Personal Information</h3>
-        <p><strong>Name:</strong> {{ selectedTrainer.name }}</p>
-        <p><strong>Email:</strong> {{ selectedTrainer.email }}</p>
-        <p><strong>Phone:</strong> {{ selectedTrainer.phoneNumber }}</p>
+
+    <!-- Modal Body -->
+    <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+      <div class="space-y-6">
+        <!-- Personal Information -->
+        <div class="bg-gray-750 rounded-lg p-4">
+          <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+            <i class="fas fa-user w-5 mr-2 text-blue-400"></i>
+            Personal Information
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="text-gray-400">Name:</span>
+              <p class="text-white font-medium">{{ selectedTrainer.name }}</p>
+            </div>
+            <div>
+              <span class="text-gray-400">Email:</span>
+              <p class="text-white font-medium">{{ selectedTrainer.email }}</p>
+            </div>
+            <div>
+              <span class="text-gray-400">Phone:</span>
+              <p class="text-white font-medium">{{ selectedTrainer.phoneNumber }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Professional Information -->
+        <div class="bg-gray-750 rounded-lg p-4">
+          <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+            <i class="fas fa-dumbbell w-5 mr-2 text-green-400"></i>
+            Professional Information
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="text-gray-400">Specialization:</span>
+              <p class="text-white font-medium">{{ selectedTrainer.specialization }}</p>
+            </div>
+            <div>
+              <span class="text-gray-400">Experience:</span>
+              <p class="text-white font-medium">{{ selectedTrainer.experience }} years</p>
+            </div>
+          </div>
+          <div class="mt-4" *ngIf="selectedTrainer.bio">
+            <span class="text-gray-400">Bio:</span>
+            <p class="text-white font-medium mt-1">{{ selectedTrainer.bio || "Not provided" }}</p>
+          </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="bg-gray-750 rounded-lg p-4" *ngIf="selectedTrainer?.idProofUrl || selectedTrainer?.certificationUrl">
+          <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+            <i class="fas fa-file-alt w-5 mr-2 text-yellow-400"></i>
+            Documents
+          </h3>
+          
+          <div class="space-y-6">
+            <div *ngIf="selectedTrainer?.idProofUrl">
+              <span class="text-gray-400 text-sm">ID Proof:</span>
+              <div class="mt-2 bg-gray-700 rounded-lg p-2">
+                <img
+                  [src]="selectedTrainer.idProofUrl"
+                  alt="ID Proof"
+                  class="w-full max-h-64 object-contain rounded-lg"
+                />
+              </div>
+            </div>
+
+            <div *ngIf="selectedTrainer?.certificationUrl">
+              <span class="text-gray-400 text-sm">Certification:</span>
+              <div class="mt-2 bg-gray-700 rounded-lg p-2">
+                <img
+                  [src]="selectedTrainer.certificationUrl"
+                  alt="Certification"
+                  class="w-full max-h-64 object-contain rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="detail-group">
-        <h3>Professional Information</h3>
-        <p>
-          <strong>Specialization:</strong> {{ selectedTrainer.specialization }}
-        </p>
-        <p>
-          <strong>Experience:</strong> {{ selectedTrainer.experience }} years
-        </p>
-        <p><strong>Bio:</strong> {{ selectedTrainer.bio || "Not provided" }}</p>
-      </div>
-<div class="detail-group" *ngIf="selectedTrainer?.idProofUrl || selectedTrainer?.certificationUrl">
-  <h3>Documents</h3>
-
-  <div *ngIf="selectedTrainer?.idProofUrl">
-    <strong>ID Proof:</strong><br />
-    <img
-      [src]="selectedTrainer.idProofUrl"
-      alt="ID Proof"
-      style="max-width: 100%; max-height: 300px; border: 1px solid #ccc; border-radius: 8px; margin-top: 8px;"
-    />
-  </div>
-
-  <div *ngIf="selectedTrainer?.certificationUrl">
-
-    <strong>Certification:</strong><br />
-    <img
-      [src]="selectedTrainer.certificationUrl"
-      alt="Certification"
-      style="max-width: 100%; max-height: 300px; border: 1px solid #ccc; border-radius: 8px; margin-top: 8px;"
-    />
-  </div>
-</div>
-
-
     </div>
   </div>
 </div>
 
 <!-- Rejection Reason Modal -->
 <div
-  class="modal-overlay"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
   *ngIf="showRejectionModal"
   (click)="closeRejectionModal()"
 >
-  <div class="modal-content rejection-modal" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>Rejection Reason</h2>
-      <button class="close-btn" (click)="closeRejectionModal()">
+  <div 
+    class="bg-gray-800 rounded-xl max-w-md w-full border border-gray-700"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between p-6 border-b border-gray-700">
+      <h2 class="text-xl font-bold text-white">Rejection Reason</h2>
+      <button 
+        class="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-colors duration-200"
+        (click)="closeRejectionModal()"
+      >
         <i class="fas fa-times"></i>
       </button>
     </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label for="rejectionReason"
-          >Please provide a reason for rejection:</label
+
+    <!-- Modal Body -->
+    <div class="p-6">
+      <div class="mb-4">
+        <label for="rejectionSelect" class="block text-sm font-medium text-gray-300 mb-2">
+          Select rejection reason:
+        </label>
+        <select
+          id="rejectionSelect"
+          [(ngModel)]="selectedRejectionReason"
+          (ngModelChange)="onRejectionReasonChange($event)"
+          class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
-        <textarea
-          id="rejectionReason"
-          [(ngModel)]="rejectionReason"
-          rows="4"
-          placeholder="Enter rejection reason..."
-          class="rejection-textarea"
-        ></textarea>
+          <option value="" disabled>Select a reason...</option>
+          <option value="certification">Certification is not proper</option>
+          <option value="experience">Insufficient experience documentation</option>
+          <option value="documents">Required documents are missing or unclear</option>
+          <option value="qualifications">Qualifications do not meet requirements</option>
+        </select>
       </div>
+
+   
     </div>
-    <div class="modal-footer">
-      <button class="action-btn cancel-btn" (click)="closeRejectionModal()">
+
+    <!-- Modal Footer -->
+    <div class="flex items-center justify-end space-x-3 p-6 border-t border-gray-700">
+      <button 
+        class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded-lg transition-colors duration-200 text-sm font-medium"
+        (click)="closeRejectionModal()"
+      >
         Cancel
       </button>
       <button
-        class="action-btn submit-reject-btn"
+        class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[140px]"
         (click)="submitRejection()"
-        [disabled]="!rejectionReason.trim()"
+        [disabled]="!isRejectionValid() || isSubmittingRejection"
       >
-        Submit Rejection
+        <div *ngIf="isSubmittingRejection" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+        {{ isSubmittingRejection ? 'Submitting...' : 'Submit Rejection' }}
       </button>
     </div>
   </div>
 </div>
-
-<style>
-  .trainer-verification-container {
-    padding: 2rem;
-    background-color: #1a1a1a;
-    min-height: 100vh;
-    color: #ffffff;
-  }
-
-  .trainer-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .trainer-card {
-    background-color: #2d2d2d;
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-  }
-
-  .trainer-card:hover {
-    transform: translateY(-5px);
-  }
-
-  .trainer-name {
-    color: #ffffff;
-    margin-bottom: 1rem;
-    font-size: 1.25rem;
-  }
-
-  .trainer-details p {
-    margin: 0.5rem 0;
-    color: #b3b3b3;
-  }
-
-  .trainer-details i {
-    margin-right: 0.5rem;
-    color: #ffffff;
-  }
-
-  .trainer-actions {
-    margin-top: 1.5rem;
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
-
-  .action-btn {
-    flex: 1;
-    min-width: 100px;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-
-  .view-btn {
-    background-color: #404040;
-    color: white;
-  }
-
-  .approve-btn {
-    background-color: #dc2626;
-    color: white;
-  }
-
-  .reject-btn {
-    background-color: #404040;
-    color: white;
-  }
-
-  .view-btn:hover {
-    background-color: #505050;
-  }
-
-  .approve-btn:hover {
-    background-color: #b91c1c;
-  }
-
-  .reject-btn:hover {
-    background-color: #505050;
-  }
-
-  .no-trainers {
-    text-align: center;
-    padding: 3rem;
-    color: #b3b3b3;
-  }
-
-  .no-trainers i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: #ffffff;
-  }
-
-  .loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    color: #b3b3b3;
-  }
-
-  .spinner {
-    border: 4px solid #2d2d2d;
-    border-top: 4px solid #ffffff;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
-  }
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  /* Modal Styles */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-
-  .modal-content {
-    background-color: #2d2d2d;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-
-  .modal-content.rejection-modal {
-    background-color: #2d2d2d;
-    color: white;
-    border: 1px solid #404040;
-  }
-
-  .modal-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid #404040;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .modal-header h2 {
-    color: #ffffff;
-    margin: 0;
-  }
-
-  .close-btn {
-    background: none;
-    border: none;
-    color: #b3b3b3;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-
-  .modal-body {
-    padding: 1.5rem;
-  }
-
-  .detail-group {
-    margin-bottom: 1.5rem;
-  }
-
-  .detail-group h3 {
-    color: #ffffff;
-    margin-bottom: 1rem;
-  }
-
-  .detail-group p {
-    margin: 0.5rem 0;
-    color: #b3b3b3;
-  }
-
-  .detail-group a {
-    color: #ffffff;
-    text-decoration: none;
-  }
-
-  .detail-group a:hover {
-    text-decoration: underline;
-  }
-
-  .modal-footer {
-    padding: 1.5rem;
-    border-top: 1px solid #404040;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-  }
-
-  .cancel-btn {
-    background-color: #404040;
-    color: white;
-  }
-
-  .submit-reject-btn {
-    background-color: #dc2626;
-    color: white;
-  }
-
-  .submit-reject-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .cancel-btn:hover {
-    background-color: #505050;
-  }
-
-  .submit-reject-btn:hover:not(:disabled) {
-    background-color: #b91c1c;
-  }
-
-  /* Rejection Modal Specific Styles */
-  .form-group {
-    margin-bottom: 1rem;
-  }
-
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: white;
-  }
-
-  .rejection-textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #404040;
-    border-radius: 4px;
-    background-color: #1a1a1a;
-    color: white;
-    resize: vertical;
-  }
-
-  .rejection-textarea:focus {
-    outline: none;
-    border-color: #dc2626;
-  }
-</style>

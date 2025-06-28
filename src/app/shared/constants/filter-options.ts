@@ -19,3 +19,12 @@ export const CATEGORY_IMAGES: { [key: string]: string } = {
   martial_arts: 'https://images.unsplash.com/photo-1603394513444-d0d8ff15bff4?auto=format&fit=crop&w=1000&q=80',
   fitness: 'https://images.unsplash.com/photo-1599058917212-d750089bc07d?auto=format&fit=crop&w=1000&q=80',
 };
+
+
+  export const REJECTION_REASONS = [
+    { value: 'certification', label: 'Certification is not proper' },
+    { value: 'experience', label: 'Insufficient experience documentation' },
+    { value: 'documents', label: 'Required documents are missing or unclear' },
+    { value: 'qualifications', label: 'Qualifications do not meet requirements' },
+
+  ];

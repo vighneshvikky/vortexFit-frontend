@@ -1,354 +1,125 @@
-:root {
-  --bg-dark: #1a1a1a;
-  --bg-card: #2d2d2d;
-  --text-primary: #ffffff;
-  --text-secondary: #a0aec0;
-  --border-color: #404040;
-  --accent-red: #dc2626;
-  --accent-green: #059669;
-  --accent-yellow: #d97706;
-  --hover-bg: #404040;
+// Custom SCSS for additional styling
+.trainer-card {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  &:hover::before {
+    opacity: 1;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
 }
 
-.verification-container {
-  padding: 2rem;
-  background-color: var(--bg-dark);
-  min-height: 100vh;
-  color: var(--text-primary);
+// Custom background color for better contrast
+.bg-gray-750 {
+  background-color: rgb(55, 65, 81);
+}
 
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
+// Animation for status indicator
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
 
-    .title {
-      font-size: 1.875rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
+.trainer-card .absolute {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
 
-    .actions {
-      .btn-primary {
-        background-color: var(--accent-red);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 0.375rem;
-        border: none;
-        cursor: pointer;
-        transition: all 0.2s;
-
-        &:hover {
-          background-color: #b91c1c;
-        }
-
-        i {
-          margin-right: 0.5rem;
-        }
-      }
+// Smooth scrollbar for modal
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(75, 85, 99) rgb(31, 41, 55);
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgb(31, 41, 55);
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgb(75, 85, 99);
+    border-radius: 3px;
+    
+    &:hover {
+      background: rgb(107, 114, 128);
     }
   }
+}
 
-  .content {
-    .loading-state {
-      display: flex;
+// Focus states for better accessibility
+button:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .trainer-card {
+    .flex {
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      color: var(--text-secondary);
-
-      .spinner {
-        border: 4px solid var(--border-color);
-        border-top: 4px solid var(--accent-red);
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin-bottom: 1rem;
-      }
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 3rem;
-      color: var(--text-secondary);
-    }
-
-    .trainer-card {
-      background-color: var(--bg-card);
-      border-radius: 0.5rem;
-      padding: 1.5rem;
-      margin-bottom: 1rem;
-      border: 1px solid var(--border-color);
-      transition: all 0.2s;
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      }
-
-      .trainer-info {
-        display: flex;
-        gap: 1.5rem;
-        margin-bottom: 1rem;
-
-        .trainer-details {
-          flex: 1;
-
-          .trainer-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-
-            .trainer-name {
-              font-size: 1.25rem;
-              font-weight: 600;
-              color: var(--text-primary);
-            }
-
-            .status-badge {
-              padding: 0.25rem 0.75rem;
-              border-radius: 9999px;
-              font-size: 0.875rem;
-              font-weight: 500;
-
-              &.pending {
-                background-color: rgba(217, 119, 6, 0.1);
-                color: var(--accent-yellow);
-              }
-
-              &.rejected {
-                background-color: rgba(220, 38, 38, 0.1);
-                color: var(--accent-red);
-              }
-
-              &.approved {
-                background-color: rgba(5, 150, 105, 0.1);
-                color: var(--accent-green);
-              }
-            }
-          }
-
-          .trainer-email, .trainer-phone {
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-          }
-
-          .trainer-meta {
-            display: flex;
-            gap: 1.5rem;
-            margin-top: 1rem;
-
-            .meta-label {
-              color: var(--text-secondary);
-              margin-right: 0.5rem;
-            }
-
-            .specialty-tag {
-              background-color: var(--hover-bg);
-              padding: 0.25rem 0.75rem;
-              border-radius: 9999px;
-              font-size: 0.875rem;
-              color: var(--text-primary);
-            }
-          }
-        }
-      }
-
-      .trainer-actions {
-        display: flex;
-        gap: 1rem;
+      align-items: flex-start;
+      
+      .ml-6 {
+        margin-left: 0;
         margin-top: 1rem;
-
-        button {
-          padding: 0.5rem 1rem;
-          border-radius: 0.375rem;
-          border: none;
-          cursor: pointer;
-          transition: all 0.2s;
-          font-weight: 500;
-
-          &.btn-secondary {
-            background-color: var(--hover-bg);
-            color: var(--text-primary);
-
-            &:hover {
-              background-color: #4a4a4a;
-            }
-          }
-
-          &.btn-success {
-            background-color: var(--accent-green);
-            color: white;
-
-            &:hover {
-              background-color: #047857;
-            }
-          }
-
-          &.btn-danger {
-            background-color: var(--accent-red);
-            color: white;
-
-            &:hover {
-              background-color: #b91c1c;
-            }
-          }
+        width: 100%;
+        
+        .space-x-3 > button {
+          flex: 1;
         }
       }
     }
   }
 }
 
-// Modal styles
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.75);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
-
-  .modal {
-    background-color: var(--bg-card);
-    border-radius: 0.5rem;
-    padding: 2rem;
-    width: 90%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-
-    .modal-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 1.5rem;
-    }
-
-    .modal-content {
-      .modal-avatar {
-        text-align: center;
-        margin-bottom: 1.5rem;
-
-        img {
-          width: 100px;
-          height: 100px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
-      }
-
-      .modal-fields {
-        p {
-          margin-bottom: 1rem;
-          color: var(--text-primary);
-
-          strong {
-            color: var(--text-secondary);
-            margin-right: 0.5rem;
-          }
-
-          .link {
-            color: var(--accent-red);
-            text-decoration: none;
-
-            &:hover {
-              text-decoration: underline;
-            }
-          }
-        }
-      }
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
-      justify-content: flex-end;
-    }
-  }
-}
-
-// Rejection Modal
-.modal {
-  background-color: var(--bg-card);
-  border-radius: 0.5rem;
-  padding: 2rem;
-  width: 90%;
-  max-width: 500px;
-
-  h3 {
-    color: var(--text-primary);
-    margin-bottom: 1.5rem;
-  }
-
-  label {
-    display: block;
-    color: var(--text-secondary);
-    margin-bottom: 0.5rem;
-  }
-
-  select {
-    width: 100%;
-    padding: 0.5rem;
-    border-radius: 0.375rem;
-    background-color: var(--bg-dark);
-    border: 1px solid var(--border-color);
-    color: var(--text-primary);
-    margin-bottom: 1.5rem;
-
-    &:focus {
-      outline: none;
-      border-color: var(--accent-red);
-    }
-  }
-
-  .modal-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-
-    button {
-      padding: 0.5rem 1rem;
-      border-radius: 0.375rem;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-weight: 500;
-
-      &:first-child {
-        background-color: var(--accent-red);
-        color: white;
-
-        &:hover {
-          background-color: #b91c1c;
-        }
-
-        &:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-      }
-
-      &:last-child {
-        background-color: var(--hover-bg);
-        color: var(--text-primary);
-
-        &:hover {
-          background-color: #4a4a4a;
-        }
-      }
-    }
-  }
-}
-
+// Loading animation
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+// Status badge colors
+.status-pending {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: rgb(245, 158, 11);
+}
+
+.status-approved {
+  background-color: rgba(34, 197, 94, 0.2);
+  color: rgb(34, 197, 94);
+}
+
+.status-rejected {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: rgb(239, 68, 68);
 }
