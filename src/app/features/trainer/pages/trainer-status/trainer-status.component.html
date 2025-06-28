@@ -3,7 +3,7 @@
     <ng-container *ngIf="currentUserStatus$ | async as status">
       <ng-container [ngSwitch]="status.verificationStatus">
         <!-- Pending -->
-        <div *ngSwitchCase="'requested'" class="status-section requested">
+        <div *ngSwitchCase="'pending'" class="status-section pending">
           <div class="status-icon">
             <i class="fas fa-clock"></i>
           </div>

@@ -191,6 +191,7 @@ export class TrainerVerificationComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log('submitting')
     if (this.verificationForm.valid && this.trainerId) {
       this.isLoading = true;
       const formValues = this.verificationForm.value;
@@ -211,7 +212,7 @@ export class TrainerVerificationComponent implements OnInit {
         },
       };
 
-      this.trainerService.updateProfile(profileData).subscribe({
+      this.trainerService.updateVerificationProfile(profileData).subscribe({
         next: (res: Trainer) => {
           console.log('res from be', res);
           this.store.dispatch(updateCurrentUser({ user: res }));
@@ -223,6 +224,7 @@ export class TrainerVerificationComponent implements OnInit {
           this.router.navigate(['/auth/trainer-status']);
         },
         error: (error) => {
+          console.error('Error from backend:', error);
           this.isLoading = false;
           this.notyService.showError(
             error?.error?.message || 'Failed to submit verification request'

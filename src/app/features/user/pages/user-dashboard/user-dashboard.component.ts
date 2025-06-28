@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CategoryCardComponent } from '../category-card/category-card.component';
 import { CommonModule } from '@angular/common';
+import { CATEGORIES } from '../../../../shared/constants/filter-options';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -9,10 +10,5 @@ import { CommonModule } from '@angular/common';
   styleUrl: './user-dashboard.component.scss',
 })
 export class UserDashboardComponent {
-  categories = [
-    { value: 'cardio', label: 'Cardio' },
-    { value: 'yoga', label: 'Yoga' },
-    { value: 'martial_arts', label: 'Martial Arts' },
-    { value: 'fitness', label: 'Fitness' },
-  ];
+  categories = CATEGORIES
 }

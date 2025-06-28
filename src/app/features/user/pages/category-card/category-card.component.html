@@ -1,23 +1,29 @@
-<!-- Original Angular template structure with Tailwind styling -->
-    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-100 hover:border-purple-300 group overflow-hidden">
-        <!-- Image container -->
-        <div class="relative h-48 bg-gradient-to-br from-purple-400 to-purple-600 overflow-hidden">
-            <img [src]=" 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80'" 
-                 [alt]="label + ' training category'"
-                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-            <!-- Purple overlay for better text contrast -->
-            <div class="absolute inset-0 bg-purple-900 bg-opacity-20 group-hover:bg-opacity-10 transition-all duration-300"></div>
-        </div>
-        
-        <!-- Content container -->
-        <div class="p-6">
-            <h3 class="text-xl font-bold text-purple-800 mb-4 group-hover:text-purple-900 transition-colors duration-200">
-                {{ label }}
-            </h3>
-            <button class="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 shadow-md hover:shadow-lg" 
-                    [routerLink]="['/user/trainers']" 
-                    [queryParams]="{ category: value }">
-                Find Trainers
-            </button>
-        </div>
-    </div>
+<div
+  class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-100 hover:border-purple-300 group overflow-hidden"
+>
+  <div class="relative h-48 bg-gradient-to-br from-purple-400 to-purple-600 overflow-hidden">
+    <img
+      [src]="imageUrl"
+      [alt]="label + ' training category'"
+      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+    />
+    <div
+      class="absolute inset-0 bg-purple-900 bg-opacity-20 group-hover:bg-opacity-10 transition-all duration-300"
+    ></div>
+  </div>
+
+  <div class="p-6">
+    <h3
+      class="text-xl font-bold text-purple-800 mb-4 group-hover:text-purple-900 transition-colors duration-200"
+    >
+      {{ label }}
+    </h3>
+    <button
+      class="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 shadow-md hover:shadow-lg"
+      [routerLink]="['/user/trainers']"
+      [queryParams]="{ category: value }"
+    >
+      Find Trainers
+    </button>
+  </div>
+</div>

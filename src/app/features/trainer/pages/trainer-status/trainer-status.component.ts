@@ -24,7 +24,7 @@ import { isTrainer } from '../../../../core/guards/user-type-guards';
 })
 export class TrainerStatusComponent implements OnInit, OnDestroy {
   currentUserStatus$: Observable<AuthenticatedUser | null>;
-  verificationStatus!: 'pending' | 'approved' | 'rejected' | 'requested';
+  verificationStatus: 'pending' | 'approved' | 'rejected' | 'requested' = 'pending';
   trainerId: string | null = null;
   rejectionReason: string | null = null;
   private subscription: Subscription = new Subscription();

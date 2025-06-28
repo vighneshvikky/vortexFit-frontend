@@ -343,7 +343,7 @@
             [disabled]="verificationForm.invalid || isLoading"
             class="inline-flex items-center justify-center px-8 py-3.5 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-lg min-w-[200px]"
           >
-            <i class="fas fa-spinner fa-spin mr-2" *ngIf="isLoading"></i>
+            <!-- <i class="fas fa-spinner fa-spin mr-2" *ngIf="isLoading"></i> -->
             {{ isLoading ? "Submitting..." : "Submit for Verification" }}
           </button>
         </div>
