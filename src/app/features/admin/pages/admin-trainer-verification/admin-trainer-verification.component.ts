@@ -6,12 +6,10 @@ import { Trainer } from '../../../trainer/models/trainer.interface';
 import { FormsModule } from '@angular/forms';
 import {
   selectUnverifiedTrainers,
-  selectUsersLoaded,
 } from '../../../../store/admin/users/user.selector';
 import {
   loadUnverifiedTrainers,
   loadUsers,
-  resetUsersLoaded,
 } from '../../../../store/admin/users/users.actions';
 import { AdminService } from '../../services/admin.service';
 import { NotyService } from '../../../../core/services/noty.service';
