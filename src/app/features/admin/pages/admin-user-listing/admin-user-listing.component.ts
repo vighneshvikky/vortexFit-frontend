@@ -34,7 +34,7 @@ export class AdminUserListingComponent implements OnInit {
   isLoadingUsers = false;
   currentPage = 1;
   totalPages = 1;
-  limit = 6;
+  limit = 1;
 
   constructor(private store: Store, private adminService: AdminService) {
     this.setupSearch();

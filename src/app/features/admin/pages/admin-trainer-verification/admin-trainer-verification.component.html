@@ -1,87 +1,120 @@
 <!-- Main Container -->
-<div class="min-h-screen bg-gray-900 p-6">
-  <div class="max-w-7xl mx-auto">
-    <!-- Header -->
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-900">
+  <div class="container mx-auto px-4 py-6 max-w-7xl">
+    
+    <!-- Header Section -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-white mb-2">Trainer Applications</h1>
-      <p class="text-gray-400">Review and manage trainer verification requests</p>
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <h1 class="text-3xl lg:text-4xl font-bold text-white mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            Trainer Applications
+          </h1>
+          <p class="text-gray-400 text-lg">Review and manage trainer verification requests</p>
+        </div>
+        
+        <div class="flex items-center gap-4">
+          <div class="flex items-center bg-gray-800/60 backdrop-blur-sm rounded-xl px-4 py-2.5 border border-gray-700/50">
+            <i class="fas fa-hourglass-half text-amber-400 mr-2"></i>
+            <span class="text-sm font-medium text-gray-200">
+              {{ (unverifiedTrainers$ | async)?.length || 0 }} Pending
+            </span>
+          </div>
+          
+          <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-blue-500/25 font-medium">
+            <i class="fas fa-sync-alt text-sm"></i>
+            <span class="hidden sm:inline">Refresh</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Main Content -->
-    <div *ngIf="unverifiedTrainers$ | async as trainers; else loading">
-      <div class="space-y-4" *ngIf="trainers.length; else noTrainers">
+    <div *ngIf="unverifiedTrainers$ | async as trainers; else loading" class="space-y-6">
+      
+      <!-- Trainer Cards -->
+      <div class="space-y-5" *ngIf="trainers.length; else noTrainers">
         <div 
-          class="trainer-card bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-300"
-          *ngFor="let trainer of trainers"
+          class="bg-gray-800/40 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-blue-500/40 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/5 hover:-translate-y-1 group"
+          *ngFor="let trainer of trainers;"
         >
-          <div class="flex items-start justify-between">
+          <div class="flex flex-col xl:flex-row xl:items-start gap-6">
+            
             <!-- Left Section: Profile and Info -->
-            <div class="flex items-start space-x-4 flex-1">
-
+            <div class="flex flex-col sm:flex-row items-start gap-4 flex-1">
+              <!-- Avatar -->
+              <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-blue-500/25 transition-shadow duration-300">
+                <i class="fas fa-dumbbell text-white text-xl"></i>
+              </div>
 
               <!-- Trainer Information -->
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center space-x-3 mb-2">
-                  <h3 class="text-xl font-semibold text-white">{{ trainer.name }}</h3>
-                  <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded-full font-medium">
-                    Pending
+              <div class="flex-1 min-w-0 space-y-4">
+                <!-- Name and Status -->
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                  <h3 class="text-xl font-semibold text-white group-hover:text-blue-100 transition-colors duration-200">
+                    {{ trainer.name }}
+                  </h3>
+                  <span class="inline-flex items-center px-3 py-1.5 bg-amber-500/15 text-amber-400 text-xs font-medium rounded-full border border-amber-500/20 w-fit">
+                    <i class="fas fa-clock w-3 mr-1.5"></i>
+                    Pending Review
                   </span>
                 </div>
                 
-                <div class="text-sm text-gray-400 space-y-1">
-                  <p class="flex items-center">
-                    <i class="fas fa-envelope w-4 mr-2"></i>
-                    {{ trainer.email }}
-                  </p>
-                  <p class="flex items-center">
-                    <i class="fas fa-phone w-4 mr-2"></i>
-                    {{ trainer.phoneNumber }}
-                  </p>
+                <!-- Contact Information -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div class="flex items-center text-sm text-gray-300 group-hover:text-gray-200 transition-colors duration-200">
+                    <i class="fas fa-envelope w-4 mr-3 text-blue-400 flex-shrink-0"></i>
+                    <span class="truncate">{{ trainer.email }}</span>
+                  </div>
+                  <div class="flex items-center text-sm text-gray-300 group-hover:text-gray-200 transition-colors duration-200">
+                    <i class="fas fa-phone w-4 mr-3 text-green-400 flex-shrink-0"></i>
+                    <span>{{ trainer.phoneNumber }}</span>
+                  </div>
                 </div>
 
-                <!-- Specialization Tags -->
-                <div class="mt-3 flex flex-wrap gap-2">
-                  <span 
-                    class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-full font-medium"
-                    *ngFor="let spec of trainer.specialization?.split(',') || [trainer.specialization]"
-                  >
-                    {{ spec?.trim() }}
-                  </span>
-                </div>
-
-                <!-- Experience -->
-                <div class="mt-3">
-                  <div class="flex items-center text-sm text-gray-400">
-                    <i class="fas fa-clock w-4 mr-2"></i>
-                    <span class="font-medium text-white">{{ trainer.experience }} years</span>
-                    <span class="ml-1">experience</span>
+                <!-- Specialization and Experience -->
+                <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <div class="flex items-center gap-2">
+                    <span class="px-3 py-1.5 bg-blue-500/15 text-blue-400 text-xs font-medium rounded-full border border-blue-500/20">
+                      {{ trainer.specialization }}
+                    </span>
+                  </div>
+                  
+                  <div class="flex items-center text-sm text-gray-300">
+                    <i class="fas fa-star w-4 mr-2 text-yellow-400"></i>
+                    <span class="font-medium text-white">{{ trainer.experience }}</span>
+                    <span class="ml-1">years experience</span>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Right Section: Actions -->
-            <div class="flex items-center space-x-3 ml-6">
+            <div class="flex flex-col sm:flex-row xl:flex-col gap-3 sm:gap-2 xl:gap-3 min-w-fit">
               <button 
-                class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded-lg transition-colors duration-200 text-sm font-medium"
+                class="px-5 py-2.5 bg-gray-700/60 hover:bg-gray-600/80 text-gray-200 hover:text-white rounded-xl transition-all duration-200 text-sm font-medium border border-gray-600/50 hover:border-gray-500/50 backdrop-blur-sm"
                 (click)="openTrainerModal(trainer)"
               >
+                <i class="fas fa-eye mr-2"></i>
                 View Details
               </button>
+              
               <button 
-                class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium flex items-center justify-center min-w-[80px]"
+                class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-all duration-200 text-sm font-medium flex items-center justify-center min-w-[120px] shadow-lg hover:shadow-emerald-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
                 (click)="approveTrainer(trainer)"
                 [disabled]="isApproving(trainer._id)"
               >
-                <div *ngIf="isApproving(trainer._id)" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                <div *ngIf="isApproving(trainer._id)" class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                <i *ngIf="!isApproving(trainer._id)" class="fas fa-check mr-2"></i>
                 {{ isApproving(trainer._id) ? 'Approving...' : 'Approve' }}
               </button>
+              
               <button 
-                class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium flex items-center justify-center min-w-[70px]"
+                class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl transition-all duration-200 text-sm font-medium flex items-center justify-center min-w-[120px] shadow-lg hover:shadow-red-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
                 (click)="openRejectionModal(trainer)"
                 [disabled]="isRejecting(trainer._id)"
               >
-                <div *ngIf="isRejecting(trainer._id)" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                <div *ngIf="isRejecting(trainer._id)" class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                <i *ngIf="!isRejecting(trainer._id)" class="fas fa-times mr-2"></i>
                 {{ isRejecting(trainer._id) ? 'Rejecting...' : 'Reject' }}
               </button>
             </div>
@@ -91,23 +124,37 @@
 
       <!-- No Trainers State -->
       <ng-template #noTrainers>
-        <div class="text-center py-16 bg-gray-800 rounded-xl border border-gray-700">
-          <div class="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-            <i class="fas fa-user-slash text-gray-400 text-xl"></i>
+        <div class="flex flex-col items-center justify-center py-20 bg-gray-800/30 backdrop-blur-sm rounded-2xl border border-gray-700/50">
+          <div class="w-20 h-20 bg-gray-700/50 rounded-2xl flex items-center justify-center mb-6">
+            <i class="fas fa-user-slash text-gray-400 text-2xl"></i>
           </div>
-          <h3 class="text-xl font-semibold text-white mb-2">No pending applications</h3>
-          <p class="text-gray-400">All trainer applications have been reviewed.</p>
+          <h3 class="text-2xl font-semibold text-white mb-3">No pending applications</h3>
+          <p class="text-gray-400 text-center max-w-md">All trainer applications have been reviewed. New applications will appear here when submitted.</p>
         </div>
       </ng-template>
+
+      <!-- Pagination Section - Properly Aligned -->
+      <div class="flex justify-center mt-8 pt-6 border-t border-gray-700/50" *ngIf="usersMeta$ | async as meta">
+        <div class="w-full max-w-sm">
+          <app-pagination
+            [currentPage]="meta.page"
+            [totalPages]="meta.totalPages"
+            [maxVisiblePages]="5"
+            (pageChanged)="onPageChange($event)"
+            class="flex justify-center">
+          </app-pagination>
+        </div>
+      </div>
     </div>
 
     <!-- Loading State -->
     <ng-template #loading>
-      <div class="flex items-center justify-center py-16">
-        <div class="text-center">
-          <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mb-4"></div>
-          <p class="text-gray-400">Loading trainers...</p>
+      <div class="flex flex-col items-center justify-center py-20">
+        <div class="relative">
+          <div class="w-12 h-12 border-4 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
+          <div class="absolute inset-0 w-12 h-12 border-4 border-transparent border-r-purple-500 rounded-full animate-spin animation-delay-150"></div>
         </div>
+        <p class="text-gray-400 mt-6 text-lg">Loading trainer applications...</p>
       </div>
     </ng-template>
   </div>
@@ -115,19 +162,22 @@
 
 <!-- Trainer Details Modal -->
 <div
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+  class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in"
   *ngIf="selectedTrainer"
   (click)="closeTrainerModal()"
 >
   <div 
-    class="bg-gray-800 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-gray-700"
+    class="bg-gray-800/95 backdrop-blur-md rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-gray-600/50 shadow-2xl animate-scale-in"
     (click)="$event.stopPropagation()"
   >
     <!-- Modal Header -->
-    <div class="flex items-center justify-between p-6 border-b border-gray-700">
-      <h2 class="text-2xl font-bold text-white">Trainer Details</h2>
+    <div class="flex items-center justify-between p-6 border-b border-gray-700/50 bg-gray-800/50">
+      <div>
+        <h2 class="text-2xl font-bold text-white">Trainer Details</h2>
+        <p class="text-gray-400 text-sm mt-1">Review complete application information</p>
+      </div>
       <button 
-        class="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-colors duration-200"
+        class="w-10 h-10 bg-gray-700/60 hover:bg-gray-600/80 rounded-xl flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200 border border-gray-600/50"
         (click)="closeTrainerModal()"
       >
         <i class="fas fa-times"></i>
@@ -135,78 +185,86 @@
     </div>
 
     <!-- Modal Body -->
-    <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+    <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)] custom-scrollbar">
       <div class="space-y-6">
+        
         <!-- Personal Information -->
-        <div class="bg-gray-750 rounded-lg p-4">
+        <div class="bg-gray-750/50 backdrop-blur-sm rounded-xl p-5 border border-gray-600/30">
           <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-            <i class="fas fa-user w-5 mr-2 text-blue-400"></i>
+            <div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center mr-3">
+              <i class="fas fa-user text-blue-400 text-sm"></i>
+            </div>
             Personal Information
           </h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <span class="text-gray-400">Name:</span>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-1">
+              <span class="text-gray-400 text-sm font-medium">Full Name</span>
               <p class="text-white font-medium">{{ selectedTrainer.name }}</p>
             </div>
-            <div>
-              <span class="text-gray-400">Email:</span>
+            <div class="space-y-1">
+              <span class="text-gray-400 text-sm font-medium">Email Address</span>
               <p class="text-white font-medium">{{ selectedTrainer.email }}</p>
             </div>
-            <div>
-              <span class="text-gray-400">Phone:</span>
+            <div class="space-y-1">
+              <span class="text-gray-400 text-sm font-medium">Phone Number</span>
               <p class="text-white font-medium">{{ selectedTrainer.phoneNumber }}</p>
             </div>
           </div>
         </div>
 
         <!-- Professional Information -->
-        <div class="bg-gray-750 rounded-lg p-4">
+        <div class="bg-gray-750/50 backdrop-blur-sm rounded-xl p-5 border border-gray-600/30">
           <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-            <i class="fas fa-dumbbell w-5 mr-2 text-green-400"></i>
+            <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center mr-3">
+              <i class="fas fa-dumbbell text-emerald-400 text-sm"></i>
+            </div>
             Professional Information
           </h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <span class="text-gray-400">Specialization:</span>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-1">
+              <span class="text-gray-400 text-sm font-medium">Specialization</span>
               <p class="text-white font-medium">{{ selectedTrainer.specialization }}</p>
             </div>
-            <div>
-              <span class="text-gray-400">Experience:</span>
+            <div class="space-y-1">
+              <span class="text-gray-400 text-sm font-medium">Years of Experience</span>
               <p class="text-white font-medium">{{ selectedTrainer.experience }} years</p>
             </div>
           </div>
           <div class="mt-4" *ngIf="selectedTrainer.bio">
-            <span class="text-gray-400">Bio:</span>
-            <p class="text-white font-medium mt-1">{{ selectedTrainer.bio || "Not provided" }}</p>
+            <span class="text-gray-400 text-sm font-medium">Professional Bio</span>
+            <p class="text-white font-medium mt-2 leading-relaxed">{{ selectedTrainer.bio || "Not provided" }}</p>
           </div>
         </div>
 
-        <!-- Documents -->
-        <div class="bg-gray-750 rounded-lg p-4" *ngIf="selectedTrainer?.idProofUrl || selectedTrainer?.certificationUrl">
+        <!-- Documents Section -->
+        <div class="bg-gray-750/50 backdrop-blur-sm rounded-xl p-5 border border-gray-600/30" 
+             *ngIf="selectedTrainer?.idProofUrl || selectedTrainer?.certificationUrl">
           <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-            <i class="fas fa-file-alt w-5 mr-2 text-yellow-400"></i>
-            Documents
+            <div class="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center mr-3">
+              <i class="fas fa-file-alt text-amber-400 text-sm"></i>
+            </div>
+            Verification Documents
           </h3>
           
           <div class="space-y-6">
             <div *ngIf="selectedTrainer?.idProofUrl">
-              <span class="text-gray-400 text-sm">ID Proof:</span>
-              <div class="mt-2 bg-gray-700 rounded-lg p-2">
+              <span class="text-gray-400 text-sm font-medium">Identity Proof Document</span>
+              <div class="mt-3 bg-gray-700/30 rounded-xl p-3 border border-gray-600/30">
                 <img
                   [src]="selectedTrainer.idProofUrl"
-                  alt="ID Proof"
-                  class="w-full max-h-64 object-contain rounded-lg"
+                  alt="ID Proof Document"
+                  class="w-full max-h-80 object-contain rounded-lg"
                 />
               </div>
             </div>
 
             <div *ngIf="selectedTrainer?.certificationUrl">
-              <span class="text-gray-400 text-sm">Certification:</span>
-              <div class="mt-2 bg-gray-700 rounded-lg p-2">
+              <span class="text-gray-400 text-sm font-medium">Professional Certification</span>
+              <div class="mt-3 bg-gray-700/30 rounded-xl p-3 border border-gray-600/30">
                 <img
                   [src]="selectedTrainer.certificationUrl"
-                  alt="Certification"
-                  class="w-full max-h-64 object-contain rounded-lg"
+                  alt="Professional Certification"
+                  class="w-full max-h-80 object-contain rounded-lg"
                 />
               </div>
             </div>
@@ -219,19 +277,22 @@
 
 <!-- Rejection Reason Modal -->
 <div
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+  class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in"
   *ngIf="showRejectionModal"
   (click)="closeRejectionModal()"
 >
   <div 
-    class="bg-gray-800 rounded-xl max-w-md w-full border border-gray-700"
+    class="bg-gray-800/95 backdrop-blur-md rounded-2xl max-w-md w-full border border-gray-600/50 shadow-2xl animate-scale-in"
     (click)="$event.stopPropagation()"
   >
     <!-- Modal Header -->
-    <div class="flex items-center justify-between p-6 border-b border-gray-700">
-      <h2 class="text-xl font-bold text-white">Rejection Reason</h2>
+    <div class="flex items-center justify-between p-6 border-b border-gray-700/50">
+      <div>
+        <h2 class="text-xl font-bold text-white">Rejection Reason</h2>
+        <p class="text-gray-400 text-sm mt-1">Please specify why this application is being rejected</p>
+      </div>
       <button 
-        class="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-colors duration-200"
+        class="w-10 h-10 bg-gray-700/60 hover:bg-gray-600/80 rounded-xl flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200"
         (click)="closeRejectionModal()"
       >
         <i class="fas fa-times"></i>
@@ -240,43 +301,82 @@
 
     <!-- Modal Body -->
     <div class="p-6">
-      <div class="mb-4">
-        <label for="rejectionSelect" class="block text-sm font-medium text-gray-300 mb-2">
-          Select rejection reason:
-        </label>
-        <select
-          id="rejectionSelect"
-          [(ngModel)]="selectedRejectionReason"
-          (ngModelChange)="onRejectionReasonChange($event)"
-          class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        >
-          <option value="" disabled>Select a reason...</option>
-          <option value="certification">Certification is not proper</option>
-          <option value="experience">Insufficient experience documentation</option>
-          <option value="documents">Required documents are missing or unclear</option>
-          <option value="qualifications">Qualifications do not meet requirements</option>
-        </select>
+      <div class="space-y-4">
+        <div>
+          <label for="rejectionSelect" class="block text-sm font-medium text-gray-300 mb-3">
+            Select rejection reason <span class="text-red-400">*</span>
+          </label>
+          <select
+            id="rejectionSelect"
+            [(ngModel)]="selectedRejectionReason"
+            (ngModelChange)="onRejectionReasonChange($event)"
+            class="w-full px-4 py-3 bg-gray-700/60 backdrop-blur-sm border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+          >
+            <option value="" disabled>Choose a reason...</option>
+            <option value="certification">Certification is not proper or valid</option>
+            <option value="experience">Insufficient experience documentation</option>
+            <option value="documents">Required documents are missing or unclear</option>
+            <option value="qualifications">Qualifications do not meet our requirements</option>
+          </select>
+        </div>
       </div>
-
-   
     </div>
 
     <!-- Modal Footer -->
-    <div class="flex items-center justify-end space-x-3 p-6 border-t border-gray-700">
+    <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-700/50 bg-gray-800/30">
       <button 
-        class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded-lg transition-colors duration-200 text-sm font-medium"
+        class="px-5 py-2.5 bg-gray-700/60 hover:bg-gray-600/80 text-gray-300 hover:text-white rounded-xl transition-all duration-200 font-medium border border-gray-600/50"
         (click)="closeRejectionModal()"
       >
         Cancel
       </button>
       <button
-        class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[140px]"
+        class="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[140px] shadow-lg hover:shadow-red-500/25"
         (click)="submitRejection()"
         [disabled]="!isRejectionValid() || isSubmittingRejection"
       >
-        <div *ngIf="isSubmittingRejection" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+        <div *ngIf="isSubmittingRejection" class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+        <i *ngIf="!isSubmittingRejection" class="fas fa-paper-plane mr-2"></i>
         {{ isSubmittingRejection ? 'Submitting...' : 'Submit Rejection' }}
       </button>
     </div>
   </div>
 </div>
+
+<style>
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes scale-in {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scale-in 0.2s ease-out;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(75, 85, 99, 0.3);
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(107, 114, 128, 0.6);
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(156, 163, 175, 0.8);
+  }
+</style>

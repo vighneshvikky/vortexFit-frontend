@@ -28,6 +28,7 @@ loadUnverifiedTrainers$ = createEffect(() =>
     ofType(UsersActions.loadUnverifiedTrainers),
     switchMap(({ query }) =>
       this.adminService.getUnverifiedTrainers(query).pipe(
+        tap((response) => console.log('Unverified Trainers Response:', response)),
         map((response) =>
           UsersActions.loadUnverifiedTrainersSuccess({ response })
         ),
@@ -38,6 +39,7 @@ loadUnverifiedTrainers$ = createEffect(() =>
     )
   )
 );
+
 
 
 

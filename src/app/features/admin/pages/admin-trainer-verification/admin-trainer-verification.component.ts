@@ -6,6 +6,7 @@ import { Trainer } from '../../../trainer/models/trainer.interface';
 import { FormsModule } from '@angular/forms';
 import {
   selectUnverifiedTrainers,
+  selectUsersMeta,
 } from '../../../../store/admin/users/user.selector';
 import {
   loadUnverifiedTrainers,
@@ -20,10 +21,11 @@ import {
 import { selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';
 import { AppState } from '../../../../store/app.state';
 import { REJECTION_REASONS } from '../../../../shared/constants/filter-options';
+import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-admin-trainer-verification',
-  imports: [CommonModule, FormsModule, AsyncPipe],
+  imports: [CommonModule, FormsModule, AsyncPipe, PaginationComponent],
   templateUrl: './admin-trainer-verification.component.html',
   styleUrl: './admin-trainer-verification.component.scss',
 })
@@ -42,14 +44,20 @@ export class AdminTrainerVerificationComponent implements OnInit {
   rejectingTrainers = new Set<string>();
   isSubmittingRejection = false;
 
+  usersMeta$!: Observable<{ total: number; totalPages: number; page: number; limit: number }>;
+
+
   readonly S3_BASE_URL =
     'https://vortexfit-app-upload.s3.ap-south-1.amazonaws.com/';
+
   constructor(
     private store: Store<AppState>,
     private adminService: AdminService,
     private notyService: NotyService
   ) {
     this.unverifiedTrainers$ = this.store.select(selectUnverifiedTrainers);
+    this.usersMeta$ = this.store.select(selectUsersMeta);
+
   }
 
   ngOnInit(): void {
@@ -140,6 +148,13 @@ export class AdminTrainerVerificationComponent implements OnInit {
 
     return true;
   }
+
+  onPageChange(newPage: number): void {
+  this.store.dispatch(
+    loadUnverifiedTrainers({ query: { page: newPage, limit: 2 } })
+  );
+}
+
 
   onRejectionReasonChange(reason: string): void {
     this.selectedRejectionReason = reason;

@@ -14,7 +14,7 @@ export const selectUsersMeta = createSelector(
   (state) => ({
     total: Number(state.total),
     totalPages: Number(state.totalPages),
-    page: Number(state.page),
+    page: Number(state.page),   
     limit: Number(state.limit)
   })
 );
