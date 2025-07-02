@@ -1,53 +1,60 @@
-<div
-  class="min-h-screen flex items-center justify-center px-4 py-12"
-  [ngClass]="{
-    'bg-gradient-to-br from-blue-50 to-blue-100': role === 'user',
-    'bg-gradient-to-br from-red-50 to-red-100': role === 'trainer'
-  }"
->
-  <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-xl">
-    <div class="text-center">
-      <h1
-        class="text-3xl font-extrabold"
-        [ngClass]="{
-          'text-blue-900': role === 'user',
-          'text-red-900': role === 'trainer'
-        }"
-      >
-        Welcome Back!
+<div class="min-h-screen fitness-bg flex items-center justify-center px-4 py-12 relative overflow-hidden">
+  <!-- Decorative Elements -->
+  <div class="absolute top-10 left-10 w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full opacity-20 floating-animation"></div>
+  <div class="absolute bottom-10 right-10 w-16 h-16 bg-gradient-to-r from-green-500 to-teal-600 rounded-full opacity-20 floating-animation animation-delay-1"></div>
+  <div class="absolute top-1/2 left-5 w-12 h-12 bg-gradient-to-r from-pink-500 to-red-600 rounded-full opacity-20 floating-animation animation-delay-2"></div>
+  
+  <div class="max-w-md w-full space-y-8 glass-effect p-8 rounded-3xl shadow-2xl slide-in relative">
+    <!-- Logo and Header -->
+    <div class="text-center relative">
+      <div class="fitness-icon inline-block mb-4 floating-animation">
+        <i class="fas fa-dumbbell text-white text-2xl"></i>
+      </div>
+      <div class="absolute -top-2 left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full opacity-30 pulse-ring"></div>
+      
+      <h1 class="text-4xl font-extrabold vortex-logo mb-2">
+        VortexFit
       </h1>
-      <p class="mt-2 text-gray-600">
-        {{ role === "user" ? "Fitness Enthusiast" : "Fitness Trainer" }}
-      </p>
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">Welcome Back!</h2>
+      <div class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700">
+        <i class="fas mr-2" 
+           [ngClass]="{
+             'fa-user-circle text-blue-500': role === 'user',
+             'fa-dumbbell text-red-500': role === 'trainer'
+           }"></i>
+        <span>{{ role === 'user' ? 'Fitness Enthusiast' : 'Fitness Trainer' }}</span>
+      </div>
     </div>
 
-    <form
-      [formGroup]="loginForm"
-      (ngSubmit)="onSubmit()"
-      class="mt-8 space-y-6"
-    >
-      <div class="rounded-md shadow-sm space-y-4">
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700"
-            >Email Address</label
-          >
-          <input
-            id="email"
-            type="email"
-            formControlName="email"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors"
-            [ngClass]="{
-              'focus:ring-blue-500': role === 'user',
-              'focus:ring-red-500': role === 'trainer'
-            }"
-            placeholder="john@example.com"
-          />
-          <div
-            *ngIf="
-              loginForm.get('email')?.touched && loginForm.get('email')?.errors
-            "
-            class="mt-1 text-sm text-red-600"
-          >
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
+      <div class="space-y-4">
+        <!-- Email Field -->
+        <div class="group">
+          <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
+            <i class="fas fa-envelope mr-2 text-gray-500"></i>Email Address
+          </label>
+          <div class="relative">
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none transition-all duration-300 bg-white/90"
+              [ngClass]="{
+                'focus:border-blue-500 focus:shadow-blue-100': role === 'user',
+                'focus:border-red-500 focus:shadow-red-100': role === 'trainer',
+                'border-green-300': loginForm.get('email')?.valid && loginForm.get('email')?.touched,
+                'border-red-300': loginForm.get('email')?.invalid && loginForm.get('email')?.touched
+              }"
+              placeholder="john@example.com"
+            />
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+              <i class="fas fa-check text-green-500" 
+                 *ngIf="loginForm.get('email')?.valid && loginForm.get('email')?.touched"></i>
+            </div>
+          </div>
+          <div class="mt-1 text-sm text-red-600" 
+               *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors">
             <p *ngIf="loginForm.get('email')?.errors?.['required']">
               Email is required.
             </p>
@@ -57,28 +64,30 @@
           </div>
         </div>
 
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700"
-            >Password</label
-          >
-          <input
-            id="password"
-            type="password"
-            formControlName="password"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors"
-            [ngClass]="{
-              'focus:ring-blue-500': role === 'user',
-              'focus:ring-red-500': role === 'trainer'
-            }"
-            placeholder="••••••••"
-          />
-          <div
-            *ngIf="
-              loginForm.get('password')?.touched &&
-              loginForm.get('password')?.errors
-            "
-            class="mt-1 text-sm text-red-600"
-          >
+        <!-- Password Field -->
+        <div class="group">
+          <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
+            <i class="fas fa-lock mr-2 text-gray-500"></i>Password
+          </label>
+          <div class="relative">
+            <input
+              id="password"
+              type="password"
+              formControlName="password"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none transition-all duration-300 bg-white/90 pr-12"
+              [ngClass]="{
+                'focus:border-blue-500 focus:shadow-blue-100': role === 'user',
+                'focus:border-red-500 focus:shadow-red-100': role === 'trainer',
+                'border-red-300': loginForm.get('password')?.invalid && loginForm.get('password')?.touched
+              }"
+              placeholder="••••••••"
+            />
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+              <i class="fas fa-eye text-gray-400 hover:text-gray-600 cursor-pointer"></i>
+            </div>
+          </div>
+          <div class="mt-1 text-sm text-red-600" 
+               *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors">
             <p *ngIf="loginForm.get('password')?.errors?.['required']">
               Password is required.
             </p>
@@ -86,27 +95,48 @@
         </div>
       </div>
 
+      <!-- Submit Button -->
       <div class="relative">
-        <app-spinner
-          [isLoading]="(loading$ | async)!"
-          [role]="role"
-        ></app-spinner>
+        <app-spinner [isLoading]="(loading$ | async)!" [role]="role"></app-spinner>
         <button
           type="submit"
           [disabled]="(loading$ | async)!"
-          class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          class="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-xl text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           [ngClass]="{
-            'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500':
-              role === 'user',
-            'bg-red-600 hover:bg-red-700 focus:ring-red-500': role === 'trainer'
+            'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:ring-blue-500 shadow-lg hover:shadow-xl': role === 'user',
+            'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:ring-red-500 shadow-lg hover:shadow-xl': role === 'trainer'
           }"
         >
-          <i class="fas fa-sign-in-alt mr-2" *ngIf="!(loading$ | async)!"></i>
-          {{ (loading$ | async)! ? "Signing In..." : "Sign In" }}
+          <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+            <i class="group-hover:text-white/80" 
+               [ngClass]="(loading$ | async)! ? 'fas fa-spinner fa-spin' : 'fas fa-sign-in-alt'"></i>
+          </span>
+          <span>{{ (loading$ | async)! ? 'Signing In...' : 'Sign In' }}</span>
         </button>
       </div>
 
-      <div class="text-center mt-4">
+      <!-- Divider -->
+      <div class="relative">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-300"></div>
+        </div>
+        <div class="relative flex justify-center text-sm">
+          <span class="px-2 bg-white text-gray-500">Or continue with</span>
+        </div>
+      </div>
+
+      <!-- Google Login -->
+      <button 
+        type="button"
+        (click)="onGoogleLogin()"
+        class="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white border-2 border-gray-200 text-gray-700 font-semibold rounded-xl shadow-sm hover:shadow-md hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 group"
+      >
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5 group-hover:scale-110 transition-transform">
+        Continue with Google
+      </button>
+
+      <!-- Additional Links -->
+      <div class="flex flex-col space-y-3 text-center">
         <button
           type="button"
           (click)="navigateToForgotPassword()"
@@ -116,35 +146,21 @@
             'text-red-600 hover:text-red-500': role === 'trainer'
           }"
         >
-          Forgot your password?
+          <i class="fas fa-key mr-1"></i>Forgot your password?
         </button>
-      </div>
-
-            <div class="text-center mt-4">
+        
         <button
           type="button"
           (click)="redirectTosignup()"
-          class="text-sm font-medium focus:outline-none focus:underline transition-colors"
+          class="text-sm font-medium focus:outline-none transition-colors"
           [ngClass]="{
             'text-blue-600 hover:text-blue-500': role === 'user',
             'text-red-600 hover:text-red-500': role === 'trainer'
           }"
         >
-          signup
+          Don't have an account? <span class="font-semibold">Sign up</span>
         </button>
       </div>
-    <div class="ml-20">
-<button 
-  (click)="onGoogleLogin()" 
-  class="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-700 font-medium rounded-xl shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-200"
->
-  <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5">
-  Continue with Google
-</button>
-    </div>
-
-
-
     </form>
   </div>
 </div>

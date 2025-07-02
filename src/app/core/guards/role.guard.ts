@@ -17,7 +17,6 @@ export function RoleGuard(): CanActivateFn {
     const store = inject(Store<AuthState>);
     const router = inject(Router);
     const allowedRoles = route.data['role'] as string | string[];
-
     return store.select(selectCurrentUser).pipe(
       take(1),
       map((user) => {

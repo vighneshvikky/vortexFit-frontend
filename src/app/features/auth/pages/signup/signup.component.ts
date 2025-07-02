@@ -12,13 +12,13 @@ import {
 } from '../../../../core/validators/password.validators';
 import { CommonModule } from '@angular/common';
 import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NotyService } from '../../../../core/services/noty.service';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SpinnerComponent],
+  imports: [CommonModule, ReactiveFormsModule, SpinnerComponent, RouterModule],
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
 })

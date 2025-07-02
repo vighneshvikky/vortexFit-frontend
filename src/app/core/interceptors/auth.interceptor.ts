@@ -36,7 +36,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (excludedUrls.some((url) => req.url.includes(url))) {
       return next.handle(req); 
     }
-    console.log('AuthInterceptor intercepted:', req.url);
+  
     const clonedRequest = req.clone({
       withCredentials: true,
     });
@@ -50,7 +50,6 @@ export class AuthInterceptor implements HttpInterceptor {
           (error.error?.message === 'User is blocked or not found' ||
             error.error?.message === 'Trainer is blocked or not found')
         ) {
-          console.log('Trying to navigate to /blocked');
           this.zone.run(() => {
             this.router.navigate(['/blocked']).then((success) => {
               console.log('Navigation success:', success);
@@ -67,7 +66,6 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<T>,
     next: HttpHandler
   ): Observable<HttpEvent<T>> {
-    console.log('handling 401 erro');
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(false);
@@ -79,7 +77,6 @@ export class AuthInterceptor implements HttpInterceptor {
           return next.handle(req);
         }),
         catchError((err) => {
-          console.error('Token refresh failed', err);
           this.isRefreshing = false;
           this.router.navigate(['/admin/login']);
           return throwError(() => err);

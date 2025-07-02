@@ -22,7 +22,7 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User | Trainer | null>(null);
   public user$ = this.userSubject.asObservable();
   registerUser(data: SignupRequest): Observable<ApiResponse<SignupResponse>> {
-    console.log('data', data);
+
     return this.http
       .post<ApiResponse<SignupResponse>>(`${this.api}/signup`, data)
       .pipe(
@@ -33,7 +33,7 @@ export class AuthService {
   }
 
   verifyOtp(email: string, otp: string, role: string) {
-    console.log('email', email);
+    
     return this.http.post<ApiResponse<OtpVerificationResponse>>(
       `${this.api}/verify-otp`,
       { email, otp, role }
@@ -41,7 +41,7 @@ export class AuthService {
   }
 
   resendOtp(email: string, role: string) {
-    console.log(email);
+
     return this.http.post<ApiResponse<OtpVerificationRequest>>(
       `${this.api}/resend-otp`,
       { email, role }
@@ -49,7 +49,7 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    console.log('hai');
+    
     const data$ = this.http
       .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials, {
         withCredentials: true,
