@@ -67,7 +67,6 @@ export class AuthEffects {
           .login({ email, password, role: role as 'user' | 'trainer' })
           .pipe(
             map((response) => {
-              console.log('response', response);
               if (!response) {
                 throw new Error('No response received');
               }
@@ -112,9 +111,6 @@ export class AuthEffects {
           const role = user.role as UserRole;
           if (role === 'trainer' || role === 'user') {
             const verifiedUser = user as User | Trainer;
-            console.log('verification', verifiedUser.isVerified);
-            console.log('verifiedUser', verifiedUser);
-            console.log('verificationStatus', verifiedUser.verificationStatus);
             if (verifiedUser.isVerified) {
               const dashboardRoute =
                 role === 'trainer' ? '/trainer/dashboard' : '/user/dashboard';
@@ -129,13 +125,12 @@ export class AuthEffects {
                 role === 'trainer'
                   ? '/auth/trainer-requests'
                   : '/auth/user-details';
-              console.log('trainer req', requestRoute);
+
               this.router.navigate([requestRoute]);
             }
           } else if (role === 'admin') {
             this.router.navigate(['/admin/dashboard']);
           } else {
-            console.error('Unknow role:', role);
             this.notyService.showError('Invalid user role');
           }
         })
@@ -143,13 +138,14 @@ export class AuthEffects {
     { dispatch: false }
   );
 
-
   logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(logout),
       switchMap(() =>
         this.authService.logout().pipe(
-          map((response) => logoutSuccess({ role: (response as { role: string }).role })),
+          map((response) =>
+            logoutSuccess({ role: (response as { role: string }).role })
+          ),
           catchError((error) => {
             const errorMsg =
               error?.error?.message || error?.message || 'Logout failed';
@@ -161,19 +157,18 @@ export class AuthEffects {
     )
   );
 
-redirectAfterLogout$ = createEffect(
-  () =>
-    this.actions$.pipe(
-      ofType(logoutSuccess),
-      tap(({ role }) => {
-       if(role === 'admin'){
-        this.router.navigate(['/admin/login'])
-       }else{
-        this.router.navigate(['/auth/login'], {queryParams: {role}})
-       }
-      })
-    ),
-  { dispatch: false }
-);
-
+  redirectAfterLogout$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(logoutSuccess),
+        tap(({ role }) => {
+          if (role === 'admin') {
+            this.router.navigate(['/admin/login']);
+          } else {
+            this.router.navigate(['/auth/login'], { queryParams: { role } });
+          }
+        })
+      ),
+    { dispatch: false }
+  );
 }

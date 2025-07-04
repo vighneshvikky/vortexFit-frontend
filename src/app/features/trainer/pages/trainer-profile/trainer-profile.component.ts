@@ -132,7 +132,6 @@ import { CATEGORIES, CATEGORY_TO_SPECIALIZATIONS } from '../../../../shared/cons
               .subscribe({
                 next: () => {
                   const fullUrl = `https://vortexfit-app-upload.s3.ap-south-1.amazonaws.com/${key}`;
-                  console.log('Full URL:', fullUrl);
                   this.profileForm.patchValue({ [field]: fullUrl });
                   this.profileForm.get(field)?.markAsDirty();
 

@@ -40,7 +40,7 @@ export function RoleGuard(): CanActivateFn {
           (user.role === 'trainer' || user.role === 'user') &&
           user.isBlocked
         ) {
-          console.log('User is blocked');
+     
           router.navigate(['/blocked']);
           return false;
         }

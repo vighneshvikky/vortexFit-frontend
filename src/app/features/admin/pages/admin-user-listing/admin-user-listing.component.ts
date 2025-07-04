@@ -81,7 +81,7 @@ export class AdminUserListingComponent implements OnInit {
   }
 
   onPageChange(page: number): void {
-     console.log('Page changed to:', page); 
+
   this.loadUsers(this.searchTerm, page);
 }
 
