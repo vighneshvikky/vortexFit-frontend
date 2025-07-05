@@ -9,6 +9,10 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { firstValueFrom } from 'rxjs';
 import {
   Availability,
@@ -29,21 +33,24 @@ interface CalendarDay {
   isCurrentMonth: boolean;
   isSelected: boolean;
   isToday: boolean;
-  hasAvailability?: boolean; // New property to track availability
-  isPastDate?: boolean; // New property to track past dates
+  hasAvailability?: boolean;
+  isPastDate?: boolean;
+  activeSlotCount?: number;
 }
 
 interface TimeSlot {
+  id?: string;
   start: string;
   end: string;
+  isActive: boolean;
+  isDefault: boolean;
+  dateSpecific?: boolean;
 }
 
-interface Session {
-  id: string;
-  clientName: string;
-  startTime: string;
-  endTime: string;
-  status: 'confirmed' | 'pending' | 'completed';
+interface DayAvailability {
+  date: string;
+  slots: TimeSlot[];
+  hasActiveSlots: boolean;
 }
 
 @Component({
@@ -59,6 +66,10 @@ interface Session {
     MatSnackBarModule,
     MatProgressSpinnerModule,
     MatIconModule,
+    MatSlideToggleModule,
+    MatCardModule,
+    MatTabsModule,
+    MatExpansionModule,
     FormsModule,
   ],
   templateUrl: './availablity.component.html',
@@ -74,30 +85,42 @@ export class AvailabilityComponent implements OnInit {
   calendarDays: CalendarDay[] = [];
   dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+  // Default time slots that apply to all days
+  defaultTimeSlots: TimeSlot[] = [
+    { start: '09:00', end: '10:00', isActive: true, isDefault: true },
+    { start: '10:00', end: '11:00', isActive: true, isDefault: true },
+    { start: '11:00', end: '12:00', isActive: true, isDefault: true },
+    { start: '14:00', end: '15:00', isActive: true, isDefault: true },
+    { start: '15:00', end: '16:00', isActive: true, isDefault: true },
+    { start: '16:00', end: '17:00', isActive: true, isDefault: true },
+  ];
+
   // Store all availability data for the month
-  monthlyAvailability: Map<string, Availability> = new Map();
+  monthlyAvailability: Map<string, DayAvailability> = new Map();
 
-  // Availability state
-  showAvailabilityForm = false;
-  newTimeSlots: TimeSlot[] = [{ start: '', end: '' }];
-  currentAvailability: Availability | null = null;
-  availabilityData: {
-    date: string;
-    slots: { start: string; end: string }[];
-  } | null = null;
+  // Current day's availability
+  currentDayAvailability: DayAvailability | null = null;
 
+  // UI State
+  showSlotManagement = false;
+  showDefaultSlotManager = false;
+  newSlot: TimeSlot = { start: '', end: '', isActive: true, isDefault: false };
   loading = false;
   error: string | null = null;
+  activeTab = 0; // 0: Day View, 1: Default Settings
 
   async ngOnInit() {
     // Select today by default
     const today = new Date();
     this.selectedDate = this.formatDateForApi(today);
 
-    // Load monthly availability first, then generate calendar
+    // Load default settings first
+    await this.loadDefaultSlots();
+
+    // Load monthly availability and generate calendar
     await this.loadMonthlyAvailability();
     this.generateCalendar();
-    this.loadAvailability();
+    this.loadDayAvailability();
   }
 
   get currentMonthYear(): string {
@@ -111,20 +134,15 @@ export class AvailabilityComponent implements OnInit {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
 
-    // First day of the month
     const firstDay = new Date(year, month, 1);
-    // Last day of the month
     const lastDay = new Date(year, month + 1, 0);
-
-    // Start from the first Sunday of the calendar view
     const startDate = new Date(firstDay);
     startDate.setDate(startDate.getDate() - startDate.getDay());
 
     this.calendarDays = [];
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset time for accurate comparison
+    today.setHours(0, 0, 0, 0);
 
-    // Generate 42 days (6 weeks)
     for (let i = 0; i < 42; i++) {
       const date = new Date(startDate);
       date.setDate(date.getDate() + i);
@@ -134,13 +152,16 @@ export class AvailabilityComponent implements OnInit {
       const isToday = this.isSameDate(date, today);
       const isSelected = this.selectedDate === fullDate;
 
-      // Check if it's a past date
       const dateForComparison = new Date(date);
       dateForComparison.setHours(0, 0, 0, 0);
       const isPastDate = dateForComparison < today;
 
-      // Check if this date has availability
-      const hasAvailability = this.monthlyAvailability.has(fullDate);
+      // Get availability info for this date
+      const dayAvailability = this.getDayAvailability(fullDate);
+      const hasAvailability = dayAvailability.hasActiveSlots;
+      const activeSlotCount = dayAvailability.slots.filter(
+        (s) => s.isActive
+      ).length;
 
       this.calendarDays.push({
         date: date.getDate(),
@@ -150,6 +171,7 @@ export class AvailabilityComponent implements OnInit {
         isToday,
         isPastDate,
         hasAvailability,
+        activeSlotCount,
       });
     }
   }
@@ -157,15 +179,14 @@ export class AvailabilityComponent implements OnInit {
   selectDate(day: CalendarDay) {
     if (!day.isCurrentMonth) return;
 
-    // Update selected state
     this.calendarDays.forEach((d) => (d.isSelected = false));
     day.isSelected = true;
 
     this.selectedDate = day.fullDate;
-    this.showAvailabilityForm = false;
-    this.resetForm();
+    this.showSlotManagement = false;
+    this.resetNewSlot();
 
-    this.loadAvailability();
+    this.loadDayAvailability();
   }
 
   async previousMonth() {
@@ -180,192 +201,281 @@ export class AvailabilityComponent implements OnInit {
     this.generateCalendar();
   }
 
-  toggleAvailabilityForm() {
-    // Check if selected date is in the past
-    if (this.isSelectedDatePast()) {
-      this.notyfy.showError('Cannot set availability for past dates');
-      return;
+  // Get availability for a specific date (combines default + custom slots)
+  getDayAvailability(date: string): DayAvailability {
+    const stored = this.monthlyAvailability.get(date);
+    if (stored) {
+      return stored;
     }
 
-    this.showAvailabilityForm = !this.showAvailabilityForm;
-    if (!this.showAvailabilityForm) {
-      this.resetForm();
-    }
+    // Return default slots for this date
+    const defaultSlots = this.defaultTimeSlots.map((slot) => ({
+      ...slot,
+      id: `default-${date}-${slot.start}-${slot.end}`,
+    }));
+
+    return {
+      date,
+      slots: defaultSlots,
+      hasActiveSlots: defaultSlots.some((s) => s.isActive),
+    };
   }
 
-  addTimeSlot() {
-    this.newTimeSlots.push({ start: '', end: '' });
-  }
-
-  removeTimeSlot(index: number) {
-    if (this.newTimeSlots.length > 1) {
-      this.newTimeSlots.splice(index, 1);
-    }
-  }
-
-  async saveAvailability() {
+  loadDayAvailability() {
     if (!this.selectedDate) return;
 
-    // Check if selected date is in the past
-    if (this.isSelectedDatePast()) {
-      this.notyfy.showError('Cannot set availability for past dates');
-      return;
-    }
+    this.currentDayAvailability = this.getDayAvailability(this.selectedDate);
 
-    // Validate time slots
-    const validSlots = this.newTimeSlots.filter(
-      (slot) => slot.start && slot.end && slot.start < slot.end
-    );
-
-    if (validSlots.length === 0) {
-      this.error = 'Please add at least one valid time slot';
-      this.notyfy.showError(this.error);
-      return;
-    }
-
-    this.loading = true;
-    this.error = null;
-
-    try {
-      const slotsFormatted = validSlots.map(
-        (slot) => `${slot.start}-${slot.end}`
-      );
-
-      const payload = {
-        date: this.selectedDate,
-        slots: slotsFormatted,
-      };
-
-      const response = await firstValueFrom(
-        this.availabilityService.setAvailability(payload)
-      );
-
-      // Update availability data immediately
-      const newAvailabilityData = {
-        date: this.selectedDate,
-        slots: validSlots,
-      };
-
-      this.availabilityData = newAvailabilityData;
-
-      // Update monthly availability cache
-      this.monthlyAvailability.set(this.selectedDate, newAvailabilityData);
-
-      // Force full calendar regeneration to ensure colors update
-
-      this.generateCalendar();
-
-      this.showAvailabilityForm = false;
-      this.loadAvailability();
-      this.resetForm();
-    } catch (err) {
-      let errMsg = 'Failed to save availability';
-
-      if (typeof err === 'object' && err !== null) {
-        const backendError = err as BackendError;
-        errMsg = backendError.error?.message || 'Failed to save availability';
-      }
-
-      this.notyfy.showError(errMsg);
-    } finally {
-      this.loading = false;
-    }
-  }
-
-  async loadAvailability() {
-    if (!this.selectedDate) return;
-
+    // Load from API if needed
     this.availabilityService.getMyAvailability(this.selectedDate).subscribe({
       next: (response) => {
-        this.availabilityData = response;
-
-        // Update monthly availability cache
-        const hasSlots =
-          response && response.slots && response.slots.length > 0;
-
-        if (hasSlots) {
-          this.monthlyAvailability.set(this.selectedDate!, response);
-        } else {
-          this.monthlyAvailability.delete(this.selectedDate!);
+        if (response && response.slots) {
+          this.updateDayAvailabilityFromAPI(response);
         }
-
-        // Force regenerate calendar to update visual indicators
-
-        this.generateCalendar();
       },
       error: (err) => {
-        this.availabilityData = null;
-        this.monthlyAvailability.delete(this.selectedDate!);
-        this.generateCalendar();
+        console.log(
+          'No specific availability found for this date, using defaults'
+        );
       },
     });
   }
 
-  // Load availability for all days in the current month
+  updateDayAvailabilityFromAPI(apiResponse: any) {
+    if (!this.selectedDate) return;
+
+    const slots: TimeSlot[] = [];
+
+    // Add default slots
+    this.defaultTimeSlots.forEach((defaultSlot) => {
+      slots.push({
+        ...defaultSlot,
+        id: `default-${this.selectedDate}-${defaultSlot.start}-${defaultSlot.end}`,
+      });
+    });
+
+    // Add/update custom slots from API
+    if (apiResponse.slots) {
+      apiResponse.slots.forEach((apiSlot: any) => {
+        const existingIndex = slots.findIndex(
+          (s) => s.start === apiSlot.start && s.end === apiSlot.end
+        );
+
+        if (existingIndex >= 0) {
+          // Update existing slot
+          slots[existingIndex] = {
+            ...slots[existingIndex],
+            isActive: apiSlot.isActive !== undefined ? apiSlot.isActive : true,
+            dateSpecific: true,
+          };
+        } else {
+          // Add new custom slot
+          slots.push({
+            id:
+              apiSlot.id ||
+              `custom-${this.selectedDate}-${apiSlot.start}-${apiSlot.end}`,
+            start: apiSlot.start,
+            end: apiSlot.end,
+            isActive: apiSlot.isActive !== undefined ? apiSlot.isActive : true,
+            isDefault: false,
+            dateSpecific: true,
+          });
+        }
+      });
+    }
+
+    const dayAvailability: DayAvailability = {
+      date: this.selectedDate,
+      slots: slots.sort((a, b) => a.start.localeCompare(b.start)),
+      hasActiveSlots: slots.some((s) => s.isActive),
+    };
+
+    this.monthlyAvailability.set(this.selectedDate, dayAvailability);
+    this.currentDayAvailability = dayAvailability;
+    this.generateCalendar();
+  }
+
   async loadMonthlyAvailability() {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
 
-    // Get first and last day of the month
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-
-    // Clear existing monthly availability
     this.monthlyAvailability.clear();
 
-    // If you have a batch API to get all availability for the month, use it here
-    // For now, we'll use a different approach - load availability for each day
-    // This is a simplified version - you should implement a proper monthly API call
+    // In a real app, you'd load all month data in one API call
+    // For now, we'll populate as needed
+  }
 
+  async loadDefaultSlots() {
+    // Load default slots from API or local storage
+    // For now, using hardcoded defaults
     try {
-      // Generate all dates for the month
-      const dates = [];
-      for (let day = 1; day <= lastDay.getDate(); day++) {
-        const date = new Date(year, month, day);
-        dates.push(this.formatDateForApi(date));
-      }
-
-      // Load availability for each date (this should ideally be a single API call)
-      // You can implement this with Promise.all or use a batch API endpoint
-
-      // For now, this will be populated as we load individual dates
+      // const defaults = await this.availabilityService.getDefaultSlots();
+      // this.defaultTimeSlots = defaults;
     } catch (error) {
-      console.error('Error loading monthly availability:', error);
+      console.log('Using hardcoded default slots');
     }
   }
 
-  async deleteAvailability() {
-    if (!this.selectedDate || !this.currentAvailability) return;
+  toggleSlotStatus(slot: TimeSlot) {
+    if (!this.selectedDate || this.isSelectedDatePast()) return;
 
-    if (
-      !confirm(
-        'Are you sure you want to delete all availability for this date?'
-      )
-    ) {
+    slot.isActive = !slot.isActive;
+    this.saveDayAvailability();
+  }
+
+  addNewSlot() {
+    if (!this.selectedDate || this.isSelectedDatePast()) return;
+
+    if (!this.newSlot.start || !this.newSlot.end) {
+      this.notyfy.showError('Please fill in both start and end times');
       return;
     }
 
+    if (this.newSlot.start >= this.newSlot.end) {
+      this.notyfy.showError('End time must be after start time');
+      return;
+    }
+
+    // Check for overlapping slots
+    const hasOverlap = this.currentDayAvailability?.slots.some(
+      (slot) => slot.isActive && this.slotsOverlap(slot, this.newSlot)
+    );
+
+    if (hasOverlap) {
+      this.notyfy.showError(
+        'This time slot overlaps with an existing active slot'
+      );
+      return;
+    }
+
+    const newSlot: TimeSlot = {
+      id: `custom-${this.selectedDate}-${this.newSlot.start}-${this.newSlot.end}`,
+      start: this.newSlot.start,
+      end: this.newSlot.end,
+      isActive: true,
+      isDefault: false,
+      dateSpecific: true,
+    };
+
+    if (this.currentDayAvailability) {
+      this.currentDayAvailability.slots.push(newSlot);
+      this.currentDayAvailability.slots.sort((a, b) =>
+        a.start.localeCompare(b.start)
+      );
+      this.currentDayAvailability.hasActiveSlots =
+        this.currentDayAvailability.slots.some((s) => s.isActive);
+    }
+
+    this.saveDayAvailability();
+    this.resetNewSlot();
+    this.showSlotManagement = false;
+  }
+
+  slotsOverlap(slot1: TimeSlot, slot2: TimeSlot): boolean {
+    return slot1.start < slot2.end && slot2.start < slot1.end;
+  }
+
+  async saveDayAvailability() {
+    if (!this.selectedDate || !this.currentDayAvailability) return;
+
     this.loading = true;
-    this.error = null;
 
     try {
-      await this.availabilityService
-        .deleteAvailability(this.selectedDate)
-        .toPromise();
-      this.currentAvailability = null;
-      this.availabilityData = null;
+      const payload = {
+        date: this.selectedDate,
+        slots: this.currentDayAvailability.slots.map((slot) => ({
+          id: slot.id,
+          start: slot.start,
+          end: slot.end,
+          isActive: slot.isActive,
+          isDefault: slot.isDefault,
+          dateSpecific: slot.dateSpecific,
+        })),
+      };
 
-      // Remove from monthly availability cache
-      this.monthlyAvailability.delete(this.selectedDate);
+      await firstValueFrom(this.availabilityService.setAvailability(payload));
 
-      // Regenerate calendar to update visual indicators
+      this.monthlyAvailability.set(
+        this.selectedDate,
+        this.currentDayAvailability
+      );
       this.generateCalendar();
+      this.notyfy.showSuccess('Availability updated successfully');
     } catch (error) {
-      this.error = 'Failed to delete availability. Please try again.';
-      console.error('Error deleting availability:', error);
+      this.notyfy.showError('Failed to save availability');
+      console.error('Error saving availability:', error);
     } finally {
       this.loading = false;
     }
+  }
+
+  async updateDefaultSlots() {
+    this.loading = true;
+
+    try {
+      const payload = {
+        defaultSlots: this.defaultTimeSlots,
+      };
+
+      // await firstValueFrom(this.availabilityService.setDefaultSlots(payload));
+
+      this.notyfy.showSuccess('Default slots updated successfully');
+
+      // Refresh calendar to show updated defaults
+      this.generateCalendar();
+    } catch (error) {
+      this.notyfy.showError('Failed to update default slots');
+      console.error('Error updating default slots:', error);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  addDefaultSlot() {
+    if (!this.newSlot.start || !this.newSlot.end) {
+      this.notyfy.showError('Please fill in both start and end times');
+      return;
+    }
+
+    if (this.newSlot.start >= this.newSlot.end) { 
+      this.notyfy.showError('End time must be after start time');
+      return;
+    }
+
+    const newSlot: TimeSlot = {
+      start: this.newSlot.start,
+      end: this.newSlot.end,
+      isActive: true,
+      isDefault: true,
+    };
+
+    this.defaultTimeSlots.push(newSlot);
+    this.defaultTimeSlots.sort((a, b) => a.start.localeCompare(b.start));
+
+    this.resetNewSlot();
+    this.updateDefaultSlots();
+
+    const payload = {
+      date: this.selectedDate,
+      slots: this.defaultTimeSlots.map((slot) => `${slot.start}-${slot.end}`),
+    };
+
+    this.availabilityService.setAvailability(payload).subscribe({
+      next: (res) => {
+this.notyfy.showSuccess('Availability updated successfully');
+ console.log('✅ Availability response:', res);
+      },
+      error: (error) => {
+        console.log('hai error')
+this.notyfy.showError('Failed to update availability');
+      console.error('❌ API error:', error);
+      }
+    })
+  }
+
+  toggleDefaultSlot(slot: TimeSlot) {
+    slot.isActive = !slot.isActive;
+    this.updateDefaultSlots();
   }
 
   formatSelectedDate(): string {
@@ -380,17 +490,10 @@ export class AvailabilityComponent implements OnInit {
   }
 
   formatTime(time: string): string {
-    // Convert 24-hour format to 12-hour format
     const [hours, minutes] = time.split(':');
     const hour12 = parseInt(hours) % 12 || 12;
     const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
     return `${hour12}:${minutes} ${ampm}`;
-  }
-
-  isSelectedDateToday(): boolean {
-    if (!this.selectedDate) return false;
-    const today = new Date();
-    return this.selectedDate === this.formatDateForApi(today);
   }
 
   isSelectedDatePast(): boolean {
@@ -402,9 +505,24 @@ export class AvailabilityComponent implements OnInit {
     return selectedDateObj < today;
   }
 
-  // Check if we should show the add availability button
-  canAddAvailability(): boolean {
+  canManageSlots(): boolean {
     return this.selectedDate !== null && !this.isSelectedDatePast();
+  }
+
+  getSlotTypeLabel(slot: TimeSlot): string {
+    if (slot.isDefault && !slot.dateSpecific) return 'Default';
+    if (slot.dateSpecific) return 'Custom';
+    return 'Default';
+  }
+
+  getActiveSlotCount(): number {
+    return (
+      this.currentDayAvailability?.slots.filter((s) => s.isActive).length || 0
+    );
+  }
+
+  getTotalSlotCount(): number {
+    return this.currentDayAvailability?.slots.length || 0;
   }
 
   private formatDateForApi(date: Date): string {
@@ -418,8 +536,7 @@ export class AvailabilityComponent implements OnInit {
     return date1.toDateString() === date2.toDateString();
   }
 
-  private resetForm() {
-    this.newTimeSlots = [{ start: '', end: '' }];
-    this.error = null;
+  resetNewSlot() {
+    this.newSlot = { start: '', end: '', isActive: true, isDefault: false };
   }
 }
