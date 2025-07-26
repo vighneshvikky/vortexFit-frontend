@@ -4,7 +4,8 @@ import { TrainerVerificationComponent } from './pages/trainer-verification/train
 import { RoleGuard } from '../../core/guards/role.guard';
 import { TrainerProfileComponent } from './pages/trainer-profile/trainer-profile.component';
 import { TrainerLayoutComponent } from '../../shared/components/trainer/trainer-layout/trainer-layout.component';
-import { AvailabilityComponent } from './pages/availablity/availablity.component';
+import { TrainerSlotAvailabilityComponent } from './pages/trainer-slot-availability/trainer-slot-availability.component';
+
 export const trainerRoutes: Routes = [
   {
     path: '',
@@ -15,7 +16,7 @@ export const trainerRoutes: Routes = [
       { path: 'dashboard', component: TrainerDashboardComponent },
       { path: 'trainer-requests', component: TrainerVerificationComponent },
       { path: 'profile', component: TrainerProfileComponent },
-      { path: 'availablity', component: AvailabilityComponent },
+      { path: 'availablity', component: TrainerSlotAvailabilityComponent },
       { path: '**', redirectTo: 'dashboard' },
     ],
   },

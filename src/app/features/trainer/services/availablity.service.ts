@@ -41,23 +41,25 @@ export class AvailablityService {
     private http = inject(HttpClient);
 
 
-setAvailability(payload: any): Observable<any> {
-  console.log('🟡 Original payload:', payload);
+setAvailability(payload: any) {
+  console.log('🟡 Original payload:', payload); 
+  console.log('hai')
+  // const formattedPayload = {
+  //   date: payload.date || null,
+  //   slots: Array.isArray(payload.slots) ? payload.slots.map((slot: string) => {
+  //     const [start, end] = slot.split('-');
+  //     return { start, end };
+  //   }) : [],
+  // };
 
-  const formattedPayload = {
-    date: payload.date,
-    slots: payload.slots.map((slot: string) => {
-      const [start, end] = slot.split('-');
-      return { start, end };
-    }),
-  };
-
-  return this.http.post<any>(`${this.apiUrl}/set-availability`, formattedPayload);
+  // console.log('formatted payloaded', formattedPayload)
+  // return this.http.post<any>(`${this.apiUrl}/set-availability`, payload);
 }
 
 
-  getDefaultSlots(): Observable<AvailabilityResponse>{
-    return this.http.get<AvailabilityResponse>(`${this.apiUrl}/get-availableSlots`)
+
+  getDefaultSlots(): Observable<any>{
+    return this.http.get<any>(`${this.apiUrl}/default-slots`)
   }
 
 

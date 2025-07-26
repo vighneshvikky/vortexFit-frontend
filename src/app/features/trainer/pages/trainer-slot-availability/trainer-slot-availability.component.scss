@@ -1,0 +1,821 @@
+.trainer-slot-availability {
+  background: #f8f9fa;
+  min-height: 100vh;
+  padding: 24px;
+
+  // Main Content Area
+  .main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(139, 0, 0, 0.1);
+
+      h1 {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #8B0000;
+      }
+
+      .calendar-nav {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        button {
+          background: #8B0000;
+          color: white;
+          border: none;
+          padding: 12px;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: #DC143C;
+            transform: scale(1.05);
+          }
+
+          mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
+        }
+
+        .current-month {
+          font-size: 1.5rem;
+          font-weight: 600;
+          color: #8B0000;
+          min-width: 200px;
+          text-align: center;
+        }
+      }
+    }
+
+    .quick-actions {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      justify-content: center;
+
+      .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 24px;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+        &.primary {
+          background: #2196f3;
+          color: white;
+
+          &:hover {
+            background: #1976d2;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3);
+          }
+        }
+
+        &.accent {
+          background: #ff9800;
+          color: white;
+
+          &:hover {
+            background: #f57c00;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.3);
+          }
+        }
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      background: #e0e0e0;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(139, 0, 0, 0.1);
+
+      .day-header {
+        background: #8B0000;
+        color: white;
+        padding: 16px 8px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .calendar-day {
+        background: white;
+        min-height: 120px;
+        padding: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid #f0f0f0;
+        position: relative;
+
+        &:hover {
+          background: #fff5f5;
+          border-color: #8B0000;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(139, 0, 0, 0.1);
+        }
+
+        &.today {
+          background: #fff0f0;
+          border-color: #DC143C;
+
+          .day-number {
+            background: #DC143C;
+            color: white;
+          }
+        }
+
+        &.other-month {
+          display: none; // Hide previous/next month dates
+        }
+
+        &.has-slots {
+          background: #fff8f8;
+          border-color: #ffcccc;
+        }
+
+        .day-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 8px;
+
+          .day-number {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #8B0000;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            background: #fff0f0;
+          }
+
+          .day-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            .recurring-icon {
+              font-size: 14px;
+              color: #DC143C;
+              background: #fff0f0;
+              border-radius: 50%;
+              padding: 2px;
+            }
+
+            .add-slot-btn {
+              width: 24px;
+              height: 24px;
+              line-height: 24px;
+              background: #8B0000;
+              color: white;
+              border-radius: 50%;
+              border: none;
+              cursor: pointer;
+              transition: all 0.3s ease;
+
+              &:hover {
+                background: #DC143C;
+                transform: scale(1.1);
+              }
+
+              mat-icon {
+                font-size: 14px;
+                width: 14px;
+                height: 14px;
+                line-height: 14px;
+              }
+            }
+          }
+        }
+
+        .slots-preview {
+          .slot-count {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: #666;
+            margin-bottom: 4px;
+
+            .count-badge {
+              background: #8B0000;
+              color: white;
+              padding: 2px 6px;
+              border-radius: 10px;
+              font-size: 0.7rem;
+              font-weight: 600;
+            }
+          }
+
+          .slot-types {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+
+            .type-indicator {
+              width: 8px;
+              height: 8px;
+              border-radius: 50%;
+              
+              &.initial {
+                background: #2196f3;
+              }
+              
+              &.one-on-one {
+                background: #ff9800;
+              }
+            }
+          }
+        }
+
+        .empty-state {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 60px;
+          color: #ccc;
+          font-size: 0.75rem;
+
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            margin-bottom: 4px;
+          }
+        }
+      }
+    }
+  }
+
+  // Day Modal
+  .day-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 20px;
+
+    .day-modal {
+      background: white;
+      border-radius: 20px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(139, 0, 0, 0.3);
+
+      .modal-header {
+        background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
+        color: white;
+        padding: 24px;
+        border-radius: 20px 20px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h2 {
+          margin: 0;
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+
+        .close-btn {
+          background: rgba(255, 255, 255, 0.2);
+          border: none;
+          color: white;
+          padding: 8px;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+          }
+
+          mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+
+      .modal-content {
+        padding: 24px;
+
+        .date-info {
+          text-align: center;
+          margin-bottom: 24px;
+          padding: 16px;
+          background: #fff8f8;
+          border-radius: 12px;
+          border: 1px solid #ffcccc;
+
+          h3 {
+            margin: 0 0 8px 0;
+            color: #8B0000;
+            font-size: 1.3rem;
+          }
+
+          p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+          }
+        }
+
+        .edit-options {
+          margin-bottom: 24px;
+          padding: 16px;
+          background: #f8f9fa;
+          border-radius: 12px;
+          border: 1px solid #e9ecef;
+
+          .edit-buttons {
+            display: flex;
+            gap: 12px;
+
+            button {
+              flex: 1;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 8px;
+              padding: 12px 16px;
+              border: 2px solid #8B0000;
+              background: white;
+              color: #8B0000;
+              border-radius: 8px;
+              cursor: pointer;
+              font-weight: 500;
+              transition: all 0.3s ease;
+
+              &:hover {
+                background: #8B0000;
+                color: white;
+                transform: translateY(-2px);
+              }
+
+              mat-icon {
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+              }
+            }
+          }
+        }
+
+        .slots-list {
+          .slot-item {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s ease;
+
+            &:hover {
+              border-color: #8B0000;
+              box-shadow: 0 4px 12px rgba(139, 0, 0, 0.1);
+            }
+
+            &.initial-consultation {
+              border-left: 4px solid #2196f3;
+              background: #f8fbff;
+            }
+
+            &.one-on-one {
+              border-left: 4px solid #ff9800;
+              background: #fff8f0;
+            }
+
+            .slot-header {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 8px;
+
+              .slot-time {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #333;
+              }
+
+              .slot-type {
+                .type-chip {
+                  padding: 4px 12px;
+                  border-radius: 20px;
+                  font-size: 0.8rem;
+                  font-weight: 600;
+                  text-transform: uppercase;
+                  letter-spacing: 0.5px;
+
+                  &.initial {
+                    background: #e3f2fd;
+                    color: #1976d2;
+                  }
+
+                  &.one-on-one {
+                    background: #fff3e0;
+                    color: #f57c00;
+                  }
+                }
+              }
+            }
+
+            .slot-actions {
+              display: flex;
+              gap: 8px;
+              margin-top: 12px;
+
+              button {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 16px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+
+                &.edit-btn {
+                  background: #2196f3;
+                  color: white;
+
+                  &:hover {
+                    background: #1976d2;
+                    transform: translateY(-1px);
+                  }
+                }
+
+                &.delete-btn {
+                  background: #f44336;
+                  color: white;
+
+                  &:hover {
+                    background: #d32f2f;
+                    transform: translateY(-1px);
+                  }
+                }
+
+                mat-icon {
+                  font-size: 16px;
+                  width: 16px;
+                  height: 16px;
+                }
+              }
+            }
+          }
+
+          .no-slots {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+
+            mat-icon {
+              font-size: 48px;
+              width: 48px;
+              height: 48px;
+              color: #ccc;
+              margin-bottom: 16px;
+            }
+
+            h3 {
+              margin: 0 0 8px 0;
+              color: #8B0000;
+            }
+
+            p {
+              margin: 0;
+              color: #666;
+            }
+          }
+        }
+
+        .add-slot-section {
+          margin-top: 24px;
+          padding-top: 24px;
+          border-top: 1px solid #f0f0f0;
+
+          h3 {
+            margin: 0 0 16px 0;
+            color: #8B0000;
+            font-size: 1.1rem;
+          }
+
+          .add-buttons {
+            display: flex;
+            gap: 12px;
+
+            button {
+              flex: 1;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 8px;
+              padding: 12px 16px;
+              border: 2px solid #8B0000;
+              background: white;
+              color: #8B0000;
+              border-radius: 8px;
+              cursor: pointer;
+              font-weight: 500;
+              transition: all 0.3s ease;
+
+              &:hover {
+                background: #8B0000;
+                color: white;
+                transform: translateY(-2px);
+              }
+
+              mat-icon {
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Slot Dialog
+  .slot-dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 20px;
+
+    .slot-dialog {
+      background: white;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(139, 0, 0, 0.3);
+
+      .dialog-header {
+        background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
+        color: white;
+        padding: 24px;
+        border-radius: 20px 20px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h2 {
+          margin: 0;
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+
+        button {
+          background: rgba(255, 255, 255, 0.2);
+          border: none;
+          color: white;
+          padding: 8px;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+          }
+
+          mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+
+      .slot-form {
+        padding: 24px;
+
+        .form-section {
+          margin-bottom: 24px;
+
+          h3 {
+            margin: 0 0 12px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+          }
+
+          .slot-type-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
+            .slot-type-option {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              padding: 16px;
+              border: 2px solid #e0e0e0;
+              border-radius: 8px;
+              cursor: pointer;
+              transition: all 0.3s ease;
+
+              &:hover {
+                border-color: #8B0000;
+                background: #fff8f8;
+              }
+
+              &.selected {
+                border-color: #8B0000;
+                background: #fff0f0;
+              }
+
+              mat-icon {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                color: #666;
+              }
+
+              .slot-type-info {
+                h4 {
+                  margin: 0 0 4px 0;
+                  font-size: 1rem;
+                  font-weight: 600;
+                  color: #333;
+                }
+
+                p {
+                  margin: 0;
+                  font-size: 0.875rem;
+                  color: #666;
+                }
+              }
+            }
+          }
+
+          .time-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+          }
+
+          .recurring-options {
+            .recurring-details {
+              margin-top: 12px;
+            }
+          }
+        }
+
+        .dialog-actions {
+          display: flex;
+          justify-content: flex-end;
+          gap: 12px;
+          margin-top: 24px;
+          padding-top: 24px;
+          border-top: 1px solid #e0e0e0;
+        }
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .trainer-slot-availability {
+    padding: 16px;
+
+    .main-content {
+      .calendar-header {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+
+      .quick-actions {
+        flex-direction: column;
+        gap: 12px;
+
+        .action-btn {
+          width: 100%;
+        }
+      }
+
+      .calendar-grid {
+        .calendar-day {
+          min-height: 100px;
+          padding: 8px;
+
+          .day-header .day-actions {
+            flex-direction: column;
+            gap: 2px;
+          }
+        }
+      }
+    }
+
+    .day-modal-overlay .day-modal {
+      margin: 20px;
+      max-width: none;
+
+      .modal-content .edit-options .edit-buttons {
+        flex-direction: column;
+      }
+    }
+
+    .slot-dialog-overlay .slot-dialog {
+      margin: 20px;
+      max-width: none;
+
+      .slot-form .time-inputs {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .trainer-slot-availability {
+    background: #1a1a1a;
+
+    .main-content {
+      .calendar-header {
+        background: #2d2d2d;
+        color: #fff;
+      }
+
+      .calendar-grid {
+        .calendar-day {
+          background: #3d3d3d;
+          color: #fff;
+
+          &.today {
+            background: #4a1a1a;
+          }
+
+          &.has-slots {
+            background: #3a1a1a;
+          }
+        }
+      }
+    }
+
+    .day-modal-overlay .day-modal,
+    .slot-dialog-overlay .slot-dialog {
+      background: #2d2d2d;
+      color: #fff;
+    }
+  }
+}
+

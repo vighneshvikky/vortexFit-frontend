@@ -1,0 +1,269 @@
+<div class="trainer-slot-availability">
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- Calendar Header -->
+    <div class="calendar-header">
+      <h1>Trainer Slot Availability</h1>
+      
+      <div class="calendar-nav">
+        <button (click)="previousMonth()">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <div class="current-month">{{ getMonthYearString() }}</div>
+        <button (click)="nextMonth()">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <button class="action-btn primary" (click)="openSlotDialog('initial')">
+        <mat-icon>person_search</mat-icon>
+        Add Initial Consultation
+      </button>
+      <button class="action-btn accent" (click)="openSlotDialog('one-on-one')">
+        <mat-icon>fitness_center</mat-icon>
+        Add One-on-One Session
+      </button>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div class="calendar-grid">
+      <!-- Day Names Header -->
+      <div class="day-header" *ngFor="let dayName of dayNames">
+        {{ dayName }}
+      </div>
+
+      <!-- Calendar Days -->
+      <div 
+        class="calendar-day" 
+        *ngFor="let day of calendarDays"
+        [class.today]="isToday(day.date)"
+        [class.current-month]="isCurrentMonth(day.date)"
+        [class.other-month]="!isCurrentMonth(day.date)"
+        [class.has-slots]="day.slots.length > 0"
+        (click)="openDayModal(day.date)"
+      >
+        <div class="day-header">
+          <span class="day-number">{{ day.date.getDate() }}</span>
+          <div class="day-actions" *ngIf="isCurrentMonth(day.date)">
+            <mat-icon 
+              class="recurring-icon" 
+              *ngIf="day.isRecurring"
+              matTooltip="This day has recurring slots"
+            >
+              repeat
+            </mat-icon>
+            <button 
+              class="add-slot-btn"
+              (click)="$event.stopPropagation(); openSlotDialog('initial')"
+              matTooltip="Add slot"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Slots Preview -->
+        <div class="slots-preview" *ngIf="day.slots.length > 0">
+          <div class="slot-count">
+            <span>{{ day.slots.length }} slot{{ day.slots.length > 1 ? 's' : '' }}</span>
+            <span class="count-badge">{{ day.slots.length }}</span>
+          </div>
+          <div class="slot-types">
+            <div 
+              class="type-indicator" 
+              *ngFor="let slot of day.slots.slice(0, 3)"
+              [class.initial]="slot.type === 'initial'"
+              [class.one-on-one]="slot.type === 'one-on-one'"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="day.slots.length === 0 && isCurrentMonth(day.date)">
+          <mat-icon>schedule</mat-icon>
+          <span>No slots</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day Modal -->
+  <div class="day-modal-overlay" *ngIf="showDayModal" (click)="closeDayModal()">
+    <div class="day-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ selectedDate ? (selectedDate | date:'EEEE, MMMM d, y') : 'Day Details' }}</h2>
+        <button class="close-btn" (click)="closeDayModal()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="modal-content">
+        <!-- Date Info -->
+        <div class="date-info">
+          <h3>{{ selectedDate ? (selectedDate | date:'EEEE, MMMM d, y') : '' }}</h3>
+          <p>{{ selectedDate ? (selectedDate | date:'fullDate') : '' }}</p>
+        </div>
+
+        <!-- Edit Options -->
+        <div class="edit-options" *ngIf="selectedDate">
+          <div class="edit-buttons">
+            <button class="edit-date-btn" (click)="editSpecificDate()">
+              <mat-icon>edit_calendar</mat-icon>
+              Edit Date
+            </button>
+            <button class="edit-recurring-btn" (click)="editAllWeekdays()">
+              <mat-icon>repeat</mat-icon>
+              Edit All {{ getDayName(selectedDate.getDay()) }}s
+            </button>
+          </div>
+        </div>
+
+        <!-- Slots List -->
+        <div class="slots-list">
+          <div 
+            class="slot-item" 
+            *ngFor="let slot of selectedDaySlots"
+            [class.initial-consultation]="slot.type === 'initial'"
+            [class.one-on-one]="slot.type === 'one-on-one'"
+          >
+            <div class="slot-header">
+              <div class="slot-time">
+                {{ slot.startTime }} - {{ slot.endTime }}
+              </div>
+              <div class="slot-type">
+                <span 
+                  class="type-chip"
+                  [class.initial]="slot.type === 'initial'"
+                  [class.one-on-one]="slot.type === 'one-on-one'"
+                >
+                  {{ getSlotTypeLabel(slot.type) }}
+                </span>
+              </div>
+            </div>
+            
+            <div class="slot-actions">
+              <button class="edit-btn" (click)="editSlot(slot)">
+                <mat-icon>edit</mat-icon>
+                Edit
+              </button>
+              <button class="delete-btn" (click)="deleteSlot(slot)">
+                <mat-icon>delete</mat-icon>
+                Delete
+              </button>
+            </div>
+          </div>
+
+          <!-- No Slots State -->
+          <div class="no-slots" *ngIf="selectedDaySlots.length === 0">
+            <mat-icon>schedule</mat-icon>
+            <h3>No slots scheduled</h3>
+            <p>This day has no availability slots set up yet.</p>
+          </div>
+        </div>
+
+        <!-- Add Slot Section -->
+        <div class="add-slot-section">
+          <h3>Add New Slot</h3>
+          <div class="add-buttons">
+            <button (click)="openSlotDialog('initial')">
+              <mat-icon>person_search</mat-icon>
+              Initial Consultation
+            </button>
+            <button (click)="openSlotDialog('one-on-one')">
+              <mat-icon>fitness_center</mat-icon>
+              One-on-One Session
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slot Dialog -->
+  <div class="slot-dialog-overlay" *ngIf="showSlotDialog" (click)="closeSlotDialog()">
+    <div class="slot-dialog" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h2>{{ editingSlot ? 'Edit Slot' : 'Add New Slot' }}</h2>
+        <button mat-icon-button (click)="closeSlotDialog()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <form [formGroup]="slotForm" (ngSubmit)="saveSlot()" class="slot-form">
+        <!-- Slot Type Selection -->
+        <div class="form-section">
+          <h3>Slot Type</h3>
+          <div class="slot-type-selection">
+            <div 
+              class="slot-type-option" 
+              *ngFor="let slotType of slotTypes"
+              [class.selected]="slotForm.get('type')?.value === slotType.value"
+              (click)="slotForm.patchValue({ type: slotType.value })"
+            >
+              <mat-icon>{{ slotType.value === 'initial' ? 'person_search' : 'fitness_center' }}</mat-icon>
+              <div class="slot-type-info">
+                <h4>{{ slotType.label }}</h4>
+                <p>{{ slotType.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Time Selection -->
+        <div class="form-section">
+          <h3>Time</h3>
+          <div class="time-inputs">
+            <mat-form-field appearance="outline">
+              <mat-label>Start Time</mat-label>
+              <input matInput type="time" formControlName="startTime" required>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline">
+              <mat-label>End Time</mat-label>
+              <input matInput type="time" formControlName="endTime" required>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Recurring Options -->
+        <div class="form-section">
+          <h3>Schedule</h3>
+          <div class="recurring-options">
+            <mat-checkbox formControlName="isRecurring">
+              Set as recurring slot
+            </mat-checkbox>
+            
+            <div class="recurring-details" *ngIf="slotForm.get('isRecurring')?.value">
+              <mat-form-field appearance="outline">
+                <mat-label>Day of Week</mat-label>
+                <mat-select formControlName="dayOfWeek">
+                  <mat-option *ngFor="let dayName of dayNames; let i = index" [value]="i">
+                    {{ dayName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="dialog-actions">
+          <button mat-button type="button" (click)="closeSlotDialog()">
+            Cancel
+          </button>
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit"
+            [disabled]="!slotForm.valid"
+          >
+            {{ editingSlot ? 'Update Slot' : 'Save Slot' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
