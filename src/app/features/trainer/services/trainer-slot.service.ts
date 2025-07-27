@@ -18,11 +18,17 @@ export class TrainerSlotService {
     return this.slotsSubject.value;
   }
 
+  // Get active slots only
+  getActiveSlots(): TimeSlot[] {
+    return this.slotsSubject.value.filter(slot => slot.isActive);
+  }
+
   // Add a new slot
   addSlot(slot: Omit<TimeSlot, 'id'>): TimeSlot {
     const newSlot: TimeSlot = {
       ...slot,
-      id: this.generateId()
+      id: this.generateId(),
+      isActive: slot.isActive !== undefined ? slot.isActive : true
     };
     
     const currentSlots = this.slotsSubject.value;
@@ -53,12 +59,20 @@ export class TrainerSlotService {
     this.saveSlotsToStorage(updatedSlots);
   }
 
-  // Get slots for a specific date
+  // Clear all slots
+  clearAllSlots(): void {
+    this.slotsSubject.next([]);
+    this.saveSlotsToStorage([]);
+  }
+
+  // Get slots for a specific date (only active slots)
   getSlotsForDate(date: Date): TimeSlot[] {
     const dayOfWeek = date.getDay();
     const dateString = this.formatDate(date);
     
     return this.slotsSubject.value.filter(slot => {
+      if (!slot.isActive) return false;
+      
       if (slot.isRecurring) {
         return slot.dayOfWeek === dayOfWeek;
       } else {
@@ -67,23 +81,23 @@ export class TrainerSlotService {
     });
   }
 
-  // Get recurring slots for a specific day of week
+  // Get recurring slots for a specific day of week (only active slots)
   getRecurringSlotsForDay(dayOfWeek: number): TimeSlot[] {
     return this.slotsSubject.value.filter(slot => 
-      slot.isRecurring && slot.dayOfWeek === dayOfWeek
+      slot.isRecurring && slot.dayOfWeek === dayOfWeek && slot.isActive
     );
   }
 
-  // Get slots by type
-  getSlotsByType(type: 'initial' | 'one-on-one'): TimeSlot[] {
-    return this.slotsSubject.value.filter(slot => slot.type === type);
+  // Get slots by type (only active slots)
+  getSlotsByType(type: 'initial' | 'one-on-one' | 'group'): TimeSlot[] {
+    return this.slotsSubject.value.filter(slot => slot.type === type && slot.isActive);
   }
 
-  // Check if a date has recurring slots
+  // Check if a date has recurring slots (only active slots)
   hasRecurringSlots(date: Date): boolean {
     const dayOfWeek = date.getDay();
     return this.slotsSubject.value.some(slot => 
-      slot.isRecurring && slot.dayOfWeek === dayOfWeek
+      slot.isRecurring && slot.dayOfWeek === dayOfWeek && slot.isActive
     );
   }
 
@@ -117,10 +131,10 @@ export class TrainerSlotService {
     return start < end;
   }
 
-  // Check for overlapping slots
+  // Check for overlapping slots (only active slots)
   checkSlotOverlap(newSlot: Omit<TimeSlot, 'id'>, excludeSlotId?: string): boolean {
     const currentSlots = this.slotsSubject.value.filter(slot => 
-      excludeSlotId ? slot.id !== excludeSlotId : true
+      slot.isActive && (excludeSlotId ? slot.id !== excludeSlotId : true)
     );
 
     return currentSlots.some(existingSlot => {
@@ -178,6 +192,49 @@ export class TrainerSlotService {
     return availableSlots;
   }
 
+  // Toggle slot active status
+  toggleSlotActive(slotId: string): TimeSlot | null {
+    const currentSlots = this.slotsSubject.value;
+    const slotIndex = currentSlots.findIndex(slot => slot.id === slotId);
+    
+    if (slotIndex === -1) return null;
+    
+    const updatedSlot = {
+      ...currentSlots[slotIndex],
+      isActive: !currentSlots[slotIndex].isActive
+    };
+    
+    const updatedSlots = [...currentSlots];
+    updatedSlots[slotIndex] = updatedSlot;
+    
+    this.slotsSubject.next(updatedSlots);
+    this.saveSlotsToStorage(updatedSlots);
+    
+    return updatedSlot;
+  }
+
+  // Get slot statistics
+  getSlotStatistics(): {
+    total: number;
+    active: number;
+    inactive: number;
+    byType: { [key: string]: number };
+  } {
+    const slots = this.slotsSubject.value;
+    const stats = {
+      total: slots.length,
+      active: slots.filter(slot => slot.isActive).length,
+      inactive: slots.filter(slot => !slot.isActive).length,
+      byType: {
+        initial: slots.filter(slot => slot.type === 'initial').length,
+        'one-on-one': slots.filter(slot => slot.type === 'one-on-one').length,
+        group: slots.filter(slot => slot.type === 'group').length
+      }
+    };
+    
+    return stats;
+  }
+
   // Private helper methods
   private generateId(): string {
     return Date.now().toString() + Math.random().toString(36).substr(2, 9);
@@ -212,9 +269,10 @@ export class TrainerSlotService {
       const storedSlots = localStorage.getItem('trainer-slots');
       if (storedSlots) {
         const slots = JSON.parse(storedSlots);
-        // Convert date strings back to Date objects
+        // Convert date strings back to Date objects and ensure isActive property exists
         const parsedSlots = slots.map((slot: any) => ({
           ...slot,
+          isActive: slot.isActive !== undefined ? slot.isActive : true,
           specificDate: slot.specificDate ? new Date(slot.specificDate) : undefined
         }));
         this.slotsSubject.next(parsedSlots);
