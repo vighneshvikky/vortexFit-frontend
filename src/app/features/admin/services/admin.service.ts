@@ -86,25 +86,7 @@ export class AdminService {
     );
   }
 
-  // toggleBlockStatusAndFetchUsers(
-  //   userId: string,
-  //   role: string,
-  //   params: GetUsersParams
-  // ) {
-  //   const { page = 1, limit = 10, search = '' } = params;
-  //   return this.http.patch<PaginatedResponse<User | Trainer>>(
-  //     `${this.apiUrl}/users/${userId}/toggle-block`,
-  //     null,
-  //     {
-  //       params: {
-  //         role,
-  //         page: page.toString(),
-  //         limit: limit.toString(),
-  //         search,
-  //       },
-  //     }
-  //   );
-  // }
+
 
   toggleBlockStatus(userId: string, role: string): Observable<User | Trainer> {
     return this.http.patch<User | Trainer>(

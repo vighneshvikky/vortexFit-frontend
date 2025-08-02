@@ -1,11 +1,11 @@
 <div class="trainer-slot-availability">
-
-
   <!-- Configuration Panel -->
   <mat-card class="config-panel" *ngIf="showConfigPanel">
     <mat-card-header>
       <mat-card-title>Dynamic Slot Configuration</mat-card-title>
-      <mat-card-subtitle>Configure automatic slot generation settings</mat-card-subtitle>
+      <mat-card-subtitle
+        >Configure automatic slot generation settings</mat-card-subtitle
+      >
     </mat-card-header>
 
     <mat-card-content>
@@ -17,16 +17,40 @@
             <div class="form-row">
               <mat-form-field appearance="outline">
                 <mat-label>Initial Consultation Duration (minutes)</mat-label>
-                <input matInput type="number" formControlName="initialSessionDuration" min="15" max="120">
-                <mat-error *ngIf="dynamicConfigFormControls['initialSessionDuration'].hasError('required')">
+                <input
+                  matInput
+                  type="number"
+                  formControlName="initialSessionDuration"
+                  min="15"
+                  max="120"
+                />
+                <mat-error
+                  *ngIf="
+                    dynamicConfigFormControls[
+                      'initialSessionDuration'
+                    ].hasError('required')
+                  "
+                >
                   Duration is required
                 </mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
                 <mat-label>One-on-One Session Duration (minutes)</mat-label>
-                <input matInput type="number" formControlName="oneOnOneSessionDuration" min="30" max="180">
-                <mat-error *ngIf="dynamicConfigFormControls['oneOnOneSessionDuration'].hasError('required')">
+                <input
+                  matInput
+                  type="number"
+                  formControlName="oneOnOneSessionDuration"
+                  min="30"
+                  max="180"
+                />
+                <mat-error
+                  *ngIf="
+                    dynamicConfigFormControls[
+                      'oneOnOneSessionDuration'
+                    ].hasError('required')
+                  "
+                >
                   Duration is required
                 </mat-error>
               </mat-form-field>
@@ -39,16 +63,32 @@
             <div class="form-row">
               <mat-form-field appearance="outline">
                 <mat-label>Start Time</mat-label>
-                <input matInput type="time" formControlName="workingHoursStart">
-                <mat-error *ngIf="dynamicConfigFormControls['workingHoursStart'].hasError('required')">
+                <input
+                  matInput
+                  type="time"
+                  formControlName="workingHoursStart"
+                />
+                <mat-error
+                  *ngIf="
+                    dynamicConfigFormControls['workingHoursStart'].hasError(
+                      'required'
+                    )
+                  "
+                >
                   Start time is required
                 </mat-error>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
                 <mat-label>End Time</mat-label>
-                <input matInput type="time" formControlName="workingHoursEnd">
-                <mat-error *ngIf="dynamicConfigFormControls['workingHoursEnd'].hasError('required')">
+                <input matInput type="time" formControlName="workingHoursEnd" />
+                <mat-error
+                  *ngIf="
+                    dynamicConfigFormControls['workingHoursEnd'].hasError(
+                      'required'
+                    )
+                  "
+                >
                   End time is required
                 </mat-error>
               </mat-form-field>
@@ -61,8 +101,20 @@
             <div class="form-row">
               <mat-form-field appearance="outline">
                 <mat-label>Break Duration (minutes)</mat-label>
-                <input matInput type="number" formControlName="breakDuration" min="5" max="60">
-                <mat-error *ngIf="dynamicConfigFormControls['breakDuration'].hasError('required')">
+                <input
+                  matInput
+                  type="number"
+                  formControlName="breakDuration"
+                  min="5"
+                  max="60"
+                />
+                <mat-error
+                  *ngIf="
+                    dynamicConfigFormControls['breakDuration'].hasError(
+                      'required'
+                    )
+                  "
+                >
                   Break duration is required
                 </mat-error>
               </mat-form-field>
@@ -74,18 +126,37 @@
             <h3>Working Days</h3>
             <div class="days-selection">
               <div class="days-grid">
-                <mat-checkbox 
-                  *ngFor="let day of daysOfWeek" 
+                <mat-checkbox
+                  *ngFor="let day of daysOfWeek"
                   [value]="day.value.toString()"
-                  [checked]="dynamicConfigFormControls['selectedDays'].value?.includes(day.value)"
+                  [checked]="
+                    dynamicConfigFormControls['selectedDays'].value?.includes(
+                      day.value
+                    )
+                  "
                   (change)="toggleDaySelection(day.value, $event.checked)"
-                  class="day-checkbox">
+                  class="day-checkbox"
+                >
                   {{ day.short }}
                 </mat-checkbox>
               </div>
               <div class="quick-actions">
-                <button type="button" mat-stroked-button (click)="selectAllDays()" class="action-btn">Select All</button>
-                <button type="button" mat-stroked-button (click)="clearAllDays()" class="action-btn">Clear All</button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  (click)="selectAllDays()"
+                  class="action-btn"
+                >
+                  Select All
+                </button>
+                <button
+                  type="button"
+                  mat-stroked-button
+                  (click)="clearAllDays()"
+                  class="action-btn"
+                >
+                  Clear All
+                </button>
               </div>
             </div>
           </div>
@@ -94,10 +165,16 @@
           <div class="form-section">
             <h3>Session Types to Generate</h3>
             <div class="session-types">
-              <mat-checkbox formControlName="generateInitialSessions" class="session-checkbox">
+              <mat-checkbox
+                formControlName="generateInitialSessions"
+                class="session-checkbox"
+              >
                 Generate Initial Consultation Sessions
               </mat-checkbox>
-              <mat-checkbox formControlName="generateOneOnOneSessions" class="session-checkbox">
+              <mat-checkbox
+                formControlName="generateOneOnOneSessions"
+                class="session-checkbox"
+              >
                 Generate One-on-One Training Sessions
               </mat-checkbox>
             </div>
@@ -113,11 +190,22 @@
         </div>
 
         <div class="form-actions">
-          <button type="button" mat-stroked-button (click)="previewGeneratedSlots()" class="preview-btn">
+          <button
+            type="button"
+            mat-stroked-button
+            (click)="previewGeneratedSlots()"
+            class="preview-btn"
+          >
             <mat-icon>preview</mat-icon>
             Preview Slots
           </button>
-          <button type="submit" mat-raised-button color="primary" [disabled]="dynamicConfigForm.invalid || isLoading" class="apply-btn">
+          <button
+            type="submit"
+            mat-raised-button
+            color="primary"
+            [disabled]="dynamicConfigForm.invalid || isLoading"
+            class="apply-btn"
+          >
             <mat-icon>save</mat-icon>
             Apply Configuration
           </button>
@@ -130,25 +218,39 @@
   <mat-card class="preview-panel" *ngIf="showPreview">
     <mat-card-header>
       <mat-card-title>Generated Slots Preview</mat-card-title>
-      <mat-card-subtitle>Preview of automatically generated slots</mat-card-subtitle>
+      <mat-card-subtitle
+        >Preview of automatically generated slots</mat-card-subtitle
+      >
     </mat-card-header>
 
     <mat-card-content>
       <div class="preview-slots">
-        <div class="slot-item" *ngFor="let slot of previewSlots" [class.break-slot]="slot.isBreak">
-          <div class="slot-time">
-            {{ slot.startTime }} - {{ slot.endTime }}
-          </div>
+        <div
+          class="slot-item"
+          *ngFor="let slot of previewSlots"
+          [class.break-slot]="slot.isBreak"
+        >
+          <div class="slot-time">{{ slot.startTime }} - {{ slot.endTime }}</div>
           <div class="slot-type" [class]="'type-' + slot.type">
             <span *ngIf="slot.isBreak">Break</span>
-            <span *ngIf="!slot.isBreak">{{ slot.type === 'initial' ? 'Initial Consultation' : 'One-on-One Training' }}</span>
+            <span *ngIf="!slot.isBreak">{{
+              slot.type === "initial"
+                ? "Initial Consultation"
+                : "One-on-One Training"
+            }}</span>
           </div>
         </div>
       </div>
     </mat-card-content>
 
     <mat-card-actions>
-      <button mat-stroked-button (click)="showPreview = false" class="close-btn">Close Preview</button>
+      <button
+        mat-stroked-button
+        (click)="showPreview = false"
+        class="close-btn"
+      >
+        Close Preview
+      </button>
     </mat-card-actions>
   </mat-card>
 
@@ -156,17 +258,33 @@
   <div class="main-content">
     <!-- Action Buttons -->
     <div class="action-buttons">
-      <button mat-raised-button color="primary" (click)="showConfigPanel = !showConfigPanel" class="config-btn">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="showConfigPanel = !showConfigPanel"
+        class="config-btn"
+      >
         <mat-icon>settings</mat-icon>
-        {{ showConfigPanel ? 'Hide' : 'Show' }} Configuration
-      </button>
-      
-      <button mat-raised-button color="accent" (click)="autoGenerateSlots()" [disabled]="isLoading" class="generate-btn">
-        <mat-icon>refresh</mat-icon>
-        {{ isLoading ? 'Generating...' : 'Generate Slots' }}
+        {{ showConfigPanel ? "Hide" : "Show" }} Configuration
       </button>
 
-      <button mat-raised-button color="warn" (click)="clearAllSlots()" class="clear-btn">
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="autoGenerateSlots()"
+        [disabled]="isLoading"
+        class="generate-btn"
+      >
+        <mat-icon>refresh</mat-icon>
+        {{ isLoading ? "Generating..." : "Generate Slots" }}
+      </button>
+
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="clearAllSlots()"
+        class="clear-btn"
+      >
         <mat-icon>clear_all</mat-icon>
         Clear All Slots
       </button>
@@ -179,7 +297,7 @@
           <button mat-icon-button (click)="previousMonth()" class="nav-btn">
             <mat-icon>chevron_left</mat-icon>
           </button>
-          {{ currentMonth | date:'MMMM yyyy' }}
+          {{ currentMonth | date : "MMMM yyyy" }}
           <button mat-icon-button (click)="nextMonth()" class="nav-btn">
             <mat-icon>chevron_right</mat-icon>
           </button>
@@ -190,7 +308,10 @@
         <div class="calendar-grid">
           <!-- Calendar Header -->
           <div class="calendar-header">
-            <div class="calendar-cell header-cell" *ngFor="let day of daysOfWeek">
+            <div
+              class="calendar-cell header-cell"
+              *ngFor="let day of daysOfWeek"
+            >
               {{ day.short }}
             </div>
           </div>
@@ -198,21 +319,31 @@
           <!-- Calendar Days -->
           <div class="calendar-body">
             <div class="calendar-row" *ngFor="let week of getCalendarWeeks()">
-              <div class="calendar-cell day-cell" 
-                   *ngFor="let day of week" 
-                   [class.other-month]="day.date.getMonth() !== currentMonth.getMonth()"
-                   [class.has-slots]="day.slots.length > 0"
-                   [class.today]="isToday(day.date)"
-                   (click)="selectDay(day)">
+              <div
+                class="calendar-cell day-cell"
+                *ngFor="let day of week"
+                [class.other-month]="
+                  day.date.getMonth() !== currentMonth.getMonth()
+                "
+                [class.has-slots]="day.slots.length > 0"
+                [class.today]="isToday(day.date)"
+                (click)="selectDay(day)"
+              >
                 <div class="day-number">{{ day.date.getDate() }}</div>
                 <div class="slot-indicators" *ngIf="day.slots.length > 0">
                   <div class="slot-count">{{ day.slots.length }} slots</div>
                   <div class="slot-types">
-                    <span class="slot-type-indicator initial" *ngIf="getSlotCountByType(day.slots, 'initial') > 0">
-                      {{ getSlotCountByType(day.slots, 'initial') }}
+                    <span
+                      class="slot-type-indicator initial"
+                      *ngIf="getSlotCountByType(day.slots, 'initial') > 0"
+                    >
+                      {{ getSlotCountByType(day.slots, "initial") }}
                     </span>
-                    <span class="slot-type-indicator one-on-one" *ngIf="getSlotCountByType(day.slots, 'one-on-one') > 0">
-                      {{ getSlotCountByType(day.slots, 'one-on-one') }}
+                    <span
+                      class="slot-type-indicator one-on-one"
+                      *ngIf="getSlotCountByType(day.slots, 'one-on-one') > 0"
+                    >
+                      {{ getSlotCountByType(day.slots, "one-on-one") }}
                     </span>
                   </div>
                 </div>
@@ -226,28 +357,59 @@
     <!-- Selected Day Details -->
     <mat-card class="day-details" *ngIf="selectedDay">
       <mat-card-header>
-        <mat-card-title>{{ selectedDay.date | date:'EEEE, MMMM d, yyyy' }}</mat-card-title>
-        <mat-card-subtitle>{{ selectedDay.slots.length }} slots available</mat-card-subtitle>
+        <mat-card-title>{{
+          selectedDay.date | date : "EEEE, MMMM d, yyyy"
+        }}</mat-card-title>
+        <mat-card-subtitle
+          >{{ selectedDay.slots.length }} slots available</mat-card-subtitle
+        >
       </mat-card-header>
 
       <mat-card-content>
-        <div class="slots-list" *ngIf="selectedDay.slots.length > 0; else noSlots">
-          <div class="slot-item" *ngFor="let slot of selectedDay.slots" [class.inactive]="!slot.isActive">
+        <div
+          class="slots-list"
+          *ngIf="selectedDay.slots.length > 0; else noSlots"
+        >
+          <div
+            class="slot-item"
+            *ngFor="let slot of selectedDay.slots"
+            [class.inactive]="!slot.isActive"
+          >
             <div class="slot-info">
-              <div class="slot-time">{{ slot.startTime }} - {{ slot.endTime }}</div>
+              <div class="slot-time">
+                {{ slot.startTime }} - {{ slot.endTime }}
+              </div>
               <div class="slot-type" [class]="'type-' + slot.type">
-                {{ slot.type === 'initial' ? 'Initial Consultation' : 
-                   slot.type === 'one-on-one' ? 'One-on-One Training' : 'Group Session' }}
+                {{
+                  slot.type === "initial"
+                    ? "Initial Consultation"
+                    : slot.type === "one-on-one"
+                    ? "One-on-One Training"
+                    : "Group Session"
+                }}
               </div>
             </div>
             <div class="slot-actions">
-              <button mat-icon-button [color]="slot.isActive ? 'warn' : 'primary'" 
-                      (click)="toggleSlotActive(slot)" 
-                      [matTooltip]="slot.isActive ? 'Deactivate Slot' : 'Activate Slot'"
-                      class="action-icon-btn">
-                <mat-icon>{{ slot.isActive ? 'pause' : 'play_arrow' }}</mat-icon>
+              <button
+                mat-icon-button
+                [color]="slot.isActive ? 'warn' : 'primary'"
+                (click)="toggleSlotActive(slot)"
+                [matTooltip]="
+                  slot.isActive ? 'Deactivate Slot' : 'Activate Slot'
+                "
+                class="action-icon-btn"
+              >
+                <mat-icon>{{
+                  slot.isActive ? "pause" : "play_arrow"
+                }}</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="deleteSlot(slot)" matTooltip="Delete Slot" class="action-icon-btn">
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteSlot(slot)"
+                matTooltip="Delete Slot"
+                class="action-icon-btn"
+              >
                 <mat-icon>delete</mat-icon>
               </button>
             </div>

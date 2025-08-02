@@ -9,7 +9,10 @@ import {
 import { Trainer } from '../../../trainer/models/trainer.interface';
 import { Observable, debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectUsersList, selectUsersMeta } from '../../../../store/admin/users/user.selector';
+import {
+  selectUsersList,
+  selectUsersMeta,
+} from '../../../../store/admin/users/user.selector';
 import {
   loadUsers,
   toggleBlockAndLoadUsers,
@@ -41,16 +44,14 @@ export class AdminUserListingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-     this.users$ = this.store.select(selectUsersList);
+    this.users$ = this.store.select(selectUsersList);
 
-     this.store.select(selectUsersMeta).subscribe(meta => {
+    this.store.select(selectUsersMeta).subscribe((meta) => {
       this.totalPages = meta.totalPages;
       this.limit = meta.limit;
       this.currentPage = meta.page;
-     })
+    });
     this.loadUsers(this.searchTerm, this.currentPage);
-
-
   }
 
   private setupSearch(): void {
@@ -81,13 +82,12 @@ export class AdminUserListingComponent implements OnInit {
   }
 
   onPageChange(page: number): void {
-
-  this.loadUsers(this.searchTerm, page);
-}
-
+    this.loadUsers(this.searchTerm, page);
+  }
 
   toggleBlockStatus(user: User | Trainer): void {
-    
+   
+    console.log('user for toggle', user)
     const params: GetUsersParams = {
       page: this.currentPage,
       limit: this.limit,
@@ -103,8 +103,8 @@ export class AdminUserListingComponent implements OnInit {
     );
   }
 
-    onImageError(event: Event) {
-  const target = event.target as HTMLImageElement;
-  target.src = 'assets/images/default-user.png'; 
-}
+  onImageError(event: Event) {
+    const target = event.target as HTMLImageElement;
+    target.src = 'assets/images/default-user.png';
+  }
 }

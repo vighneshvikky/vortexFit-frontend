@@ -31,18 +31,27 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<T>,
     next: HttpHandler
   ): Observable<HttpEvent<T>> {
-    const excludedUrls = ['/auth', '/login', '/signup', '/otp'];
+    // const excludedUrls = ['/auth', '/login', '/signup', '/otp'];
 
-    if (excludedUrls.some((url) => req.url.includes(url))) {
-      return next.handle(req);
-    }
+    // if (excludedUrls.some((url) => req.url.includes(url))) {
+    //   return next.handle(req);
+    // }
+
+    const excludedUrls = ['/auth/login', '/auth/signup', '/auth/otp', '/auth/refresh'];
+
+if (excludedUrls.some((url) => req.url.includes(url))) {
+  return next.handle(req);
+}
 
     const clonedRequest = req.clone({
       withCredentials: true,
     });
     return next.handle(clonedRequest).pipe(
       catchError((error: HttpErrorResponse) => {
+        console.log('error from the backend', error);
+        console.log('error status', error.status);
         if (error.status === 401) {
+          console.log('calling hangle');
           return this.handle401Error(clonedRequest, next);
         }
         if (
@@ -69,7 +78,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(false);
-
+ console.log('hiadfjlajdf =>')
       return this.authService.refreshToken().pipe(
         switchMap(() => {
           this.refreshTokenSubject.next(true);

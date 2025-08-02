@@ -44,8 +44,12 @@ export class AdminTrainerVerificationComponent implements OnInit {
   rejectingTrainers = new Set<string>();
   isSubmittingRejection = false;
 
-  usersMeta$!: Observable<{ total: number; totalPages: number; page: number; limit: number }>;
-
+  usersMeta$!: Observable<{
+    total: number;
+    totalPages: number;
+    page: number;
+    limit: number;
+  }>;
 
   readonly S3_BASE_URL =
     'https://vortexfit-app-upload.s3.ap-south-1.amazonaws.com/';
@@ -57,7 +61,6 @@ export class AdminTrainerVerificationComponent implements OnInit {
   ) {
     this.unverifiedTrainers$ = this.store.select(selectUnverifiedTrainers);
     this.usersMeta$ = this.store.select(selectUsersMeta);
-
   }
 
   ngOnInit(): void {
@@ -104,7 +107,6 @@ export class AdminTrainerVerificationComponent implements OnInit {
 
   approveTrainer(trainer: Trainer): void {
     if (trainer && !this.isApproving(trainer._id)) {
-      // Add trainer to approving set
       this.approvingTrainers.add(trainer._id);
 
       this.store
@@ -125,7 +127,7 @@ export class AdminTrainerVerificationComponent implements OnInit {
           this.store.dispatch(
             loadUnverifiedTrainers({ query: { page: 1, limit: 2 } })
           );
-          // Remove trainer from approving set
+
           this.approvingTrainers.delete(trainer._id);
         },
         error: (error) => {
@@ -133,12 +135,13 @@ export class AdminTrainerVerificationComponent implements OnInit {
           this.notyService.showError(
             error?.error?.message || 'Failed to approve trainer'
           );
-          // Remove trainer from approving set on error
+
           this.approvingTrainers.delete(trainer._id);
         },
       });
     }
   }
+
   isRejectionValid(): boolean {
     if (!this.selectedRejectionReason) return false;
 
@@ -150,16 +153,14 @@ export class AdminTrainerVerificationComponent implements OnInit {
   }
 
   onPageChange(newPage: number): void {
-  this.store.dispatch(
-    loadUnverifiedTrainers({ query: { page: newPage, limit: 2 } })
-  );
-}
-
+    this.store.dispatch(
+      loadUnverifiedTrainers({ query: { page: newPage, limit: 2 } })
+    );
+  }
 
   onRejectionReasonChange(reason: string): void {
     this.selectedRejectionReason = reason;
     if (reason !== 'other') {
-      // Set the rejection reason based on selected option
       const selectedOption = this.rejectionReasons.find(
         (r) => r.value === reason
       );
@@ -176,16 +177,13 @@ export class AdminTrainerVerificationComponent implements OnInit {
     )
       return;
 
-    // Set submitting rejection state
     this.isSubmittingRejection = true;
 
-    // Step 1: Check if the trainer being rejected is the currently logged-in user
     this.store
       .select(selectCurrentUser)
       .pipe(take(1))
       .subscribe((currentUser) => {
         if (currentUser && currentUser._id === this.selectedTrainer!._id) {
-          // Only update the auth state if the rejected trainer is the logged-in user
           this.store.dispatch(
             updateCurrentUserVerificationStatus({ status: 'rejected' })
           );
@@ -194,7 +192,6 @@ export class AdminTrainerVerificationComponent implements OnInit {
           );
         }
 
-        // Step 2: Proceed with rejection API call
         this.adminService
           .rejectTrainer(this.selectedTrainer!._id, this.rejectionReason)
           .subscribe({
@@ -203,7 +200,7 @@ export class AdminTrainerVerificationComponent implements OnInit {
               this.closeRejectionModal();
               this.closeTrainerModal();
               this.store.dispatch(loadUsers({ params: { role: 'trainer' } }));
-              // Reset submitting state
+
               this.isSubmittingRejection = false;
             },
             error: (error) => {
@@ -211,7 +208,7 @@ export class AdminTrainerVerificationComponent implements OnInit {
               this.notyService.showError(
                 error?.error?.message || 'Failed to reject trainer'
               );
-              // Reset submitting state on error
+
               this.isSubmittingRejection = false;
             },
           });

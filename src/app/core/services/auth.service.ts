@@ -12,12 +12,14 @@ import { LoginRequest } from '../interfaces/auth/login-request.model';
 
 import { Trainer } from '../../features/trainer/models/trainer.interface';
 import { User } from '../../features/admin/services/admin.service';
+import { environment } from '../../../enviorments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private api = 'http://localhost:3000/auth';
+  
+  private api = `${environment.api}/auth`;
   constructor(private http: HttpClient) {}
   private userSubject = new BehaviorSubject<User | Trainer | null>(null);
   public user$ = this.userSubject.asObservable();
@@ -48,22 +50,15 @@ export class AuthService {
     );
   }
 
+
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    
-    const data$ = this.http
+    return this.http
       .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials, {
         withCredentials: true,
       })
       .pipe(map((res) => res.data));
-
-    data$.subscribe({
-      next: (data) => console.log('data from BE', data),
-      error: (err) => console.error('error from BE', err),
-    });
-
-    return data$;
   }
-
+  
   forgotPassword(email: string, role: string): Observable<ApiResponse<null>> {
     return this.http.post<ApiResponse<null>>(`${this.api}/forgot-password`, {
       email,
@@ -119,9 +114,7 @@ export class AuthService {
     );
   }
 
-  // getCurrentUser(): Observable<User | Trainer> {
-  //   return this.http.get<User | Trainer>(`${this.api}/getUser`);
-  // }
+
 
   logout() {
     return this.http.post(`${this.api}/logout`, {}, { withCredentials: true });

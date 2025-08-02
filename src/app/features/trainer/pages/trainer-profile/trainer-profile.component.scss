@@ -1,24 +1,170 @@
-// Optional SCSS for additional customizations
-// Most styling is handled by Tailwind classes
+// Enhanced animations and styling for the redesigned trainer profile
 
-.profile-summary {
-  // Smooth animations
-  animation: fadeInUp 0.3s ease-out;
+// Main container animations
+.profile-container {
+  animation: fadeInUp 0.6s ease-out;
 }
 
+// Hero section enhancements
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+    pointer-events: none;
+  }
+}
+
+// Profile image hover effects
+.profile-image {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Status indicator animation
+.status-indicator {
+  animation: pulse 2s infinite;
+}
+
+// Card hover effects
+.info-card {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Pricing cards with gradient backgrounds
+.pricing-card {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  &:hover::before {
+    opacity: 1;
+  }
+  
+  &.purple::before {
+    background: linear-gradient(135deg, rgba(147, 51, 234, 0.1) 0%, rgba(126, 34, 206, 0.1) 100%);
+  }
+}
+
+// Modal enhancements
 .modal-backdrop {
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(8px);
+  animation: backdropFadeIn 0.3s ease-out;
 }
 
 .modal-content {
-  animation: modalSlideIn 0.2s ease-out;
+  animation: modalSlideIn 0.4s ease-out;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+
+// Form input enhancements
+.form-input {
+  transition: all 0.3s ease;
+  
+  &:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.15);
+  }
+}
+
+// Button hover effects
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  &:hover::before {
+    left: 100%;
+  }
+}
+
+// File input styling
+.file-input {
+  position: relative;
+  
+  &::before {
+    content: '📁';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    pointer-events: none;
+  }
+  
+  input[type="file"] {
+    padding-left: 40px;
+    
+    &:hover {
+      border-color: #ef4444 !important;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+  }
+}
+
+// Scrollbar customization
+.modal-content {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ef4444, #dc2626);
+    border-radius: 4px;
+    
+    &:hover {
+      background: linear-gradient(180deg, #dc2626, #b91c1c);
+    }
+  }
 }
 
 // Animations
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -29,38 +175,103 @@
 @keyframes modalSlideIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.9) translateY(-20px);
   }
   to {
     opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes backdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+// Responsive design enhancements
+@media (max-width: 768px) {
+  .hero-section {
+    height: 200px;
+  }
+  
+  .profile-image {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .modal-content {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+  }
+}
+
+// Loading states
+.loading {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 1.5s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+// Success/error states
+.success-state {
+  animation: successPulse 0.6s ease-out;
+}
+
+.error-state {
+  animation: errorShake 0.6s ease-out;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
     transform: scale(1);
   }
 }
 
-// Custom scrollbar for modal
-.modal-content {
-  &::-webkit-scrollbar {
-    width: 6px;
+@keyframes errorShake {
+  0%, 100% {
+    transform: translateX(0);
   }
-  
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
+  25% {
+    transform: translateX(-5px);
   }
-  
-  &::-webkit-scrollbar-thumb {
-    background: #ef4444;
-    border-radius: 3px;
-    
-    &:hover {
-      background: #dc2626;
-    }
-  }
-}
-
-// File input hover effects
-input[type="file"] {
-  &:hover {
-    border-color: #ef4444 !important;
+  75% {
+    transform: translateX(5px);
   }
 }
