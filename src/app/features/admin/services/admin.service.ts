@@ -43,6 +43,7 @@ export interface GetUsersParams {
   role?: 'user' | 'trainer';
   page?: number;
   limit?: number;
+  filter?: 'user' | 'trainer' | 'all';
 }
 
 export interface PaginatedResponse<T> {
@@ -86,8 +87,6 @@ export class AdminService {
     );
   }
 
-
-
   toggleBlockStatus(userId: string, role: string): Observable<User | Trainer> {
     return this.http.patch<User | Trainer>(
       `${this.apiUrl}/users/${userId}/toggle-block`,
@@ -116,9 +115,11 @@ export class AdminService {
   }
 
   approveTrainer(trainerId: string): Observable<Trainer> {
-  return this.http.patch<Trainer>(`${this.apiUrl}/verify-trainer/${trainerId}`, {});
-}
-
+    return this.http.patch<Trainer>(
+      `${this.apiUrl}/verify-trainer/${trainerId}`,
+      {}
+    );
+  }
 
   getTrainers(): Observable<Trainer[]> {
     return this.http.get<Trainer[]>(`${this.apiUrl}/trainers`);

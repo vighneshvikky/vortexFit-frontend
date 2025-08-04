@@ -1,8 +1,14 @@
 
-<div class="flex min-h-screen">
-<app-trainer-sidebar [navItems]="navItems" (logout)="onLogout()"></app-trainer-sidebar>
+<div class="flex min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-red-100">
+  <!-- Fixed Sidebar -->
+  <div class="fixed left-0 top-0 h-full z-40">
+    <app-trainer-sidebar [navItems]="navItems" (logout)="onLogout()"></app-trainer-sidebar>
+  </div>
 
-  <div class="flex-1 bg-gray-100 p-6">
-    <router-outlet></router-outlet>
+  <!-- Main Content Area with Left Margin for Sidebar -->
+  <div class="flex-1 ml-64 min-h-screen overflow-y-auto">
+    <div class="p-6">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>

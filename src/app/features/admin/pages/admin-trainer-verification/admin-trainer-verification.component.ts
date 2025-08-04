@@ -30,7 +30,7 @@ import { PaginationComponent } from '../../../../shared/components/pagination/pa
   styleUrl: './admin-trainer-verification.component.scss',
 })
 export class AdminTrainerVerificationComponent implements OnInit {
-  unverifiedTrainers$: Observable<Trainer[]>;
+  unverifiedTrainers$: Trainer[] = [];
   selectedTrainer: Trainer | null = null;
   showRejectionModal = false;
   rejectionReason = '';
@@ -59,7 +59,7 @@ export class AdminTrainerVerificationComponent implements OnInit {
     private adminService: AdminService,
     private notyService: NotyService
   ) {
-    this.unverifiedTrainers$ = this.store.select(selectUnverifiedTrainers);
+    // this.unverifiedTrainers$ = this.store.select(selectUnverifiedTrainers);
     this.usersMeta$ = this.store.select(selectUsersMeta);
   }
 
@@ -67,6 +67,9 @@ export class AdminTrainerVerificationComponent implements OnInit {
     this.store.dispatch(
       loadUnverifiedTrainers({ query: { page: 1, limit: 2 } })
     );
+    this.store
+      .select(selectUnverifiedTrainers)
+      .subscribe((trainers) => (this.unverifiedTrainers$ = trainers));
   }
 
   isApproving(trainerId: string): boolean {
@@ -109,26 +112,16 @@ export class AdminTrainerVerificationComponent implements OnInit {
     if (trainer && !this.isApproving(trainer._id)) {
       this.approvingTrainers.add(trainer._id);
 
-      this.store
-        .select(selectCurrentUser)
-        .pipe(take(1))
-        .subscribe((currentUser) => {
-          if (currentUser && currentUser._id === trainer._id) {
-            this.store.dispatch(
-              updateCurrentUserVerificationStatus({ status: 'approved' })
-            );
-          }
-        });
-
       this.adminService.acceptTrainer(trainer._id).subscribe({
         next: () => {
           this.notyService.showSuccess('Trainer approved successfully');
           this.closeTrainerModal();
-          this.store.dispatch(
-            loadUnverifiedTrainers({ query: { page: 1, limit: 2 } })
-          );
+          // this.store.dispatch(
+          //   loadUnverifiedTrainers({ query: { page: 1, limit: 2 } })
+          // );
+          this.unverifiedTrainers$ = this.unverifiedTrainers$.filter(t => t._id !== trainer._id);
 
-          this.approvingTrainers.delete(trainer._id);
+          this.approvingTrainers.delete(trainer._id)
         },
         error: (error) => {
           console.error('Error approving trainer:', error);
@@ -178,6 +171,7 @@ export class AdminTrainerVerificationComponent implements OnInit {
       return;
 
     this.isSubmittingRejection = true;
+    const rejectTrainerId = this.selectedTrainer._id;
 
     this.store
       .select(selectCurrentUser)
@@ -193,14 +187,13 @@ export class AdminTrainerVerificationComponent implements OnInit {
         }
 
         this.adminService
-          .rejectTrainer(this.selectedTrainer!._id, this.rejectionReason)
+          .rejectTrainer(rejectTrainerId, this.rejectionReason)
           .subscribe({
             next: () => {
               this.notyService.showSuccess('Trainer rejected successfully');
               this.closeRejectionModal();
               this.closeTrainerModal();
-              this.store.dispatch(loadUsers({ params: { role: 'trainer' } }));
-
+             this.unverifiedTrainers$ = this.unverifiedTrainers$.filter(t => t._id !==  rejectTrainerId)
               this.isSubmittingRejection = false;
             },
             error: (error) => {

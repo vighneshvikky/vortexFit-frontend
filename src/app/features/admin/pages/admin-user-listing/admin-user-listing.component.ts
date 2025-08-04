@@ -38,6 +38,7 @@ export class AdminUserListingComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
   limit = 1;
+  filter: 'all' | 'user' | 'trainer' = 'all';
 
   constructor(private store: Store, private adminService: AdminService) {
     this.setupSearch();
@@ -73,6 +74,7 @@ export class AdminUserListingComponent implements OnInit {
       page,
       limit: this.limit,
       search: searchTerm,
+      filter: this.filter,
     };
     this.store.dispatch(loadUsers({ params }));
   }
@@ -86,8 +88,6 @@ export class AdminUserListingComponent implements OnInit {
   }
 
   toggleBlockStatus(user: User | Trainer): void {
-   
-    console.log('user for toggle', user)
     const params: GetUsersParams = {
       page: this.currentPage,
       limit: this.limit,
@@ -101,6 +101,15 @@ export class AdminUserListingComponent implements OnInit {
         params,
       })
     );
+  }
+
+  onFilterChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value as
+      | 'all'
+      | 'user'
+      | 'trainer';
+    this.filter = value;
+    this.loadUsers(this.searchTerm, 1);
   }
 
   onImageError(event: Event) {

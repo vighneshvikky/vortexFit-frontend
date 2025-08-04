@@ -20,10 +20,11 @@
   import { Router } from '@angular/router';
   import { HttpClient } from '@angular/common/http';
 import { CATEGORIES, CATEGORY_TO_SPECIALIZATIONS } from '../../../../shared/constants/filter-options';
+import { ButtonComponent } from "../../../../UI/button.component";
 
   @Component({
     selector: 'app-trainer-profile',
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule, ButtonComponent],
     templateUrl: './trainer-profile.component.html',
     styleUrl: './trainer-profile.component.scss',
   })
@@ -31,6 +32,7 @@ import { CATEGORIES, CATEGORY_TO_SPECIALIZATIONS } from '../../../../shared/cons
     profileForm!: FormGroup;
     currentTrainer$!: Observable<Trainer | null>;
     showEditModal = false;
+    showCertificateModal = false;
 
     categories = CATEGORIES
 
@@ -250,6 +252,37 @@ onCategoryChange(event: Event): void {
     onEscapeKey(event: KeyboardEvent) {
       if (this.showEditModal) {
         this.closeEditModal();
+      }
+      if (this.showCertificateModal) {
+        this.closeCertificateModal();
+      }
+    }
+
+    openCertificateModal() {
+      this.showCertificateModal = true;
+      document.body.style.overflow = 'hidden';
+    }
+
+    closeCertificateModal() {
+      this.showCertificateModal = false;
+      document.body.style.overflow = 'auto';
+    }
+
+    downloadCertificate() {
+      if (this.certPreviewUrl) {
+        const link = document.createElement('a');
+        link.href = this.certPreviewUrl;
+        link.download = 'certificate.jpg';
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+
+    openCertificateInNewTab() {
+      if (this.certPreviewUrl) {
+        window.open(this.certPreviewUrl, '_blank');
       }
     }
   }
