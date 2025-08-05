@@ -20,11 +20,11 @@
   import { Router } from '@angular/router';
   import { HttpClient } from '@angular/common/http';
 import { CATEGORIES, CATEGORY_TO_SPECIALIZATIONS } from '../../../../shared/constants/filter-options';
-import { ButtonComponent } from "../../../../UI/button.component";
+
 
   @Component({
     selector: 'app-trainer-profile',
-    imports: [CommonModule, ReactiveFormsModule, ButtonComponent],
+    imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './trainer-profile.component.html',
     styleUrl: './trainer-profile.component.scss',
   })

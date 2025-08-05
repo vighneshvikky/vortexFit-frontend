@@ -18,13 +18,11 @@ import { environment } from '../../../enviorments/environment';
   providedIn: 'root',
 })
 export class AuthService {
-  
   private api = `${environment.api}/auth`;
   constructor(private http: HttpClient) {}
   private userSubject = new BehaviorSubject<User | Trainer | null>(null);
   public user$ = this.userSubject.asObservable();
   registerUser(data: SignupRequest): Observable<ApiResponse<SignupResponse>> {
-
     return this.http
       .post<ApiResponse<SignupResponse>>(`${this.api}/signup`, data)
       .pipe(
@@ -35,7 +33,6 @@ export class AuthService {
   }
 
   verifyOtp(email: string, otp: string, role: string) {
-    
     return this.http.post<ApiResponse<OtpVerificationResponse>>(
       `${this.api}/verify-otp`,
       { email, otp, role }
@@ -43,13 +40,11 @@ export class AuthService {
   }
 
   resendOtp(email: string, role: string) {
-
     return this.http.post<ApiResponse<OtpVerificationRequest>>(
       `${this.api}/resend-otp`,
       { email, role }
     );
   }
-
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http
@@ -58,7 +53,7 @@ export class AuthService {
       })
       .pipe(map((res) => res.data));
   }
-  
+
   forgotPassword(email: string, role: string): Observable<ApiResponse<null>> {
     return this.http.post<ApiResponse<null>>(`${this.api}/forgot-password`, {
       email,
@@ -113,8 +108,6 @@ export class AuthService {
       }
     );
   }
-
-
 
   logout() {
     return this.http.post(`${this.api}/logout`, {}, { withCredentials: true });

@@ -16,7 +16,7 @@ export class TrainerLayoutComponent {
 navItems = [
   { icon: 'fas fa-tachometer-alt', label: 'Dashboard', route: '/trainer/dashboard' },
   { icon: 'fas fa-calendar-check', label: 'Sessions', route: '/trainer/sessions' },
-  { icon: 'fas fa-dumbbell', label: 'Availability', route: '/trainer/availablity' },
+  { icon: 'fas fa-dumbbell', label: 'Availability', route: '/trainer/scheduling' },
   { icon: 'fas fa-chart-line', label: 'Client Progress', route: '/trainer/progress' },
   { icon: 'fas fa-comment-alt', label: 'Messaging', route: '/trainer/messaging' },
   { icon: 'fas fa-bell', label: 'Notifications', route: '/trainer/notifications' },

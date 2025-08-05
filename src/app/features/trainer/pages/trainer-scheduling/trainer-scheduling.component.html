@@ -1,0 +1,350 @@
+<div class="scheduling-container">
+  <!-- Header -->
+  <div class="header">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">Trainer Scheduling</h1>
+    <p class="text-gray-600 mb-6">
+      Manage your scheduling rules and availability
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Rules Section -->
+    <div class="lg:col-span-1">
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold text-gray-800">Scheduling Rules</h2>
+          <button
+            (click)="showRuleForm = true; editingRule = null"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
+            Add Rule
+          </button>
+        </div>
+
+        <!-- Rules List -->
+        <div class="space-y-4">
+          <div
+            *ngFor="let rule of rules"
+            class="border border-gray-200 rounded-lg p-4"
+          >
+            <div class="flex justify-between items-start mb-2">
+              <div class="flex-1">
+                <h3 class="font-medium text-gray-800">
+                  {{ getSessionTypeLabel(rule.sessionType) }}
+                </h3>
+                <p class="text-sm text-gray-600">
+                  {{ formatTime(rule.startTime) }} -
+                  {{ formatTime(rule.endTime) }}
+                </p>
+                <p class="text-xs text-gray-500">
+                  {{ formatDate(rule.startDate) }} -
+                  {{ formatDate(rule.endDate) }}
+                </p>
+                <p class="text-xs text-gray-500">
+                  {{ getDaysOfWeekString(rule.daysOfWeek) }}
+                </p>
+                <p
+                  *ngIf="
+                    rule.exceptionalDays && rule.exceptionalDays.length > 0
+                  "
+                  class="text-xs text-red-500"
+                >
+                  Exceptional Days: {{ rule.exceptionalDays.length }} day(s)
+                </p>
+              </div>
+              <div class="flex items-center space-x-2">
+                <button
+                  (click)="onToggleRuleActive(rule.id!)"
+                  [class]="
+                    rule.isActive
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-gray-100 text-gray-600'
+                  "
+                  class="px-2 py-1 rounded text-xs font-medium"
+                >
+                  {{ rule.isActive ? "Active" : "Inactive" }}
+                </button>
+                <button
+                  (click)="onEditRule(rule)"
+                  class="text-blue-600 hover:text-blue-800 text-sm"
+                >
+                  Edit
+                </button>
+                <button
+                  (click)="onDeleteRule(rule.id!)"
+                  class="text-red-600 hover:text-red-800 text-sm"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+            <div class="text-xs text-gray-500">
+              Duration: {{ rule.slotDuration }}min | Buffer:
+              {{ rule.bufferTime }}min
+              <span *ngIf="rule.maxBookingsPerSlot"
+                >| Max: {{ rule.maxBookingsPerSlot }}</span
+              >
+            </div>
+          </div>
+
+          <div
+            *ngIf="rules.length === 0"
+            class="text-center py-8 text-gray-500"
+          >
+            <p>No scheduling rules created yet.</p>
+            <p class="text-sm">
+              Create your first rule to start managing your availability.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rule Details Section -->
+    <div class="lg:col-span-1">
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Rule Details</h2>
+        <div class="text-gray-600">
+          <p class="mb-4">
+            Create and manage scheduling rules to define your availability
+            patterns.
+          </p>
+          <div class="space-y-2 text-sm">
+            <p>• Set start and end dates for your availability period</p>
+            <p>• Choose specific days of the week</p>
+            <p>• Define time slots and session types</p>
+            <p>• Add exceptional days to exclude from scheduling</p>
+            <p>• Configure buffer time and booking limits</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rule Form Modal -->
+  <div
+    *ngIf="showRuleForm"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  >
+    <div
+      class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto"
+    >
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">
+        {{ editingRule ? "Edit" : "Add" }} Scheduling Rule
+      </h3>
+
+      <form
+        [formGroup]="schedulingForm"
+        (ngSubmit)="onSubmit()"
+        class="space-y-4"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Start Time -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >Start Time</label
+            >
+            <input
+              type="time"
+              formControlName="startTime"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <!-- End Time -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >End Time</label
+            >
+            <input
+              type="time"
+              formControlName="endTime"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <!-- Start Date -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >Start Date</label
+            >
+            <input
+              type="date"
+              formControlName="startDate"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <!-- End Date -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >End Date</label
+            >
+            <input
+              type="date"
+              formControlName="endDate"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Buffer Time -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >Buffer Time (minutes)</label
+            >
+            <input
+              type="number"
+              formControlName="bufferTime"
+              min="0"
+              max="60"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <!-- Session Type -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >Session Type</label
+            >
+            <select
+              formControlName="sessionType"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option *ngFor="let type of sessionTypes" [value]="type.value">
+                {{ type.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Slot Duration -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >Slot Duration (minutes)</label
+            >
+            <input
+              type="number"
+              formControlName="slotDuration"
+              min="15"
+              max="240"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <!-- Max Bookings Per Slot -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1"
+              >Max Bookings Per Slot</label
+            >
+            <input
+              type="number"
+              formControlName="maxBookingsPerSlot"
+              min="1"
+              max="10"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
+
+        <!-- Days of Week -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Days of Week</label
+          >
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <label *ngFor="let day of daysOfWeek" class="flex items-center">
+              <input
+                type="checkbox"
+                [value]="day.value"
+                [checked]="schedulingForm.get('daysOfWeek')?.value.includes(day.value)"
+                (change)="onDayOfWeekChange(day.value, $event)"
+
+                class="mr-2"
+              />
+              {{ day.label }}
+            </label>
+            
+          </div>
+        </div>
+
+        <!-- Exceptional Days -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Exceptional Days (Dates to exclude)</label
+          >
+          <div class="flex space-x-2 mb-2">
+            <input
+              type="date"
+              formControlName="exceptionalDayInput"
+              class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <button
+              type="button"
+              (click)="addExceptionalDay()"
+              class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            >
+              Add
+            </button>
+          </div>
+
+          <!-- Display added exceptional days -->
+          <!-- <div
+            *ngIf="schedulingForm.get('exceptionalDays')?.value?.length > 0"
+            class="space-y-2"
+          >
+            <div
+              *ngFor="let day of schedulingForm.get('exceptionalDays')?.value"
+              class="flex items-center justify-between bg-red-50 p-2 rounded"
+            >
+              <span class="text-sm text-red-800">{{ formatDate(day) }}</span>
+              <button
+                type="button"
+                (click)="removeExceptionalDay(day)"
+                class="text-red-600 hover:text-red-800 text-sm"
+              >
+                Remove
+              </button>
+            </div>
+          </div> -->
+          <div class="flex flex-wrap gap-2">
+            <div
+              *ngFor="let date of schedulingForm.get('exceptionalDays')?.value"
+              class="flex items-center space-x-2 px-3 py-1 bg-gray-200 rounded-full"
+            >
+              <span>{{ formatDate(date) }}</span>
+              <button
+                type="button"
+                (click)="removeExceptionalDay(date)"
+                class="text-red-500 hover:text-red-700"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+          
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex justify-end space-x-3 pt-4">
+          <button
+            type="button"
+            (click)="cancelEdit()"
+            class="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            [disabled]="!schedulingForm.valid"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ editingRule ? "Update" : "Create" }} Rule
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

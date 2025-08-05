@@ -18,13 +18,16 @@ export class TrainerService {
       profileData
     );
   }
-  updateVerificationProfile(profileData: Partial<Trainer>): Observable<Trainer> {
+  updateVerificationProfile(
+    profileData: Partial<Trainer>
+  ): Observable<Trainer> {
     profileData.verificationStatus = 'pending';
     return this.http.patch<Trainer>(
       `${this.apiUrl}/update-trainer-profile`,
       profileData
     );
   }
+
   getSignedUploadUrl(fileName: string, contentType: string, type: string) {
     return this.http.post<{ url: string; key: string }>(
       'http://localhost:3000/s3/generate-upload-url',

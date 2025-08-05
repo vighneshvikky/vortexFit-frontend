@@ -31,11 +31,6 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<T>,
     next: HttpHandler
   ): Observable<HttpEvent<T>> {
-    // const excludedUrls = ['/auth', '/login', '/signup', '/otp'];
-
-    // if (excludedUrls.some((url) => req.url.includes(url))) {
-    //   return next.handle(req);
-    // }
 
     const excludedUrls = ['/auth/login', '/auth/signup', '/auth/otp', '/auth/refresh'];
 
@@ -78,7 +73,7 @@ if (excludedUrls.some((url) => req.url.includes(url))) {
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(false);
- console.log('hiadfjlajdf =>')
+
       return this.authService.refreshToken().pipe(
         switchMap(() => {
           this.refreshTokenSubject.next(true);
