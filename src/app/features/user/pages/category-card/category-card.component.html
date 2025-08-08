@@ -1,29 +1,145 @@
 <div
-  class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-purple-100 hover:border-purple-300 group overflow-hidden"
+  class="bg-black/80 backdrop-blur-sm rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 border border-blue-500/20 hover:border-blue-500/40 group overflow-hidden transform hover:scale-105 relative"
 >
-  <div class="relative h-48 bg-gradient-to-br from-purple-400 to-purple-600 overflow-hidden">
+  <!-- Animated border effect -->
+  <div class="absolute inset-0 rounded-xl overflow-hidden">
+    <div class="animated-border"></div>
+  </div>
+
+  <!-- Floating particles inside card -->
+  <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+    <div class="card-particle" style="top: 20%; left: 10%; animation-delay: 0s;"></div>
+    <div class="card-particle" style="top: 60%; right: 15%; animation-delay: 0.5s;"></div>
+    <div class="card-particle" style="bottom: 30%; left: 20%; animation-delay: 1s;"></div>
+  </div>
+
+  <div class="relative h-48 bg-gradient-to-br from-blue-500/20 to-orange-500/20 overflow-hidden">
     <img
       [src]="imageUrl"
       [alt]="label + ' training category'"
       class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
     />
     <div
-      class="absolute inset-0 bg-purple-900 bg-opacity-20 group-hover:bg-opacity-10 transition-all duration-300"
+      class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent group-hover:from-black/40 transition-all duration-300"
     ></div>
+    <!-- Animated glow effect -->
+    <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+    
+    <!-- Scanning line effect -->
+    <div class="scanning-line"></div>
   </div>
 
-  <div class="p-6">
+  <div class="p-6 relative z-10">
     <h3
-      class="text-xl font-bold text-purple-800 mb-4 group-hover:text-purple-900 transition-colors duration-200"
+      class="text-xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors duration-200"
     >
       {{ label }}
     </h3>
     <button
-      class="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 shadow-md hover:shadow-lg"
+      class="w-full bg-gradient-to-r from-blue-500 to-orange-500 hover:from-blue-600 hover:to-orange-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 relative overflow-hidden"
       [routerLink]="['/user/trainers']"
       [queryParams]="{ category: value }"
     >
-      Find Trainers
+      <!-- Button shine effect -->
+      <div class="button-shine"></div>
+      <span class="relative z-10">Find Trainers</span>
     </button>
   </div>
+
+  <!-- Add incredible card animations -->
+  <style>
+    /* Animated border effect */
+
+    
+    .group:hover .animated-border {
+      opacity: 1;
+      animation: border-rotate 2s linear infinite;
+    }
+    
+    @keyframes border-rotate {
+      0% { background: linear-gradient(0deg, blue, orange, blue) border-box; }
+      25% { background: linear-gradient(90deg, blue, orange, blue) border-box; }
+      50% { background: linear-gradient(180deg, blue, orange, blue) border-box; }
+      75% { background: linear-gradient(270deg, blue, orange, blue) border-box; }
+      100% { background: linear-gradient(360deg, blue, orange, blue) border-box; }
+    }
+
+    /* Card particles */
+    .card-particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: blue;
+      border-radius: 50%;
+      animation: card-particle-float 3s ease-in-out infinite;
+    }
+    
+    @keyframes card-particle-float {
+      0%, 100% { transform: translateY(0px) scale(1); opacity: 0.7; }
+      50% { transform: translateY(-20px) scale(1.5); opacity: 1; }
+    }
+
+    /* Scanning line effect */
+    .scanning-line {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right, transparent, blue, orange, transparent);
+      animation: scan 3s ease-in-out infinite;
+    }
+    
+    @keyframes scan {
+      0% { left: -100%; }
+      50% { left: 100%; }
+      100% { left: 100%; }
+    }
+
+    /* Button shine effect */
+    .button-shine {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    button:hover .button-shine {
+      left: 100%;
+    }
+
+    /* Enhanced hover effects */
+    .group:hover {
+      transform: translateY(-10px) scale(1.05) rotateX(5deg);
+      box-shadow: 
+        0 20px 40px rgba(59, 130, 246, 0.3),
+        0 0 0 1px rgba(59, 130, 246, 0.5),
+        inset 0 0 20px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Glow effect on hover */
+    .group::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(45deg, blue, orange, blue);
+      border-radius: inherit;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .group:hover::before {
+      opacity: 0.5;
+      animation: glow-pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes glow-pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+  </style>
 </div>

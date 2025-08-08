@@ -1,0 +1,54 @@
+[33mc165ced[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m feat(trainer-scheduling connected to backend)
+[33mb013881[m added reusable button
+[33m1970b9e[m feat(in trainer edit profile) reusable button added
+[33mbe1a873[m update some pending
+[33m8cfd722[m working of trainer-slots
+[33m22ebbf2[m working on trainer-slt
+[33m6a85aa0[m working on trainer-availability
+[33m361057d[m removed some logs
+[33m6a34bc7[m add the auth guard
+[33m32d2359[m completed pagination in admin trainer verification component
+[33m87474f2[m removed some unwanted data
+[33m6569eb9[m fixed some bugs in admin trainer verification
+[33m49f6c23[m fix some bugs in trainer-verification
+[33m20f5e6f[m fix some type issues
+[33m1d32e37[m completed user profile
+[33m584ad4b[m logout feature completed in admin and trainer side
+[33mecba898[m completed all feature section
+[33me858df2[m fix some type  errors
+[33mdd57cea[m design the trainer profile feature
+[33m964be4f[m updated the trainer-verification
+[33mdf5c9a2[m completed some pendings
+[33m76105c3[m completed block/unblock status
+[33m8ae666f[m added 404 and block page
+[33md3374ce[m make the app_logo
+[33m280432d[m updated the ui of user-details
+[33m35aded1[m completed pagination
+[33mcce6641[m some updation in trainer-slot feature
+[33ma7dfae4[m updated trainer slot session
+[33m4fd0a3c[m working on trainer-slot component
+[33ma89dbf2[m working on trainer availability
+[33m1da583c[m completed some bugs
+[33m61e36c6[m[33m ([m[1;32mtrainer-info[m[33m)[m compelted trainer-info feature in user side
+[33m981e4f2[m completed some bugs
+[33m329fce1[m fixed some bugs
+[33m429d1a4[m fixed some bugs
+[33m7ab8489[m completed trainer price feature
+[33m23f6b45[m completed user dashboard
+[33m4a6ab14[m completed some pendings
+[33ma7dd3cf[m completed trainer profile
+[33mdfb98a9[m completed some pending
+[33mf6d09d1[m completed user-training-info form
+[33me026b6d[m trainer sidebar component added
+[33m6540685[m completed some pending
+[33m9ecd5f2[m completed trainer registration flow
+[33mdaea2a0[m google authentication completed
+[33m2347f2e[m otp page design completed
+[33m0325bcf[m trainer verification completed
+[33mbe12d4d[m completed some pending
+[33ma4ff4ab[m trainer-registration completed
+[33m10c3fe6[m admin login, userListing almost done
+[33md189b17[m completed forgot, reset password
+[33m5144076[m otp feature completed successfully
+[33m6212eb6[m first commit
+[33m7c506d7[m initial commit

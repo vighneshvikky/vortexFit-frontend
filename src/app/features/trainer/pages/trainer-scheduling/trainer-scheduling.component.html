@@ -24,7 +24,7 @@
         <!-- Rules List -->
         <div class="space-y-4">
           <div
-            *ngFor="let rule of rules"
+            *ngFor="let rule of scheduleData"
             class="border border-gray-200 rounded-lg p-4"
           >
             <div class="flex justify-between items-start mb-2">
@@ -95,26 +95,6 @@
             <p class="text-sm">
               Create your first rule to start managing your availability.
             </p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Rule Details Section -->
-    <div class="lg:col-span-1">
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-semibold text-gray-800 mb-4">Rule Details</h2>
-        <div class="text-gray-600">
-          <p class="mb-4">
-            Create and manage scheduling rules to define your availability
-            patterns.
-          </p>
-          <div class="space-y-2 text-sm">
-            <p>• Set start and end dates for your availability period</p>
-            <p>• Choose specific days of the week</p>
-            <p>• Define time slots and session types</p>
-            <p>• Add exceptional days to exclude from scheduling</p>
-            <p>• Configure buffer time and booking limits</p>
           </div>
         </div>
       </div>
@@ -259,14 +239,14 @@
               <input
                 type="checkbox"
                 [value]="day.value"
-                [checked]="schedulingForm.get('daysOfWeek')?.value.includes(day.value)"
+                [checked]="
+                  schedulingForm.get('daysOfWeek')?.value.includes(day.value)
+                "
                 (change)="onDayOfWeekChange(day.value, $event)"
-
                 class="mr-2"
               />
               {{ day.label }}
             </label>
-            
           </div>
         </div>
 
@@ -290,25 +270,6 @@
             </button>
           </div>
 
-          <!-- Display added exceptional days -->
-          <!-- <div
-            *ngIf="schedulingForm.get('exceptionalDays')?.value?.length > 0"
-            class="space-y-2"
-          >
-            <div
-              *ngFor="let day of schedulingForm.get('exceptionalDays')?.value"
-              class="flex items-center justify-between bg-red-50 p-2 rounded"
-            >
-              <span class="text-sm text-red-800">{{ formatDate(day) }}</span>
-              <button
-                type="button"
-                (click)="removeExceptionalDay(day)"
-                class="text-red-600 hover:text-red-800 text-sm"
-              >
-                Remove
-              </button>
-            </div>
-          </div> -->
           <div class="flex flex-wrap gap-2">
             <div
               *ngFor="let date of schedulingForm.get('exceptionalDays')?.value"
@@ -324,7 +285,6 @@
               </button>
             </div>
           </div>
-          
         </div>
 
         <!-- Form Actions -->

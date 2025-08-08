@@ -25,7 +25,6 @@ export class SchedulingService {
     this.loadFromStorage();
   }
 
-  // Rule Management
   addRule(ruleData: SchedulingFormData): SchedulingRule {
     console.log('ruleData', ruleData);
     const newRule: SchedulingRule = {
@@ -39,7 +38,6 @@ export class SchedulingService {
     this.rulesSubject.next(updatedRules);
     this.saveToStorage();
 
-    // Send to backend
     this.addSlotRule(newRule);
 
     return newRule;
@@ -333,16 +331,8 @@ export class SchedulingService {
     }
   }
 
-  // API Methods
-  public addSlotRule(rule: SchedulingRule) {
-    return this.http.post(`${this.apiUrl}/create`, rule).subscribe({
-      next: (response) => {
-        console.log('Rule added successfully:', response);
-      },
-      error: (error) => {
-        console.error('Error adding rule:', error);
-      },
-    });
+  public addSlotRule(rule: SchedulingRule): Observable<SchedulingRule> {
+    return this.http.post<SchedulingRule>(`${this.apiUrl}/create`, rule);
   }
 
   private updateSlotRule(rule: SchedulingRule) {
@@ -365,5 +355,16 @@ export class SchedulingService {
         console.error('Error deleting rule:', error);
       },
     });
+  }
+
+  getSchedule(): Observable<SchedulingRule[]> {
+    console.log('calling getschedules');
+    return this.http.get<SchedulingRule[]>(`${this.apiUrl}/getSchedules`);
+  }
+
+  deleteSchedule(id: string): Observable<SchedulingRule> {
+    return this.http.delete<SchedulingRule>(
+      `${this.apiUrl}/deleteSchedule/${id}`
+    );
   }
 }

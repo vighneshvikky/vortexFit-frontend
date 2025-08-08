@@ -1,246 +1,303 @@
-<div class="form-wrapper">
-  <div class="form-header">
-    <h2>Profile Settings</h2>
-    <p>Update your fitness profile information</p>
-  </div>
-
-  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
-    <!-- Personal Information Section -->
-    <div class="form-section">
-      <h3 class="section-title">Personal Information</h3>
-      
-      <!-- Name (disabled) -->
-      <div class="form-group">
-        <label for="name" class="form-label">Name</label>
-        <input 
-          id="name" 
-          formControlName="name" 
-          class="form-input disabled"
-          readonly
-        />
-      </div>
-
-      <!-- Email (disabled) -->
-      <div class="form-group">
-        <label for="email" class="form-label">Email</label>
-        <input 
-          id="email" 
-          formControlName="email" 
-          class="form-input disabled"
-          readonly
-        />
-      </div>
-
-      <!-- Date of Birth -->
-      <div class="form-group">
-        <label for="dob" class="form-label">Date of Birth *</label>
-        <input 
-          type="date" 
-          id="dob" 
-          formControlName="dob" 
-          class="form-input"
-          [class.error]="isFieldInvalid('dob')"
-        />
-        <div class="error-message" *ngIf="isFieldInvalid('dob')">
-          {{ getFieldError('dob') }}
-        </div>
-      </div>
-    </div>
-
-    <!-- Physical Attributes Section -->
-    <div class="form-section">
-      <h3 class="section-title">Physical Attributes</h3>
-      
-      <!-- Height -->
-     
-
-<!-- Height -->
-<div class="mb-6">
-  <label for="height" class="block text-sm font-semibold text-gray-800 mb-2 uppercase tracking-wide">
-    Height *
-  </label>
-  <div class="relative flex items-center">
-    <input 
-      type="number" 
-      id="height" 
-      formControlName="height" 
-      class="w-full pr-12 px-4 py-3 border-2 border-gray-300 rounded-lg text-gray-900 font-medium text-base bg-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-200"
-      [class.border-red-500]="isFieldInvalid('height')"
-      [class.focus:border-red-500]="isFieldInvalid('height')"
-      [class.focus:ring-red-100]="isFieldInvalid('height')"
-      placeholder="Enter height"
-      min="30"
-      max="300"
-      step="1"
-    />
-    <span class="absolute right-4 text-gray-700 font-semibold text-sm">cm</span>
-  </div>
-  <div 
-    class="mt-2 text-red-600 text-sm font-medium flex items-center" 
-    *ngIf="isFieldInvalid('height')"
-  >
-    <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-      <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-    </svg>
-    {{ getFieldError('height') }}
-  </div>
-</div>
-
-
-<!-- Weight -->
-<div class="mb-6">
-  <label for="weight" class="block text-sm font-semibold text-gray-800 mb-2 uppercase tracking-wide">
-    Weight *
-  </label>
-  <div class="relative flex items-center">
-    <input 
-      type="number" 
-      id="weight" 
-      formControlName="weight" 
-      class="w-full pr-12 px-4 py-3 border-2 border-gray-300 rounded-lg text-gray-900 font-medium text-base bg-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-200"
-      [class.border-red-500]="isFieldInvalid('weight')"
-      [class.focus:border-red-500]="isFieldInvalid('weight')"
-      [class.focus:ring-red-100]="isFieldInvalid('weight')"
-      placeholder="Enter weight"
-      min="10"
-      max="300"
-      step="0.1"
-    />
-    <span class="absolute right-4 text-gray-700 font-semibold text-sm">kg</span>
-  </div>
-  <div 
-    class="mt-2 text-red-600 text-sm font-medium flex items-center" 
-    *ngIf="isFieldInvalid('weight')"
-  >
-    <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-      <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-    </svg>
-    {{ getFieldError('weight') }}
-  </div>
-</div>
-
-    </div>
-
-    <!-- Fitness Information Section -->
-    <div class="form-section">
-      <h3 class="section-title">Fitness Information</h3>
-      
-      <!-- Fitness Level -->
-      <div class="form-group">
-        <label for="fitnessLevel" class="form-label">Fitness Level *</label>
-        <select 
-          id="fitnessLevel" 
-          formControlName="fitnessLevel" 
-          class="form-select"
-          [class.error]="isFieldInvalid('fitnessLevel')"
-        >
-          <option value="">Select your fitness level</option>
-          <option value="beginner">Beginner</option>
-          <option value="intermediate">Intermediate</option>
-          <option value="advanced">Advanced</option>
-        </select>
-        <div class="error-message" *ngIf="isFieldInvalid('fitnessLevel')">
-          {{ getFieldError('fitnessLevel') }}
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 py-8 px-4">
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-black/60 backdrop-blur-sm rounded-2xl shadow-2xl border border-blue-500/20 overflow-hidden">
+      <!-- Header Section -->
+      <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-6 relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+        <!-- Animated background elements -->
+        <div class="absolute top-0 left-0 w-32 h-32 bg-blue-500/20 rounded-full blur-xl animate-pulse"></div>
+        <div class="absolute bottom-0 right-0 w-40 h-40 bg-orange-500/20 rounded-full blur-xl animate-pulse delay-1000"></div>
+        
+        <div class="relative z-10 text-center">
+          <h2 class="text-3xl font-bold text-white mb-2">Profile Settings</h2>
+          <p class="text-blue-100">Update your fitness profile information</p>
         </div>
       </div>
 
-      <!-- Fitness Goals -->
-      <div class="form-group">
-        <label class="form-label">Fitness Goals *</label>
-        <div class="checkbox-group">
-          <div 
-            *ngFor="let goal of fitnessGoalOptions" 
-            class="checkbox-item"
-          >
-            <label class="checkbox-label">
-              <input
-                type="checkbox"
-                [value]="goal"
-                (change)="onCheckboxChange($event, 'fitnessGoals')"
-                [checked]="profileForm.get('fitnessGoals')?.value.includes(goal)"
-                class="checkbox-input"
-              />
-              <span class="checkbox-custom"></span>
-              <span class="checkbox-text">{{ goal | titlecase }}</span>
-            </label>
+      <!-- Form Content -->
+      <div class="p-8">
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="space-y-8">
+          <!-- Personal Information Section -->
+          <div class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+            <h3 class="text-xl font-semibold text-white mb-6 flex items-center">
+              <svg class="w-6 h-6 text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+              Personal Information
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Name (disabled) -->
+              <div>
+                <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Name</label>
+                <input 
+                  id="name" 
+                  formControlName="name" 
+                  class="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                  readonly
+                />
+              </div>
+
+              <!-- Email (disabled) -->
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                <input 
+                  id="email" 
+                  formControlName="email" 
+                  class="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                  readonly
+                />
+              </div>
+
+              <!-- Date of Birth -->
+              <div class="md:col-span-2">
+                <label for="dob" class="block text-sm font-medium text-gray-300 mb-2">Date of Birth *</label>
+                <input 
+                  type="date" 
+                  id="dob" 
+                  formControlName="dob" 
+                  class="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                  [class.border-orange-500]="isFieldInvalid('dob')"
+                  [class.focus:border-orange-500]="isFieldInvalid('dob')"
+                />
+                <div class="mt-2 text-orange-400 text-sm flex items-center" *ngIf="isFieldInvalid('dob')">
+                  <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                  </svg>
+                  {{ getFieldError('dob') }}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="error-message" *ngIf="isFieldInvalid('fitnessGoals')">
-          {{ getFieldError('fitnessGoals') }}
-        </div>
-      </div>
 
-      <!-- Training Types -->
-      <div class="form-group">
-        <label class="form-label">Preferred Training Types *</label>
-        <div class="checkbox-group">
-          <div 
-            *ngFor="let type of trainingTypeOptions" 
-            class="checkbox-item"
-          >
-            <label class="checkbox-label">
-              <input
-                type="checkbox"
-                [value]="type"
-                (change)="onCheckboxChange($event, 'trainingTypes')"
-                [checked]="profileForm.get('trainingTypes')?.value.includes(type)"
-                class="checkbox-input"
-              />
-              <span class="checkbox-custom"></span>
-              <span class="checkbox-text">{{ type | titlecase }}</span>
-            </label>
+          <!-- Physical Attributes Section -->
+          <div class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+            <h3 class="text-xl font-semibold text-white mb-6 flex items-center">
+              <svg class="w-6 h-6 text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+              Physical Attributes
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Height -->
+              <div>
+                <label for="height" class="block text-sm font-medium text-gray-300 mb-2">Height *</label>
+                <div class="relative">
+                  <input 
+                    type="number" 
+                    id="height" 
+                    formControlName="height" 
+                    class="w-full pr-12 px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    [class.border-orange-500]="isFieldInvalid('height')"
+                    [class.focus:border-orange-500]="isFieldInvalid('height')"
+                    placeholder="Enter height"
+                    min="30"
+                    max="300"
+                    step="1"
+                  />
+                  <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 font-medium text-sm">cm</span>
+                </div>
+                <div class="mt-2 text-orange-400 text-sm flex items-center" *ngIf="isFieldInvalid('height')">
+                  <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                  </svg>
+                  {{ getFieldError('height') }}
+                </div>
+              </div>
+
+              <!-- Weight -->
+              <div>
+                <label for="weight" class="block text-sm font-medium text-gray-300 mb-2">Weight *</label>
+                <div class="relative">
+                  <input 
+                    type="number" 
+                    id="weight" 
+                    formControlName="weight" 
+                    class="w-full pr-12 px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                    [class.border-orange-500]="isFieldInvalid('weight')"
+                    [class.focus:border-orange-500]="isFieldInvalid('weight')"
+                    placeholder="Enter weight"
+                    min="10"
+                    max="300"
+                    step="0.1"
+                  />
+                  <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 font-medium text-sm">kg</span>
+                </div>
+                <div class="mt-2 text-orange-400 text-sm flex items-center" *ngIf="isFieldInvalid('weight')">
+                  <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                  </svg>
+                  {{ getFieldError('weight') }}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="error-message" *ngIf="isFieldInvalid('trainingTypes')">
-          {{ getFieldError('trainingTypes') }}
-        </div>
-      </div>
 
-      <!-- Preferred Time -->
-      <div class="form-group">
-        <label for="preferredTime" class="form-label">Preferred Workout Time</label>
-        <select id="preferredTime" formControlName="preferredTime" class="form-select">
-          <option value="morning">Morning (6AM - 12PM)</option>
-          <option value="afternoon">Afternoon (12PM - 6PM)</option>
-          <option value="evening">Evening (6PM - 10PM)</option>
-          <option value="flexible">Flexible</option>
-        </select>
-      </div>
+          <!-- Fitness Information Section -->
+          <div class="bg-gray-900/60 backdrop-blur-sm rounded-xl p-6 border border-blue-500/20">
+            <h3 class="text-xl font-semibold text-white mb-6 flex items-center">
+              <svg class="w-6 h-6 text-blue-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+              Fitness Information
+            </h3>
+            
+            <div class="space-y-6">
+              <!-- Fitness Level -->
+              <div>
+                <label for="fitnessLevel" class="block text-sm font-medium text-gray-300 mb-2">Fitness Level *</label>
+                <select 
+                  id="fitnessLevel" 
+                  formControlName="fitnessLevel" 
+                  class="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
+                  [class.border-orange-500]="isFieldInvalid('fitnessLevel')"
+                >
+                  <option value="">Select your fitness level</option>
+                  <option value="beginner">Beginner</option>
+                  <option value="intermediate">Intermediate</option>
+                  <option value="advanced">Advanced</option>
+                </select>
+                <div class="mt-2 text-orange-400 text-sm flex items-center" *ngIf="isFieldInvalid('fitnessLevel')">
+                  <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                  </svg>
+                  {{ getFieldError('fitnessLevel') }}
+                </div>
+              </div>
 
-      <!-- Equipment -->
-      <div class="form-group">
-        <label class="form-label">Available Equipment</label>
-        <div class="checkbox-group">
-          <div 
-            *ngFor="let equipment of equipmentOptions" 
-            class="checkbox-item"
-          >
-            <label class="checkbox-label">
-              <input
-                type="checkbox"
-                [value]="equipment"
-                (change)="onCheckboxChange($event, 'equipments')"
-                [checked]="profileForm.get('equipments')?.value.includes(equipment)"
-                class="checkbox-input"
-              />
-              <span class="checkbox-custom"></span>
-              <span class="checkbox-text">{{ equipment | titlecase }}</span>
-            </label>
+              <!-- Fitness Goals -->
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">Fitness Goals *</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div 
+                    *ngFor="let goal of fitnessGoalOptions" 
+                    class="flex items-center"
+                  >
+                    <label class="flex items-center cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        [value]="goal"
+                        (change)="onCheckboxChange($event, 'fitnessGoals')"
+                        [checked]="profileForm.get('fitnessGoals')?.value.includes(goal)"
+                        class="sr-only"
+                      />
+                      <div class="w-5 h-5 border-2 border-gray-600 rounded group-hover:border-blue-500 transition-colors duration-200 mr-3 relative">
+                        <div class="absolute inset-0 bg-blue-500 rounded opacity-0 transition-opacity duration-200" 
+                             [class.opacity-100]="profileForm.get('fitnessGoals')?.value.includes(goal)">
+                          <svg class="w-3 h-3 text-white absolute top-0.5 left-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                          </svg>
+                        </div>
+                      </div>
+                      <span class="text-gray-300 group-hover:text-white transition-colors duration-200">{{ goal | titlecase }}</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="mt-2 text-orange-400 text-sm flex items-center" *ngIf="isFieldInvalid('fitnessGoals')">
+                  <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                  </svg>
+                  {{ getFieldError('fitnessGoals') }}
+                </div>
+              </div>
+
+              <!-- Training Types -->
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">Preferred Training Types *</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div 
+                    *ngFor="let type of trainingTypeOptions" 
+                    class="flex items-center"
+                  >
+                    <label class="flex items-center cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        [value]="type"
+                        (change)="onCheckboxChange($event, 'trainingTypes')"
+                        [checked]="profileForm.get('trainingTypes')?.value.includes(type)"
+                        class="sr-only"
+                      />
+                      <div class="w-5 h-5 border-2 border-gray-600 rounded group-hover:border-blue-500 transition-colors duration-200 mr-3 relative">
+                        <div class="absolute inset-0 bg-blue-500 rounded opacity-0 transition-opacity duration-200" 
+                             [class.opacity-100]="profileForm.get('trainingTypes')?.value.includes(type)">
+                          <svg class="w-3 h-3 text-white absolute top-0.5 left-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                          </svg>
+                        </div>
+                      </div>
+                      <span class="text-gray-300 group-hover:text-white transition-colors duration-200">{{ type | titlecase }}</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="mt-2 text-orange-400 text-sm flex items-center" *ngIf="isFieldInvalid('trainingTypes')">
+                  <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                  </svg>
+                  {{ getFieldError('trainingTypes') }}
+                </div>
+              </div>
+
+              <!-- Preferred Time -->
+              <div>
+                <label for="preferredTime" class="block text-sm font-medium text-gray-300 mb-2">Preferred Workout Time</label>
+                <select id="preferredTime" formControlName="preferredTime" class="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200">
+                  <option value="morning">Morning (6AM - 12PM)</option>
+                  <option value="afternoon">Afternoon (12PM - 6PM)</option>
+                  <option value="evening">Evening (6PM - 10PM)</option>
+                  <option value="flexible">Flexible</option>
+                </select>
+              </div>
+
+              <!-- Equipment -->
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-3">Available Equipment</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div 
+                    *ngFor="let equipment of equipmentOptions" 
+                    class="flex items-center"
+                  >
+                    <label class="flex items-center cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        [value]="equipment"
+                        (change)="onCheckboxChange($event, 'equipments')"
+                        [checked]="profileForm.get('equipments')?.value.includes(equipment)"
+                        class="sr-only"
+                      />
+                      <div class="w-5 h-5 border-2 border-gray-600 rounded group-hover:border-blue-500 transition-colors duration-200 mr-3 relative">
+                        <div class="absolute inset-0 bg-blue-500 rounded opacity-0 transition-opacity duration-200" 
+                             [class.opacity-100]="profileForm.get('equipments')?.value.includes(equipment)">
+                          <svg class="w-3 h-3 text-white absolute top-0.5 left-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                          </svg>
+                        </div>
+                      </div>
+                      <span class="text-gray-300 group-hover:text-white transition-colors duration-200">{{ equipment | titlecase }}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+
+          <!-- Submit Button -->
+          <div class="flex justify-center">
+            <button 
+              type="submit" 
+              class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/20 shadow-lg shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              [disabled]="profileForm.invalid"
+            >
+              <span class="flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Update Profile
+              </span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
-
-    <!-- Submit Button -->
-    <div class="form-actions">
-      <button 
-        type="submit" 
-        class="submit-btn"
-        [disabled]="profileForm.invalid"
-        [class.disabled]="profileForm.invalid"
-      >
-        Update Profile
-      </button>
-    </div>
-  </form>
+  </div>
 </div>

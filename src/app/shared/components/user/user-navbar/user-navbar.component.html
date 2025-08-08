@@ -1,66 +1,67 @@
-<nav class="bg-purple-700 text-white shadow-lg">
+<nav class="bg-black text-white shadow-2xl border-b border-blue-500/20">
   <div class="container mx-auto px-6 py-3">
     <div class="flex items-center justify-between">
       <!-- Left: Brand & Nav Links -->
       <div class="flex items-center space-x-6">
-       <a routerLink="/user/dashboard"><div class="text-2xl font-bold">VortexFit</div></a> 
-
+       <a routerLink="/user/dashboard">
+         <div class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-orange-500 bg-clip-text text-transparent">VortexFit</div>
+       </a> 
       </div>
 
       <!-- Center: Search Bar -->
-<div class="hidden md:flex flex-1 justify-center">
-      <form 
-        class="flex items-center bg-white rounded-lg shadow-inner max-w-xl w-full px-3 py-1"
-        (ngSubmit)="onSearch()"
-      >
-        <input
-          type="text"
-          [(ngModel)]="searchTerm"
-          name="searchTerm"
-          placeholder="Search by specialty, name"
-          class="flex-grow px-3 py-2 text-gray-700 focus:outline-none"
-          (keyup.enter)="onSearch()"
-        />
-        <button
-          type="submit"
-          class="bg-purple-700 hover:bg-purple-800 text-white text-sm font-semibold px-4 py-2 rounded-lg ml-2"
+      <div class="hidden md:flex flex-1 justify-center">
+        <form 
+          class="flex items-center bg-gray-900/80 backdrop-blur-sm rounded-lg shadow-inner max-w-xl w-full px-3 py-1 border border-blue-500/30"
+          (ngSubmit)="onSearch()"
         >
-          Find Coaches
-        </button>
-      </form>
-    </div>
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            name="searchTerm"
+            placeholder="Search by specialty, name"
+            class="flex-grow px-3 py-2 text-gray-200 bg-transparent focus:outline-none placeholder-gray-400"
+            (keyup.enter)="onSearch()"
+          />
+          <button
+            type="submit"
+            class="bg-gradient-to-r from-blue-500 to-orange-500 hover:from-blue-600 hover:to-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-lg ml-2 transition-all duration-200 shadow-lg shadow-blue-500/25"
+          >
+            Find Coaches
+          </button>
+        </form>
+      </div>
 
       <!-- Right: Notifications & Profile -->
- <div class="flex items-center space-x-4 bg-violet-50 p-2 rounded-lg shadow-md">
+      <div class="flex items-center space-x-4 bg-gray-900/80 backdrop-blur-sm p-2 rounded-lg shadow-lg border border-blue-500/20">
 
-  @if ($currentUser | async; as user) {
-    @if (user.role === 'user') {
-      <a routerLink="/user/profile" class="flex items-center space-x-2 hover:bg-violet-100 px-2 py-1 rounded transition-colors duration-200">
-        <!-- Profile -->
-        <div class="relative">
-          <img
-            class="w-10 h-10 rounded-full border-2 border-violet-500 object-cover"
-            [src]="user.image"
-            (error)="onImageError($event)"
-            alt="user Image"
-          />
-          <span
-            class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"
-          ></span>
-        </div>
-        <span class="text-sm font-medium text-violet-800">{{user.name}}</span>
-      </a>
+        @if ($currentUser | async; as user) {
+          @if (user.role === 'user') {
+            <a routerLink="/user/profile" class="flex items-center space-x-2 hover:bg-gray-800/80 px-2 py-1 rounded transition-colors duration-200">
+              <!-- Profile -->
+              <div class="relative">
+                <img
+                  class="w-10 h-10 rounded-full border-2 border-blue-500 object-cover shadow-lg shadow-blue-500/25"
+                  [src]="user.image"
+                  (error)="onImageError($event)"
+                  alt="user Image"
+                />
+                <span
+                  class="absolute bottom-0 right-0 w-3 h-3 bg-orange-500 rounded-full border-2 border-black shadow-lg"
+                ></span>
+              </div>
+              <span class="text-sm font-medium text-gray-200">{{user.name}}</span>
+            </a>
 
-      <!-- Mobile Menu Button (hidden on md and up) -->
-      <div class="md:hidden ml-4">
-        <button class="mobile-menu-button p-2 rounded hover:bg-violet-200 transition">
-          <i class="fas fa-bars text-2xl text-violet-700"></i>
-        </button>
+            <!-- Mobile Menu Button (hidden on md and up) -->
+            <div class="md:hidden ml-4">
+              <button class="mobile-menu-button p-2 rounded hover:bg-gray-800/80 transition-colors duration-200">
+                <i class="fas fa-bars text-2xl text-blue-400"></i>
+              </button>
+            </div>
+          }
+        }
+
       </div>
-    }
-  }
-
-</div>
 
     </div>
   </div>

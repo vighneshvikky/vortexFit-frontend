@@ -66,7 +66,7 @@ import { CATEGORIES, CATEGORY_TO_SPECIALIZATIONS } from '../../../../shared/cons
         ],
         phoneNumber: ['', [Validators.pattern(/^[0-9]{10}$/)]],
         experience: ['', [Validators.min(0), Validators.max(100)]],
-        bio: ['', [Validators.minLength(1), Validators.maxLength(100)]],
+        bio: [''],
         oneToOneSessionPrice: ['', [Validators.min(0), Validators.max(100000)]],
         workoutPlanPrice: ['', [Validators.min(0), Validators.max(100000)]],
         image: [''],

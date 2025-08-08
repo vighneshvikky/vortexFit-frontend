@@ -1,21 +1,286 @@
-<section class="category-section">
-  <div class="bg-white rounded-xl p-8 shadow-lg border-2 border-purple-200">
-    <div class="text-center">
-      <h2
-        class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 tracking-tight leading-tight"
-      >
+<section class="category-section bg-gradient-to-br from-black via-gray-900 to-black rounded-2xl p-6 sm:p-8 shadow-2xl border border-blue-500/20 relative overflow-hidden">
+  <!-- Matrix-style falling particles -->
+  <div class="absolute inset-0 matrix-bg">
+    <div class="matrix-column" style="left: 10%"></div>
+    <div class="matrix-column" style="left: 20%"></div>
+    <div class="matrix-column" style="left: 30%"></div>
+    <div class="matrix-column" style="left: 40%"></div>
+    <div class="matrix-column" style="left: 50%"></div>
+    <div class="matrix-column" style="left: 60%"></div>
+    <div class="matrix-column" style="left: 70%"></div>
+    <div class="matrix-column" style="left: 80%"></div>
+    <div class="matrix-column" style="left: 90%"></div>
+  </div>
+
+  <!-- Floating orbs with trail effects -->
+  <div class="absolute inset-0">
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+    <div class="floating-orb orb-4"></div>
+    <div class="floating-orb orb-5"></div>
+  </div>
+
+  <!-- Morphing geometric shapes -->
+  <div class="absolute inset-0">
+    <div class="morphing-shape shape-1"></div>
+    <div class="morphing-shape shape-2"></div>
+    <div class="morphing-shape shape-3"></div>
+  </div>
+
+  <!-- Interactive particle system -->
+  <div class="absolute inset-0 particle-system">
+    <div class="particle" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]"></div>
+  </div>
+
+  <!-- Animated background particles -->
+  <div class="absolute inset-0">
+    <div class="absolute top-10 left-10 w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
+    <div class="absolute top-20 right-20 w-1 h-1 bg-orange-500 rounded-full animate-pulse"></div>
+    <div class="absolute bottom-10 left-1/4 w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce"></div>
+    <div class="absolute bottom-20 right-1/3 w-1 h-1 bg-orange-400 rounded-full animate-ping delay-1000"></div>
+  </div>
+  
+  <div class="rounded-xl p-6 sm:p-8 border border-blue-500/30 bg-black/60 backdrop-blur-sm relative overflow-hidden">
+    <!-- Animated background elements -->
+    <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-orange-500/5"></div>
+    <div class="absolute top-0 left-0 w-20 h-20 bg-blue-500/10 rounded-full blur-xl animate-pulse"></div>
+    <div class="absolute bottom-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+    
+    <div class="text-center relative z-10">
+      <h2 class="text-3xl lg:text-4xl font-bold text-white mb-3 tracking-tight leading-tight animate-fade-in">
         What Are You Looking For?
       </h2>
-      <div
-        class="w-16 h-1 bg-gradient-to-r from-purple-600 to-purple-700 rounded-full mx-auto"
-      ></div>
+      <div class="w-20 h-1 bg-gradient-to-r from-blue-500 to-orange-500 rounded-full mx-auto shadow-lg shadow-blue-500/50 animate-pulse"></div>
+      <p class="text-gray-300 mt-3 text-sm sm:text-base animate-fade-in-delay">Explore categories to find your perfect fit</p>
     </div>
   </div>
-  <div class="category-grid">
+  
+  <div class="category-grid mt-6 relative z-10">
     <app-category-card
-      *ngFor="let category of categories"
+      *ngFor="let category of categories; let i = index"
       [label]="category.label"
       [value]="category.value"
+      class="animate-fade-in-up hover:animate-wiggle"
+      [style.animation-delay]="(i * 0.1) + 's'"
     ></app-category-card>
   </div>
 </section>
+
+<!-- Add incredible animations to your global styles -->
+<style>
+  /* Matrix-style falling particles */
+  .matrix-bg {
+    pointer-events: none;
+  }
+  
+  .matrix-column {
+    position: absolute;
+    top: -100%;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, blue, transparent);
+    animation: matrix-fall 3s linear infinite;
+  }
+  
+  @keyframes matrix-fall {
+    0% { transform: translateY(-100%); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+  }
+  
+  .matrix-column:nth-child(1) { animation-delay: 0s; }
+  .matrix-column:nth-child(2) { animation-delay: 0.3s; }
+  .matrix-column:nth-child(3) { animation-delay: 0.6s; }
+  .matrix-column:nth-child(4) { animation-delay: 0.9s; }
+  .matrix-column:nth-child(5) { animation-delay: 1.2s; }
+  .matrix-column:nth-child(6) { animation-delay: 1.5s; }
+  .matrix-column:nth-child(7) { animation-delay: 1.8s; }
+  .matrix-column:nth-child(8) { animation-delay: 2.1s; }
+  .matrix-column:nth-child(9) { animation-delay: 2.4s; }
+
+  /* Floating orbs with trails */
+  .floating-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(1px);
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  .orb-1 {
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, blue, transparent);
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+  
+  .orb-2 {
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, orange, transparent);
+    top: 60%;
+    right: 15%;
+    animation-delay: 2s;
+  }
+  
+  .orb-3 {
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, blue, transparent);
+    bottom: 30%;
+    left: 20%;
+    animation-delay: 4s;
+  }
+  
+  .orb-4 {
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle, orange, transparent);
+    top: 40%;
+    left: 70%;
+    animation-delay: 6s;
+  }
+  
+  .orb-5 {
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle, blue, transparent);
+    bottom: 20%;
+    right: 30%;
+    animation-delay: 1s;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    25% { transform: translateY(-20px) rotate(90deg); }
+    50% { transform: translateY(-10px) rotate(180deg); }
+    75% { transform: translateY(-30px) rotate(270deg); }
+  }
+
+  /* Morphing geometric shapes */
+  .morphing-shape {
+    position: absolute;
+    opacity: 0.3;
+    animation: morph 6s ease-in-out infinite;
+  }
+  
+  .shape-1 {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(45deg, blue, orange);
+    top: 10%;
+    right: 10%;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  }
+  
+  .shape-2 {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(45deg, orange, blue);
+    bottom: 20%;
+    left: 5%;
+    clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+  }
+  
+  .shape-3 {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(45deg, blue, orange);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+  }
+  
+  @keyframes morph {
+    0%, 100% { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+    25% { clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%); }
+    50% { clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%); }
+    75% { clip-path: polygon(0% 20%, 100% 0%, 100% 80%, 0% 100%); }
+  }
+
+  /* Interactive particle system */
+  .particle-system {
+    pointer-events: none;
+  }
+  
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: blue;
+    border-radius: 50%;
+    animation: particle-float 4s linear infinite;
+  }
+  
+  .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+  .particle:nth-child(2) { left: 20%; animation-delay: 0.5s; }
+  .particle:nth-child(3) { left: 30%; animation-delay: 1s; }
+  .particle:nth-child(4) { left: 40%; animation-delay: 1.5s; }
+  .particle:nth-child(5) { left: 50%; animation-delay: 2s; }
+  .particle:nth-child(6) { left: 60%; animation-delay: 2.5s; }
+  .particle:nth-child(7) { left: 70%; animation-delay: 3s; }
+  .particle:nth-child(8) { left: 80%; animation-delay: 3.5s; }
+  .particle:nth-child(9) { left: 90%; animation-delay: 4s; }
+  .particle:nth-child(10) { left: 15%; animation-delay: 0.2s; }
+  .particle:nth-child(11) { left: 25%; animation-delay: 0.7s; }
+  .particle:nth-child(12) { left: 35%; animation-delay: 1.2s; }
+  .particle:nth-child(13) { left: 45%; animation-delay: 1.7s; }
+  .particle:nth-child(14) { left: 55%; animation-delay: 2.2s; }
+  .particle:nth-child(15) { left: 65%; animation-delay: 2.7s; }
+  
+  @keyframes particle-float {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100px) scale(1); opacity: 0; }
+  }
+
+  /* Wiggle animation for cards */
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(1deg); }
+    75% { transform: rotate(-1deg); }
+  }
+  
+  .animate-wiggle {
+    animation: wiggle 0.3s ease-in-out;
+  }
+
+  /* Enhanced fade animations */
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  
+  @keyframes fade-in-delay {
+    from { opacity: 0; transform: translateY(20px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(30px) rotateX(15deg); }
+    to { opacity: 1; transform: translateY(0) rotateX(0deg); }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.8s ease-out;
+  }
+  
+  .animate-fade-in-delay {
+    animation: fade-in-delay 0.8s ease-out 0.3s both;
+  }
+  
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out both;
+  }
+
+  /* Hover effects for cards */
+  .category-grid app-category-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+  }
+</style>
