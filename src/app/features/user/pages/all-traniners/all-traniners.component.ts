@@ -95,7 +95,7 @@ export class AllTraninersComponent implements OnInit, OnDestroy {
       const specializationMatch = !this.selectedSpecialization || 
         (trainer.specialization && Array.isArray(trainer.specialization) && 
          trainer.specialization.includes(this.selectedSpecialization));
-      const priceMatch = this.isPriceInRange(trainer.pricing);
+      const priceMatch = this.isPriceInRange(trainer.pricing as unknown as Pricing);
       const experienceMatch = trainer.experience >= this.minExperience;
       
       // Add search functionality
@@ -135,7 +135,7 @@ export class AllTraninersComponent implements OnInit, OnDestroy {
     return nameMatch || specializationMatch || categoryMatch || bioMatch;
   }
 
-  isPriceInRange(pricing: any): boolean {
+  isPriceInRange(pricing: Pricing | undefined): boolean {
     if (!pricing) return true; // If no pricing info, don't filter out
     
     const hourlyPrice = pricing.hourly || pricing.per_hour || 0;

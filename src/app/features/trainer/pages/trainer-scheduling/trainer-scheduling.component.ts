@@ -224,7 +224,7 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
     return `${displayHour}:${minutes} ${ampm}`;
   }
 
-  getDaysOfWeekString(days: number[] | any): string {
+  getDaysOfWeekString(days: number[] | undefined): string {
     if (!days || !Array.isArray(days)) {
       return 'No days selected';
     }
