@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Trainer } from '../../../trainer/models/trainer.interface';
 import { UserService } from '../../services/user.service';
 import { NotyService } from '../../../../core/services/noty.service';
@@ -16,6 +16,7 @@ export class TrainerInfoComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private userService = inject(UserService);
   private notyf = inject(NotyService);
+  private router = inject(Router)
   trainers!: Trainer;
   ngOnInit(): void {
     const trainerId = this.route.snapshot.paramMap.get('id');
@@ -33,8 +34,12 @@ export class TrainerInfoComponent implements OnInit {
     }
   }
 
-  ImageError(event: Event){
+  ImageError(event: Event){ 
   onImageError(event)
+  }
+
+  onBooking(trainerId: string){
+  this.router.navigate(['/user/booking', trainerId])
   }
 }
 

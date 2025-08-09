@@ -1,0 +1,269 @@
+<!-- Loading State -->
+<div *ngIf="isLoading" class="loading-overlay">
+  <div class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Loading trainer information...</p>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div *ngIf="!isLoading && trainer" class="booking-container">
+  <!-- Matrix-style falling particles -->
+  <div class="absolute inset-0 matrix-bg">
+    <div class="matrix-column" style="left: 10%"></div>
+    <div class="matrix-column" style="left: 20%"></div>
+    <div class="matrix-column" style="left: 30%"></div>
+    <div class="matrix-column" style="left: 40%"></div>
+    <div class="matrix-column" style="left: 50%"></div>
+    <div class="matrix-column" style="left: 60%"></div>
+    <div class="matrix-column" style="left: 70%"></div>
+    <div class="matrix-column" style="left: 80%"></div>
+    <div class="matrix-column" style="left: 90%"></div>
+  </div>
+
+  <!-- Floating orbs with trail effects -->
+  <div class="absolute inset-0">
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+    <div class="floating-orb orb-4"></div>
+    <div class="floating-orb orb-5"></div>
+  </div>
+
+  <!-- Morphing geometric shapes -->
+  <div class="absolute inset-0">
+    <div class="morphing-shape shape-1"></div>
+    <div class="morphing-shape shape-2"></div>
+    <div class="morphing-shape shape-3"></div>
+  </div>
+
+  <!-- Interactive particle system -->
+  <div class="absolute inset-0 particle-system">
+    <div class="particle" *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]"></div>
+  </div>
+
+  <!-- Animated background particles -->
+  <div class="absolute inset-0">
+    <div class="absolute top-10 left-10 w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
+    <div class="absolute top-20 right-20 w-1 h-1 bg-orange-500 rounded-full animate-pulse"></div>
+    <div class="absolute bottom-10 left-1/4 w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce"></div>
+    <div class="absolute bottom-20 right-1/3 w-1 h-1 bg-orange-400 rounded-full animate-ping delay-1000"></div>
+  </div>
+
+  <!-- Main Booking Content -->
+  <div class="booking-content">
+    <!-- Header -->
+    <div class="booking-header">
+      <div class="rounded-xl p-6 sm:p-8 border border-blue-500/30 bg-black/60 backdrop-blur-sm relative overflow-hidden">
+        <!-- Animated background elements -->
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-orange-500/5"></div>
+        <div class="absolute top-0 left-0 w-20 h-20 bg-blue-500/10 rounded-full blur-xl animate-pulse"></div>
+        <div class="absolute bottom-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+
+        <div class="text-center relative z-10">
+          <h1 class="text-3xl lg:text-4xl font-bold text-white mb-3 tracking-tight leading-tight animate-fade-in">
+            Book Your Session
+          </h1>
+          <div class="w-20 h-1 bg-gradient-to-r from-blue-500 to-orange-500 rounded-full mx-auto shadow-lg shadow-blue-500/50 animate-pulse"></div>
+          <p class="text-gray-300 mt-3 text-sm sm:text-base animate-fade-in-delay">
+            Choose your preferred session type and schedule
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trainer Info Card -->
+    <div class="trainer-card">
+      <div class="trainer-info">
+        <div class="trainer-avatar">
+          <img [src]="getTrainerImage()" [alt]="getTrainerName()" class="avatar-img">
+          <div class="online-indicator"></div>
+        </div>
+        <div class="trainer-details">
+          <h3 class="trainer-name">{{ getTrainerName() }}</h3>
+          <div class="trainer-category">{{ getTrainerCategory() }}</div>
+          <div class="trainer-experience">{{ getTrainerExperience() }}</div>
+          <div class="trainer-rating">
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <span class="rating-text">4.9 (127 reviews)</span>
+          </div>
+        </div>
+      </div>
+      <div class="trainer-bio">
+        <p>{{ getTrainerBio() }}</p>
+        <button class="read-more-btn">Read more</button>
+      </div>
+    </div>
+
+    <!-- Session Type Selection -->
+    <div class="session-selection">
+      <h2 class="section-title">Choose Session Type</h2>
+      <div class="session-options">
+        <div 
+          *ngFor="let session of sessionTypes" 
+          class="session-card" 
+          [class.selected]="selectedSessionType === session.id" 
+          (click)="selectSessionType(session.id)"
+        >
+          <div class="session-icon">
+            <i [class]="session.id === 'one-to-one' ? 'fas fa-user' : 'fas fa-dumbbell'"></i>
+          </div>
+          <div class="session-content">
+            <h3>{{ session.name }}</h3>
+            <p class="session-description">{{ session.description }}</p>
+            <div class="session-price">₹{{ session.price }}</div>
+          </div>
+          <div class="selection-indicator">
+            <i class="fas fa-check"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Date & Time Picker -->
+    <div class="datetime-selection">
+      <h2 class="section-title">Select Date & Time</h2>
+      
+      <!-- Calendar -->
+      <div class="calendar-section">
+        <div class="calendar-header">
+          <button class="calendar-nav" (click)="previousMonth()">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <h3 class="current-month">{{ currentMonthYear }}</h3>
+          <button class="calendar-nav" (click)="nextMonth()">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+        
+        <div class="calendar-grid">
+          <div class="calendar-weekdays">
+            <div class="weekday">Sun</div>
+            <div class="weekday">Mon</div>
+            <div class="weekday">Tue</div>
+            <div class="weekday">Wed</div>
+            <div class="weekday">Thu</div>
+            <div class="weekday">Fri</div>
+            <div class="weekday">Sat</div>
+          </div>
+          
+          <div class="calendar-days">
+            <div 
+              *ngFor="let day of calendarDays" 
+              class="calendar-day"
+              [class.other-month]="!day.isCurrentMonth"
+              [class.available]="day.isAvailable"
+              [class.selected]="day.isSelected"
+              [class.unavailable]="!day.isAvailable"
+              (click)="selectDate(day)"
+            >
+              {{ day.date }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Time Slots -->
+      <div class="time-slots" *ngIf="selectedDate">
+        <h3>Available Time Slots for {{ selectedDate | date:'MMM dd, yyyy' }}</h3>
+        <div class="slots-grid">
+          <button 
+            *ngFor="let slot of availableTimeSlots" 
+            class="time-slot"
+            [class.selected]="selectedTimeSlot === slot"
+            [class.booked]="slot.isBooked"
+            [disabled]="slot.isBooked"
+            (click)="selectTimeSlot(slot)"
+          >
+            {{ slot.time }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Summary Panel (Sticky) -->
+    <div class="order-summary" *ngIf="selectedSessionType && selectedDate && selectedTimeSlot">
+      <div class="summary-header">
+        <h3>Order Summary</h3>
+      </div>
+      <div class="summary-content">
+        <div class="summary-item">
+          <span class="label">Trainer:</span>
+          <span class="value">{{ getTrainerName() }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Session:</span>
+          <span class="value">{{ getSessionTypeName() }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Date:</span>
+          <span class="value">{{ selectedDate | date:'MMM dd, yyyy' }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Time:</span>
+          <span class="value">{{ selectedTimeSlot?.time | date:'HH:mm' | uppercase  }}</span>
+        </div>
+        <div class="summary-item total">
+          <span class="label">Total:</span>
+          <span class="value">₹{{ getSessionPrice() }}</span>
+        </div>
+      </div>
+      <button class="confirm-booking-btn" (click)="confirmBooking()">
+        Confirm Booking
+      </button>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showConfirmationModal" (click)="closeConfirmationModal()">
+    <div class="confirmation-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="success-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>Booking Confirmed!</h2>
+        <p>Your session has been successfully booked</p>
+      </div>
+      
+      <div class="booking-details">
+        <div class="detail-item">
+          <span class="label">Booking ID:</span>
+          <span class="value">{{ bookingId }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Trainer:</span>
+          <span class="value">{{ getTrainerName() }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Session:</span>
+          <span class="value">{{ getSessionTypeName() }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Date & Time:</span>
+          <span class="value">{{ selectedDate | date:'MMM dd, yyyy' }} at {{ selectedTimeSlot?.time }}</span>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="action-btn secondary" (click)="addToCalendar()">
+          <i class="fas fa-calendar-plus"></i>
+          Add to Calendar
+        </button>
+        <button class="action-btn primary" (click)="messageTrainer()">
+          <i class="fas fa-comment"></i>
+          Message Trainer
+        </button>
+      </div>
+
+      <button class="close-modal" (click)="closeConfirmationModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</div>

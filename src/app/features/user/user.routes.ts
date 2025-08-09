@@ -6,18 +6,21 @@ import { UserTrainerListComponent } from './pages/user-trainer-list/user-trainer
 import { TrainerInfoComponent } from './pages/trainer-info/trainer-info.component';
 import { AllTraninersComponent } from './pages/all-traniners/all-traniners.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
+import { UserBookingComponent } from './pages/user-booking/user-booking.component';
 export const userRoutes: Routes = [
   {
     path: '',
     component: UserLayoutComponent,
     canActivate: [RoleGuard()],
-    data: {role: 'user'},
+    data: { role: 'user' },
     children: [
-      {path: 'dashboard', component: UserDashboardComponent},
-      {path: 'trainers', component: UserTrainerListComponent},
-      {path: 'trainer-info/:id', component: TrainerInfoComponent},
-      {path: 'all-trainers', component: AllTraninersComponent},
-      {path: 'profile', component: UserProfileComponent}
-    ]
-  }
+      { path: 'dashboard', component: UserDashboardComponent },
+      { path: 'trainers', component: UserTrainerListComponent },
+      { path: 'trainer-info/:id', component: TrainerInfoComponent },
+      { path: 'all-trainers', component: AllTraninersComponent },
+      { path: 'profile', component: UserProfileComponent },
+      { path: 'booking/:id', component: UserBookingComponent },
+    ],
+  },
 ];
+  
