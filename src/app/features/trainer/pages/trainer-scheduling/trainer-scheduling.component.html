@@ -1,19 +1,18 @@
-<div class="min-h-screen bg-gradient-to-br from-red-50 via-red-100 to-red-200 p-4">
+  <div class="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black p-6">
   <div class="max-w-6xl mx-auto">
     <!-- Header -->
     <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold text-red-900 mb-3">Trainer Scheduling</h1>
-      <p class="text-red-700 text-lg">
-        Manage your scheduling rules and availability with precision
-      </p>
+      <h1 class="text-4xl font-bold text-white mb-2 tracking-tight">Trainer Scheduling</h1>
+      <div class="w-24 h-1 mx-auto bg-gradient-to-r from-red-600 to-red-400 rounded-full mb-3"></div>
+      <p class="text-gray-300 text-base">Manage your scheduling rules and availability with precision</p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <!-- Rules Section -->
       <div class="lg:col-span-1">
-        <div class="bg-white rounded-2xl shadow-2xl border border-red-200 overflow-hidden">
+        <div class="bg-black/70 rounded-2xl shadow-2xl border border-red-800 overflow-hidden">
           <!-- Section Header -->
-          <div class="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4">
+          <div class="bg-gradient-to-r from-red-700 to-red-600 px-6 py-4 border-b border-red-800">
             <div class="flex justify-between items-center">
               <h2 class="text-xl font-semibold text-white flex items-center">
                 <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -23,7 +22,7 @@
               </h2>
               <button
                 (click)="showRuleForm = true; editingRule = null"
-                class="bg-white hover:bg-red-50 text-red-600 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+                class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-lg shadow-red-800/30 hover:shadow-red-600/40"
               >
                 <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -38,45 +37,45 @@
             <div class="space-y-4">
               <div
                 *ngFor="let rule of scheduleData"
-                class="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-xl p-4 hover:shadow-lg transition-all duration-300"
+                class="bg-black/50 border border-red-800 rounded-xl p-4 hover:shadow-lg hover:shadow-red-800/20 transition-all duration-300"
               >
                 <div class="flex justify-between items-start mb-3">
                   <div class="flex-1">
-                    <h3 class="font-semibold text-red-900 text-lg">
+                    <h3 class="font-semibold text-white text-lg">
                       {{ getSessionTypeLabel(rule.sessionType) }}
                     </h3>
                     <div class="grid grid-cols-2 gap-4 mt-2">
                       <div>
-                        <p class="text-sm font-medium text-red-700">Time Range</p>
-                        <p class="text-red-600">
+                        <p class="text-sm font-medium text-gray-300">Time Range</p>
+                        <p class="text-gray-200">
                           {{ formatTime(rule.startTime) }} - {{ formatTime(rule.endTime) }}
                         </p>
                       </div>
                       <div>
-                        <p class="text-sm font-medium text-red-700">Date Range</p>
-                        <p class="text-red-600">
+                        <p class="text-sm font-medium text-gray-300">Date Range</p>
+                        <p class="text-gray-200">
                           {{ formatDate(rule.startDate) }} - {{ formatDate(rule.endDate) }}
                         </p>
                       </div>
                     </div>
                     <div class="mt-2">
-                      <p class="text-sm font-medium text-red-700">Days</p>
-                      <p class="text-red-600 text-sm">{{ getDaysOfWeekString(rule.daysOfWeek) }}</p>
+                      <p class="text-sm font-medium text-gray-300">Days</p>
+                      <p class="text-gray-200 text-sm">{{ getDaysOfWeekString(rule.daysOfWeek) }}</p>
                     </div>
                     <div class="mt-2 flex items-center space-x-4">
-                      <span class="text-xs bg-red-200 text-red-800 px-2 py-1 rounded-full">
+                      <span class="text-xs bg-red-800/30 text-red-300 border border-red-800 px-2 py-1 rounded-full">
                         Duration: {{ rule.slotDuration }}min
                       </span>
-                      <span class="text-xs bg-red-200 text-red-800 px-2 py-1 rounded-full">
+                      <span class="text-xs bg-red-800/30 text-red-300 border border-red-800 px-2 py-1 rounded-full">
                         Buffer: {{ rule.bufferTime }}min
                       </span>
-                      <span *ngIf="rule.maxBookingsPerSlot" class="text-xs bg-red-200 text-red-800 px-2 py-1 rounded-full">
+                      <span *ngIf="rule.maxBookingsPerSlot" class="text-xs bg-red-800/30 text-red-300 border border-red-800 px-2 py-1 rounded-full">
                         Max: {{ rule.maxBookingsPerSlot }}
                       </span>
                     </div>
                     <p
                       *ngIf="rule.exceptionalDays && rule.exceptionalDays.length > 0"
-                      class="text-xs text-red-600 mt-2 font-medium"
+                      class="text-xs text-red-300 mt-2 font-medium"
                     >
                       ⚠️ {{ rule.exceptionalDays.length }} exceptional day(s) excluded
                     </p>
@@ -86,8 +85,8 @@
                       (click)="onToggleRuleActive(rule.id!)"
                       [class]="
                         rule.isActive
-                          ? 'bg-green-100 text-green-800 border-green-300'
-                          : 'bg-gray-100 text-gray-600 border-gray-300'
+                          ? 'bg-red-800/30 text-red-300 border-red-800'
+                          : 'bg-gray-800 text-gray-400 border-gray-700'
                       "
                       class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-200"
                     >
@@ -95,7 +94,7 @@
                     </button>
                     <button
                       (click)="onEditRule(rule)"
-                      class="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-all duration-200"
+                      class="text-red-300 hover:text-red-200 hover:bg-red-800/20 p-2 rounded-lg transition-all duration-200"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -103,7 +102,7 @@
                     </button>
                     <button
                       (click)="onDeleteRule(rule.id!)"
-                      class="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-all duration-200"
+                      class="text-red-300 hover:text-red-200 hover:bg-red-800/20 p-2 rounded-lg transition-all duration-200"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -115,16 +114,16 @@
 
               <div
                 *ngIf="rules.length === 0"
-                class="text-center py-12 bg-red-50 rounded-xl border-2 border-dashed border-red-200"
+                class="text-center py-12 bg-black/40 rounded-xl border-2 border-dashed border-red-800 text-gray-300"
               >
-                <svg class="w-16 h-16 text-red-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-16 h-16 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <h3 class="text-lg font-semibold text-red-700 mb-2">No scheduling rules yet</h3>
-                <p class="text-red-600 mb-4">Create your first rule to start managing your availability.</p>
+                <h3 class="text-lg font-semibold text-white mb-2">No scheduling rules yet</h3>
+                <p class="text-gray-300 mb-4">Create your first rule to start managing your availability.</p>
                 <button
                   (click)="showRuleForm = true; editingRule = null"
-                  class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+                  class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg shadow-red-800/30 hover:shadow-red-600/40"
                 >
                   Create First Rule
                 </button>
@@ -141,9 +140,9 @@
     *ngIf="showRuleForm"
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
   >
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl mx-auto max-h-[90vh] overflow-y-auto">
+    <div class="bg-gray-950 text-white rounded-2xl shadow-2xl w-full max-w-4xl mx-auto max-h-[90vh] overflow-y-auto border border-red-800">
       <!-- Modal Header -->
-      <div class="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4 rounded-t-2xl">
+      <div class="bg-gradient-to-r from-red-700 to-red-600 px-6 py-4 rounded-t-2xl border-b border-red-800">
         <div class="flex justify-between items-center">
           <h3 class="text-xl font-semibold text-white flex items-center">
             <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,7 +152,7 @@
           </h3>
           <button
             (click)="cancelEdit()"
-            class="text-white hover:text-red-100 transition-colors"
+            class="text-white hover:text-red-200 transition-colors"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -166,8 +165,8 @@
       <div class="p-6">
         <form [formGroup]="schedulingForm" (ngSubmit)="onSubmit()" class="space-y-6">
           <!-- Time Settings -->
-          <div class="bg-red-50 rounded-xl p-6 border border-red-200">
-            <h4 class="text-lg font-semibold text-red-900 mb-4 flex items-center">
+          <div class="bg-black/60 rounded-xl p-6 border border-red-800">
+            <h4 class="text-lg font-semibold text-white mb-4 flex items-center">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
@@ -176,14 +175,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Start Time -->
               <div>
-                <label class="block text-sm font-medium text-red-700 mb-2">Start Time *</label>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Start Time *</label>
                 <input
                   type="time"
                   formControlName="startTime"
-                  class="w-full px-4 py-3 border-2 border-red-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all duration-200"
+                  class="w-full px-4 py-3 bg-gray-900 text-white placeholder-gray-400 border-2 border-red-800 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-800/40 transition-all duration-200"
                   [class.border-red-500]="schedulingForm.get('startTime')?.invalid && schedulingForm.get('startTime')?.touched"
                 />
-                <div *ngIf="schedulingForm.get('startTime')?.invalid && schedulingForm.get('startTime')?.touched" class="text-red-600 text-sm mt-1 flex items-center">
+                <div *ngIf="schedulingForm.get('startTime')?.invalid && schedulingForm.get('startTime')?.touched" class="text-red-300 text-sm mt-1 flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                   </svg>
@@ -193,20 +192,20 @@
 
               <!-- End Time -->
               <div>
-                <label class="block text-sm font-medium text-red-700 mb-2">End Time *</label>
+                <label class="block text-sm font-medium text-gray-300 mb-2">End Time *</label>
                 <input
                   type="time"
                   formControlName="endTime"
-                  class="w-full px-4 py-3 border-2 border-red-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all duration-200"
+                  class="w-full px-4 py-3 bg-gray-900 text-white placeholder-gray-400 border-2 border-red-800 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-800/40 transition-all duration-200"
                   [class.border-red-500]="schedulingForm.get('endTime')?.invalid && schedulingForm.get('endTime')?.touched"
                 />
-                <div *ngIf="schedulingForm.get('endTime')?.invalid && schedulingForm.get('endTime')?.touched" class="text-red-600 text-sm mt-1 flex items-center">
+                <div *ngIf="schedulingForm.get('endTime')?.invalid && schedulingForm.get('endTime')?.touched" class="text-red-300 text-sm mt-1 flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                   </svg>
                   End time is required
                 </div>
-                <div *ngIf="schedulingForm.get('endTime')?.value && schedulingForm.get('startTime')?.value && schedulingForm.get('endTime')?.value <= schedulingForm.get('startTime')?.value" class="text-red-600 text-sm mt-1 flex items-center">
+                <div *ngIf="schedulingForm.get('endTime')?.value && schedulingForm.get('startTime')?.value && schedulingForm.get('endTime')?.value <= schedulingForm.get('startTime')?.value" class="text-red-300 text-sm mt-1 flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                   </svg>
@@ -217,8 +216,8 @@
           </div>
 
           <!-- Date Settings -->
-          <div class="bg-red-50 rounded-xl p-6 border border-red-200">
-            <h4 class="text-lg font-semibold text-red-900 mb-4 flex items-center">
+          <div class="bg-black/60 rounded-xl p-6 border border-red-800">
+            <h4 class="text-lg font-semibold text-white mb-4 flex items-center">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
               </svg>
@@ -227,14 +226,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Start Date -->
               <div>
-                <label class="block text-sm font-medium text-red-700 mb-2">Start Date *</label>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Start Date *</label>
                 <input
                   type="date"
                   formControlName="startDate"
-                  class="w-full px-4 py-3 border-2 border-red-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all duration-200"
+                  class="w-full px-4 py-3 bg-gray-900 text-white placeholder-gray-400 border-2 border-red-800 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-800/40 transition-all duration-200"
                   [class.border-red-500]="schedulingForm.get('startDate')?.invalid && schedulingForm.get('startDate')?.touched"
                 />
-                <div *ngIf="schedulingForm.get('startDate')?.invalid && schedulingForm.get('startDate')?.touched" class="text-red-600 text-sm mt-1 flex items-center">
+                <div *ngIf="schedulingForm.get('startDate')?.invalid && schedulingForm.get('startDate')?.touched" class="text-red-300 text-sm mt-1 flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                   </svg>
@@ -244,20 +243,20 @@
 
               <!-- End Date -->
               <div>
-                <label class="block text-sm font-medium text-red-700 mb-2">End Date *</label>
+                <label class="block text-sm font-medium text-gray-300 mb-2">End Date *</label>
                 <input
                   type="date"
                   formControlName="endDate"
-                  class="w-full px-4 py-3 border-2 border-red-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all duration-200"
+                  class="w-full px-4 py-3 bg-gray-900 text-white placeholder-gray-400 border-2 border-red-800 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-800/40 transition-all duration-200"
                   [class.border-red-500]="schedulingForm.get('endDate')?.invalid && schedulingForm.get('endDate')?.touched"
                 />
-                <div *ngIf="schedulingForm.get('endDate')?.invalid && schedulingForm.get('endDate')?.touched" class="text-red-600 text-sm mt-1 flex items-center">
+                <div *ngIf="schedulingForm.get('endDate')?.invalid && schedulingForm.get('endDate')?.touched" class="text-red-300 text-sm mt-1 flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                   </svg>
                   End date is required
                 </div>
-                <div *ngIf="schedulingForm.get('endDate')?.value && schedulingForm.get('startDate')?.value && schedulingForm.get('endDate')?.value < schedulingForm.get('startDate')?.value" class="text-red-600 text-sm mt-1 flex items-center">
+                <div *ngIf="schedulingForm.get('endDate')?.value && schedulingForm.get('startDate')?.value && schedulingForm.get('endDate')?.value < schedulingForm.get('startDate')?.value" class="text-red-300 text-sm mt-1 flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                   </svg>
@@ -268,8 +267,8 @@
           </div>
 
           <!-- Session Configuration -->
-          <div class="bg-red-50 rounded-xl p-6 border border-red-200">
-            <h4 class="text-lg font-semibold text-red-900 mb-4 flex items-center">
+          <div class="bg-black/60 rounded-xl p-6 border border-red-800">
+            <h4 class="text-lg font-semibold text-white mb-4 flex items-center">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
               </svg>
@@ -278,16 +277,16 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <!-- Buffer Time -->
               <div>
-                <label class="block text-sm font-medium text-red-700 mb-2">Buffer Time (minutes) *</label>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Buffer Time (minutes) *</label>
                 <input
                   type="number"
                   formControlName="bufferTime"
                   min="0"
                   max="60"
-                  class="w-full px-4 py-3 border-2 border-red-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all duration-200"
+                  class="w-full px-4 py-3 bg-gray-900 text-white placeholder-gray-400 border-2 border-red-800 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-800/40 transition-all duration-200"
                   [class.border-red-500]="schedulingForm.get('bufferTime')?.invalid && schedulingForm.get('bufferTime')?.touched"
                 />
-                <div *ngIf="schedulingForm.get('bufferTime')?.invalid && schedulingForm.get('bufferTime')?.touched" class="text-red-600 text-sm mt-1 flex items-center">
+                <div *ngIf="schedulingForm.get('bufferTime')?.invalid && schedulingForm.get('bufferTime')?.touched" class="text-red-300 text-sm mt-1 flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                   </svg>
@@ -297,16 +296,16 @@
 
               <!-- Session Type -->
               <div>
-                <label class="block text-sm font-medium text-red-700 mb-2">Session Type *</label>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Session Type *</label>
                 <select
                   formControlName="sessionType"
-                  class="w-full px-4 py-3 border-2 border-red-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all duration-200"
+                  class="w-full px-4 py-3 bg-gray-900 text-white placeholder-gray-400 border-2 border-red-800 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-800/40 transition-all duration-200"
                   [class.border-red-500]="schedulingForm.get('sessionType')?.invalid && schedulingForm.get('sessionType')?.touched"
                 >
                   <option value="">Select session type</option>
                   <option *ngFor="let type of sessionTypes" [value]="type.value">{{ type.label }}</option>
                 </select>
-                <div *ngIf="schedulingForm.get('sessionType')?.invalid && schedulingForm.get('sessionType')?.touched" class="text-red-600 text-sm mt-1 flex items-center">
+                <div *ngIf="schedulingForm.get('sessionType')?.invalid && schedulingForm.get('sessionType')?.touched" class="text-red-300 text-sm mt-1 flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                   </svg>
@@ -316,16 +315,16 @@
 
               <!-- Slot Duration -->
               <div>
-                <label class="block text-sm font-medium text-red-700 mb-2">Slot Duration (minutes) *</label>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Slot Duration (minutes) *</label>
                 <input
                   type="number"
                   formControlName="slotDuration"
                   min="15"
                   max="240"
-                  class="w-full px-4 py-3 border-2 border-red-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all duration-200"
+                  class="w-full px-4 py-3 bg-gray-900 text-white placeholder-gray-400 border-2 border-red-800 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-800/40 transition-all duration-200"
                   [class.border-red-500]="schedulingForm.get('slotDuration')?.invalid && schedulingForm.get('slotDuration')?.touched"
                 />
-                <div *ngIf="schedulingForm.get('slotDuration')?.invalid && schedulingForm.get('slotDuration')?.touched" class="text-red-600 text-sm mt-1 flex items-center">
+                <div *ngIf="schedulingForm.get('slotDuration')?.invalid && schedulingForm.get('slotDuration')?.touched" class="text-red-300 text-sm mt-1 flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                   </svg>
@@ -336,16 +335,16 @@
 
             <!-- Max Bookings Per Slot -->
             <div class="mt-4">
-              <label class="block text-sm font-medium text-red-700 mb-2">Max Bookings Per Slot</label>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Max Bookings Per Slot</label>
               <input
                 type="number"
                 formControlName="maxBookingsPerSlot"
                 min="1"
                 max="10"
-                class="w-full px-4 py-3 border-2 border-red-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all duration-200"
+                class="w-full px-4 py-3 bg-gray-900 text-white placeholder-gray-400 border-2 border-red-800 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-800/40 transition-all duration-200"
                 [class.border-red-500]="schedulingForm.get('maxBookingsPerSlot')?.invalid && schedulingForm.get('maxBookingsPerSlot')?.touched"
               />
-              <div *ngIf="schedulingForm.get('maxBookingsPerSlot')?.invalid && schedulingForm.get('maxBookingsPerSlot')?.touched" class="text-red-600 text-sm mt-1 flex items-center">
+              <div *ngIf="schedulingForm.get('maxBookingsPerSlot')?.invalid && schedulingForm.get('maxBookingsPerSlot')?.touched" class="text-red-300 text-sm mt-1 flex items-center">
                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                 </svg>
@@ -355,26 +354,26 @@
           </div>
 
           <!-- Days of Week -->
-          <div class="bg-red-50 rounded-xl p-6 border border-red-200">
-            <h4 class="text-lg font-semibold text-red-900 mb-4 flex items-center">
+          <div class="bg-black/60 rounded-xl p-6 border border-red-800">
+            <h4 class="text-lg font-semibold text-white mb-4 flex items-center">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
               </svg>
               Days of Week *
             </h4>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <label *ngFor="let day of daysOfWeek" class="flex items-center p-3 bg-white rounded-lg border-2 border-red-200 hover:border-red-300 transition-all duration-200 cursor-pointer">
+              <label *ngFor="let day of daysOfWeek" class="flex items-center p-3 bg-gray-900 rounded-lg border-2 border-red-800 hover:border-red-600 transition-all duration-200 cursor-pointer">
                 <input
                   type="checkbox"
                   [value]="day.value"
                   [checked]="schedulingForm.get('daysOfWeek')?.value.includes(day.value)"
                   (change)="onDayOfWeekChange(day.value, $event)"
-                  class="w-4 h-4 text-red-600 border-red-300 rounded focus:ring-red-500 mr-3"
+                  class="w-4 h-4 text-red-500 bg-gray-900 border-red-800 rounded focus:ring-red-600 mr-3"
                 />
-                <span class="text-sm font-medium text-red-700">{{ day.label }}</span>
+                <span class="text-sm font-medium text-gray-300">{{ day.label }}</span>
               </label>
             </div>
-            <div *ngIf="schedulingForm.get('daysOfWeek')?.value.length === 0 && schedulingForm.get('daysOfWeek')?.touched" class="text-red-600 text-sm mt-2 flex items-center">
+            <div *ngIf="schedulingForm.get('daysOfWeek')?.value.length === 0 && schedulingForm.get('daysOfWeek')?.touched" class="text-red-300 text-sm mt-2 flex items-center">
               <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
               </svg>
@@ -383,8 +382,8 @@
           </div>
 
           <!-- Exceptional Days -->
-          <div class="bg-red-50 rounded-xl p-6 border border-red-200">
-            <h4 class="text-lg font-semibold text-red-900 mb-4 flex items-center">
+          <div class="bg-black/60 rounded-xl p-6 border border-red-800">
+            <h4 class="text-lg font-semibold text-white mb-4 flex items-center">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
               </svg>
@@ -394,12 +393,12 @@
               <input
                 type="date"
                 formControlName="exceptionalDayInput"
-                class="flex-1 px-4 py-3 border-2 border-red-200 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all duration-200"
+                class="flex-1 px-4 py-3 bg-gray-900 text-white placeholder-gray-400 border-2 border-red-800 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-800/40 transition-all duration-200"
               />
               <button
                 type="button"
                 (click)="addExceptionalDay()"
-                class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+                class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg shadow-red-800/30 hover:shadow-red-600/40"
               >
                 Add Date
               </button>
@@ -408,13 +407,13 @@
             <div class="flex flex-wrap gap-2">
               <div
                 *ngFor="let date of schedulingForm.get('exceptionalDays')?.value"
-                class="flex items-center space-x-2 px-3 py-2 bg-red-200 rounded-full"
+                class="flex items-center space-x-2 px-3 py-2 bg-red-800/30 border border-red-800 rounded-full"
               >
-                <span class="text-red-800 font-medium">{{ formatDate(date) }}</span>
+                <span class="text-red-300 font-medium">{{ formatDate(date) }}</span>
                 <button
                   type="button"
                   (click)="removeExceptionalDay(date)"
-                  class="text-red-600 hover:text-red-800 hover:bg-red-300 p-1 rounded-full transition-all duration-200"
+                  class="text-red-300 hover:text-red-200 hover:bg-red-800/30 p-1 rounded-full transition-all duration-200"
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -425,18 +424,18 @@
           </div>
 
           <!-- Form Actions -->
-          <div class="flex justify-end space-x-4 pt-6 border-t border-red-200">
+          <div class="flex justify-end space-x-4 pt-6 border-t border-red-800">
             <button
               type="button"
               (click)="cancelEdit()"
-              class="px-6 py-3 text-red-600 hover:text-red-800 border-2 border-red-300 hover:border-red-400 rounded-lg font-medium transition-all duration-200"
+              class="px-6 py-3 text-red-300 hover:text-white border-2 border-red-800 hover:border-red-600 rounded-lg font-medium transition-all duration-200"
             >
               Cancel
             </button>
             <button
               type="submit"
               [disabled]="!schedulingForm.valid"
-              class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white px-8 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg shadow-red-800/30 hover:shadow-red-600/40 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span class="flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -31,6 +31,7 @@ export class SchedulingService {
       id: this.generateId(),
       ...ruleData,
       isActive: true,
+      isBooked: false,
     };
 
     const currentRules = this.rulesSubject.value;
@@ -64,6 +65,9 @@ export class SchedulingService {
 
     return updatedRule;
   }
+
+
+
 
   deleteRule(ruleId: string): void {
     const currentRules = this.rulesSubject.value;

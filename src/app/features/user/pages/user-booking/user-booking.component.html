@@ -8,58 +8,11 @@
 
 <!-- Main Content -->
 <div *ngIf="!isLoading && trainer" class="booking-container">
-  <!-- Matrix-style falling particles -->
-  <div class="absolute inset-0 matrix-bg">
-    <div class="matrix-column" style="left: 10%"></div>
-    <div class="matrix-column" style="left: 20%"></div>
-    <div class="matrix-column" style="left: 30%"></div>
-    <div class="matrix-column" style="left: 40%"></div>
-    <div class="matrix-column" style="left: 50%"></div>
-    <div class="matrix-column" style="left: 60%"></div>
-    <div class="matrix-column" style="left: 70%"></div>
-    <div class="matrix-column" style="left: 80%"></div>
-    <div class="matrix-column" style="left: 90%"></div>
-  </div>
-
-  <!-- Floating orbs with trail effects -->
-  <div class="absolute inset-0">
-    <div class="floating-orb orb-1"></div>
-    <div class="floating-orb orb-2"></div>
-    <div class="floating-orb orb-3"></div>
-    <div class="floating-orb orb-4"></div>
-    <div class="floating-orb orb-5"></div>
-  </div>
-
-  <!-- Morphing geometric shapes -->
-  <div class="absolute inset-0">
-    <div class="morphing-shape shape-1"></div>
-    <div class="morphing-shape shape-2"></div>
-    <div class="morphing-shape shape-3"></div>
-  </div>
-
-  <!-- Interactive particle system -->
-  <div class="absolute inset-0 particle-system">
-    <div class="particle" *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]"></div>
-  </div>
-
-  <!-- Animated background particles -->
-  <div class="absolute inset-0">
-    <div class="absolute top-10 left-10 w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
-    <div class="absolute top-20 right-20 w-1 h-1 bg-orange-500 rounded-full animate-pulse"></div>
-    <div class="absolute bottom-10 left-1/4 w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce"></div>
-    <div class="absolute bottom-20 right-1/3 w-1 h-1 bg-orange-400 rounded-full animate-ping delay-1000"></div>
-  </div>
-
   <!-- Main Booking Content -->
   <div class="booking-content">
     <!-- Header -->
     <div class="booking-header">
       <div class="rounded-xl p-6 sm:p-8 border border-blue-500/30 bg-black/60 backdrop-blur-sm relative overflow-hidden">
-        <!-- Animated background elements -->
-        <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-orange-500/5"></div>
-        <div class="absolute top-0 left-0 w-20 h-20 bg-blue-500/10 rounded-full blur-xl animate-pulse"></div>
-        <div class="absolute bottom-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-pulse delay-1000"></div>
-
         <div class="text-center relative z-10">
           <h1 class="text-3xl lg:text-4xl font-bold text-white mb-3 tracking-tight leading-tight animate-fade-in">
             Book Your Session
@@ -82,22 +35,39 @@
         <div class="trainer-details">
           <h3 class="trainer-name">{{ getTrainerName() }}</h3>
           <div class="trainer-category">{{ getTrainerCategory() }}</div>
-          <div class="trainer-experience">{{ getTrainerExperience() }}</div>
-          <div class="trainer-rating">
-            <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
+          
+          <div class="trainer-essential-info">
+            <div class="info-row">
+              <span class="info-label">Email:</span>
+              <span class="info-value">{{ trainer.email }}</span>
             </div>
-            <span class="rating-text">4.9 (127 reviews)</span>
+            <div class="info-row">
+              <span class="info-label">Contact:</span>
+              <span class="info-value">{{ trainer.phoneNumber }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Experience:</span>
+              <span class="info-value">{{ getTrainerExperience() }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Specialization:</span>
+              <span class="info-value">{{ trainer.specialization }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Rating:</span>
+              <div class="trainer-rating">
+                <div class="stars">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+                <span class="rating-text">4.9 (127 reviews)</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="trainer-bio">
-        <p>{{ getTrainerBio() }}</p>
-        <button class="read-more-btn">Read more</button>
       </div>
     </div>
 
@@ -162,6 +132,9 @@
               [class.selected]="day.isSelected"
               [class.unavailable]="!day.isAvailable"
               (click)="selectDate(day)"
+              (mouseenter)="onDayHover(day)"
+              (mouseleave)="onDayLeave()"
+              [attr.title]="!day.isAvailable ? (hoverMessage || 'Not available') : null"
             >
               {{ day.date }}
             </div>
@@ -172,18 +145,25 @@
       <!-- Time Slots -->
       <div class="time-slots" *ngIf="selectedDate">
         <h3>Available Time Slots for {{ selectedDate | date:'MMM dd, yyyy' }}</h3>
-        <div class="slots-grid">
-          <button 
-            *ngFor="let slot of availableTimeSlots" 
-            class="time-slot"
-            [class.selected]="selectedTimeSlot === slot"
-            [class.booked]="slot.isBooked"
-            [disabled]="slot.isBooked"
-            (click)="selectTimeSlot(slot)"
-          >
-            {{ slot.time }}
-          </button>
-        </div>
+        <ng-container *ngIf="availableTimeSlots.length > 0; else noSlots">
+          <div class="slots-grid">
+            <button 
+              *ngFor="let slot of availableTimeSlots" 
+              class="time-slot"
+              [class.selected]="selectedTimeSlot === slot"
+              [class.booked]="slot.isBooked"
+              [disabled]="slot.isBooked"
+              (click)="selectTimeSlot(slot)"
+            >
+              {{ slot.time }}
+            </button>
+          </div>
+        </ng-container>
+        <ng-template #noSlots>
+          <div class="no-slots-message">
+            {{ hoverMessage || 'No available slots for this date. Please pick another day.' }}
+          </div>
+        </ng-template>
       </div>
     </div>
 
@@ -207,7 +187,7 @@
         </div>
         <div class="summary-item">
           <span class="label">Time:</span>
-          <span class="value">{{ selectedTimeSlot?.time | date:'HH:mm' | uppercase  }}</span>
+          <span class="value">{{ selectedTimeSlot.time }}</span>
         </div>
         <div class="summary-item total">
           <span class="label">Total:</span>

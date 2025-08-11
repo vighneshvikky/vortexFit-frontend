@@ -12,6 +12,7 @@ export interface SchedulingRule {
   slotDuration: number;
   maxBookingsPerSlot?: number;
   exceptionalDays?: string[];
+  isBooked?: boolean  
 }
 
 export interface TimeSlot {

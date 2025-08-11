@@ -4,11 +4,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Trainer } from '../../trainer/models/trainer.interface';
 import { User } from '../../admin/services/admin.service';
+import { SchedulingRule } from '../../trainer/models/scheduling.interface';
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private apiUrl = `${environment.api}/user`;
+  private scheduleUrl = `${environment.api}/schedules`
 
   constructor(private http: HttpClient) {}
 
@@ -22,6 +24,11 @@ export class UserService {
         category: category || '',
       },
     });
+  }
+
+      generateSlots(trainerId: string): Observable<SchedulingRule[]>{
+        // generateSlots/:trainerId
+  return this.http.get<SchedulingRule[]>(`${this.scheduleUrl}/generateSlots/${trainerId}`)
   }
 
   getTrainerData(id: string): Observable<Trainer> {
@@ -38,4 +45,6 @@ export class UserService {
       }
     );
   }
+
+
 }

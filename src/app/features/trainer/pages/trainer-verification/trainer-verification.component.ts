@@ -81,8 +81,6 @@ export class TrainerVerificationComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(100), // ✅ increase this
           this.minWords(2),
         ],
       ],
