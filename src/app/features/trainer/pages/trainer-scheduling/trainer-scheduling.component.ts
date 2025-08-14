@@ -14,6 +14,7 @@ import {
   SchedulingFormData,
 } from '../../models/scheduling.interface';
 import { NotyService } from '../../../../core/services/noty.service';
+import { CATEGORIES, DAYSOFWEEK, SESSION_TYPES } from '../../../../shared/constants/filter-options';
 
 @Component({
   selector: 'app-trainer-scheduling',
@@ -31,22 +32,11 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
-  public sessionTypes = [
-    { value: 'interactive', label: 'Interactive Session' },
-    { value: 'one-to-one', label: 'One-to-One Session' },
-    { value: 'group', label: 'Group Session' },
-    { value: 'other', label: 'Other' },
-  ];
 
-  daysOfWeek = [
-    { value: 0, label: 'Sunday' },
-    { value: 1, label: 'Monday' },
-    { value: 2, label: 'Tuesday' },
-    { value: 3, label: 'Wednesday' },
-    { value: 4, label: 'Thursday' },
-    { value: 5, label: 'Friday' },
-    { value: 6, label: 'Saturday' },
-  ];
+
+    public sessionTypes = SESSION_TYPES;
+
+  daysOfWeek = DAYSOFWEEK;
 
   constructor(
     private fb: FormBuilder,
@@ -92,7 +82,6 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
       ],
       maxBookingsPerSlot: [1, [Validators.min(1), Validators.max(10)]],
       exceptionalDays: [[]],
-      // Add this new form control for the input
       exceptionalDayInput: [''],
     });
   }
@@ -170,9 +159,9 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
     control.updateValueAndValidity();
   }
 
-  onToggleRuleActive(ruleId: string): void {
-    this.schedulingService.toggleRuleActive(ruleId);
-  }
+onToggleRuleActive(rule: string){
+
+}
 
   addExceptionalDay(): void {
     const inputControl = this.schedulingForm.get('exceptionalDayInput');
@@ -182,16 +171,16 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
       const currentDays: string[] =
         this.schedulingForm.get('exceptionalDays')?.value || [];
 
-      // Avoid duplicates
+
       if (!currentDays.includes(inputValue)) {
         const updatedDays = [...currentDays, inputValue];
 
         this.schedulingForm.patchValue({
           exceptionalDays: updatedDays,
-          exceptionalDayInput: '', // Clear the input field
+          exceptionalDayInput: '',
         });
 
-        // Optionally mark as dirty/touched
+        
         this.schedulingForm.get('exceptionalDays')?.markAsDirty();
       }
     }
@@ -262,7 +251,7 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
       slotDuration: 60,
       maxBookingsPerSlot: 1,
       exceptionalDays: [],
-      exceptionalDayInput: '', // Add this
+      exceptionalDayInput: '', 
     });
   }
 }

@@ -20,7 +20,6 @@ export class UserTrainerListComponent implements OnInit {
       const category = params['category'];
       this.userService.getTrainer(category).subscribe({
         next: (response) => {
-          console.log('response', response)
           this.trainers = response;
         },
         error: (err) => {

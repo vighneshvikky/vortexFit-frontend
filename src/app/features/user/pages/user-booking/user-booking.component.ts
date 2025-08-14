@@ -1,12 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { Trainer } from '../../../trainer/models/trainer.interface';
 import { UserService } from '../../services/user.service';
 import { NotyService } from '../../../../core/services/noty.service';
 import { SchedulingRule } from '../../../trainer/models/scheduling.interface';
 import { formatTime as formatTimeAmPm } from '../../../../shared/methods/time.checker';
+import { PaymentService } from '../../services/payment.service';
+import { environment } from '../../../../../enviorments/environment';
 
 interface CalendarDay {
   date: number;
@@ -40,8 +41,8 @@ export class UserBookingComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private userService = inject(UserService);
+  private paymentService = inject(PaymentService);
   private notyf = inject(NotyService);
-  private http = inject(HttpClient);
 
   // Trainer data
   trainer: Trainer | null = null;
@@ -51,7 +52,7 @@ export class UserBookingComponent implements OnInit {
   // Session selection
   selectedSessionType: string = '';
   sessionTypes: SessionType[] = [];
-
+  selectedPrice!: number;
   // Calendar and date selection
   currentDate: Date = new Date();
   selectedDate: Date | null = null;
@@ -73,11 +74,9 @@ export class UserBookingComponent implements OnInit {
     this.userService
       .generateSlots(this.trainerId)
       .subscribe((res: SchedulingRule[]) => {
-       this.trainerRules = res;
-       console.log('trainerRules', this.trainerRules)
-       // Rebuild calendar once rules are loaded so availability reflects actual rules
-       this.generateCalendar();
-       this.updateCurrentMonthYear();
+        this.trainerRules = res;
+        this.generateCalendar();
+        this.updateCurrentMonthYear();
       });
     if (this.trainerId) {
       this.fetchTrainerData();
@@ -126,8 +125,9 @@ export class UserBookingComponent implements OnInit {
   }
 
   // Session type selection
-  selectSessionType(type: string) {
+  selectSessionType(type: string, price: number) {
     this.selectedSessionType = type;
+    this.selectedPrice = price;
   }
 
   getSessionTypeName(): string {
@@ -180,10 +180,9 @@ export class UserBookingComponent implements OnInit {
 
     if (checkDate < today) return false;
 
-    const dayOfWeek = checkDate.getDay(); // 0-6, Sun-Sat
+    const dayOfWeek = checkDate.getDay();
     const dateStr = this.formatDateLocal(checkDate);
 
-    // A date is available if at least one active rule applies for that date
     return this.trainerRules.some((rule) => {
       if (!rule.isActive) return false;
 
@@ -305,21 +304,6 @@ export class UserBookingComponent implements OnInit {
     return results;
   }
 
-  generateTimeSlots(selectedDate: Date) {
-    // const slots = [
-    //   { time: '09:00 AM', isBooked: false, isAvailable: true },
-    //   { time: '10:00 AM', isBooked: false, isAvailable: true },
-    //   { time: '11:00 AM', isBooked: true, isAvailable: false },
-    //   { time: '12:00 PM', isBooked: false, isAvailable: true },
-    //   { time: '02:00 PM', isBooked: false, isAvailable: true },
-    //   { time: '03:00 PM', isBooked: false, isAvailable: true },
-    //   { time: '04:00 PM', isBooked: true, isAvailable: false },
-    //   { time: '05:00 PM', isBooked: false, isAvailable: true },
-    //   { time: '06:00 PM', isBooked: false, isAvailable: true }
-    // ];
-    // this.availableTimeSlots = slots.filter(slot => slot.isAvailable);
-  }
-
   previousMonth() {
     this.currentDate.setMonth(this.currentDate.getMonth() - 1);
     this.generateCalendar();
@@ -372,8 +356,8 @@ export class UserBookingComponent implements OnInit {
 
     if (!inAnyRange) return 'No sessions scheduled for this date range';
 
-    const isExceptional = this.trainerRules.some(
-      (r) => (r.exceptionalDays || []).includes(dateStr)
+    const isExceptional = this.trainerRules.some((r) =>
+      (r.exceptionalDays || []).includes(dateStr)
     );
     if (isExceptional) return 'Trainer is unavailable on this date';
 
@@ -401,9 +385,30 @@ export class UserBookingComponent implements OnInit {
       this.notyf.showError('Please select all required fields');
       return;
     }
-
+    console.log('selectedSessionType', this.selectedSessionType);
+    console.log('selectedDate', this.selectedDate);
+    console.log('selectedTimeSlot', this.selectedTimeSlot);
     // Generate booking ID
     this.bookingId = 'BK' + Date.now().toString().slice(-6);
+
+    const bookingData = {
+      amount: this.selectedPrice,
+      bookingId: this.bookingId,
+      sessionType: this.selectedSessionType,
+      date: this.selectedDate,
+      timeSlot: this.selectedTimeSlot,
+    };
+
+    this.paymentService.createOrder(bookingData).subscribe({
+      next: (res) => {
+        this.openRazorpayCheckout(res.order);
+      },
+      error: (err) => {
+        console.error('Order creation failed', err);
+        this.notyf.showError('Something went wrong while starting payment');
+      },
+    });
+
     this.showConfirmationModal = true;
   }
 
@@ -412,26 +417,22 @@ export class UserBookingComponent implements OnInit {
   }
 
   addToCalendar() {
-    // Implementation for adding to calendar
     console.log('Adding to calendar...');
     this.notyf.showSuccess('Added to calendar successfully');
   }
 
   messageTrainer() {
-    // Implementation for messaging trainer
     console.log('Opening chat with trainer...');
     this.notyf.showSuccess('Opening chat with trainer');
   }
 
   scrollToBooking() {
-    // Scroll to the session selection section
     const sessionSection = document.querySelector('.session-selection');
     if (sessionSection) {
       sessionSection.scrollIntoView({ behavior: 'smooth' });
     }
   }
 
-  // Helper methods
   getTrainerImage(): string {
     return this.trainer?.image || 'assets/images/default-trainer.jpg';
   }
@@ -452,5 +453,43 @@ export class UserBookingComponent implements OnInit {
 
   getTrainerBio(): string {
     return this.trainer?.bio || 'No bio available';
+  }
+
+  openRazorpayCheckout(order: {
+    id: string;
+    amount: number;
+    currency: string;
+  }) {
+    const options: Razorpay.Options = {
+      key: environment.razorpayKey,
+      amount: order.amount,
+      currency: order.currency,
+      name: 'VortexFit Booking',
+      description: 'Session Booking Payment',
+      order_id: order.id,
+      handler: (response) => {
+        console.log('Payment success:', response);
+        this.paymentService
+          .verifyOrder({ ...response, bookingId: this.bookingId })
+          .subscribe((verifyRes) => {
+            if (verifyRes.status === 'success') {
+              this.notyf.showSuccess('Booking confirmed!');
+            } else {
+              this.notyf.showError('Payment verification failed');
+            }
+          });
+      },
+      prefill: {
+        name: 'vortexfit',
+        email: 'vvortex@example.com',
+        contact: '9999999999',
+      },
+      theme: {
+        color: '#3399cc',
+      },
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
   }
 }

@@ -12,13 +12,21 @@
   <div class="booking-content">
     <!-- Header -->
     <div class="booking-header">
-      <div class="rounded-xl p-6 sm:p-8 border border-blue-500/30 bg-black/60 backdrop-blur-sm relative overflow-hidden">
+      <div
+        class="rounded-xl p-6 sm:p-8 border border-blue-500/30 bg-black/60 backdrop-blur-sm relative overflow-hidden"
+      >
         <div class="text-center relative z-10">
-          <h1 class="text-3xl lg:text-4xl font-bold text-white mb-3 tracking-tight leading-tight animate-fade-in">
+          <h1
+            class="text-3xl lg:text-4xl font-bold text-white mb-3 tracking-tight leading-tight animate-fade-in"
+          >
             Book Your Session
           </h1>
-          <div class="w-20 h-1 bg-gradient-to-r from-blue-500 to-orange-500 rounded-full mx-auto shadow-lg shadow-blue-500/50 animate-pulse"></div>
-          <p class="text-gray-300 mt-3 text-sm sm:text-base animate-fade-in-delay">
+          <div
+            class="w-20 h-1 bg-gradient-to-r from-blue-500 to-orange-500 rounded-full mx-auto shadow-lg shadow-blue-500/50 animate-pulse"
+          ></div>
+          <p
+            class="text-gray-300 mt-3 text-sm sm:text-base animate-fade-in-delay"
+          >
             Choose your preferred session type and schedule
           </p>
         </div>
@@ -29,13 +37,17 @@
     <div class="trainer-card">
       <div class="trainer-info">
         <div class="trainer-avatar">
-          <img [src]="getTrainerImage()" [alt]="getTrainerName()" class="avatar-img">
+          <img
+            [src]="getTrainerImage()"
+            [alt]="getTrainerName()"
+            class="avatar-img"
+          />
           <div class="online-indicator"></div>
         </div>
         <div class="trainer-details">
           <h3 class="trainer-name">{{ getTrainerName() }}</h3>
           <div class="trainer-category">{{ getTrainerCategory() }}</div>
-          
+
           <div class="trainer-essential-info">
             <div class="info-row">
               <span class="info-label">Email:</span>
@@ -75,14 +87,18 @@
     <div class="session-selection">
       <h2 class="section-title">Choose Session Type</h2>
       <div class="session-options">
-        <div 
-          *ngFor="let session of sessionTypes" 
-          class="session-card" 
-          [class.selected]="selectedSessionType === session.id" 
-          (click)="selectSessionType(session.id)"
+        <div
+          *ngFor="let session of sessionTypes"
+          class="session-card"
+          [class.selected]="selectedSessionType === session.id"
+          (click)="selectSessionType(session.id, session.price)"
         >
           <div class="session-icon">
-            <i [class]="session.id === 'one-to-one' ? 'fas fa-user' : 'fas fa-dumbbell'"></i>
+            <i
+              [class]="
+                session.id === 'one-to-one' ? 'fas fa-user' : 'fas fa-dumbbell'
+              "
+            ></i>
           </div>
           <div class="session-content">
             <h3>{{ session.name }}</h3>
@@ -99,7 +115,7 @@
     <!-- Date & Time Picker -->
     <div class="datetime-selection">
       <h2 class="section-title">Select Date & Time</h2>
-      
+
       <!-- Calendar -->
       <div class="calendar-section">
         <div class="calendar-header">
@@ -111,7 +127,7 @@
             <i class="fas fa-chevron-right"></i>
           </button>
         </div>
-        
+
         <div class="calendar-grid">
           <div class="calendar-weekdays">
             <div class="weekday">Sun</div>
@@ -122,10 +138,10 @@
             <div class="weekday">Fri</div>
             <div class="weekday">Sat</div>
           </div>
-          
+
           <div class="calendar-days">
-            <div 
-              *ngFor="let day of calendarDays" 
+            <div
+              *ngFor="let day of calendarDays"
               class="calendar-day"
               [class.other-month]="!day.isCurrentMonth"
               [class.available]="day.isAvailable"
@@ -134,7 +150,9 @@
               (click)="selectDate(day)"
               (mouseenter)="onDayHover(day)"
               (mouseleave)="onDayLeave()"
-              [attr.title]="!day.isAvailable ? (hoverMessage || 'Not available') : null"
+              [attr.title]="
+                !day.isAvailable ? hoverMessage || 'Not available' : null
+              "
             >
               {{ day.date }}
             </div>
@@ -144,11 +162,13 @@
 
       <!-- Time Slots -->
       <div class="time-slots" *ngIf="selectedDate">
-        <h3>Available Time Slots for {{ selectedDate | date:'MMM dd, yyyy' }}</h3>
+        <h3>
+          Available Time Slots for {{ selectedDate | date : "MMM dd, yyyy" }}
+        </h3>
         <ng-container *ngIf="availableTimeSlots.length > 0; else noSlots">
           <div class="slots-grid">
-            <button 
-              *ngFor="let slot of availableTimeSlots" 
+            <button
+              *ngFor="let slot of availableTimeSlots"
               class="time-slot"
               [class.selected]="selectedTimeSlot === slot"
               [class.booked]="slot.isBooked"
@@ -161,14 +181,20 @@
         </ng-container>
         <ng-template #noSlots>
           <div class="no-slots-message">
-            {{ hoverMessage || 'No available slots for this date. Please pick another day.' }}
+            {{
+              hoverMessage ||
+                "No available slots for this date. Please pick another day."
+            }}
           </div>
         </ng-template>
       </div>
     </div>
 
     <!-- Order Summary Panel (Sticky) -->
-    <div class="order-summary" *ngIf="selectedSessionType && selectedDate && selectedTimeSlot">
+    <div
+      class="order-summary"
+      *ngIf="selectedSessionType && selectedDate && selectedTimeSlot"
+    >
       <div class="summary-header">
         <h3>Order Summary</h3>
       </div>
@@ -183,7 +209,7 @@
         </div>
         <div class="summary-item">
           <span class="label">Date:</span>
-          <span class="value">{{ selectedDate | date:'MMM dd, yyyy' }}</span>
+          <span class="value">{{ selectedDate | date : "MMM dd, yyyy" }}</span>
         </div>
         <div class="summary-item">
           <span class="label">Time:</span>
@@ -201,7 +227,11 @@
   </div>
 
   <!-- Confirmation Modal -->
-  <div class="modal-overlay" *ngIf="showConfirmationModal" (click)="closeConfirmationModal()">
+  <div
+    class="modal-overlay"
+    *ngIf="showConfirmationModal"
+    (click)="closeConfirmationModal()"
+  >
     <div class="confirmation-modal" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <div class="success-icon">
@@ -210,7 +240,7 @@
         <h2>Booking Confirmed!</h2>
         <p>Your session has been successfully booked</p>
       </div>
-      
+
       <div class="booking-details">
         <div class="detail-item">
           <span class="label">Booking ID:</span>
@@ -226,7 +256,10 @@
         </div>
         <div class="detail-item">
           <span class="label">Date & Time:</span>
-          <span class="value">{{ selectedDate | date:'MMM dd, yyyy' }} at {{ selectedTimeSlot?.time }}</span>
+          <span class="value"
+            >{{ selectedDate | date : "MMM dd, yyyy" }} at
+            {{ selectedTimeSlot?.time }}</span
+          >
         </div>
       </div>
 
