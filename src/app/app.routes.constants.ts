@@ -15,7 +15,9 @@ export const API_ROUTES = {
     DELETE_SCHEDULES: (id: string) => `/deleteSchedule/${id}`
   },
   S3: {
-    GENERATE_UPLOAD_URL: '/s3/generate-upload-url'
+    BASE: '/s3',
+    GENERATE_UPLOAD_URL: '/generate-upload-url',
+  GENERATE_DOWNLOAD_URL: '/generate-download-url'
   },
   TRAINER: {
     BASE: '/trainer',

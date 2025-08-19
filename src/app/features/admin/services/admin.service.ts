@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../enviorments/environment';
 import { GetUsersQuery } from '../../../shared/components/admin/sidebar/sidebar.component';
 import { Trainer } from '../../trainer/models/trainer.interface';
+import { API_ROUTES } from '../../../app.routes.constants';
 
 export interface AdminLoginRequest {
   email: string;
@@ -59,6 +60,7 @@ export interface PaginatedResponse<T> {
 })
 export class AdminService {
   private apiUrl = `${environment.api}/admin`;
+  private uploadUrl = `${environment.api}`;
 
   constructor(private http: HttpClient) {}
 
@@ -137,6 +139,14 @@ export class AdminService {
     return this.http.patch<Trainer>(
       `${this.apiUrl}/reject-trainer/${trainerId}`,
       { reason }
+    );
+  }
+
+  download(key: string, fileName: string) {
+    console.log('downloading', key, fileName)
+    return this.http.post<{ url: string }>(
+      `${this.uploadUrl}${API_ROUTES.S3.BASE}${API_ROUTES.S3.GENERATE_DOWNLOAD_URL}`,
+      { key, fileName }
     );
   }
 }

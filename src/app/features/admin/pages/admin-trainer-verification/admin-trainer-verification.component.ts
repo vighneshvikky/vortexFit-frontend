@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { Observable, take } from 'rxjs';
+import { firstValueFrom, Observable, take } from 'rxjs';
 import { Trainer } from '../../../trainer/models/trainer.interface';
 import { FormsModule } from '@angular/forms';
 import {
@@ -43,6 +43,8 @@ export class AdminTrainerVerificationComponent implements OnInit {
   approvingTrainers = new Set<string>();
   rejectingTrainers = new Set<string>();
   isSubmittingRejection = false;
+
+  downloadingDocuments = new Set<string>();
 
   usersMeta$!: Observable<{
     total: number;
@@ -93,6 +95,55 @@ export class AdminTrainerVerificationComponent implements OnInit {
     };
   }
 
+  isDownloading(documentId: string): boolean {
+    return this.downloadingDocuments.has(documentId);
+  }
+
+  async downloadDocument(
+    key: string,
+    fileName: string,
+    type: 'idproof' | 'certification'
+  ) {
+    this.downloadingDocuments.add(type);
+
+    try {
+      const { url } = await firstValueFrom(
+        this.adminService.download(key, fileName)
+      );
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error('Download error:', err);
+      this.notyService.showError('Failed to generate download link');
+    } finally {
+      this.downloadingDocuments.delete(type);
+    }
+  }
+
+downloadIdProof(): void {
+  if (!this.selectedTrainer?.idProofUrl) return;
+  const filename = `${this.selectedTrainer.name}_idproof.jpg`;
+  const key = this.extractKey(this.selectedTrainer.idProofUrl);
+  this.downloadDocument(key, filename, 'idproof');
+}
+
+downloadCertification(): void {
+  if (!this.selectedTrainer?.certificationUrl) return;
+  const filename = `${this.selectedTrainer.name}_certification.jpg`;
+  const key = this.extractKey(this.selectedTrainer.certificationUrl);
+  this.downloadDocument(key, filename, 'certification');
+}
+private extractKey(url: string): string {
+  return url.replace(/^https?:\/\/[^/]+\/?/, '');
+}
+
+
+
   closeTrainerModal(): void {
     this.selectedTrainer = null;
   }
@@ -119,9 +170,11 @@ export class AdminTrainerVerificationComponent implements OnInit {
           // this.store.dispatch(
           //   loadUnverifiedTrainers({ query: { page: 1, limit: 2 } })
           // );
-          this.unverifiedTrainers$ = this.unverifiedTrainers$.filter(t => t._id !== trainer._id);
+          this.unverifiedTrainers$ = this.unverifiedTrainers$.filter(
+            (t) => t._id !== trainer._id
+          );
 
-          this.approvingTrainers.delete(trainer._id)
+          this.approvingTrainers.delete(trainer._id);
         },
         error: (error) => {
           console.error('Error approving trainer:', error);
@@ -135,6 +188,9 @@ export class AdminTrainerVerificationComponent implements OnInit {
     }
   }
 
+  private extractS3Key(url: string): string {
+  return url.replace(/^https?:\/\/[^/]+\/?/, '');
+}
   isRejectionValid(): boolean {
     if (!this.selectedRejectionReason) return false;
 
@@ -193,7 +249,9 @@ export class AdminTrainerVerificationComponent implements OnInit {
               this.notyService.showSuccess('Trainer rejected successfully');
               this.closeRejectionModal();
               this.closeTrainerModal();
-             this.unverifiedTrainers$ = this.unverifiedTrainers$.filter(t => t._id !==  rejectTrainerId)
+              this.unverifiedTrainers$ = this.unverifiedTrainers$.filter(
+                (t) => t._id !== rejectTrainerId
+              );
               this.isSubmittingRejection = false;
             },
             error: (error) => {

@@ -321,53 +321,76 @@
         </div>
 
         <!-- Documents Section -->
-        <div
-          class="bg-gray-750/50 backdrop-blur-sm rounded-xl p-5 border border-gray-600/30"
-          *ngIf="
-            selectedTrainer?.idProofUrl || selectedTrainer?.certificationUrl
-          "
+<div
+  class="bg-gray-750/50 backdrop-blur-sm rounded-xl p-5 border border-gray-600/30"
+  *ngIf="selectedTrainer?.idProofUrl || selectedTrainer?.certificationUrl"
+>
+  <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+    <div
+      class="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center mr-3"
+    >
+      <i class="fas fa-file-alt text-amber-400 text-sm"></i>
+    </div>
+    Verification Documents
+  </h3>
+
+  <div class="space-y-6">
+    <!-- ID Proof -->
+    <div *ngIf="selectedTrainer?.idProofUrl">
+      <span class="text-gray-400 text-sm font-medium">
+        Identity Proof Document
+      </span>
+      <div
+        class="mt-3 bg-gray-700/30 rounded-xl p-3 border border-gray-600/30 relative"
+      >
+        <img
+          [src]="selectedTrainer.idProofUrl"
+          alt="ID Proof Document"
+          class="w-full max-h-80 object-contain rounded-lg"
+        />
+
+        <!-- Download Button -->
+        <button
+          class="absolute top-3 right-3 bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1 rounded-lg flex items-center space-x-1"
+          (click)="downloadIdProof()"
+          [disabled]="isDownloading('idproof')"
         >
-          <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-            <div
-              class="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center mr-3"
-            >
-              <i class="fas fa-file-alt text-amber-400 text-sm"></i>
-            </div>
-            Verification Documents
-          </h3>
+          <i *ngIf="!isDownloading('idproof')" class="fas fa-download"></i>
+          <i *ngIf="isDownloading('idproof')" class="fas fa-spinner fa-spin"></i>
+          <span>{{ isDownloading('idproof') ? 'Downloading...' : 'Download' }}</span>
+        </button>
+      </div>
+    </div>
 
-          <div class="space-y-6">
-            <div *ngIf="selectedTrainer?.idProofUrl">
-              <span class="text-gray-400 text-sm font-medium"
-                >Identity Proof Document</span
-              >
-              <div
-                class="mt-3 bg-gray-700/30 rounded-xl p-3 border border-gray-600/30"
-              >
-                <img
-                  [src]="selectedTrainer.idProofUrl"
-                  alt="ID Proof Document"
-                  class="w-full max-h-80 object-contain rounded-lg"
-                />
-              </div>
-            </div>
+    <!-- Certification -->
+    <div *ngIf="selectedTrainer?.certificationUrl">
+      <span class="text-gray-400 text-sm font-medium">
+        Professional Certification
+      </span>
+      <div
+        class="mt-3 bg-gray-700/30 rounded-xl p-3 border border-gray-600/30 relative"
+      >
+        <img
+          [src]="selectedTrainer.certificationUrl"
+          alt="Professional Certification"
+          class="w-full max-h-80 object-contain rounded-lg"
+        />
 
-            <div *ngIf="selectedTrainer?.certificationUrl">
-              <span class="text-gray-400 text-sm font-medium"
-                >Professional Certification</span
-              >
-              <div
-                class="mt-3 bg-gray-700/30 rounded-xl p-3 border border-gray-600/30"
-              >
-                <img
-                  [src]="selectedTrainer.certificationUrl"
-                  alt="Professional Certification"
-                  class="w-full max-h-80 object-contain rounded-lg"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        <!-- Download Button -->
+        <button
+          class="absolute top-3 right-3 bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1 rounded-lg flex items-center space-x-1"
+          (click)="downloadCertification()"
+          [disabled]="isDownloading('certification')"
+        >
+          <i *ngIf="!isDownloading('certification')" class="fas fa-download"></i>
+          <i *ngIf="isDownloading('certification')" class="fas fa-spinner fa-spin"></i>
+          <span>{{ isDownloading('certification') ? 'Downloading...' : 'Download' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+  
       </div>
     </div>
   </div>
