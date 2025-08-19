@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, NgZone, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Trainer } from '../../../trainer/models/trainer.interface';
@@ -8,33 +8,19 @@ import { SchedulingRule } from '../../../trainer/models/scheduling.interface';
 import { formatTime as formatTimeAmPm } from '../../../../shared/methods/time.checker';
 import { PaymentService } from '../../services/payment.service';
 import { environment } from '../../../../../enviorments/environment';
-
-interface CalendarDay {
-  date: number;
-  isCurrentMonth: boolean;
-  isAvailable: boolean;
-  isSelected: boolean;
-  fullDate: Date;
-}
-
-interface TimeSlot {
-  time: string;
-  isBooked: boolean;
-  isAvailable: boolean;
-}
-
-interface SessionType {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-}
+import { ConfirmationModalComponent } from './modals/cofirm-booking-modal/cofirm-booking-modal.component';
+import {
+  CalendarDay,
+  SessionType,
+  TimeSlot,
+  TimeSlotsResponse,
+} from './interface/user-booking.interface';
 
 @Component({
   selector: 'app-user-booking',
-  styleUrl: './user-booking.component.scss',
+  styleUrls: ['./user-booking.component.scss'],
   templateUrl: './user-booking.component.html',
-  imports: [CommonModule],
+  imports: [CommonModule, ConfirmationModalComponent],
   standalone: true,
 })
 export class UserBookingComponent implements OnInit {
@@ -43,6 +29,7 @@ export class UserBookingComponent implements OnInit {
   private userService = inject(UserService);
   private paymentService = inject(PaymentService);
   private notyf = inject(NotyService);
+  private ngZone = inject(NgZone);
 
   // Trainer data
   trainer: Trainer | null = null;
@@ -53,6 +40,7 @@ export class UserBookingComponent implements OnInit {
   selectedSessionType: string = '';
   sessionTypes: SessionType[] = [];
   selectedPrice!: number;
+
   // Calendar and date selection
   currentDate: Date = new Date();
   selectedDate: Date | null = null;
@@ -60,30 +48,26 @@ export class UserBookingComponent implements OnInit {
   currentMonthYear: string = '';
   trainerRules: SchedulingRule[] = [];
   hoverMessage: string | null = null;
+
   // Time slots
   selectedTimeSlot: TimeSlot | null = null;
   availableTimeSlots: TimeSlot[] = [];
-  timeSlots = [];
+  isLoadingSlots: boolean = false; // New loading state for slots
+  slotsErrorMessage: string = ''; // New error message for slots
 
   // Confirmation modal
   showConfirmationModal: boolean = false;
   bookingId: string = '';
-
   ngOnInit() {
     this.trainerId = this.route.snapshot.paramMap.get('id') || '';
-    this.userService
-      .generateSlots(this.trainerId)
-      .subscribe((res: SchedulingRule[]) => {
-        this.trainerRules = res;
-        this.generateCalendar();
-        this.updateCurrentMonthYear();
-      });
     if (this.trainerId) {
       this.fetchTrainerData();
     } else {
       this.notyf.showError('Trainer ID not found');
-      this.router.navigate(['/user/dashboard']);
     }
+    // Initialize calendar without trainer rules
+    this.generateCalendar();
+    this.updateCurrentMonthYear();
   }
 
   fetchTrainerData() {
@@ -92,8 +76,6 @@ export class UserBookingComponent implements OnInit {
       next: (response) => {
         this.trainer = response;
         this.initializeSessionTypes();
-        this.generateCalendar();
-        this.updateCurrentMonthYear();
         this.isLoading = false;
       },
       error: (err) => {
@@ -178,26 +160,8 @@ export class UserBookingComponent implements OnInit {
     const checkDate = new Date(date);
     checkDate.setHours(0, 0, 0, 0);
 
-    if (checkDate < today) return false;
-
-    const dayOfWeek = checkDate.getDay();
-    const dateStr = this.formatDateLocal(checkDate);
-
-    return this.trainerRules.some((rule) => {
-      if (!rule.isActive) return false;
-
-      const start = new Date(rule.startDate);
-      const end = new Date(rule.endDate);
-      // Normalize times
-      start.setHours(0, 0, 0, 0);
-      end.setHours(0, 0, 0, 0);
-
-      const inRange = checkDate >= start && checkDate <= end;
-      const allowedDay = rule.daysOfWeek?.includes(dayOfWeek);
-      const notExceptional = !(rule.exceptionalDays || []).includes(dateStr);
-
-      return inRange && !!allowedDay && notExceptional;
-    });
+    // Only allow future dates (including today)
+    return checkDate >= today;
   }
 
   selectDate(day: CalendarDay) {
@@ -207,19 +171,62 @@ export class UserBookingComponent implements OnInit {
     }
 
     if (!day.isAvailable) {
-      const reason = this.getUnavailableReason(day.fullDate);
-      this.notyf.showInfo(reason);
+      this.notyf.showInfo('This date is not available for booking');
       return;
     }
 
+    // Clear previous selection
     this.calendarDays.forEach((d) => (d.isSelected = false));
     day.isSelected = true;
 
     this.selectedDate = day.fullDate;
-
     this.selectedTimeSlot = null;
 
-    this.generateTimeSlotsForSelectedDate(day.fullDate);
+    // Fetch time slots from backend instead of generating them
+    this.fetchTimeSlotsFromBackend(day.fullDate);
+  }
+
+  // New method to fetch time slots from backend
+  private fetchTimeSlotsFromBackend(selectedDate: Date) {
+    this.isLoadingSlots = true;
+    this.availableTimeSlots = [];
+    this.slotsErrorMessage = '';
+
+    const dateStr = this.formatDateForAPI(selectedDate);
+
+    this.userService.getTimeSlots(this.trainerId, dateStr).subscribe({
+      next: (response: TimeSlotsResponse) => {
+        console.log('response from the backend', response);
+        this.isLoadingSlots = false;
+
+        if (response.success && response.slots) {
+          this.availableTimeSlots = response.slots;
+          this.slotsErrorMessage = '';
+
+          if (response.slots.length === 0) {
+            this.slotsErrorMessage =
+              'No available slots for this date. Please pick another day.';
+          }
+        } else {
+          this.availableTimeSlots = [];
+          this.slotsErrorMessage =
+            response.message ||
+            'No available slots for this date. Please pick another day.';
+        }
+      },
+      error: (error) => {
+        this.isLoadingSlots = false;
+        this.availableTimeSlots = [];
+        this.slotsErrorMessage = 'Failed to load time slots. Please try again.';
+        console.error('Error fetching time slots:', error);
+        this.notyf.showError('Failed to load available time slots');
+      },
+    });
+  }
+
+  // Helper method to format date for API
+  private formatDateForAPI(date: Date): string {
+    return this.formatDateLocal(date); // You can modify this format if your API expects a different format
   }
 
   onDayHover(day: CalendarDay) {
@@ -228,7 +235,7 @@ export class UserBookingComponent implements OnInit {
       return;
     }
     if (!day.isAvailable) {
-      this.hoverMessage = this.getUnavailableReason(day.fullDate);
+      this.hoverMessage = 'This date is not available for booking';
     } else {
       this.hoverMessage = null;
     }
@@ -236,72 +243,6 @@ export class UserBookingComponent implements OnInit {
 
   onDayLeave() {
     this.hoverMessage = null;
-  }
-
-  private generateTimeSlotsForSelectedDate(selectedDate: Date) {
-    const dateStr = this.formatDateLocal(selectedDate);
-
-    const applicableRules = this.trainerRules.filter((rule) => {
-      if (!rule.isActive) return false;
-      const start = new Date(rule.startDate);
-      const end = new Date(rule.endDate);
-      start.setHours(0, 0, 0, 0);
-      end.setHours(0, 0, 0, 0);
-      const inRange = selectedDate >= start && selectedDate <= end;
-      const allowedDay = rule.daysOfWeek?.includes(selectedDate.getDay());
-      const notExceptional = !(rule.exceptionalDays || []).includes(dateStr);
-      return inRange && !!allowedDay && notExceptional;
-    });
-
-    const generated: TimeSlot[] = [];
-
-    for (const rule of applicableRules) {
-      const slotsForRule = this.generateSlotsForRuleAndDate(rule, selectedDate);
-      generated.push(...slotsForRule);
-    }
-
-    // Remove duplicates by time label
-    const uniqueByTime = new Map<string, TimeSlot>();
-    for (const slot of generated) {
-      if (!uniqueByTime.has(slot.time)) uniqueByTime.set(slot.time, slot);
-    }
-    this.availableTimeSlots = Array.from(uniqueByTime.values());
-
-    if (this.availableTimeSlots.length === 0) {
-      this.notyf.showInfo('No available slots for this date');
-    }
-  }
-
-  private generateSlotsForRuleAndDate(
-    rule: SchedulingRule,
-    date: Date
-  ): TimeSlot[] {
-    const results: TimeSlot[] = [];
-    // Build a reference date string but use time math in minutes
-    const [startH, startM] = rule.startTime.split(':').map(Number);
-    const [endH, endM] = rule.endTime.split(':').map(Number);
-    const startTotal = startH * 60 + startM;
-    const endTotal = endH * 60 + endM;
-
-    let current = startTotal;
-    while (current + rule.slotDuration <= endTotal) {
-      const hour = Math.floor(current / 60)
-        .toString()
-        .padStart(2, '0');
-      const minute = (current % 60).toString().padStart(2, '0');
-      const label24 = `${hour}:${minute}`;
-      const label = formatTimeAmPm(label24);
-
-      results.push({
-        time: label,
-        isBooked: false,
-        isAvailable: true,
-      });
-
-      current += rule.slotDuration + rule.bufferTime;
-    }
-
-    return results;
   }
 
   previousMonth() {
@@ -334,73 +275,48 @@ export class UserBookingComponent implements OnInit {
     return `${y}-${m}-${d}`;
   }
 
-  private getUnavailableReason(date: Date): string {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const cmp = new Date(date);
-    cmp.setHours(0, 0, 0, 0);
-
-    if (cmp < today) return 'Past dates are not bookable';
-
-    const dateStr = this.formatDateLocal(cmp);
-    const day = cmp.getDay();
-
-    const inAnyRange = this.trainerRules.some((r) => {
-      if (!r.isActive) return false;
-      const s = new Date(r.startDate);
-      const e = new Date(r.endDate);
-      s.setHours(0, 0, 0, 0);
-      e.setHours(0, 0, 0, 0);
-      return cmp >= s && cmp <= e;
-    });
-
-    if (!inAnyRange) return 'No sessions scheduled for this date range';
-
-    const isExceptional = this.trainerRules.some((r) =>
-      (r.exceptionalDays || []).includes(dateStr)
-    );
-    if (isExceptional) return 'Trainer is unavailable on this date';
-
-    const allowedByWeekday = this.trainerRules.some(
-      (r) => r.isActive && r.daysOfWeek?.includes(day)
-    );
-    if (!allowedByWeekday) return 'No sessions offered on this weekday';
-
-    return 'No available slots for this date';
-  }
-
-  // Time slot selection
   selectTimeSlot(slot: TimeSlot) {
-    if (!slot.isAvailable || slot.isBooked) return;
     this.selectedTimeSlot = slot;
   }
 
   // Booking confirmation
   confirmBooking() {
-    if (
-      !this.selectedSessionType ||
-      !this.selectedDate ||
-      !this.selectedTimeSlot
-    ) {
-      this.notyf.showError('Please select all required fields');
+    // Validate all required fields
+    if (!this.selectedSessionType) {
+      this.notyf.showError('Please select a session type');
       return;
     }
+
+    if (!this.selectedDate) {
+      this.notyf.showError('Please select a date');
+      return;
+    }
+
+    if (!this.selectedTimeSlot) {
+      this.notyf.showError('Please select a time slot');
+      return;
+    }
+
     console.log('selectedSessionType', this.selectedSessionType);
     console.log('selectedDate', this.selectedDate);
     console.log('selectedTimeSlot', this.selectedTimeSlot);
-    // Generate booking ID
-    this.bookingId = 'BK' + Date.now().toString().slice(-6);
+
+    console.log('availableTimeSlots', this.availableTimeSlots);
+    console.log('selectedTimeSlot', this.selectedTimeSlot);
 
     const bookingData = {
+      trainerId: this.trainerId,
       amount: this.selectedPrice,
-      bookingId: this.bookingId,
       sessionType: this.selectedSessionType,
-      date: this.selectedDate,
+      date: this.formatDateForAPI(this.selectedDate),
       timeSlot: this.selectedTimeSlot,
     };
 
+    console.log('Booking data being sent:', bookingData);
+
     this.paymentService.createOrder(bookingData).subscribe({
       next: (res) => {
+        console.log('Order creation response:', res);
         this.openRazorpayCheckout(res.order);
       },
       error: (err) => {
@@ -408,8 +324,6 @@ export class UserBookingComponent implements OnInit {
         this.notyf.showError('Something went wrong while starting payment');
       },
     });
-
-    this.showConfirmationModal = true;
   }
 
   closeConfirmationModal() {
@@ -469,27 +383,65 @@ export class UserBookingComponent implements OnInit {
       order_id: order.id,
       handler: (response) => {
         console.log('Payment success:', response);
-        this.paymentService
-          .verifyOrder({ ...response, bookingId: this.bookingId })
-          .subscribe((verifyRes) => {
-            if (verifyRes.status === 'success') {
-              this.notyf.showSuccess('Booking confirmed!');
-            } else {
-              this.notyf.showError('Payment verification failed');
-            }
-          });
+
+        this.verifyPaymentInBackground(response);
       },
       prefill: {
-        name: 'vortexfit',
-        email: 'vvortex@example.com',
+        name: 'VortexFit User',
+        email: 'user@vortexfit.com',
         contact: '9999999999',
       },
       theme: {
-        color: '#3399cc',
+        color: '#3B82F6',
       },
     };
 
     const rzp = new Razorpay(options);
+
+    rzp.on('payment.failed', (response: any) => {
+      console.error('Payment failed:', response);
+      this.notyf.showError('Payment failed: ' + response.error.description);
+    });
+
     rzp.open();
+  }
+  private verifyPaymentInBackground(response: any) {
+    this.paymentService
+      .verifyOrder({
+        ...response,
+        trainerId: this.trainerId,
+        sessionType: this.selectedSessionType,
+        date: this.formatDateForAPI(this.selectedDate!),
+        timeSlot: this.selectedTimeSlot,
+        amount: this.selectedPrice,
+      })
+      .subscribe({
+        next: (verifyRes) => {
+          if (verifyRes.status === 'success') {
+           
+            this.ngZone.run(() => {
+              this.showConfirmationModal = true;
+              this.bookingId = verifyRes.bookingId;
+              this.availableTimeSlots = this.availableTimeSlots.filter(
+                (slot) => slot !== this.selectedTimeSlot
+              );
+            });
+
+            
+
+            this.notyf.showSuccess('Booking confirmed successfully!');
+          } else {
+            this.notyf.showError('Payment verification failed');
+            this.showConfirmationModal = false;
+            this.bookingId = '';
+          }
+        },
+        error: (err) => {
+          console.error('Payment verification error:', err);
+          this.notyf.showError('Payment verification failed');
+          this.showConfirmationModal = false;
+          this.bookingId = '';
+        },
+      });
   }
 }

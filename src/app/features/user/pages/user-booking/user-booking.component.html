@@ -161,32 +161,48 @@
       </div>
 
       <!-- Time Slots -->
+      <!-- Time Slots -->
       <div class="time-slots" *ngIf="selectedDate">
         <h3>
           Available Time Slots for {{ selectedDate | date : "MMM dd, yyyy" }}
         </h3>
-        <ng-container *ngIf="availableTimeSlots.length > 0; else noSlots">
+
+        <!-- Loading state for slots -->
+        <div *ngIf="isLoadingSlots" class="loading-slots">
+          <div class="loading-spinner-small">
+            <div class="spinner-small"></div>
+            <p>Loading available slots...</p>
+          </div>
+        </div>
+
+        <!-- Slots available -->
+        <ng-container *ngIf="!isLoadingSlots && availableTimeSlots.length > 0">
           <div class="slots-grid">
             <button
               *ngFor="let slot of availableTimeSlots"
               class="time-slot"
               [class.selected]="selectedTimeSlot === slot"
-              [class.booked]="slot.isBooked"
-              [disabled]="slot.isBooked"
               (click)="selectTimeSlot(slot)"
             >
-              {{ slot.time }}
+              {{ slot }}
+              <span *ngIf="slot.isBooked" class="booked-label">(Booked)</span>
             </button>
           </div>
         </ng-container>
-        <ng-template #noSlots>
-          <div class="no-slots-message">
-            {{
-              hoverMessage ||
-                "No available slots for this date. Please pick another day."
-            }}
-          </div>
-        </ng-template>
+
+        <!-- No slots or error message -->
+        <div
+          *ngIf="
+            !isLoadingSlots &&
+            (availableTimeSlots.length === 0 || slotsErrorMessage)
+          "
+          class="no-slots-message"
+        >
+          {{
+            slotsErrorMessage ||
+              "No available slots for this date. Please pick another day."
+          }}
+        </div>
       </div>
     </div>
 
@@ -213,7 +229,7 @@
         </div>
         <div class="summary-item">
           <span class="label">Time:</span>
-          <span class="value">{{ selectedTimeSlot.time }}</span>
+          <span class="value">{{ selectedTimeSlot }}</span>
         </div>
         <div class="summary-item total">
           <span class="label">Total:</span>
@@ -227,56 +243,16 @@
   </div>
 
   <!-- Confirmation Modal -->
-  <div
-    class="modal-overlay"
-    *ngIf="showConfirmationModal"
-    (click)="closeConfirmationModal()"
-  >
-    <div class="confirmation-modal" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <div class="success-icon">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <h2>Booking Confirmed!</h2>
-        <p>Your session has been successfully booked</p>
-      </div>
-
-      <div class="booking-details">
-        <div class="detail-item">
-          <span class="label">Booking ID:</span>
-          <span class="value">{{ bookingId }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="label">Trainer:</span>
-          <span class="value">{{ getTrainerName() }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="label">Session:</span>
-          <span class="value">{{ getSessionTypeName() }}</span>
-        </div>
-        <div class="detail-item">
-          <span class="label">Date & Time:</span>
-          <span class="value"
-            >{{ selectedDate | date : "MMM dd, yyyy" }} at
-            {{ selectedTimeSlot?.time }}</span
-          >
-        </div>
-      </div>
-
-      <div class="modal-actions">
-        <button class="action-btn secondary" (click)="addToCalendar()">
-          <i class="fas fa-calendar-plus"></i>
-          Add to Calendar
-        </button>
-        <button class="action-btn primary" (click)="messageTrainer()">
-          <i class="fas fa-comment"></i>
-          Message Trainer
-        </button>
-      </div>
-
-      <button class="close-modal" (click)="closeConfirmationModal()">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-  </div>
+<!-- Updated template usage in UserBookingComponent -->
+<app-confirm-booking-modal
+  [showModal]="showConfirmationModal"
+  [bookingId]="bookingId"
+  [trainerName]="getTrainerName()"
+  [sessionType]="getSessionTypeName()"
+  [date]="selectedDate | date : 'MMM dd, yyyy'"
+  [timeSlot]="selectedTimeSlot"
+  (close)="closeConfirmationModal()"
+  (addCalendar)="addToCalendar()"
+  (messageTrainer)="messageTrainer()"
+></app-confirm-booking-modal>
 </div>

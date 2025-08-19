@@ -10,7 +10,7 @@ export const API_ROUTES = {
   SCHEDULES: {
     BASE: '/schedules',
     CREATE: '/create',
-    GENERATE_SLOTS: (trainerId: string) => `/generateSlots/${trainerId}`,
+    GENERATE_SLOTS: (trainerId: string, date: string) => `/generateSlots/${trainerId}/${date}`,
     GET_SCHEDULES: `/getSchedules`,
     DELETE_SCHEDULES: (id: string) => `/deleteSchedule/${id}`
   },
