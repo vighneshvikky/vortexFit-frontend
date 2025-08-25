@@ -38,7 +38,7 @@ export class AdminUserListingComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
   limit = 1;
-  filter: 'all' | 'user' | 'trainer' = 'all';
+  filter: 'all' | 'user' | 'trainer' | 'blocked' = 'all';
 
   constructor(private store: Store, private adminService: AdminService) {
     this.setupSearch();
@@ -107,7 +107,8 @@ export class AdminUserListingComponent implements OnInit {
     const value = (event.target as HTMLSelectElement).value as
       | 'all'
       | 'user'
-      | 'trainer';
+      | 'trainer'
+      | 'blocked';
     this.filter = value;
     this.loadUsers(this.searchTerm, 1);
   }

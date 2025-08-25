@@ -11,6 +11,9 @@ import { environment } from '../../../../../enviorments/environment';
 import { ConfirmationModalComponent } from './modals/cofirm-booking-modal/cofirm-booking-modal.component';
 import {
   CalendarDay,
+  PaymentSuccessResponse,
+  RazorpayPaymentFailedResponse,
+  SessionBookingRequest,
   SessionType,
   TimeSlot,
   TimeSlotsResponse,
@@ -52,8 +55,8 @@ export class UserBookingComponent implements OnInit {
   // Time slots
   selectedTimeSlot: TimeSlot | null = null;
   availableTimeSlots: TimeSlot[] = [];
-  isLoadingSlots: boolean = false; // New loading state for slots
-  slotsErrorMessage: string = ''; // New error message for slots
+  isLoadingSlots: boolean = false; 
+  slotsErrorMessage: string = ''; 
 
   // Confirmation modal
   showConfirmationModal: boolean = false;
@@ -279,9 +282,9 @@ export class UserBookingComponent implements OnInit {
     this.selectedTimeSlot = slot;
   }
 
-  // Booking confirmation
+
   confirmBooking() {
-    // Validate all required fields
+
     if (!this.selectedSessionType) {
       this.notyf.showError('Please select a session type');
       return;
@@ -297,14 +300,9 @@ export class UserBookingComponent implements OnInit {
       return;
     }
 
-    console.log('selectedSessionType', this.selectedSessionType);
-    console.log('selectedDate', this.selectedDate);
-    console.log('selectedTimeSlot', this.selectedTimeSlot);
+ 
 
-    console.log('availableTimeSlots', this.availableTimeSlots);
-    console.log('selectedTimeSlot', this.selectedTimeSlot);
-
-    const bookingData = {
+    const bookingData: SessionBookingRequest = {
       trainerId: this.trainerId,
       amount: this.selectedPrice,
       sessionType: this.selectedSessionType,
@@ -381,11 +379,23 @@ export class UserBookingComponent implements OnInit {
       name: 'VortexFit Booking',
       description: 'Session Booking Payment',
       order_id: order.id,
-      handler: (response) => {
-        console.log('Payment success:', response);
+handler: (response: Razorpay.PaymentSuccessResponse) => {
 
-        this.verifyPaymentInBackground(response);
-      },
+
+  if(response){
+  const enrichedResponse: PaymentSuccessResponse = {
+    ...response,
+    trainerId: this.trainerId,
+    sessionType: this.selectedSessionType,
+    date: this.formatDateForAPI(this.selectedDate!),
+    timeSlot: this.selectedTimeSlot , 
+    amount: this.selectedPrice,
+  };
+
+  this.verifyPaymentInBackground(enrichedResponse);
+  }
+
+},
       prefill: {
         name: 'VortexFit User',
         email: 'user@vortexfit.com',
@@ -398,14 +408,14 @@ export class UserBookingComponent implements OnInit {
 
     const rzp = new Razorpay(options);
 
-    rzp.on('payment.failed', (response: any) => {
+    rzp.on('payment.failed', (response: RazorpayPaymentFailedResponse) => {
       console.error('Payment failed:', response);
       this.notyf.showError('Payment failed: ' + response.error.description);
     });
 
     rzp.open();
   }
-  private verifyPaymentInBackground(response: any) {
+  private verifyPaymentInBackground(response: PaymentSuccessResponse) {
     this.paymentService
       .verifyOrder({
         ...response,

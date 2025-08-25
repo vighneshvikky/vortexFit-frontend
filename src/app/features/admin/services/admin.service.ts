@@ -44,7 +44,7 @@ export interface GetUsersParams {
   role?: 'user' | 'trainer';
   page?: number;
   limit?: number;
-  filter?: 'user' | 'trainer' | 'all';
+  filter?: 'user' | 'trainer' | 'all' | 'blocked';
 }
 
 export interface PaginatedResponse<T> {

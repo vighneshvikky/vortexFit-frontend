@@ -1,14 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Trainer } from '../../../trainer/models/trainer.interface';
 import { UserService } from '../../services/user.service';
 import { NotyService } from '../../../../core/services/noty.service';
 import { CommonModule } from '@angular/common';
 import { onImageError } from '../../../../shared/methods/image-checker';
 
+
 @Component({
   selector: 'app-trainer-info',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './trainer-info.component.html',
   styleUrl: './trainer-info.component.scss',
 })

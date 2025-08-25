@@ -7,6 +7,7 @@ import { TrainerInfoComponent } from './pages/trainer-info/trainer-info.componen
 import { AllTraninersComponent } from './pages/all-traniners/all-traniners.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { UserBookingComponent } from './pages/user-booking/user-booking.component';
+import { UserChatComponent } from './pages/user-chat/user-chat.component';
 export const userRoutes: Routes = [
   {
     path: '',
@@ -20,6 +21,7 @@ export const userRoutes: Routes = [
       { path: 'all-trainers', component: AllTraninersComponent },
       { path: 'profile', component: UserProfileComponent },
       { path: 'booking/:id', component: UserBookingComponent },
+      {path: 'chat', component: UserChatComponent}
     ],
   },
 ];

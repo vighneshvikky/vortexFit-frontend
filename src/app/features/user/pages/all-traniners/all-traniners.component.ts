@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CATEGORIES, CATEGORY_TO_SPECIALIZATIONS } from '../../../../shared/constants/filter-options';
 import { Subject, takeUntil } from 'rxjs';
+import { RouterLink } from '@angular/router';
+
 
 interface Pricing {
   _id: string;
@@ -20,7 +22,7 @@ interface Pricing {
 
 @Component({
   selector: 'app-all-traniners',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './all-traniners.component.html',
   styleUrl: './all-traniners.component.scss',
 })

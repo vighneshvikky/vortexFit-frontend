@@ -160,50 +160,41 @@
         </div>
       </div>
 
+     
       <!-- Time Slots -->
-      <!-- Time Slots -->
-      <div class="time-slots" *ngIf="selectedDate">
-        <h3>
-          Available Time Slots for {{ selectedDate | date : "MMM dd, yyyy" }}
-        </h3>
+  <div class="time-slots" *ngIf="selectedDate">
+  <h3>
+    Available Time Slots for {{ selectedDate | date : "MMM dd, yyyy" }}
+  </h3>
 
-        <!-- Loading state for slots -->
-        <div *ngIf="isLoadingSlots" class="loading-slots">
-          <div class="loading-spinner-small">
-            <div class="spinner-small"></div>
-            <p>Loading available slots...</p>
-          </div>
-        </div>
+  <!-- Loading state for slots -->
 
-        <!-- Slots available -->
-        <ng-container *ngIf="!isLoadingSlots && availableTimeSlots.length > 0">
-          <div class="slots-grid">
-            <button
-              *ngFor="let slot of availableTimeSlots"
-              class="time-slot"
-              [class.selected]="selectedTimeSlot === slot"
-              (click)="selectTimeSlot(slot)"
-            >
-              {{ slot }}
-              <span *ngIf="slot.isBooked" class="booked-label">(Booked)</span>
-            </button>
-          </div>
-        </ng-container>
 
-        <!-- No slots or error message -->
-        <div
-          *ngIf="
-            !isLoadingSlots &&
-            (availableTimeSlots.length === 0 || slotsErrorMessage)
-          "
-          class="no-slots-message"
+  <!-- Slots available OR no slots/error -->
+  <ng-container *ngIf="!isLoadingSlots">
+    <div *ngIf="availableTimeSlots.length > 0; else noSlots">
+      <div class="slots-grid">
+        <button
+          *ngFor="let slot of availableTimeSlots"
+          class="time-slot"
+          [class.selected]="selectedTimeSlot === slot"
+          (click)="selectTimeSlot(slot)"
         >
-          {{
-            slotsErrorMessage ||
-              "No available slots for this date. Please pick another day."
-          }}
-        </div>
+          {{ slot }}
+          <span *ngIf="slot.isBooked" class="booked-label">(Booked)</span>
+        </button>
       </div>
+    </div>
+  </ng-container>
+
+  <!-- Fallback: no slots or error -->
+  <ng-template #noSlots>
+    <div class="no-slots-message">
+      {{ slotsErrorMessage || "No available slots for this date. Please pick another day." }}
+    </div>
+  </ng-template>
+</div>
+
     </div>
 
     <!-- Order Summary Panel (Sticky) -->
