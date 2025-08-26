@@ -61,4 +61,6 @@ export class UserService {
   getTimeSlots(trainerId: string, date: string): Observable<TimeSlotsResponse> {
     return this.http.get<TimeSlotsResponse>(`${this.scheduleUrl}${API_ROUTES.SCHEDULES.GENERATE_SLOTS(trainerId,date)}`);
   }
+
+
 }

@@ -5,7 +5,8 @@ export const API_ROUTES = {
     BASE: '/user',
     UPDATE_PROFILE: '/update-profile',
     APPROVED_TRAINER: '/approved-trainer',
-    GET_TRAINER_DATA: (id: string) => `/getTrainerData/${id}`
+    GET_TRAINER_DATA: (id: string) => `/getTrainerData/${id}`,
+    GET_USER_DATA: (id: string) => `/getuserData/${id}`
   },
   SCHEDULES: {
     BASE: '/schedules',
@@ -20,12 +21,17 @@ export const API_ROUTES = {
   GENERATE_DOWNLOAD_URL: '/generate-download-url'
   },
   TRAINER: {
-    BASE: '/trainer',
+    BASE: '/trainers',
     UPDATE_PROFILE: '/update-trainer-profile',
   },
   PAYMENT: {
     BASE: '/payments',
     CREATE_ORDER: '/create-order',
     VERIFY_PAYMENT: '/verify-payment'
+  },
+  BOOKING: {
+    BASE: '/bookings',
+    GET_BOOKINGS: '/getBookings',
+    CHANGE_STATUS: '/changeStatus'
   }
 };

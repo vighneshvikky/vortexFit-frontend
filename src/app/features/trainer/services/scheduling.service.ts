@@ -16,8 +16,7 @@ import { API_ROUTES } from '../../../app.routes.constants';
 export class SchedulingService {
   private apiUrl = `${environment.api}/schedules`;
 
-  private rulesSubject = new BehaviorSubject<SchedulingRule[]>([]);
-  private slotsSubject = new BehaviorSubject<TimeSlot[]>([]);
+
 
   constructor(private http: HttpClient) {}
 

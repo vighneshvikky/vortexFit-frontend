@@ -6,7 +6,7 @@ import { TrainerProfileComponent } from './pages/trainer-profile/trainer-profile
 import { TrainerLayoutComponent } from '../../shared/components/trainer/trainer-layout/trainer-layout.component';
 import { TrainerSchedulingComponent } from './pages/trainer-scheduling/trainer-scheduling.component';
 import { TrainerChatComponent } from './pages/trainer-chat/trainer-chat.component';
-
+import { TrainerSessionComponent } from './pages/trainer-session/trainer-session.component';
 
 export const trainerRoutes: Routes = [
   {
@@ -18,9 +18,11 @@ export const trainerRoutes: Routes = [
       { path: 'dashboard', component: TrainerDashboardComponent },
       { path: 'trainer-requests', component: TrainerVerificationComponent },
       { path: 'profile', component: TrainerProfileComponent },
-      { path: 'scheduling', component: TrainerSchedulingComponent }, 
-      {path: 'messaging', component: TrainerChatComponent},
+      { path: 'scheduling', component: TrainerSchedulingComponent },
+      { path: 'messaging', component: TrainerChatComponent },
+      { path: 'sessions', component: TrainerSessionComponent },
       { path: '**', redirectTo: 'dashboard' },
     ],
   },
 ];
+  

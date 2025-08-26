@@ -5,12 +5,13 @@ import { environment } from '../../../../enviorments/environment';
 import { Trainer } from '../models/trainer.interface';
 import { VerificationStatus } from '../enums/verification-status.enum';
 import { API_ROUTES } from '../../../app.routes.constants';
+import { User } from '../../admin/services/admin.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TrainerService {
-  private apiUrl = environment+API_ROUTES.TRAINER.BASE;
+  private apiUrl = environment.api+API_ROUTES.TRAINER.BASE;
 
   constructor(private http: HttpClient) {}
 
@@ -39,5 +40,9 @@ export class TrainerService {
         contentType,
       }
     );
+  }
+
+    getUserData(userId: string): Observable<User>{
+    return this.http.get<User>(`${this.apiUrl}${API_ROUTES.USER.GET_USER_DATA(userId)}`)
   }
 }

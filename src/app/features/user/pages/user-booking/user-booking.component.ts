@@ -393,7 +393,7 @@ handler: (response: Razorpay.PaymentSuccessResponse) => {
   };
 
   this.verifyPaymentInBackground(enrichedResponse);
-  }
+  } 
 
 },
       prefill: {

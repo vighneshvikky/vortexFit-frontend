@@ -108,22 +108,6 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
     }
   }
 
-  onEditRule(rule: SchedulingRule): void {
-    this.editingRule = rule;
-    this.schedulingForm.patchValue({
-      startTime: rule.startTime,
-      endTime: rule.endTime,
-      startDate: rule.startDate,
-      endDate: rule.endDate,
-      bufferTime: rule.bufferTime,
-      sessionType: rule.sessionType,
-      daysOfWeek: rule.daysOfWeek,
-      slotDuration: rule.slotDuration,
-      maxBookingsPerSlot: rule.maxBookingsPerSlot,
-      exceptionalDays: rule.exceptionalDays || [],
-    });
-    this.showRuleForm = true;
-  }
 
   onDeleteRule(ruleId: string): void {
     this.schedulingService.deleteSchedule(ruleId).subscribe({
@@ -159,9 +143,7 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
     control.updateValueAndValidity();
   }
 
-onToggleRuleActive(rule: string){
 
-}
 
   addExceptionalDay(): void {
     const inputControl = this.schedulingForm.get('exceptionalDayInput');

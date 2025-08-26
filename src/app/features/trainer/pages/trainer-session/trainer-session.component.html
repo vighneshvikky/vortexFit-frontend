@@ -1,0 +1,193 @@
+<!-- Training Sessions Template -->
+<div class="training-sessions-container">
+  <!-- Header -->
+  <div class="sessions-header">
+    <div class="header-left">
+      <h2>Training Sessions</h2>
+      <p>Schedule and manage your client sessions</p>
+    </div>
+  </div>
+       
+  <!-- Table Header -->
+  <div class="table-header">
+    <div class="header-cell">CLIENT ID</div>
+    <div class="header-cell">DATE/TIME</div>
+    <div class="header-cell">SESSION TYPE</div>
+    <div class="header-cell">STATUS</div>
+    <div class="header-cell">ACTIONS</div>
+  </div>
+   
+  <!-- Sessions List -->
+  <div class="sessions-list">
+    <div *ngFor="let booking of bookingData" class="session-row">
+      <!-- Client Info -->
+      <div class="client-cell">
+        <div class="client-info">
+          <div class="client-name">{{ booking.userId }}</div>
+        </div>
+      </div>
+
+       
+      <!-- Date/Time -->
+      <div class="datetime-cell">
+        <div class="session-date">{{ formatDate(booking.date) }}</div>
+        <div class="session-duration">{{ booking.timeSlot }}</div>
+      </div>
+       
+      <!-- Session Type -->
+      <div class="session-type-cell">
+        <span class="session-type-badge" [ngClass]="getSessionTypeClass(booking.sessionType)">
+          {{ formatSessionType(booking.sessionType) }}
+        </span>
+      </div>
+       
+      <!-- Status -->
+      <div class="status-cell">
+        <span class="status-badge" [ngClass]="getStatusClass(booking.status)">
+          {{ booking.status | titlecase }}
+        </span>
+      </div>
+       
+      <!-- Actions -->
+      <div class="actions-cell">
+        <button class="action-btn view-btn" (click)="viewSession(booking._id,booking.userId)" title="View">
+          👁️
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <h3>Client Details</h3>
+      <button class="close-btn" (click)="closeModal()">
+        <span>&times;</span>
+      </button>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="modal-content">
+      <!-- Loading State -->
+      <div *ngIf="loadingUserData" class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading client data...</p>
+      </div>
+
+      <!-- User Data -->
+      <div *ngIf="!loadingUserData && userData" class="user-details">
+        <!-- User Profile Section -->
+        <div class="profile-section">
+          <div class="profile-image">
+            <img [src]="userData.image" [alt]="userData.name" *ngIf="userData.image">
+            <div *ngIf="!userData.image" class="placeholder-image">
+              {{ userData.name }}
+            </div>
+          </div>
+          <div class="profile-info">
+            <h4>{{ userData.name }}</h4>
+            <p class="email">{{ userData.email }}</p>
+            <span class="verification-badge" [class.verified]="userData.isVerified">
+              {{ userData.isVerified ? 'Verified' : 'Unverified' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="details-grid">
+          <div class="detail-item">
+            <label>Age</label>
+            <span>{{ calculateAge(userData.dob) }} years</span>
+          </div>
+          <div class="detail-item">
+            <label>Height</label>
+            <span>{{ userData.height }} {{ userData.heightUnit }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Weight</label>
+            <span>{{ userData.weight }} {{ userData.weightUnit }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Fitness Level</label>
+            <span>{{ userData.fitnessLevel }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Preferred Time</label>
+            <span>{{ userData.preferredTime }}</span>
+          </div>
+          <div class="detail-item full-width">
+            <label>Fitness Goals</label>
+            <div class="tags">
+              <span *ngFor="let goal of userData.fitnessGoals" class="tag goal-tag">
+                {{ goal }}
+              </span>
+            </div>
+          </div>
+          <div class="detail-item full-width">
+            <label>Training Types</label>
+            <div class="tags">
+              <span *ngFor="let type of userData.trainingTypes" class="tag training-tag">
+                {{ type }}
+              </span>
+            </div>
+          </div>
+          <div class="detail-item full-width">
+            <label>Equipment Available</label>
+            <div class="tags">
+              <span *ngFor="let equipment of userData.equipments" class="tag equipment-tag">
+                {{ equipment }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Session Details -->
+
+    
+        <div class="session-details" *ngIf="selectedBooking">
+          <h5>Session Information</h5>
+          <div class="session-info-grid">
+            <div class="session-info-item">
+              <label>Date</label>
+              <span>{{ formatDate(selectedBooking.date) }}</span>
+            </div>
+            <div class="session-info-item">
+              <label>Time Slot</label>
+              <span>{{ selectedBooking.timeSlot }}</span>
+            </div>
+            <div class="session-info-item">
+              <label>Session Type</label>
+              <span>{{ formatSessionType(selectedBooking.sessionType) }}</span>
+            </div>
+            <div class="session-info-item">
+              <label>Current Status</label>
+              <span class="status-badge" [ngClass]="getStatusClass(selectedBooking.status)">
+                {{ selectedBooking.status | titlecase }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Update Section -->
+ <div *ngIf="selectedBooking">
+  <label for="statusSelect">Change Status:</label>
+  <select
+    id="statusSelect"
+    class="status-select"
+    [ngModel]="selectedBooking.status"
+    (ngModelChange)="updateBookingStatus($event)">
+    <option *ngFor="let status of getAvailableStatuses(selectedBooking.status)" 
+            [value]="status">
+      {{ status | titlecase }}
+    </option>
+  </select>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</div>

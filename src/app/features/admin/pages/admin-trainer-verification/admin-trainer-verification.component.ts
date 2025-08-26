@@ -10,7 +10,6 @@ import {
 } from '../../../../store/admin/users/user.selector';
 import {
   loadUnverifiedTrainers,
-  loadUsers,
 } from '../../../../store/admin/users/users.actions';
 import { AdminService } from '../../services/admin.service';
 import { NotyService } from '../../../../core/services/noty.service';
