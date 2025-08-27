@@ -18,6 +18,7 @@ import {
 } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { NotyService } from '../services/noty.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -26,6 +27,7 @@ export class AuthInterceptor implements HttpInterceptor {
   private authService = inject(AuthService);
   private router = inject(Router);
   private zone = inject(NgZone);
+  private notify = inject(NotyService)
 
   intercept<T>(
     req: HttpRequest<T>,
@@ -45,6 +47,12 @@ if (excludedUrls.some((url) => req.url.includes(url))) {
       catchError((error: HttpErrorResponse) => {
         console.log('error from the backend', error);
         console.log('error status', error.status);
+
+    if (error.status === 400) {
+  this.notify.showError(error.error?.message || 'Bad request');
+  return throwError(() => error); 
+}
+
         if (error.status === 401) {
           console.log('calling hangle');
           return this.handle401Error(clonedRequest, next);

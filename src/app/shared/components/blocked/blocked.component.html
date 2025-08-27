@@ -1,60 +1,79 @@
- <div class="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center p-4">
-      <div class="max-w-md w-full bg-white rounded-2xl shadow-2xl border border-red-100 overflow-hidden">
-        <!-- Header with icon -->
-        <div class="bg-gradient-to-r from-red-500 to-red-600 p-6 text-center">
-          <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                    d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636a9 9 0 00-12.728 0L5.636 18.364a9 9 0 0012.728 0z">
-              </path>
-            </svg>
-          </div>
-          <h1 class="text-2xl font-bold text-white mb-2">Access Blocked</h1>
-          <p class="text-red-100 text-sm">Your request has been restricted</p>
-        </div>
+<div
+  class="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center p-4"
+>
+  <div
+    class="max-w-md w-full bg-white rounded-2xl shadow-2xl border border-red-100 overflow-hidden"
+  >
+    <!-- Header with icon -->
+    <div class="bg-gradient-to-r from-red-500 to-red-600 p-6 text-center">
+      <div
+        class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4"
+      >
+        <svg
+          class="w-8 h-8 text-white"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636a9 9 0 00-12.728 0L5.636 18.364a9 9 0 0012.728 0z"
+          ></path>
+        </svg>
+      </div>
+      <h1 class="text-2xl font-bold text-white mb-2">Access Blocked</h1>
+      <p class="text-red-100 text-sm">Your request has been restricted</p>
+    </div>
 
-        <!-- Content -->
-        <div class="p-6 text-center">
-          <div class="mb-6">
-            <h2 class="text-xl font-semibold text-gray-800 mb-3">{{ title || 'Content Restricted' }}</h2>
-            <p class="text-gray-600 leading-relaxed">
-              {{ message || 'This content or action is not available due to security restrictions or policy violations.' }}
-            </p>
-          </div>
+    <!-- Content -->
+    <div class="p-6 text-center">
+      <div class="mb-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-3">
+          {{ title || "Content Restricted" }}
+        </h2>
+        <p class="text-gray-600 leading-relaxed">
+          {{
+            message ||
+              "This content or action is not available due to security restrictions or policy violations."
+          }}
+        </p>
+      </div>
 
-          <!-- Reason badges -->
-          <div class="flex flex-wrap gap-2 justify-center mb-6" *ngIf="reasons && reasons.length > 0">
-            <span *ngFor="let reason of reasons" 
-                  class="px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full border border-red-200">
-              {{ reason }}
-            </span>
-          </div>
+      <!-- Reason badges -->
+      <div
+        class="flex flex-wrap gap-2 justify-center mb-6"
+        *ngIf="reasons && reasons.length > 0"
+      >
+        <span
+          *ngFor="let reason of reasons"
+          class="px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full border border-red-200"
+        >
+          {{ reason }}
+        </span>
+      </div>
 
-          <!-- Action buttons -->
-          <div class="space-y-3">
-            <button (click)="onRetry()" 
-                    class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 
-                           text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 
-                           transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-              Try Again
-            </button>
-            
-            <button (click)="onGoBack()" 
-                    class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg 
-                           transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-              Go Back
-            </button>
-          </div>
+      <!-- Action buttons -->
+      <div class="space-y-3">
+        <button
+          (click)="onGoBack()"
+          class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+        >
+          Go Back
+        </button>
+      </div>
 
-          <!-- Contact support -->
-          <div class="mt-6 pt-6 border-t border-gray-100">
-            <p class="text-sm text-gray-500 mb-2">Need help?</p>
-            <button (click)="onContactSupport()" 
-                    class="text-blue-600 hover:text-blue-700 text-sm font-medium underline 
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded">
-              Contact Support
-            </button>
-          </div>
-        </div>
+      
+      <div class="mt-6 pt-6 border-t border-gray-100">
+        <p class="text-sm text-gray-500 mb-2">Need help?</p>
+        <button
+          (click)="onContactSupport()"
+          class="text-blue-600 hover:text-blue-700 text-sm font-medium underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+        >
+          Contact Support
+        </button>
       </div>
     </div>
+  </div>
+</div>
