@@ -10,7 +10,7 @@
        
   <!-- Table Header -->
   <div class="table-header">
-    <div class="header-cell">CLIENT ID</div>
+    <div class="header-cell">CLIENT NAME</div>
     <div class="header-cell">DATE/TIME</div>
     <div class="header-cell">SESSION TYPE</div>
     <div class="header-cell">STATUS</div>
@@ -23,7 +23,7 @@
       <!-- Client Info -->
       <div class="client-cell">
         <div class="client-info">
-          <div class="client-name">{{ booking.userId }}</div>
+          <div class="client-name">{{ booking.userId.name }}</div>
         </div>
       </div>
 
@@ -50,7 +50,7 @@
        
       <!-- Actions -->
       <div class="actions-cell">
-        <button class="action-btn view-btn" (click)="viewSession(booking._id,booking.userId)" title="View">
+        <button class="action-btn view-btn" (click)="viewSession(booking._id,booking.userId._id)" title="View">
           👁️
         </button>
       </div>

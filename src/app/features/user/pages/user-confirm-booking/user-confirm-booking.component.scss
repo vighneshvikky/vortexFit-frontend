@@ -1,0 +1,142 @@
+
+.booking-confirmation-component {
+  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  min-height: 100vh;
+}
+
+
+.confirmation-card {
+  animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.6, 1);
+  
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Enhanced button hover effects
+.action-button {
+  position: relative;
+  overflow: hidden;
+  
+  &:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transition: width 0.6s, height 0.6s, top 0.6s, left 0.6s;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+  }
+  
+  &:active:before {
+    width: 300px;
+    height: 300px;
+  }
+  
+  span, svg {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// Loading animation
+@keyframes spin-gradient {
+  0% { 
+    transform: rotate(0deg);
+    border-top-color: #3b82f6;
+  }
+  25% { 
+    border-top-color: #1d4ed8;
+  }
+  50% { 
+    transform: rotate(180deg);
+    border-top-color: #60a5fa;
+  }
+  75% { 
+    border-top-color: #3b82f6;
+  }
+  100% { 
+    transform: rotate(360deg);
+    border-top-color: #3b82f6;
+  }
+}
+
+.loading-spinner {
+  animation: spin-gradient 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+// Hover effects for cards
+.detail-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+// Info cards hover
+.info-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.6, 1);
+  
+  &:hover {
+    transform: translateY(-4px);
+    
+    .info-icon {
+      transform: scale(1.1);
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .booking-details-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .info-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Focus states for accessibility
+button:focus,
+button:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.2);
+}
+
+// Custom scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}

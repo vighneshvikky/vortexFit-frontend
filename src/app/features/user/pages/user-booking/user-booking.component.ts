@@ -5,10 +5,9 @@ import { Trainer } from '../../../trainer/models/trainer.interface';
 import { UserService } from '../../services/user.service';
 import { NotyService } from '../../../../core/services/noty.service';
 import { SchedulingRule } from '../../../trainer/models/scheduling.interface';
-import { formatTime as formatTimeAmPm } from '../../../../shared/methods/time.checker';
 import { PaymentService } from '../../services/payment.service';
 import { environment } from '../../../../../enviorments/environment';
-import { ConfirmationModalComponent } from './modals/cofirm-booking-modal/cofirm-booking-modal.component';
+
 import {
   CalendarDay,
   PaymentSuccessResponse,
@@ -23,7 +22,7 @@ import {
   selector: 'app-user-booking',
   styleUrls: ['./user-booking.component.scss'],
   templateUrl: './user-booking.component.html',
-  imports: [CommonModule, ConfirmationModalComponent],
+  imports: [CommonModule],
   standalone: true,
 })
 export class UserBookingComponent implements OnInit {
@@ -55,8 +54,8 @@ export class UserBookingComponent implements OnInit {
   // Time slots
   selectedTimeSlot: TimeSlot | null = null;
   availableTimeSlots: TimeSlot[] = [];
-  isLoadingSlots: boolean = false; 
-  slotsErrorMessage: string = ''; 
+  isLoadingSlots: boolean = false;
+  slotsErrorMessage: string = '';
 
   // Confirmation modal
   showConfirmationModal: boolean = false;
@@ -282,9 +281,7 @@ export class UserBookingComponent implements OnInit {
     this.selectedTimeSlot = slot;
   }
 
-
   confirmBooking() {
-
     if (!this.selectedSessionType) {
       this.notyf.showError('Please select a session type');
       return;
@@ -300,8 +297,6 @@ export class UserBookingComponent implements OnInit {
       return;
     }
 
- 
-
     const bookingData: SessionBookingRequest = {
       trainerId: this.trainerId,
       amount: this.selectedPrice,
@@ -309,8 +304,6 @@ export class UserBookingComponent implements OnInit {
       date: this.formatDateForAPI(this.selectedDate),
       timeSlot: this.selectedTimeSlot,
     };
-
-    console.log('Booking data being sent:', bookingData);
 
     this.paymentService.createOrder(bookingData).subscribe({
       next: (res) => {
@@ -379,23 +372,20 @@ export class UserBookingComponent implements OnInit {
       name: 'VortexFit Booking',
       description: 'Session Booking Payment',
       order_id: order.id,
-handler: (response: Razorpay.PaymentSuccessResponse) => {
+      handler: (response: Razorpay.PaymentSuccessResponse) => {
+        if (response) {
+          const enrichedResponse: PaymentSuccessResponse = {
+            ...response,
+            trainerId: this.trainerId,
+            sessionType: this.selectedSessionType,
+            date: this.formatDateForAPI(this.selectedDate!),
+            timeSlot: this.selectedTimeSlot,
+            amount: this.selectedPrice,
+          };
 
-
-  if(response){
-  const enrichedResponse: PaymentSuccessResponse = {
-    ...response,
-    trainerId: this.trainerId,
-    sessionType: this.selectedSessionType,
-    date: this.formatDateForAPI(this.selectedDate!),
-    timeSlot: this.selectedTimeSlot , 
-    amount: this.selectedPrice,
-  };
-
-  this.verifyPaymentInBackground(enrichedResponse);
-  } 
-
-},
+          this.verifyPaymentInBackground(enrichedResponse);
+        }
+      },
       prefill: {
         name: 'VortexFit User',
         email: 'user@vortexfit.com',
@@ -428,21 +418,29 @@ handler: (response: Razorpay.PaymentSuccessResponse) => {
       .subscribe({
         next: (verifyRes) => {
           if (verifyRes.status === 'success') {
-           
             this.ngZone.run(() => {
-              this.showConfirmationModal = true;
               this.bookingId = verifyRes.bookingId;
               this.availableTimeSlots = this.availableTimeSlots.filter(
                 (slot) => slot !== this.selectedTimeSlot
               );
             });
 
-            
-
             this.notyf.showSuccess('Booking confirmed successfully!');
+
+            const bookingData = {
+              bookingId: verifyRes.bookingId,
+              trainerName: this.getTrainerName(),
+              sessionType: this.selectedSessionType,
+              date: this.formatDateForAPI(this.selectedDate!),
+              timeSlot: this.selectedTimeSlot,
+              amount: this.selectedPrice,
+            };
+
+            this.router.navigate(['user/confirmBooking'], {
+              state: { bookingData },
+            });
           } else {
             this.notyf.showError('Payment verification failed');
-            this.showConfirmationModal = false;
             this.bookingId = '';
           }
         },

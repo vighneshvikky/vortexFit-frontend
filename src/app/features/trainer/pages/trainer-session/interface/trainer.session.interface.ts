@@ -1,6 +1,9 @@
 export interface BookingSession {
   _id: string;
-  userId: string;
+  userId: {
+    _id: string;
+    name: string;
+  };
   trainerId: string;
   date: string;          
   timeSlot: string;     

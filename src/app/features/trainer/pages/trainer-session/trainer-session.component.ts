@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component                                               , OnInit } from '@angular/core';
 import { BookingService } from '../../services/bookings.service';
 import {  CommonModule } from '@angular/common';
 import { BookingSession, BookingStatus } from './interface/trainer.session.interface';

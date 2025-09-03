@@ -233,17 +233,5 @@
     </div>
   </div>
 
-  <!-- Confirmation Modal -->
-<!-- Updated template usage in UserBookingComponent -->
-<app-confirm-booking-modal
-  [showModal]="showConfirmationModal"
-  [bookingId]="bookingId"
-  [trainerName]="getTrainerName()"
-  [sessionType]="getSessionTypeName()"
-  [date]="selectedDate | date : 'MMM dd, yyyy'"
-  [timeSlot]="selectedTimeSlot"
-  (close)="closeConfirmationModal()"
-  (addCalendar)="addToCalendar()"
-  (messageTrainer)="messageTrainer()"
-></app-confirm-booking-modal>
+
 </div>
