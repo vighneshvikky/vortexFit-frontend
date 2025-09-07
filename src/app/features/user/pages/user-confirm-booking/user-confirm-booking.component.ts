@@ -107,8 +107,7 @@ export class UserConfirmBookingComponent implements OnInit {
   onMessageTrainer() {
     console.log('Opening chat with trainer...');
 
-    // Navigate to chat/message component with trainer info
-    // You can pass trainer data or booking data to the message component
+
     this.router.navigate(['/user/messages'], {
       queryParams: {
         trainerId: this.trainerName, // You might want to pass trainer ID instead
@@ -120,52 +119,15 @@ export class UserConfirmBookingComponent implements OnInit {
   }
 
   onClose() {
-    // Navigate back to user dashboard or previous page
+
     this.router.navigate(['/user/dashboard']);
     this.closeModal.emit();
   }
 
-  private generateCalendarFile(eventData: any) {
-    // Generate ICS file for calendar integration
-    const startDate = new Date(eventData.start);
-    const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // 1 hour duration
 
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//VortexFit//Booking Confirmation//EN',
-      'BEGIN:VEVENT',
-      `DTSTART:${this.formatDateForICS(startDate)}`,
-      `DTEND:${this.formatDateForICS(endDate)}`,
-      `SUMMARY:${eventData.title}`,
-      `DESCRIPTION:${eventData.sessionType} session with ${eventData.trainer}\\nTime: ${eventData.timeSlot}\\nBooking ID: ${this.bookingId}`,
-      'STATUS:CONFIRMED',
-      'BEGIN:VALARM',
-      'TRIGGER:-PT15M',
-      'ACTION:DISPLAY',
-      'DESCRIPTION:Reminder: Session starting in 15 minutes',
-      'END:VALARM',
-      'END:VEVENT',
-      'END:VCALENDAR',
-    ].join('\r\n');
 
-    // Create and download the ICS file
-    const blob = new Blob([icsContent], { type: 'text/calendar' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `vortexfit-booking-${this.bookingId}.ics`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-  }
+ 
 
-  private formatDateForICS(date: Date): string {
-    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-  }
-
-  // Animation trigger methods for enter/leave animations
   getModalAnimationClass(): string {
     return this.isVerifying
       ? 'confirmation-modal-enter'

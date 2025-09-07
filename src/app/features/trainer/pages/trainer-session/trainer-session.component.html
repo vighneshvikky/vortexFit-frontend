@@ -1,64 +1,160 @@
 <!-- Training Sessions Template -->
 <div class="training-sessions-container">
-  <!-- Header -->
-  <div class="sessions-header">
-    <div class="header-left">
-      <h2>Training Sessions</h2>
-      <p>Schedule and manage your client sessions</p>
+
+
+  <!-- Filters Section -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <label for="clientFilter">Filter by Client</label>
+      <select
+        id="clientFilter"
+        class="filter-select"
+        [(ngModel)]="filters.client"
+      >
+        <option [ngValue]="null">All Clients</option>
+        <option *ngFor="let client of availableClients" [ngValue]="client">
+          {{ client.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="statusFilter">Filter by Status</label>
+      <select
+        id="statusFilter"
+        class="filter-select"
+        [(ngModel)]="filters.status"
+      >
+        <option value="">All Sessions</option>
+        <option *ngFor="let status of availableStatuses" [value]="status">
+          {{ status | titlecase }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="dateFromFilter">Date From</label>
+      <input
+        type="date"
+        id="dateFromFilter"
+        class="filter-input"
+        [(ngModel)]="filters.dateFrom"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="dateToFilter">Date To</label>
+      <input
+        type="date"
+        id="dateToFilter"
+        class="filter-input"
+        [(ngModel)]="filters.dateTo"
+      />
+    </div>
+
+    <div class="filter-actions">
+      <button class="apply-filters-btn" (click)="applyFilters()">
+        🔍 Apply Filters
+      </button>
+      <button class="clear-filters-btn" (click)="clearFilters()">
+        ✖ Clear Filters
+      </button>
     </div>
   </div>
-       
-  <!-- Table Header -->
-  <div class="table-header">
-    <div class="header-cell">CLIENT NAME</div>
-    <div class="header-cell">DATE/TIME</div>
-    <div class="header-cell">SESSION TYPE</div>
-    <div class="header-cell">STATUS</div>
-    <div class="header-cell">ACTIONS</div>
+
+  <!-- Results Summary -->
+  <div class="results-summary" *ngIf="!loading">
+    <p>
+      Showing {{ filteredBookingData.length }} of
+      {{ bookingData.length }} sessions
+    </p>
   </div>
-   
-  <!-- Sessions List -->
-  <div class="sessions-list">
-    <div *ngFor="let booking of bookingData" class="session-row">
-      <!-- Client Info -->
-      <div class="client-cell">
-        <div class="client-info">
-          <div class="client-name">{{ booking.userId.name }}</div>
-        </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading sessions...</p>
+  </div>
+
+  <!-- Sessions Table Container -->
+  <div class="sessions-table-container" *ngIf="!loading">
+    <!-- Table Header -->
+    <div class="table-header">
+      <div class="header-cell client-header">CLIENT NAME</div>
+      <div class="header-cell datetime-header">DATE/TIME</div>
+      <div class="header-cell session-type-header">SESSION TYPE</div>
+      <div class="header-cell status-header">STATUS</div>
+      <div class="header-cell actions-header">ACTIONS</div>
+    </div>
+
+    <!-- Sessions List -->
+    <div class="sessions-list">
+      <!-- No Results Message -->
+      <div *ngIf="filteredBookingData.length === 0" class="no-results">
+        <div class="no-results-icon">📅</div>
+        <h3>No sessions found</h3>
+        <p>Try adjusting your filters or check back later for new bookings.</p>
       </div>
 
-       
-      <!-- Date/Time -->
-      <div class="datetime-cell">
-        <div class="session-date">{{ formatDate(booking.date) }}</div>
-        <div class="session-duration">{{ booking.timeSlot }}</div>
-      </div>
-       
-      <!-- Session Type -->
-      <div class="session-type-cell">
-        <span class="session-type-badge" [ngClass]="getSessionTypeClass(booking.sessionType)">
-          {{ formatSessionType(booking.sessionType) }}
-        </span>
-      </div>
-       
-      <!-- Status -->
-      <div class="status-cell">
-        <span class="status-badge" [ngClass]="getStatusClass(booking.status)">
-          {{ booking.status | titlecase }}
-        </span>
-      </div>
-       
-      <!-- Actions -->
-      <div class="actions-cell">
-        <button class="action-btn view-btn" (click)="viewSession(booking._id,booking.userId._id)" title="View">
-          👁️
-        </button>
+      <!-- Session Rows -->
+      <div *ngFor="let booking of filteredBookingData" class="session-row">
+        <!-- Client Info -->
+        <div class="table-cell client-cell">
+          <div class="client-info">
+            <div class="client-name">{{ booking?.userId?.name }}</div>
+          </div>
+        </div>
+
+        <!-- Date/Time -->
+        <div class="table-cell datetime-cell">
+          <div class="session-date">{{ formatDate(booking.date) }}</div>
+          <div class="session-time">{{ booking.timeSlot }}</div>
+        </div>
+
+        <!-- Session Type -->
+        <div class="table-cell session-type-cell">
+          <span
+            class="session-type-badge"
+            [ngClass]="getSessionTypeClass(booking.sessionType)"
+          >
+            {{ formatSessionType(booking.sessionType) }}
+          </span>
+        </div>
+
+        <!-- Status -->
+        <div class="table-cell status-cell">
+          <span class="status-badge" [ngClass]="getStatusClass(booking.status)">
+            {{ booking.status | titlecase }}
+          </span>
+        </div>
+
+        <!-- Actions -->
+        <div class="table-cell actions-cell">
+          <button
+            class="action-btn view-btn"
+            (click)="viewSession(booking._id, booking.userId._id)"
+            title="View Details"
+          >
+            👁️
+          </button>
+        </div>
       </div>
     </div>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="totalPages > 1" class="pagination-container">
+    <app-pagination
+      [currentPage]="currentPage"
+      [totalPages]="totalPages"
+      [maxVisiblePages]="3"
+      role="trainer"
+      (pageChanged)="loadFilteredDataFromServer($event)">
+    </app-pagination>
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal (unchanged) -->
 <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
   <div class="modal-container" (click)="$event.stopPropagation()">
     <!-- Modal Header -->
@@ -82,7 +178,11 @@
         <!-- User Profile Section -->
         <div class="profile-section">
           <div class="profile-image">
-            <img [src]="userData.image" [alt]="userData.name" *ngIf="userData.image">
+            <img
+              [src]="userData.image"
+              [alt]="userData.name"
+              *ngIf="userData.image"
+            />
             <div *ngIf="!userData.image" class="placeholder-image">
               {{ userData.name }}
             </div>
@@ -90,8 +190,11 @@
           <div class="profile-info">
             <h4>{{ userData.name }}</h4>
             <p class="email">{{ userData.email }}</p>
-            <span class="verification-badge" [class.verified]="userData.isVerified">
-              {{ userData.isVerified ? 'Verified' : 'Unverified' }}
+            <span
+              class="verification-badge"
+              [class.verified]="userData.isVerified"
+            >
+              {{ userData.isVerified ? "Verified" : "Unverified" }}
             </span>
           </div>
         </div>
@@ -121,7 +224,10 @@
           <div class="detail-item full-width">
             <label>Fitness Goals</label>
             <div class="tags">
-              <span *ngFor="let goal of userData.fitnessGoals" class="tag goal-tag">
+              <span
+                *ngFor="let goal of userData.fitnessGoals"
+                class="tag goal-tag"
+              >
                 {{ goal }}
               </span>
             </div>
@@ -129,7 +235,10 @@
           <div class="detail-item full-width">
             <label>Training Types</label>
             <div class="tags">
-              <span *ngFor="let type of userData.trainingTypes" class="tag training-tag">
+              <span
+                *ngFor="let type of userData.trainingTypes"
+                class="tag training-tag"
+              >
                 {{ type }}
               </span>
             </div>
@@ -137,7 +246,10 @@
           <div class="detail-item full-width">
             <label>Equipment Available</label>
             <div class="tags">
-              <span *ngFor="let equipment of userData.equipments" class="tag equipment-tag">
+              <span
+                *ngFor="let equipment of userData.equipments"
+                class="tag equipment-tag"
+              >
                 {{ equipment }}
               </span>
             </div>
@@ -145,8 +257,6 @@
         </div>
 
         <!-- Session Details -->
-
-    
         <div class="session-details" *ngIf="selectedBooking">
           <h5>Session Information</h5>
           <div class="session-info-grid">
@@ -164,7 +274,10 @@
             </div>
             <div class="session-info-item">
               <label>Current Status</label>
-              <span class="status-badge" [ngClass]="getStatusClass(selectedBooking.status)">
+              <span
+                class="status-badge"
+                [ngClass]="getStatusClass(selectedBooking.status)"
+              >
                 {{ selectedBooking.status | titlecase }}
               </span>
             </div>
@@ -172,22 +285,26 @@
         </div>
 
         <!-- Status Update Section -->
- <div *ngIf="selectedBooking">
-  <label for="statusSelect">Change Status:</label>
-  <select
-    id="statusSelect"
-    class="status-select"
-    [ngModel]="selectedBooking.status"
-    (ngModelChange)="updateBookingStatus($event)">
-    <option *ngFor="let status of getAvailableStatuses(selectedBooking.status)" 
-            [value]="status">
-      {{ status | titlecase }}
-    </option>
-  </select>
-</div>
-
-
+        <div *ngIf="selectedBooking" class="status-update-section">
+          <label for="statusSelect">Change Status:</label>
+          <select
+            id="statusSelect"
+            class="status-select"
+            [ngModel]="selectedBooking.status"
+            (ngModelChange)="updateBookingStatus($event)"
+          >
+            <option
+              *ngFor="
+                let status of getAvailableStatuses(selectedBooking.status)
+              "
+              [value]="status"
+            >
+              {{ status | titlecase }}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
 </div>
+

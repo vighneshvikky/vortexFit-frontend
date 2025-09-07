@@ -16,7 +16,7 @@ export interface BookingSession {
   paymentSignature: string;
   createdAt: string;     
   updatedAt: string;     
-  __v: number;
+
 }
 
 

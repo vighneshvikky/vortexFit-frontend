@@ -12,6 +12,8 @@ export class PaginationComponent implements OnChanges{
   @Input() totalPages: number = 1;
   @Input() maxVisiblePages: number = 5; 
   @Output() pageChanged = new EventEmitter<number>();
+  @Input() role: 'admin' | 'user' | 'trainer' = 'admin';
+
 
   paginationRange: (number | string)[] = [];
 
@@ -57,6 +59,37 @@ export class PaginationComponent implements OnChanges{
 
     return range;
   }
+
+  get theme() {
+  switch (this.role) {
+    case 'user':
+      return {
+        primary: 'bg-orange-500',
+        hover: 'hover:bg-orange-600',
+        default: 'bg-orange-400',
+        disabled: 'disabled:opacity-50',
+        text: 'text-white'
+      };
+    case 'trainer':
+      return {
+        primary: 'bg-red-500',
+        hover: 'hover:bg-red-600',
+        default: 'bg-red-400',
+        disabled: 'disabled:opacity-50',
+        text: 'text-white'
+      };
+    case 'admin':
+    default:
+      return {
+        primary: 'bg-gray-700',
+        hover: 'hover:bg-gray-800',
+        default: 'bg-gray-600',
+        disabled: 'disabled:opacity-50',
+        text: 'text-white'
+      };
+  }
+}
+
 
   goToPage(page: number | string) {
     if (typeof page === 'number' && page !== this.currentPage) {

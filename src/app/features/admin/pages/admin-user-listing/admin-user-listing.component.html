@@ -1,4 +1,6 @@
-<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+<div
+  class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
+>
   <div class="container mx-auto px-4 py-8 max-w-7xl">
     <!-- Header Section -->
     <div class="mb-10">
@@ -8,23 +10,33 @@
             <i class="fas fa-users-cog mr-3 text-red-500"></i>
             User Management
           </h1>
-          <p class="text-gray-400 text-lg">Monitor and manage user accounts across the platform</p>
+          <p class="text-gray-400 text-lg">
+            Monitor and manage user accounts across the platform
+          </p>
         </div>
         <div class="flex items-center space-x-3">
           <div class="bg-gray-800 rounded-lg px-4 py-2 border border-gray-700">
             <span class="text-gray-400 text-sm">Total Users:</span>
-            <span class="text-white font-semibold ml-2">{{ (users$ | async)?.length || 0 }}</span>
+            <span class="text-white font-semibold ml-2">{{
+              (users$ | async)?.length || 0
+            }}</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Search and Filter Section -->
-    <div class="bg-gray-800/50 glass-effect rounded-2xl border border-gray-700/50 p-6 mb-8">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 search-filter-container">
+    <div
+      class="bg-gray-800/50 glass-effect rounded-2xl border border-gray-700/50 p-6 mb-8"
+    >
+      <div
+        class="grid grid-cols-1 lg:grid-cols-3 gap-6 search-filter-container"
+      >
         <!-- Search Input -->
         <div class="lg:col-span-2">
-          <label class="block text-sm font-medium text-gray-300 mb-2">Search Users</label>
+          <label class="block text-sm font-medium text-gray-300 mb-2"
+            >Search Users</label
+          >
           <div class="relative">
             <input
               type="text"
@@ -33,24 +45,37 @@
               placeholder="Search by name, email ..."
               class="w-full px-4 py-3 pl-12 bg-gray-700/50 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-100 placeholder-gray-400 transition-all duration-200 hover:bg-gray-700/70"
             />
-            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <i
+              class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+            ></i>
           </div>
         </div>
 
         <!-- Filter Dropdown -->
         <div>
-          <label class="block text-sm font-medium text-gray-300 mb-2">Filter by Role</label>
-          <select 
+          <label class="block text-sm font-medium text-gray-300 mb-2"
+            >Filter by Role</label
+          >
+          <select
             (change)="onFilterChange($event)"
             class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-100 transition-all duration-200 hover:bg-gray-700/70 appearance-none cursor-pointer"
           >
-            <option value="all" class="bg-gray-700 text-gray-100">All Users</option>
-            <option value="user" class="bg-gray-700 text-gray-100">Regular Users</option>
-            <option value="trainer" class="bg-gray-700 text-gray-100">Trainers</option>
-            <option value="all" class="bg-gray-700 text-gray-100">Blocked</option>
-
+            <option value="all" class="bg-gray-700 text-gray-100">
+              All Users
+            </option>
+            <option value="user" class="bg-gray-700 text-gray-100">
+              Regular Users
+            </option>
+            <option value="trainer" class="bg-gray-700 text-gray-100">
+              Trainers
+            </option>
+            <option value="all" class="bg-gray-700 text-gray-100">
+              Blocked
+            </option>
           </select>
-          <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+          <div
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
+          >
             <i class="fas fa-chevron-down text-gray-400"></i>
           </div>
         </div>
@@ -61,7 +86,10 @@
     <app-spinner [isLoading]="isLoadingUsers" role="user"></app-spinner>
 
     <!-- Users Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 user-grid" *ngIf="!isLoadingUsers">
+    <div
+      class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 user-grid"
+      *ngIf="!isLoadingUsers"
+    >
       <div
         *ngFor="let user of users$ | async"
         class="bg-gray-800/50 glass-effect rounded-2xl border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-red-500/10 group user-card"
@@ -79,14 +107,14 @@
                   (error)="onImageError($event)"
                   alt="User Image"
                 />
-                                 <div
-                   class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-3 border-gray-800 flex items-center justify-center status-indicator"
-                   [ngClass]="{
-                     'bg-green-500': !user.isBlocked,
-                     'bg-gray-500': user.isBlocked
-                   }"
-                 >
-                  <i 
+                <div
+                  class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-3 border-gray-800 flex items-center justify-center status-indicator"
+                  [ngClass]="{
+                    'bg-green-500': !user.isBlocked,
+                    'bg-gray-500': user.isBlocked
+                  }"
+                >
+                  <i
                     class="fas text-xs text-white"
                     [ngClass]="user.isBlocked ? 'fa-ban' : 'fa-check'"
                   ></i>
@@ -94,18 +122,18 @@
               </div>
             </div>
 
-                         <!-- Action Button -->
-             <button
-               (click)="toggleBlockStatus(user)"
-               [disabled]="loading"
-               class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed action-button"
-               [ngClass]="{
-                 'bg-red-600/20 hover:bg-red-600/30 text-red-400 hover:text-red-300 focus:ring-red-500 border border-red-600/30':
-                   !user.isBlocked,
-                 'bg-green-600/20 hover:bg-green-600/30 text-green-400 hover:text-green-300 focus:ring-green-500 border border-green-600/30':
-                   user.isBlocked
-               }"
-             >
+            <!-- Action Button -->
+            <button
+              (click)="toggleBlockStatus(user)"
+              [disabled]="loading"
+              class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed action-button"
+              [ngClass]="{
+                'bg-red-600/20 hover:bg-red-600/30 text-red-400 hover:text-red-300 focus:ring-red-500 border border-red-600/30':
+                  !user.isBlocked,
+                'bg-green-600/20 hover:bg-green-600/30 text-green-400 hover:text-green-300 focus:ring-green-500 border border-green-600/30':
+                  user.isBlocked
+              }"
+            >
               <i
                 class="fas mr-2"
                 [ngClass]="user.isBlocked ? 'fa-unlock' : 'fa-lock'"
@@ -117,7 +145,9 @@
           <!-- User Details -->
           <div class="space-y-3">
             <div>
-              <h3 class="text-xl font-bold text-white group-hover:text-red-400 transition-colors duration-200">
+              <h3
+                class="text-xl font-bold text-white group-hover:text-red-400 transition-colors duration-200"
+              >
                 {{ user.name }}
               </h3>
               <p class="text-gray-400 text-sm flex items-center mt-1">
@@ -127,47 +157,56 @@
             </div>
             <!-- Role and Status Badges -->
             <div class="flex flex-wrap gap-2">
-                           <!-- Role Badge -->
-             <span
-               class="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-full border badge"
-               [ngClass]="{
-                 'bg-blue-900/30 text-blue-300 border-blue-600/30': !isTrainer(user),
-                 'bg-purple-900/30 text-purple-300 border-purple-600/30': isTrainer(user)
-               }"
-             >
-                <i class="fas mr-1.5" [ngClass]="!isTrainer(user) ? 'fa-user' : 'fa-dumbbell'"></i>
-                {{ !isTrainer(user) ? 'User' : 'Trainer' }}
+              <!-- Role Badge -->
+              <span
+                class="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-full border badge"
+                [ngClass]="{
+                  'bg-blue-900/30 text-blue-300 border-blue-600/30':
+                    !isTrainer(user),
+                  'bg-purple-900/30 text-purple-300 border-purple-600/30':
+                    isTrainer(user)
+                }"
+              >
+                <i
+                  class="fas mr-1.5"
+                  [ngClass]="!isTrainer(user) ? 'fa-user' : 'fa-dumbbell'"
+                ></i>
+                {{ !isTrainer(user) ? "User" : "Trainer" }}
               </span>
 
-                             <!-- Verification Status (for trainers) -->
-               <span
-                 *ngIf="isTrainer(user)"
-                 class="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-full border badge"
-                 [ngClass]="{
-                   'bg-green-900/30 text-green-300 border-green-600/30': user.verificationStatus === 'approved',
-                   'bg-yellow-900/30 text-yellow-300 border-yellow-600/30': user.verificationStatus === 'pending',
-                   'bg-red-900/30 text-red-300 border-red-600/30': user.verificationStatus === 'rejected'
-                 }"
-               >
-                <i class="fas mr-1.5" [ngClass]="{
-                  'fa-check-circle': user.verificationStatus === 'approved',
-                  'fa-clock': user.verificationStatus === 'pending',
-                  'fa-times-circle': user.verificationStatus === 'rejected'
-                }"></i>
+              <!-- Verification Status (for trainers) -->
+              <span
+                *ngIf="isTrainer(user)"
+                class="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-full border badge"
+                [ngClass]="{
+                  'bg-green-900/30 text-green-300 border-green-600/30':
+                    user.verificationStatus === 'approved',
+                  'bg-yellow-900/30 text-yellow-300 border-yellow-600/30':
+                    user.verificationStatus === 'pending',
+                  'bg-red-900/30 text-red-300 border-red-600/30':
+                    user.verificationStatus === 'rejected'
+                }"
+              >
+                <i
+                  class="fas mr-1.5"
+                  [ngClass]="{
+                    'fa-check-circle': user.verificationStatus === 'approved',
+                    'fa-clock': user.verificationStatus === 'pending',
+                    'fa-times-circle': user.verificationStatus === 'rejected'
+                  }"
+                ></i>
                 {{ user.verificationStatus | titlecase }}
               </span>
 
-                             <!-- Blocked Status -->
-               <span
-                 *ngIf="user.isBlocked"
-                 class="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-full bg-red-900/30 text-red-300 border border-red-600/30 badge"
-               >
+              <!-- Blocked Status -->
+              <span
+                *ngIf="user.isBlocked"
+                class="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-full bg-red-900/30 text-red-300 border border-red-600/30 badge"
+              >
                 <i class="fas fa-ban mr-1.5"></i>
                 Blocked
               </span>
             </div>
-
-            
           </div>
         </div>
       </div>
@@ -179,12 +218,18 @@
       class="text-center py-20"
     >
       <div class="max-w-md mx-auto">
-        <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-12">
-          <div class="w-20 h-20 bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div
+          class="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-12"
+        >
+          <div
+            class="w-20 h-20 bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-6"
+          >
             <i class="fas fa-users text-3xl text-gray-500"></i>
           </div>
           <h3 class="text-2xl font-bold text-gray-300 mb-3">No users found</h3>
-          <p class="text-gray-500 mb-6">Try adjusting your search criteria or filters</p>
+          <p class="text-gray-500 mb-6">
+            Try adjusting your search criteria or filters
+          </p>
           <button
             (click)="loadUsers('', 1)"
             class="inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -201,10 +246,13 @@
       class="mt-12 flex justify-center"
       *ngIf="!isLoadingUsers && (users$ | async)?.length"
     >
-      <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-4">
+      <div
+        class="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-4"
+      >
         <app-pagination
           [currentPage]="currentPage"
           [totalPages]="totalPages"
+          role = "admin"
           (pageChanged)="onPageChange($event)"
           class="flex items-center space-x-2"
         ></app-pagination>

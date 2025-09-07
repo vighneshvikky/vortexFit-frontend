@@ -1,148 +1,148 @@
-// Custom scrollbar for webkit browsers
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(31, 41, 55, 0.5);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(239, 68, 68, 0.5);
-  border-radius: 4px;
-  
-  &:hover {
-    background: rgba(239, 68, 68, 0.7);
+  // Custom scrollbar for webkit browsers
+  ::-webkit-scrollbar {
+    width: 8px;
   }
-}
 
-// Custom animations
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+  ::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.5);
+    border-radius: 4px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
+  ::-webkit-scrollbar-thumb {
+    background: rgba(239, 68, 68, 0.5);
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba(239, 68, 68, 0.7);
+    }
   }
-  50% {
-    opacity: 0.7;
-  }
-}
 
-// Apply animations to user cards
-.user-card {
-  animation: fadeInUp 0.6s ease-out;
-  
-  &:hover {
-    transform: translateY(-4px);
+  // Custom animations
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-}
 
-// Enhanced focus states
-input:focus,
-select:focus {
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-}
-
-// Custom button hover effects
-.action-button {
-  position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transition: left 0.5s;
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
   }
-  
-  &:hover::before {
-    left: 100%;
-  }
-}
 
-// Status indicator animations
-.status-indicator {
-  animation: pulse 2s infinite;
-}
-
-// Glass morphism effect
-.glass-effect {
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-// Responsive grid adjustments
-@media (max-width: 1024px) {
-  .user-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  // Apply animations to user cards
+  .user-card {
+    animation: fadeInUp 0.6s ease-out;
+    
+    &:hover {
+      transform: translateY(-4px);
+    }
   }
-}
 
-@media (max-width: 768px) {
-  .user-grid {
-    grid-template-columns: 1fr;
+  // Enhanced focus states
+  input:focus,
+  select:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
   }
-  
-  .search-filter-container {
-    grid-template-columns: 1fr;
-  }
-}
 
-// Loading skeleton animation
-@keyframes shimmer {
-  0% {
-    background-position: -200px 0;
+  // Custom button hover effects
+  .action-button {
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s;
+    }
+    
+    &:hover::before {
+      left: 100%;
+    }
   }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
-}
 
-.skeleton {
-  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
-  background-size: 200px 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-// Enhanced badge styles
-.badge {
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: scale(1.05);
+  // Status indicator animations
+  .status-indicator {
+    animation: pulse 2s infinite;
   }
-}
 
-// Custom select styling
-.custom-select {
-  position: relative;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 5px solid #9ca3af;
-    pointer-events: none;
+  // Glass morphism effect
+  .glass-effect {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
-}
+
+  // Responsive grid adjustments
+  @media (max-width: 1024px) {
+    .user-grid {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .user-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .search-filter-container {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // Loading skeleton animation
+  @keyframes shimmer {
+    0% {
+      background-position: -200px 0;
+    }
+    100% {
+      background-position: calc(200px + 100%) 0;
+    }
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  // Enhanced badge styles
+  .badge {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  // Custom select styling
+  .custom-select {
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid #9ca3af;
+      pointer-events: none;
+    }
+  }
 
