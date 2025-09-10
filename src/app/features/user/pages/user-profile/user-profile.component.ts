@@ -90,7 +90,7 @@ export class UserProfileComponent implements OnInit {
 
     this.initializeForm();
 
-    // Subscribe to current user and populate form
+
     this.$currentUser.subscribe((user) => {
       if (user) {
         if(isUser(user)){

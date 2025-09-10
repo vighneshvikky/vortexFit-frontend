@@ -1,0 +1,75 @@
+// trainer-layout.component.scss
+.sidebar-container {
+  transition: transform 0.3s ease-in-out;
+}
+
+// Ensure smooth transitions for mobile overlay
+.mobile-overlay {
+  transition: opacity 0.3s ease-in-out;
+}
+
+// Hide scrollbar for sidebar navigation on webkit browsers
+.sidebar-nav {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+// Mobile specific styles
+@media (max-width: 1023px) {
+  .main-content {
+    margin-left: 0 !important;
+  }
+}
+
+// trainer-sidebar.component.scss
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  
+  @media (min-width: 1024px) {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+// Ensure nav items are accessible
+.nav-item {
+  &:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+  }
+  
+  &:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+  }
+}
+
+// Active state styling
+.router-link-active {
+  background-color: rgba(127, 29, 29, 1) !important; // red-800
+  color: white !important;
+  
+  i {
+    color: white !important;
+  }
+}

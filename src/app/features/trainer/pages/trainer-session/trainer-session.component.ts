@@ -13,6 +13,7 @@ import { TrainerService } from '../../services/trainer.service';
 import { FormsModule } from '@angular/forms';
 import {  debounceTime, Subject, takeUntil } from 'rxjs';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
+import { Router } from '@angular/router';
 
 
 
@@ -58,7 +59,8 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
 
   constructor(
     private bookingService: BookingService,
-    private trainerService: TrainerService
+    private trainerService: TrainerService,
+    private router: Router
   ) {
     this.filterSubject
       .pipe(debounceTime(500), takeUntil(this.destroy$))
@@ -368,5 +370,10 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
     }
 
     return age;
+  }
+
+    goToMessage(userId: string){
+      console.log('userId', userId)
+    this.router.navigate(['/trainer/chat', userId])
   }
 }

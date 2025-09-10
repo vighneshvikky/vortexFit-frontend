@@ -28,7 +28,6 @@ export class UserConfirmBookingComponent implements OnInit {
   amount: number = 0;
   isVerifying: boolean = false;
 
-  // Event emitters for actions
   @Output() addToCalendar = new EventEmitter<void>();
   @Output() messageTrainer = new EventEmitter<void>();
   @Output() closeModal = new EventEmitter<void>();
@@ -36,12 +35,12 @@ export class UserConfirmBookingComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
-    // Get data from navigation state or query parameters
+
     const navigation = history.state;
     if (navigation && navigation.bookingData) {
       this.setBookingData(navigation.bookingData);
     } else {
-      // Fallback: get from query parameters
+
       this.route.queryParams.subscribe((params) => {
         if (params['bookingId']) {
           this.bookingId = params['bookingId'];
@@ -49,7 +48,7 @@ export class UserConfirmBookingComponent implements OnInit {
           this.sessionType = params['sessionType'] || '';
           this.date = params['date'] || '';
           this.amount = parseFloat(params['amount']) || 0;
-          // For timeSlot, you might need to parse it from JSON string
+          
           if (params['timeSlot']) {
             try {
               this.timeSlot = JSON.parse(params['timeSlot']);
@@ -100,7 +99,7 @@ export class UserConfirmBookingComponent implements OnInit {
       };
       return date.toLocaleDateString('en-US', options);
     } catch (error) {
-      return dateString; // Fallback to original string if parsing fails
+      return dateString; 
     }
   }
 
@@ -110,7 +109,7 @@ export class UserConfirmBookingComponent implements OnInit {
 
     this.router.navigate(['/user/messages'], {
       queryParams: {
-        trainerId: this.trainerName, // You might want to pass trainer ID instead
+        trainerId: this.trainerName,
         bookingId: this.bookingId,
       },
     });

@@ -15,21 +15,32 @@ import { onImageError } from '../../../methods/image-checker';
   styleUrl: './trainer-sidebar.component.scss',
 })
 export class TrainerSidebarComponent implements OnInit {
-  
   @Input() navItems: Array<{ icon: string; label: string; route: string }> = [];
   @Output() logout = new EventEmitter<void>();
+  @Output() closeMobileSidebar = new EventEmitter<void>();
+
   constructor(private store: Store<AppState>) {}
+  
   $currentTrainer!: Observable<AuthenticatedUser | null>;
+  
   ngOnInit(): void {
     this.$currentTrainer = this.store.select(selectCurrentUser);
   }
 
-
   onImageError(event: Event) {
-  onImageError(event)
-}
+    onImageError(event);
+  }
 
-onLogout(): void{
-  this.logout.emit();
-}
+  onLogout(): void {
+    this.logout.emit();
+  }
+
+  onMobileNavClick(): void {
+    // Close sidebar on mobile after navigation
+    this.closeMobileSidebar.emit();
+  }
+
+  closeSidebar(): void {
+    this.closeMobileSidebar.emit();
+  }
 }

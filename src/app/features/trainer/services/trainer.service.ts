@@ -11,7 +11,7 @@ import { User } from '../../admin/services/admin.service';
   providedIn: 'root',
 })
 export class TrainerService {
-  private apiUrl = environment.api+API_ROUTES.TRAINER.BASE;
+  private apiUrl = environment.api + API_ROUTES.TRAINER.BASE;
 
   constructor(private http: HttpClient) {}
 
@@ -24,7 +24,7 @@ export class TrainerService {
   updateVerificationProfile(
     profileData: Partial<Trainer>
   ): Observable<Trainer> {
-    profileData.verificationStatus = VerificationStatus.Pending; 
+    profileData.verificationStatus = VerificationStatus.Pending;
     return this.http.patch<Trainer>(
       `${this.apiUrl}${API_ROUTES.TRAINER.UPDATE_PROFILE}`,
       profileData
@@ -42,7 +42,9 @@ export class TrainerService {
     );
   }
 
-    getUserData(userId: string): Observable<User>{
-    return this.http.get<User>(`${this.apiUrl}${API_ROUTES.USER.GET_USER_DATA(userId)}`)
+  getUserData(userId: string): Observable<User> {
+    return this.http.get<User>(
+      `${this.apiUrl}${API_ROUTES.TRAINER.GET_USER_DATA(userId)}`
+    );
   }
 }

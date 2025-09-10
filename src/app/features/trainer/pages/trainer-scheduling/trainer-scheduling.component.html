@@ -485,7 +485,7 @@
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             <label
               *ngFor="let day of daysOfWeek"
-              class="flex items-center p-3 bg-white rounded-lg border-2 border-red-900/30 hover:border-red-800/50 hover:bg-gray-50 transition-all duration-200 cursor-pointer"
+              class="flex items-center p-3 bg-white rounded-lg border-2 border-red-200 hover:border-red-400 hover:bg-red-50 transition-all duration-200 cursor-pointer"
             >
               <input
                 type="checkbox"
@@ -494,7 +494,7 @@
                   schedulingForm.get('daysOfWeek')?.value.includes(day.value)
                 "
                 (change)="onDayOfWeekChange(day.value, $event)"
-                class="w-4 h-4 text-red-700 bg-white border-red-900/30 rounded focus:ring-red-800 focus:ring-2 mr-3"
+                class="w-4 h-4 text-red-700 bg-white border-red-300 rounded focus:ring-red-800 focus:ring-2 mr-3"
               />
               <span class="text-sm font-medium text-gray-700">{{
                 day.label
@@ -639,11 +639,14 @@
     </div>
   </div>
 </div>
-<div class="min-h-screen bg-gray-50 p-6">
+
+
+
+<div class="min-h-screen bg-gradient-to-b from-red-50 to-white p-6">
   <div class="max-w-4xl mx-auto">
     <!-- Header -->
     <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold text-gray-800 mb-2 tracking-tight">
+      <h1 class="text-4xl font-bold text-red-900 mb-2 tracking-tight">
         Trainer Scheduling
       </h1>
       <div
@@ -658,7 +661,7 @@
       <!-- Rules Section -->
       <div class="w-full">
         <div
-          class="bg-white rounded-2xl shadow-xl border border-red-900/20 overflow-hidden"
+          class="bg-white rounded-2xl shadow-xl border border-red-100 overflow-hidden"
         >
           <!-- Section Header -->
           <div
@@ -710,7 +713,7 @@
               <div class="space-y-4">
                 <div
                   *ngFor="let rule of scheduleData"
-                  class="bg-gray-50 border border-red-900/20 rounded-xl p-4 hover:shadow-lg hover:shadow-red-900/10 hover:border-red-800/30 transition-all duration-300"
+                  class="bg-red-50 border border-red-100 rounded-xl p-4 hover:shadow-lg hover:shadow-red-900/10 hover:border-red-300 transition-all duration-300"
                 >
                   <div class="flex justify-between items-start mb-3">
                     <div class="flex-1">
@@ -719,7 +722,7 @@
                       </h3>
                       <div class="grid grid-cols-2 gap-4 mt-2">
                         <div>
-                          <p class="text-sm font-medium text-gray-600">
+                          <p class="text-sm font-medium text-red-900/80">
                             Time Range
                           </p>
                           <p class="text-gray-800">
@@ -728,7 +731,7 @@
                           </p>
                         </div>
                         <div>
-                          <p class="text-sm font-medium text-gray-600">
+                          <p class="text-sm font-medium text-red-900/80">
                             Date Range
                           </p>
                           <p class="text-gray-800">
@@ -785,7 +788,7 @@
                       <button
                         [class]="
                           rule.isActive
-                            ? 'bg-green-100 text-green-800 border-green-200'
+                            ? 'bg-red-100 text-red-800 border-red-200'
                             : 'bg-gray-100 text-gray-600 border-gray-300'
                         "
                         class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-200 hover:bg-opacity-80"
@@ -794,7 +797,7 @@
                       </button>
                       <button
                         (click)="onDeleteRule(rule.id!)"
-                        class="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-all duration-200"
+                        class="text-red-700 hover:text-red-900 hover:bg-red-50 p-2 rounded-lg transition-all duration-200"
                       >
                         <svg
                           class="w-4 h-4"

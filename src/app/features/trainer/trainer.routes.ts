@@ -5,8 +5,8 @@ import { RoleGuard } from '../../core/guards/role.guard';
 import { TrainerProfileComponent } from './pages/trainer-profile/trainer-profile.component';
 import { TrainerLayoutComponent } from '../../shared/components/trainer/trainer-layout/trainer-layout.component';
 import { TrainerSchedulingComponent } from './pages/trainer-scheduling/trainer-scheduling.component';
-import { TrainerChatComponent } from './pages/trainer-chat/trainer-chat.component';
 import { TrainerSessionComponent } from './pages/trainer-session/trainer-session.component';
+import { ChatComponent } from '../../core/chat/chat.component';
 
 export const trainerRoutes: Routes = [
   {
@@ -19,10 +19,9 @@ export const trainerRoutes: Routes = [
       { path: 'trainer-requests', component: TrainerVerificationComponent },
       { path: 'profile', component: TrainerProfileComponent },
       { path: 'scheduling', component: TrainerSchedulingComponent },
-      { path: 'messaging', component: TrainerChatComponent },
+      { path: 'chat/:id', component: ChatComponent, data: { role: 'trainer' } },
       { path: 'sessions', component: TrainerSessionComponent },
       { path: '**', redirectTo: 'dashboard' },
     ],
   },
 ];
-  

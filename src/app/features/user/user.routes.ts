@@ -7,14 +7,13 @@ import { TrainerInfoComponent } from './pages/trainer-info/trainer-info.componen
 import { AllTraninersComponent } from './pages/all-traniners/all-traniners.component';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { UserBookingComponent } from './pages/user-booking/user-booking.component';
-import { UserChatComponent } from './pages/user-chat/user-chat.component';
 import { UserConfirmBookingComponent } from './pages/user-confirm-booking/user-confirm-booking.component';
-
+import { ChatComponent } from '../../core/chat/chat.component';
 
 export const userRoutes: Routes = [
   {
     path: '',
-    component: UserLayoutComponent,
+    component: UserLayoutComponent, 
     canActivate: [RoleGuard()],
     data: { role: 'user' },
     children: [
@@ -24,9 +23,8 @@ export const userRoutes: Routes = [
       { path: 'all-trainers', component: AllTraninersComponent },
       { path: 'profile', component: UserProfileComponent },
       { path: 'booking/:id', component: UserBookingComponent },
-      {path: 'confirmBooking', component: UserConfirmBookingComponent},
-      {path: 'chat', component: UserChatComponent}
+      { path: 'confirmBooking', component: UserConfirmBookingComponent },
+      { path: 'chat/:id', component: ChatComponent, data: { role: 'user' } },
     ],
   },
 ];
-  

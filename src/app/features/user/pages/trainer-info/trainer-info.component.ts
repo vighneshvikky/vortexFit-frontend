@@ -9,7 +9,7 @@ import { onImageError } from '../../../../shared/methods/image-checker';
 
 @Component({
   selector: 'app-trainer-info',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './trainer-info.component.html',
   styleUrl: './trainer-info.component.scss',
 })
@@ -41,6 +41,11 @@ export class TrainerInfoComponent implements OnInit {
 
   onBooking(trainerId: string){
   this.router.navigate(['/user/booking', trainerId])
+  }
+
+  goToMessage(trainerId: string)
+  {
+    this.router.navigate(['/user/chat', trainerId])
   }
 }
 

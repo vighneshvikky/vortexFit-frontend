@@ -1,14 +1,44 @@
-
-<div class="flex min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-red-100">
-  <!-- Fixed Sidebar -->
-  <div class="fixed left-0 top-0 h-full z-40">
-    <app-trainer-sidebar [navItems]="navItems" (logout)="onLogout()"></app-trainer-sidebar>
+<div class="flex min-h-screen bg-gray-100">
+  <!-- Mobile Overlay for Sidebar -->
+  <div 
+    class="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden transition-opacity duration-300"
+    [class.hidden]="!isSidebarOpen"
+    [class.opacity-0]="!isSidebarOpen"
+    [class.opacity-50]="isSidebarOpen"
+    (click)="closeSidebar()"
+  ></div>
+  
+  <!-- Sidebar Container -->
+  <div class="fixed lg:relative w-64 h-full left-0 top-0 z-40 transform transition-transform duration-300 ease-in-out lg:transform-none"
+       [class.-translate-x-full]="!isSidebarOpen && !isDesktop"
+       [class.translate-x-0]="isSidebarOpen || isDesktop">
+    <app-trainer-sidebar 
+      [navItems]="navItems" 
+      (logout)="onLogout()"
+      (closeMobileSidebar)="onMobileSidebarClose()">
+    </app-trainer-sidebar>
   </div>
-
-  <!-- Main Content Area with Left Margin for Sidebar -->
-  <div class="flex-1 ml-64 min-h-screen overflow-y-auto">
-    <div class="p-6">
+  
+  <!-- Main Content -->
+  <div class="flex-1 lg:ml-64 min-h-screen flex flex-col">
+    <!-- Mobile Header (shown only on mobile) -->
+    <header class="lg:hidden bg-white shadow-sm border-b border-gray-200 sticky top-0 z-20">
+      <div class="flex items-center justify-between px-4 py-3">
+        <button 
+          (click)="toggleSidebar()"
+          class="text-gray-500 hover:text-gray-700 p-2 rounded-md hover:bg-gray-100 transition-colors"
+          [attr.aria-label]="isSidebarOpen ? 'Close menu' : 'Open menu'"
+        >
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+        <h1 class="text-lg font-semibold text-gray-800">VortexFit Trainer</h1>
+        <div class="w-10"></div> <!-- Spacer for centering -->
+      </div>
+    </header>
+    
+    <!-- Router Outlet -->
+    <main class="flex-1 overflow-hidden">
       <router-outlet></router-outlet>
-    </div>
+    </main>
   </div>
 </div>

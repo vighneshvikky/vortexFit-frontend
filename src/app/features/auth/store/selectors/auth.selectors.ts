@@ -10,6 +10,12 @@ import { AppState } from '../../../../store/app.state';
     (state: AuthState) => state.currentUser
   );
 
+  
+export const selectCurrentUserId = createSelector(
+  selectCurrentUser,
+  (currentUser) => currentUser?._id   
+);
+
   export const selectAuthLoading = createSelector(
     selectAuthState,
     (state: AuthState) => state.loading

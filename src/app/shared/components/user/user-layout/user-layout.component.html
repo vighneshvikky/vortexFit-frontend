@@ -1,6 +1,9 @@
-<app-user-navbar/>
-<main class="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
+<div class="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
+  <app-user-navbar></app-user-navbar>
+  
+  <main class="min-h-screen">
     <router-outlet></router-outlet>
-</main>
-
-<app-footer/>
+  </main>
+  
+  <app-footer class="hidden md:block"></app-footer>
+</div>

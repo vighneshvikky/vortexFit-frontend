@@ -4,10 +4,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Trainer } from '../../trainer/models/trainer.interface';
 import { User } from '../../admin/services/admin.service';
-import {
-  SchedulingRule,
-  TimeSlot,
-} from '../../trainer/models/scheduling.interface';
 import { API_ROUTES } from '../../../app.routes.constants';
 import { TimeSlotsResponse } from '../pages/user-booking/interface/user-booking.interface';
 
@@ -60,6 +56,12 @@ export class UserService {
 
   getTimeSlots(trainerId: string, date: string): Observable<TimeSlotsResponse> {
     return this.http.get<TimeSlotsResponse>(`${this.scheduleUrl}${API_ROUTES.SCHEDULES.GENERATE_SLOTS(trainerId,date)}`);
+  }
+
+  getUserData(userId: string){
+        return this.http.get<Trainer | User>(
+      `${this.apiUrl}${API_ROUTES.USER.GET_TRAINER_DATA(userId)}`
+    );
   }
 
 

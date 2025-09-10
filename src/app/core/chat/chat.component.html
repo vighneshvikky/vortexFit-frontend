@@ -1,0 +1,320 @@
+<!-- Responsive Chat Component Template -->
+<div class="flex flex-col h-screen bg-gray-50">
+  <!-- Mobile Header (shown on mobile only) -->
+  <header class="md:hidden bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+    <div class="flex items-center justify-between px-4 py-3">
+      <!-- Back Button (shown when chat is active on mobile) -->
+      <button 
+        *ngIf="isMobileChatView" 
+        (click)="showMobileConversationList()"
+        class="text-gray-500 hover:text-gray-700 mr-3"
+      >
+        <i class="fas fa-arrow-left text-lg"></i>
+      </button>
+      
+      <!-- Mobile Menu Button (shown when conversation list is active) -->
+      <button 
+        *ngIf="!isMobileChatView" 
+        class="text-gray-500 hover:text-gray-700 mr-3"
+        (click)="toggleMobileMenu()"
+      >
+        <i class="fas fa-bars text-lg"></i>
+      </button>
+
+      <!-- Title -->
+      <div class="flex-1">
+        <h2 class="text-lg font-semibold text-gray-800">
+          {{ isMobileChatView ? (userData?.name || 'Chat') : (pageTitle || 'Messages') }}
+        </h2>
+        <p *ngIf="isMobileChatView && userData" class="text-xs text-gray-500">
+          {{ userData.email }}
+        </p>
+      </div>
+
+      <!-- Header Actions -->
+      <div *ngIf="isMobileChatView" class="flex space-x-2">
+        <button class="p-2 text-gray-500 hover:text-gray-700">
+          <i class="fas fa-phone text-sm"></i>
+        </button>
+        <button class="p-2 text-gray-500 hover:text-gray-700">
+          <i class="fas fa-video text-sm"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <div class="flex-1 flex overflow-hidden">
+    <!-- Conversations List Panel -->
+    <div class="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col"
+         [class.hidden]="isMobileChatView"
+         [class.md:flex]="true">
+      
+      <!-- Conversations Header (Desktop only) -->
+      <div class="hidden md:block p-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-800">Conversations</h3>
+      </div>
+
+      <!-- Search Bar (Mobile optimized) -->
+      <div class="p-3 md:p-4 border-b border-gray-200">
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="Search conversations..."
+            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+          />
+          <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+        </div>
+      </div>
+
+      <!-- Conversations List -->
+      <div class="flex-1 overflow-y-auto">
+        <!-- Current User Chat -->
+        <div
+          class="flex items-center p-3 md:p-4 border-b border-gray-200 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
+          *ngIf="userData"
+          (click)="selectConversation()"
+        >
+          <div class="relative mr-3 flex-shrink-0">
+            <img
+              [src]="userData.image || 'https://via.placeholder.com/48'"
+              [alt]="userData.name"
+              class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover"
+            />
+            <span
+              class="absolute bottom-0 right-0 w-2.5 h-2.5 md:w-3 md:h-3 bg-green-500 rounded-full border-2 border-white"
+            ></span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-center mb-1">
+              <h3 class="font-medium text-gray-900 truncate text-sm md:text-base">
+                {{ userData.name }}
+              </h3>
+              <span class="text-xs text-gray-500 flex-shrink-0">Active</span>
+            </div>
+            <p class="text-xs md:text-sm text-gray-500 truncate mb-1">
+              {{ userData.email }}
+            </p>
+            <!-- Role Badge -->
+            <span
+              class="inline-block px-2 py-0.5 text-xs rounded-full"
+              [ngClass]="{
+                'bg-red-100 text-red-800': currentUserRole.isTrainer,
+                'bg-blue-100 text-blue-800': currentUserRole.isUser
+              }"
+            >
+              {{ currentUserRole.isTrainer ? "Trainer" : "Member" }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Additional conversation items can go here -->
+        <div class="p-4 text-center text-gray-500 text-sm">
+          <p>No other conversations</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="flex-1 flex flex-col bg-gray-50"
+         [class.hidden]="!isMobileChatView && !isDesktop"
+         [class.md:flex]="true">
+      
+      <!-- Chat Header (Desktop only - mobile uses main header) -->
+      <div
+        class="hidden md:flex items-center p-4 border-b border-gray-200 bg-white"
+        *ngIf="userData"
+      >
+        <div class="relative mr-3 flex-shrink-0">
+          <img
+            [src]="userData.image || 'https://via.placeholder.com/40'"
+            [alt]="userData.name"
+            class="w-10 h-10 rounded-full object-cover"
+          />
+          <span
+            class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"
+          ></span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-medium text-gray-900">{{ userData.name }}</h3>
+          <p class="text-xs text-gray-500">{{ userData.email }}</p>
+          <!-- Role indicator in header -->
+          <span
+            class="inline-block px-2 py-0.5 text-xs rounded-full mt-0.5"
+            [ngClass]="{
+              'bg-red-100 text-red-700': currentUserRole.isTrainer,
+              'bg-blue-100 text-blue-700': currentUserRole.isUser
+            }"
+          >
+            {{ currentUserRole.isTrainer ? "Trainer" : "Member" }}
+          </span>
+        </div>
+        <div class="flex space-x-2">
+          <button class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100">
+            <i class="fas fa-video"></i>
+          </button>
+          <button class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100">
+            <i class="fas fa-phone"></i>
+          </button>
+          <button class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100">
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Chat Messages Area -->
+      <div class="flex-1 overflow-y-auto p-3 md:p-4" #messagesContainer>
+        <div class="space-y-3 md:space-y-4">
+          <!-- Display chat messages -->
+          <div
+            *ngFor="let message of messages; trackBy: trackMessage"
+            class="flex items-start"
+            [ngClass]="{ 'justify-end': message.senderId === currentUserId }"
+          >
+            <!-- Received Message -->
+            <div
+              *ngIf="message.senderId !== currentUserId"
+              class="flex items-start max-w-[85%] md:max-w-[75%]"
+            >
+              <img
+                [src]="userData?.image || 'https://via.placeholder.com/32'"
+                [alt]="userData?.name"
+                class="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover mr-2 md:mr-3 flex-shrink-0"
+              />
+              <div class="flex-1">
+                <div class="bg-white p-2 md:p-3 rounded-lg shadow-sm">
+                  <p class="text-gray-800 text-sm md:text-base break-words">{{ message.content }}</p>
+                </div>
+                <p class="text-xs text-gray-500 mt-1 px-1">
+                  {{ message.timestamp | date : "short" }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Sent Message -->
+            <div
+              *ngIf="message.senderId === currentUserId"
+              class="flex items-start justify-end max-w-[85%] md:max-w-[75%] ml-auto"
+            >
+              <div class="text-right flex-1">
+                <div
+                  class="p-2 md:p-3 rounded-lg shadow-sm inline-block"
+                  [ngClass]="getSentMessageClass()"
+                >
+                  <p class="text-white text-sm md:text-base break-words">{{ message.content }}</p>
+                </div>
+                <p class="text-xs text-gray-500 mt-1 px-1">
+                  {{ message.timestamp | date : "short" }}
+                </p>
+              </div>
+              <img
+                [src]="getCurrentUserAvatar()"
+                [alt]="currentUserRole.isTrainer ? 'Trainer' : 'User'"
+                class="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover ml-2 md:ml-3 flex-shrink-0"
+              />
+            </div>
+          </div>
+
+          <!-- Empty state when no messages -->
+          <div *ngIf="messages.length === 0" class="text-center py-8 md:py-12">
+            <div class="text-gray-400 mb-4">
+              <i class="fas fa-comments text-4xl md:text-6xl"></i>
+            </div>
+            <h3 class="text-base md:text-lg font-medium text-gray-600 mb-2">
+              Start a conversation
+            </h3>
+            <p class="text-sm md:text-base text-gray-500" *ngIf="userData">
+              Send a message to {{ userData.name }}
+              <span class="block text-xs mt-1">
+                ({{ userData.role === 'trainer' ? "Trainer" : "Member" }})
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message Input Area -->
+      <div class="border-t border-gray-200 bg-white p-3 md:p-4">
+        <div class="flex items-end space-x-2 md:space-x-3">
+          <!-- Attachment button -->
+          <button class="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 flex-shrink-0">
+            <i class="fas fa-paperclip text-sm md:text-base"></i>
+          </button>
+          
+          <!-- Message input -->
+          <div class="flex-1 relative">
+            <textarea
+              [(ngModel)]="text"
+              (keydown)="onKeyDown($event)"
+              placeholder="Type a message..."
+              rows="1"
+              class="w-full px-3 md:px-4 py-2 md:py-3 rounded-2xl border border-gray-300 focus:outline-none focus:ring-2 focus:border-transparent resize-none text-sm md:text-base"
+              [ngClass]="{
+                'focus:ring-red-500': currentUserRole.isTrainer,
+                'focus:ring-blue-500': currentUserRole.isUser
+              }"
+              style="max-height: 120px; min-height: 40px;"
+            ></textarea>
+          </div>
+
+          <!-- Emoji button (hidden on small screens) -->
+          <button class="hidden sm:block p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 flex-shrink-0">
+            <i class="far fa-smile text-sm md:text-base"></i>
+          </button>
+          
+          <!-- Send button -->
+          <button
+            (click)="send()"
+            [disabled]="!text?.trim()"
+            class="p-2 md:p-2.5 rounded-full transition-colors flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+            [ngClass]="getButtonClass()"
+          >
+            <i class="fas fa-paper-plane text-sm md:text-base"></i>
+          </button>
+        </div>
+        
+        <!-- Typing indicator -->
+        <div *ngIf="isTyping" class="flex items-center mt-2 text-xs text-gray-500">
+          <div class="flex space-x-1 mr-2">
+            <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div>
+            <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+            <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+          </div>
+          <span>{{ userData?.name }} is typing...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop Empty State (when no conversation selected) -->
+    <div class="hidden md:flex flex-1 items-center justify-center bg-gray-50" *ngIf="!userData && !isMobileChatView">
+      <div class="text-center">
+        <div class="text-gray-400 mb-4">
+          <i class="fas fa-comments text-6xl"></i>
+        </div>
+        <h3 class="text-lg font-medium text-gray-600 mb-2">
+          Select a conversation
+        </h3>
+        <p class="text-gray-500">
+          Choose a conversation from the list to start messaging
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div
+    *ngIf="isLoading"
+    class="absolute inset-0 flex items-center justify-center bg-gray-50 bg-opacity-90 z-50"
+  >
+    <div class="text-center">
+      <div
+        class="animate-spin rounded-full h-8 w-8 md:h-12 md:w-12 border-b-2 mx-auto mb-4"
+        [ngClass]="{
+          'border-red-600': currentUserRole.isTrainer,
+          'border-blue-600': currentUserRole.isUser
+        }"
+      ></div>
+      <p class="text-gray-600 text-sm md:text-base">Loading...</p>
+    </div>
+  </div>
+</div>
