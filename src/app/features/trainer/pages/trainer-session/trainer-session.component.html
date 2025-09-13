@@ -1,160 +1,186 @@
 <!-- Training Sessions Template -->
-<div class="training-sessions-container">
-
-
+<div class="space-y-6">
   <!-- Filters Section -->
-  <div class="filters-section">
-    <div class="filter-group">
-      <label for="clientFilter">Filter by Client</label>
-      <select
-        id="clientFilter"
-        class="filter-select"
-        [(ngModel)]="filters.client"
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Client Filter -->
+      <div class="flex flex-col">
+        <label for="clientFilter" class="text-xs font-medium text-gray-600 mb-1">Filter by Client</label>
+        <select
+          id="clientFilter"
+          class="w-full rounded-lg border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+          [(ngModel)]="filters.client"
+        >
+          <option [ngValue]="null">All Clients</option>
+          <option *ngFor="let client of availableClients" [ngValue]="client">
+            {{ client.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="flex flex-col">
+        <label for="statusFilter" class="text-xs font-medium text-gray-600 mb-1">Filter by Status</label>
+        <select
+          id="statusFilter"
+          class="w-full rounded-lg border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+          [(ngModel)]="filters.status"
+        >
+          <option value="">All Sessions</option>
+          <option *ngFor="let status of availableStatuses" [value]="status">
+            {{ status | titlecase }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Date From -->
+      <div class="flex flex-col">
+        <label for="dateFromFilter" class="text-xs font-medium text-gray-600 mb-1">Date From</label>
+        <input
+          type="date"
+          id="dateFromFilter"
+          class="w-full rounded-lg border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+          [(ngModel)]="filters.dateFrom"
+        />
+      </div>
+
+      <!-- Date To -->
+      <div class="flex flex-col">
+        <label for="dateToFilter" class="text-xs font-medium text-gray-600 mb-1">Date To</label>
+        <input
+          type="date"
+          id="dateToFilter"
+          class="w-full rounded-lg border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+          [(ngModel)]="filters.dateTo"
+        />
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-end">
+      <button
+        class="group inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 hover:bg-red-800 text-white text-sm font-semibold px-4 py-2 shadow-sm transition-colors"
+        (click)="applyFilters()"
       >
-        <option [ngValue]="null">All Clients</option>
-        <option *ngFor="let client of availableClients" [ngValue]="client">
-          {{ client.name }}
-        </option>
-      </select>
-    </div>
-
-    <div class="filter-group">
-      <label for="statusFilter">Filter by Status</label>
-      <select
-        id="statusFilter"
-        class="filter-select"
-        [(ngModel)]="filters.status"
-      >
-        <option value="">All Sessions</option>
-        <option *ngFor="let status of availableStatuses" [value]="status">
-          {{ status | titlecase }}
-        </option>
-      </select>
-    </div>
-
-    <div class="filter-group">
-      <label for="dateFromFilter">Date From</label>
-      <input
-        type="date"
-        id="dateFromFilter"
-        class="filter-input"
-        [(ngModel)]="filters.dateFrom"
-      />
-    </div>
-
-    <div class="filter-group">
-      <label for="dateToFilter">Date To</label>
-      <input
-        type="date"
-        id="dateToFilter"
-        class="filter-input"
-        [(ngModel)]="filters.dateTo"
-      />
-    </div>
-
-    <div class="filter-actions">
-      <button class="apply-filters-btn" (click)="applyFilters()">
-        🔍 Apply Filters
+        <span class="text-red-200 group-hover:text-white">🔍</span>
+        Apply Filters
       </button>
-      <button class="clear-filters-btn" (click)="clearFilters()">
+      <button
+        class="inline-flex items-center justify-center gap-2 rounded-lg border border-red-300 text-red-700 hover:bg-red-50 text-sm font-medium px-4 py-2 transition-colors"
+        (click)="clearFilters()"
+      >
         ✖ Clear Filters
       </button>
     </div>
   </div>
 
   <!-- Results Summary -->
-  <div class="results-summary" *ngIf="!loading">
+  <div class="flex items-center justify-between text-sm text-gray-600" *ngIf="!loading">
     <p>
-      Showing {{ filteredBookingData.length }} of
-      {{ bookingData.length }} sessions
+      Showing <span class="font-semibold text-gray-800">{{ filteredBookingData.length }}</span> of
+      <span class="font-semibold text-gray-800">{{ bookingData.length }}</span> sessions
     </p>
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="loading" class="loading-container">
+  <div *ngIf="loading" class="bg-white rounded-xl shadow-sm border border-gray-100 p-10 flex flex-col items-center justify-center gap-3">
     <div class="spinner"></div>
-    <p>Loading sessions...</p>
+    <p class="text-gray-600">Loading sessions...</p>
   </div>
 
   <!-- Sessions Table Container -->
-  <div class="sessions-table-container" *ngIf="!loading">
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" *ngIf="!loading">
     <!-- Table Header -->
-    <div class="table-header">
-      <div class="header-cell client-header">CLIENT NAME</div>
-      <div class="header-cell datetime-header">DATE/TIME</div>
-      <div class="header-cell session-type-header">SESSION TYPE</div>
-      <div class="header-cell status-header">STATUS</div>
-      <div class="header-cell actions-header">ACTIONS</div>
+    <div class="hidden md:grid grid-cols-[1.5fr,1fr,1fr,1fr,0.5fr] items-center bg-red-50 border-b border-gray-200">
+      <div class="px-4 py-3 text-[11px] font-semibold tracking-wider text-gray-600">CLIENT NAME</div>
+      <div class="px-4 py-3 text-[11px] font-semibold tracking-wider text-gray-600">DATE/TIME</div>
+      <div class="px-4 py-3 text-[11px] font-semibold tracking-wider text-gray-600">SESSION TYPE</div>
+      <div class="px-4 py-3 text-[11px] font-semibold tracking-wider text-gray-600">STATUS</div>
+      <div class="px-4 py-3 text-[11px] font-semibold tracking-wider text-gray-600 text-right">ACTIONS</div>
     </div>
 
     <!-- Sessions List -->
-    <div class="sessions-list">
+    <div>
       <!-- No Results Message -->
-      <div *ngIf="filteredBookingData.length === 0" class="no-results">
-        <div class="no-results-icon">📅</div>
-        <h3>No sessions found</h3>
-        <p>Try adjusting your filters or check back later for new bookings.</p>
+      <div *ngIf="filteredBookingData.length === 0" class="p-10 text-center">
+        <div class="mx-auto mb-2 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center text-red-600">📅</div>
+        <h3 class="text-lg font-semibold text-gray-800">No sessions found</h3>
+        <p class="text-sm text-gray-600">Try adjusting your filters or check back later for new bookings.</p>
       </div>
 
       <!-- Session Rows -->
-      <div *ngFor="let booking of filteredBookingData" class="session-row">
-        <!-- Client Info -->
-        <div class="table-cell client-cell">
-          <div class="client-info">
-            <div class="client-name">{{ booking?.userId?.name }}</div>
+      <div *ngFor="let booking of filteredBookingData" class="group border-b last:border-0 border-gray-100 hover:bg-red-50/40 transition-colors">
+        <div class="grid md:grid-cols-[1.5fr,1fr,1fr,1fr,0.5fr] gap-4 md:gap-0 items-center">
+          <!-- Client Info -->
+          <div class="px-4 py-4">
+            <div class="text-sm font-medium text-gray-900">{{ booking?.userId?.name }}</div>
+          </div>
+
+          <!-- Date/Time -->
+          <div class="px-4 py-4 text-sm text-gray-700">
+            <div class="font-medium">{{ formatDate(booking.date) }}</div>
+            <div class="text-gray-500">{{ booking.timeSlot }}</div>
+          </div>
+
+          <!-- Session Type -->
+          <div class="px-4 py-4">
+            <span class="session-type-badge inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold" [ngClass]="getSessionTypeClass(booking.sessionType)">
+              <svg *ngIf="(booking.sessionType || '').toLowerCase().includes('video')" xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M15 10.5V6a2 2 0 0 0-2-2H5A2 2 0 0 0 3 6v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4.5l4 4v-7l-4 4z"/>
+              </svg>
+              {{ formatSessionType(booking.sessionType) }}
+            </span>
+          </div>
+
+          <!-- Status -->
+          <div class="px-4 py-4">
+            <span class="status-badge inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold" [ngClass]="getStatusClass(booking.status)">
+              {{ booking.status | titlecase }}
+            </span>
+          </div>
+
+          <!-- Actions -->
+          <div class="px-4 py-4 flex md:justify-end">
+            <button
+              class="group inline-flex items-center justify-center h-9 w-9 rounded-full bg-red-600 hover:bg-red-800 transition-colors shadow-sm"
+              (click)="viewSession(booking._id, booking.userId._id)"
+              title="View Details"
+            >
+              <span class="text-red-200 group-hover:text-white">👁️</span>
+            </button>
+
+                <button
+              class="group inline-flex items-center justify-center h-9 w-9 rounded-full bg-red-600 hover:bg-red-800 transition-colors shadow-sm"
+            >
+              <span class="text-red-200 group-hover:text-white">🎥</span>
+            </button>
           </div>
         </div>
 
-        <!-- Date/Time -->
-        <div class="table-cell datetime-cell">
-          <div class="session-date">{{ formatDate(booking.date) }}</div>
-          <div class="session-time">{{ booking.timeSlot }}</div>
-        </div>
-
-        <!-- Session Type -->
-        <div class="table-cell session-type-cell">
-          <span
-            class="session-type-badge"
-            [ngClass]="getSessionTypeClass(booking.sessionType)"
-          >
-            {{ formatSessionType(booking.sessionType) }}
-          </span>
-        </div>
-
-        <!-- Status -->
-        <div class="table-cell status-cell">
-          <span class="status-badge" [ngClass]="getStatusClass(booking.status)">
-            {{ booking.status | titlecase }}
-          </span>
-        </div>
-
-        <!-- Actions -->
-        <div class="table-cell actions-cell">
-          <button
-            class="action-btn view-btn"
-            (click)="viewSession(booking._id, booking.userId._id)"
-            title="View Details"
-          >
-            👁️
-          </button>
+        <!-- Mobile-only labels -->
+        <div class="md:hidden grid grid-cols-3 gap-4 text-[11px] text-gray-500 px-4 pb-3">
+          <div>Client</div>
+          <div>Date/Time</div>
+          <div>Status</div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Pagination -->
-  <div *ngIf="totalPages > 1" class="pagination-container">
+  <div *ngIf="totalPages > 1" class="flex justify-center">
     <app-pagination
       [currentPage]="currentPage"
       [totalPages]="totalPages"
-      [maxVisiblePages]="3"
+      [maxVisiblePages]="5"
       role="trainer"
-      (pageChanged)="loadFilteredDataFromServer($event)">
+      (pageChanged)="loadFilteredDataFromServer($event)"
+    >
     </app-pagination>
   </div>
 </div>
 
-<!-- Modal (unchanged) -->
+<!-- Modal -->
 <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
   <div class="modal-container" (click)="$event.stopPropagation()">
     <!-- Modal Header -->
@@ -164,8 +190,6 @@
         <span>&times;</span>
       </button>
     </div>
-
-    
 
     <!-- Modal Content -->
     <div class="modal-content">
@@ -180,11 +204,7 @@
         <!-- User Profile Section -->
         <div class="profile-section">
           <div class="profile-image">
-            <img
-              [src]="userData.image"
-              [alt]="userData.name"
-              *ngIf="userData.image"
-            />
+            <img [src]="userData.image" [alt]="userData.name" *ngIf="userData.image" />
             <div *ngIf="!userData.image" class="placeholder-image">
               {{ userData.name }}
             </div>
@@ -192,32 +212,20 @@
           <div class="profile-info">
             <h4>{{ userData.name }}</h4>
             <p class="email">{{ userData.email }}</p>
-            <span
-              class="verification-badge"
-              [class.verified]="userData.isVerified"
-            >
-              {{ userData.isVerified ? "Verified" : "Unverified" }}
+            <span class="verification-badge" [class.verified]="userData.isVerified">
+              {{ userData.isVerified ? 'Verified' : 'Unverified' }}
             </span>
-   <button
-        class="w-full bg-transparent border-2 border-blue-500 hover:bg-blue-500/10 text-blue-400 hover:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 transform hover:scale-105"
-        (click)="goToMessage(userData._id)"
-      
-      >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-          ></path>
-        </svg>
-        <span>Message Coach</span>
-      </button>
+            <div class="mt-4 md:mt-6 flex w-full md:justify-start">
+              <button
+                class="group w-full md:w-auto bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-5 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+                (click)="goToMessage(userData._id)"
+              >
+                <svg class="w-5 h-5 text-red-200 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+                <span class="text-white">Message Client</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -246,10 +254,7 @@
           <div class="detail-item full-width">
             <label>Fitness Goals</label>
             <div class="tags">
-              <span
-                *ngFor="let goal of userData.fitnessGoals"
-                class="tag goal-tag"
-              >
+              <span *ngFor="let goal of userData.fitnessGoals" class="tag goal-tag">
                 {{ goal }}
               </span>
             </div>
@@ -257,10 +262,7 @@
           <div class="detail-item full-width">
             <label>Training Types</label>
             <div class="tags">
-              <span
-                *ngFor="let type of userData.trainingTypes"
-                class="tag training-tag"
-              >
+              <span *ngFor="let type of userData.trainingTypes" class="tag training-tag">
                 {{ type }}
               </span>
             </div>
@@ -268,10 +270,7 @@
           <div class="detail-item full-width">
             <label>Equipment Available</label>
             <div class="tags">
-              <span
-                *ngFor="let equipment of userData.equipments"
-                class="tag equipment-tag"
-              >
+              <span *ngFor="let equipment of userData.equipments" class="tag equipment-tag">
                 {{ equipment }}
               </span>
             </div>
@@ -296,10 +295,7 @@
             </div>
             <div class="session-info-item">
               <label>Current Status</label>
-              <span
-                class="status-badge"
-                [ngClass]="getStatusClass(selectedBooking.status)"
-              >
+              <span class="status-badge" [ngClass]="getStatusClass(selectedBooking.status)">
                 {{ selectedBooking.status | titlecase }}
               </span>
             </div>
@@ -315,12 +311,7 @@
             [ngModel]="selectedBooking.status"
             (ngModelChange)="updateBookingStatus($event)"
           >
-            <option
-              *ngFor="
-                let status of getAvailableStatuses(selectedBooking.status)
-              "
-              [value]="status"
-            >
+            <option *ngFor="let status of getAvailableStatuses(selectedBooking.status)" [value]="status">
               {{ status | titlecase }}
             </option>
           </select>
@@ -329,4 +320,3 @@
     </div>
   </div>
 </div>
-

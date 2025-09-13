@@ -27,18 +27,22 @@ export class AuthInterceptor implements HttpInterceptor {
   private authService = inject(AuthService);
   private router = inject(Router);
   private zone = inject(NgZone);
-  private notify = inject(NotyService)
+  private notify = inject(NotyService);
 
   intercept<T>(
     req: HttpRequest<T>,
     next: HttpHandler
   ): Observable<HttpEvent<T>> {
+    const excludedUrls = [
+      '/auth/login',
+      '/auth/signup',
+      '/auth/otp',
+      '/auth/refresh',
+    ];
 
-    const excludedUrls = ['/auth/login', '/auth/signup', '/auth/otp', '/auth/refresh'];
-
-if (excludedUrls.some((url) => req.url.includes(url))) {
-  return next.handle(req);
-}
+    if (excludedUrls.some((url) => req.url.includes(url))) {
+      return next.handle(req);
+    }
 
     const clonedRequest = req.clone({
       withCredentials: true,
@@ -48,14 +52,22 @@ if (excludedUrls.some((url) => req.url.includes(url))) {
         console.log('error from the backend', error);
         console.log('error status', error.status);
 
-    if (error.status === 400) {
-  this.notify.showError(error.error?.message || 'Bad request');
-  return throwError(() => error); 
-}
+        if (error.status === 400) {
+          this.notify.showError(error.error?.message || 'Bad request');
+          return throwError(() => error);
+        }
 
         if (error.status === 401) {
           console.log('calling hangle');
           return this.handle401Error(clonedRequest, next);
+        }
+        if (error.status === 409) {
+          this.notify.showError(error.error?.message || 'Conflict error');
+          return throwError(() => error);
+        }
+        if (error.status === 500) {
+          this.notify.showError(error.error?.message || 'Internal server error');
+          return throwError(() => error);
         }
         if (
           error.status === 403 &&

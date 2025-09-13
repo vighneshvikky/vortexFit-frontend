@@ -53,7 +53,8 @@ export class UserDetailsComponent implements OnInit {
     this.profileForm = this.fb.group({
       name: [{ value: '', disabled: true }],
       email: [{ value: '', disabled: true }],
-      dob: ['', Validators.required, minimumAgeValidator(18)],
+    dob: ['', [Validators.required, minimumAgeValidator(18)]],
+
       height: [
         '',
         [Validators.required, Validators.min(30), Validators.max(300)],

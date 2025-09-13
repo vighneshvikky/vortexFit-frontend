@@ -1,0 +1,229 @@
+// User Layout Component Styles
+.user-layout {
+  // Custom background gradients
+  background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+  
+  // Smooth transitions for all elements
+  * {
+    transition: all 0.2s ease-in-out;
+  }
+}
+
+// Mobile header styling
+.mobile-header {
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.1);
+  
+  .menu-button {
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+    }
+    
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+  
+  .notification-button {
+    position: relative;
+    
+    &:hover {
+      transform: translateY(-1px);
+    }
+    
+    .notification-badge {
+      animation: pulse 2s infinite;
+    }
+  }
+}
+
+// Welcome banner styling
+.welcome-banner {
+  background: linear-gradient(135deg, #2563eb 0%, #f97316 100%);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+  }
+}
+
+// Main content area
+.main-content {
+  position: relative;
+  
+  .content-wrapper {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    
+    &:hover {
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+  }
+}
+
+// Sidebar overlay animations
+.sidebar-overlay {
+  &.entering {
+    animation: overlayFadeIn 0.3s ease-out;
+  }
+  
+  &.leaving {
+    animation: overlayFadeOut 0.3s ease-out;
+  }
+}
+
+// Sidebar slide animations
+.sidebar {
+  &.slide-enter {
+    animation: slideInLeft 0.3s ease-out;
+  }
+  
+  &.slide-leave {
+    animation: slideOutLeft 0.3s ease-out;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 1023px) {
+  .mobile-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  
+  .main-content {
+    padding-top: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    position: static;
+    transform: none !important;
+    box-shadow: none;
+  }
+  
+  .main-content {
+    margin-left: 0;
+  }
+  
+  // Desktop welcome section (if you want to show it on desktop too)
+  .welcome-banner {
+    display: none; // Hidden on desktop by default
+    
+    &.show-desktop {
+      display: block;
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+// Animation keyframes
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlayFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+// Loading states
+.loading {
+  .content-wrapper {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Focus states for accessibility
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .welcome-banner {
+    background: #1a56db;
+    border: 2px solid #f97316;
+  }
+  
+  .main-content .content-wrapper {
+    border: 2px solid #374151;
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

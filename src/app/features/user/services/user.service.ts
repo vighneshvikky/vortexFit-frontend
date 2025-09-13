@@ -45,7 +45,9 @@ export class UserService {
 
   getSignedUploadUrl(fileName: string, contentType: string, type: string) {
     return this.http.post<{ url: string; key: string }>(
-      `${environment.api}${API_ROUTES.S3.GENERATE_UPLOAD_URL}`,
+      `${environment.api}${API_ROUTES.S3.BASE
+        
+      }${API_ROUTES.S3.GENERATE_UPLOAD_URL}`,
       {
         folder: `trainer-verification/${type}`,
         fileName,

@@ -37,4 +37,26 @@ export const API_ROUTES = {
     GET_CLIENTS: '/getClients',
     GET_STATS: '/stats',
   },
+CHAT: {
+  BASE: '/chat',
+
+  MESSAGES: {
+    BASE: '/chat/messages',
+    GET: (roomId: string, page = 1, limit = 3) =>
+      `/chat/messages/${roomId}?page=${page}&limit=${limit}`,
+    SEND: '/chat/messages',
+    MARK_AS_READ: '/chat/messages/read',
+    UNREAD_COUNT: (userId: string) => `/chat/messages/unread-count/${userId}`,
+    SEARCH: (roomId: string, query: string) =>
+      `/chat/messages/search/${roomId}?q=${encodeURIComponent(query)}`,
+  },
+
+  ROOMS: {
+    BASE: '/chat/rooms',
+    GET_BY_USER: (userId: string) => `/chat/rooms/${userId}`,
+    CREATE: '/chat/rooms',
+    GET_OR_CREATE: '/chat/rooms/get-or-create',
+  },
+}
+
 };

@@ -40,7 +40,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   currentUserId: string | undefined = '';
   sender: string = '';
   senderId: string = '';
-  
+
   // Add missing properties
   isMobileChatView = false;
   isDesktop = false;
@@ -74,7 +74,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.checkScreenSize();
 
     this.store.select(selectCurrentUser).subscribe((currentUser) => {
-      // set current user's role for UI styling and logic
       this.currentUserRole = { isTrainer: false, isUser: false };
 
       if (currentUser?.role === 'trainer') {
@@ -109,13 +108,15 @@ export class ChatComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error loading user data:', error);
           this.isLoading = false;
-        }
+        },
       });
     }
   }
 
   private async initializeChat() {
-    this.currentUserId = await firstValueFrom(this.store.select(selectCurrentUserId));
+    this.currentUserId = await firstValueFrom(
+      this.store.select(selectCurrentUserId)
+    );
     if (!this.currentUserId) {
       console.warn('Missing current userId in store');
       return;
@@ -176,13 +177,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (!this.peerId || !this.text?.trim()) return;
 
     console.log('Sending message...', this.peerId, this.text, this.senderId);
-    
+
     // Show typing indicator briefly
     this.isTyping = true;
-    
+
     this.chat.send(this.peerId, this.senderId, this.text.trim());
     this.text = '';
-    
+
     // Hide typing indicator after a short delay
     setTimeout(() => {
       this.isTyping = false;
@@ -199,7 +200,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getSentMessageClass(): string {
-    return this.currentUserRole.isTrainer ? 'bg-red-100' : 'bg-blue-100';
+    return this.currentUserRole.isTrainer ? 'bg-red-500' : 'bg-blue-500';
   }
 
   getButtonClass(): string {

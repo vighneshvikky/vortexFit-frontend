@@ -177,18 +177,15 @@ export class UserBookingComponent implements OnInit {
       return;
     }
 
-    // Clear previous selection
     this.calendarDays.forEach((d) => (d.isSelected = false));
     day.isSelected = true;
 
     this.selectedDate = day.fullDate;
     this.selectedTimeSlot = null;
 
-    // Fetch time slots from backend instead of generating them
     this.fetchTimeSlotsFromBackend(day.fullDate);
   }
 
-  // New method to fetch time slots from backend
   private fetchTimeSlotsFromBackend(selectedDate: Date) {
     this.isLoadingSlots = true;
     this.availableTimeSlots = [];
@@ -445,8 +442,16 @@ export class UserBookingComponent implements OnInit {
           }
         },
         error: (err) => {
-          console.error('Payment verification error:', err);
-          this.notyf.showError('Payment verification failed');
+          this.ngZone.run(() => {
+            this.availableTimeSlots = this.availableTimeSlots.filter(
+              (slot) => slot !== this.selectedTimeSlot
+            );
+          });
+
+          const backendMessage =
+            err.error?.message || 'Payment verification failed';
+          this.notyf.showError(backendMessage);
+
           this.showConfirmationModal = false;
           this.bookingId = '';
         },

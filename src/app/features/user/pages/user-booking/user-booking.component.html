@@ -160,41 +160,41 @@
         </div>
       </div>
 
-     
       <!-- Time Slots -->
-  <div class="time-slots" *ngIf="selectedDate">
-  <h3>
-    Available Time Slots for {{ selectedDate | date : "MMM dd, yyyy" }}
-  </h3>
+      <div class="time-slots" *ngIf="selectedDate">
+        <h3>
+          Available Time Slots for {{ selectedDate | date : "MMM dd, yyyy" }}
+        </h3>
 
-  <!-- Loading state for slots -->
+        <!-- Loading state for slots -->
 
+        <!-- Slots available OR no slots/error -->
+        <ng-container *ngIf="!isLoadingSlots">
+          <div *ngIf="availableTimeSlots.length > 0; else noSlots">
+            <div class="slots-grid">
+              <button
+                *ngFor="let slot of availableTimeSlots"
+                class="time-slot"
+                [class.selected]="selectedTimeSlot === slot"
+                (click)="selectTimeSlot(slot)"
+              >
+                {{ slot }}
+                <span *ngIf="slot.isBooked" class="booked-label">(Booked)</span>
+              </button>
+            </div>
+          </div>
+        </ng-container>
 
-  <!-- Slots available OR no slots/error -->
-  <ng-container *ngIf="!isLoadingSlots">
-    <div *ngIf="availableTimeSlots.length > 0; else noSlots">
-      <div class="slots-grid">
-        <button
-          *ngFor="let slot of availableTimeSlots"
-          class="time-slot"
-          [class.selected]="selectedTimeSlot === slot"
-          (click)="selectTimeSlot(slot)"
-        >
-          {{ slot }}
-          <span *ngIf="slot.isBooked" class="booked-label">(Booked)</span>
-        </button>
+        <!-- Fallback: no slots or error -->
+        <ng-template #noSlots>
+          <div class="no-slots-message">
+            {{
+              slotsErrorMessage ||
+                "No available slots for this date. Please pick another day."
+            }}
+          </div>
+        </ng-template>
       </div>
-    </div>
-  </ng-container>
-
-  <!-- Fallback: no slots or error -->
-  <ng-template #noSlots>
-    <div class="no-slots-message">
-      {{ slotsErrorMessage || "No available slots for this date. Please pick another day." }}
-    </div>
-  </ng-template>
-</div>
-
     </div>
 
     <!-- Order Summary Panel (Sticky) -->
@@ -232,6 +232,4 @@
       </button>
     </div>
   </div>
-
-
 </div>

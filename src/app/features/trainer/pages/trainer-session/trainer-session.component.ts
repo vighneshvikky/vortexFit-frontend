@@ -39,7 +39,7 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
   currentStatus: BookingStatus = BookingStatus.PENDING;
   currentPage: number = 1;
   totalPages: number = 1;
-  pageSize: number = 3; 
+  pageSize: number = 5; 
 
   
   useServerSideFiltering = true; 

@@ -11,10 +11,10 @@ import { Subscription } from 'rxjs';
 import { SchedulingService } from '../../services/scheduling.service';
 import {
   SchedulingRule,
-  SchedulingFormData,
+  
 } from '../../models/scheduling.interface';
 import { NotyService } from '../../../../core/services/noty.service';
-import { CATEGORIES, DAYSOFWEEK, SESSION_TYPES } from '../../../../shared/constants/filter-options';
+import {  DAYSOFWEEK, SESSION_TYPES } from '../../../../shared/constants/filter-options';
 
 @Component({
   selector: 'app-trainer-scheduling',
