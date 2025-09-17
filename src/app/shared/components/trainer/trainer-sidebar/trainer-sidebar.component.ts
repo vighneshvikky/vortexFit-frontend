@@ -36,7 +36,7 @@ export class TrainerSidebarComponent implements OnInit {
   }
 
   onMobileNavClick(): void {
-    // Close sidebar on mobile after navigation
+    
     this.closeMobileSidebar.emit();
   }
 

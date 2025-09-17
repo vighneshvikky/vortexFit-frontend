@@ -11,11 +11,12 @@ import { UserConfirmBookingComponent } from './pages/user-confirm-booking/user-c
 import { ChatComponent } from '../../core/chat/chat.component';
 import { ProfileSidebarComponent } from '../../shared/components/user/profile-sidebar/profile-sidebar.component';
 import { UserSpecificLayoutComponent } from '../../shared/components/user/user-specific-layout/user-specific-layout.component';
+import { MySessionComponent } from './my-session/my-session.component';
 
 export const userRoutes: Routes = [
   {
     path: '',
-    component: UserLayoutComponent, 
+    component: UserLayoutComponent,
     canActivate: [RoleGuard()],
     data: { role: 'user' },
     children: [
@@ -23,14 +24,14 @@ export const userRoutes: Routes = [
       { path: 'trainers', component: UserTrainerListComponent },
       { path: 'trainer-info/:id', component: TrainerInfoComponent },
       { path: 'all-trainers', component: AllTraninersComponent },
-      // { path: 'profile', component: UserProfileComponent },
-      { 
-  path: 'profile', 
-  component: UserSpecificLayoutComponent,
-  children: [
-    { path: '', component: UserProfileComponent }, 
-  ]
-},
+      {
+        path: '',
+        component: UserSpecificLayoutComponent,
+        children: [
+          { path: 'profile', component: UserProfileComponent },
+          { path: 'my-sessions', component: MySessionComponent },
+        ],
+      },
 
       { path: 'booking/:id', component: UserBookingComponent },
       { path: 'confirmBooking', component: UserConfirmBookingComponent },

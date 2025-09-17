@@ -6,14 +6,14 @@
       <!-- Client Filter -->
       <div class="flex flex-col">
         <label for="clientFilter" class="text-xs font-medium text-gray-600 mb-1"
-          >Filter by Client</label
+          >Filter by Trainer</label
         >
         <select
           id="clientFilter"
           class="w-full rounded-lg border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
           [(ngModel)]="filters.client"
         >
-          <option [ngValue]="null">All Clients</option>
+          <option [ngValue]="null">All Trainer</option>
           <option *ngFor="let client of availableClients" [ngValue]="client">
             {{ client.name }}
           </option>
@@ -123,7 +123,7 @@
       <div
         class="px-4 py-3 text-[11px] font-semibold tracking-wider text-gray-600"
       >
-        CLIENT NAME
+        Trainer NAME
       </div>
       <div
         class="px-4 py-3 text-[11px] font-semibold tracking-wider text-gray-600"
@@ -173,7 +173,7 @@
           <!-- Client Info -->
           <div class="px-4 py-4">
             <div class="text-sm font-medium text-gray-900">
-              {{ booking?.userId?.name }}
+              {{ booking?.trainerId?.name }}
             </div>
           </div>
 
@@ -219,13 +219,7 @@
 
           <!-- Actions -->
           <div class="px-4 py-4 flex md:justify-end">
-            <button
-              class="group inline-flex items-center justify-center h-9 w-9 rounded-full bg-red-600 hover:bg-red-800 transition-colors shadow-sm"
-              (click)="viewSession(booking._id, booking.userId._id)"
-              title="View Details"
-            >
-              <span class="text-red-200 group-hover:text-white">👁️</span>
-            </button>
+
 
             <button
               (click)="startVideoCall(booking)"
@@ -257,193 +251,20 @@
     <app-pagination
       [currentPage]="currentPage"
       [totalPages]="totalPages"
-      [maxVisiblePages]="5"
-      role="trainer"
+      [maxVisiblePages]="3"
+      role="user"
       (pageChanged)="loadFilteredDataFromServer($event)"
     >
     </app-pagination>
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
-  <div class="modal-container" (click)="$event.stopPropagation()">
-    <!-- Modal Header -->
-    <div class="modal-header">
-      <h3>Client Details</h3>
-      <button class="close-btn" (click)="closeModal()">
-        <span>&times;</span>
-      </button>
-    </div>
 
-    <!-- Modal Content -->
-    <div class="modal-content">
-      <!-- Loading State -->
-      <div *ngIf="loadingUserData" class="loading-container">
-        <div class="spinner"></div>
-        <p>Loading client data...</p>
-      </div>
-
-      <!-- User Data -->
-      <div *ngIf="!loadingUserData && userData" class="user-details">
-        <!-- User Profile Section -->
-        <div class="profile-section">
-          <div class="profile-image">
-            <img
-              [src]="userData.image"
-              [alt]="userData.name"
-              *ngIf="userData.image"
-            />
-            <div *ngIf="!userData.image" class="placeholder-image">
-              {{ userData.name }}
-            </div>
-          </div>
-          <div class="profile-info">
-            <h4>{{ userData.name }}</h4>
-            <p class="email">{{ userData.email }}</p>
-            <span
-              class="verification-badge"
-              [class.verified]="userData.isVerified"
-            >
-              {{ userData.isVerified ? "Verified" : "Unverified" }}
-            </span>
-            <div class="mt-4 md:mt-6 flex w-full md:justify-start">
-              <button
-                class="group w-full md:w-auto bg-blue-600 hover:bg-blue-800 text-white font-semibold py-3 px-5 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
-                (click)="goToMessage(userData._id)"
-              >
-                <svg
-                  class="w-5 h-5 text-red-200 group-hover:text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  ></path>
-                </svg>
-                <span class="text-white">Message Client</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Details Grid -->
-        <div class="details-grid">
-          <div class="detail-item">
-            <label>Age</label>
-            <span>{{ calculateAge(userData.dob) }} years</span>
-          </div>
-          <div class="detail-item">
-            <label>Height</label>
-            <span>{{ userData.height }} {{ userData.heightUnit }}</span>
-          </div>
-          <div class="detail-item">
-            <label>Weight</label>
-            <span>{{ userData.weight }} {{ userData.weightUnit }}</span>
-          </div>
-          <div class="detail-item">
-            <label>Fitness Level</label>
-            <span>{{ userData.fitnessLevel }}</span>
-          </div>
-          <div class="detail-item">
-            <label>Preferred Time</label>
-            <span>{{ userData.preferredTime }}</span>
-          </div>
-          <div class="detail-item full-width">
-            <label>Fitness Goals</label>
-            <div class="tags">
-              <span
-                *ngFor="let goal of userData.fitnessGoals"
-                class="tag goal-tag"
-              >
-                {{ goal }}
-              </span>
-            </div>
-          </div>
-          <div class="detail-item full-width">
-            <label>Training Types</label>
-            <div class="tags">
-              <span
-                *ngFor="let type of userData.trainingTypes"
-                class="tag training-tag"
-              >
-                {{ type }}
-              </span>
-            </div>
-          </div>
-          <div class="detail-item full-width">
-            <label>Equipment Available</label>
-            <div class="tags">
-              <span
-                *ngFor="let equipment of userData.equipments"
-                class="tag equipment-tag"
-              >
-                {{ equipment }}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Session Details -->
-        <div class="session-details" *ngIf="selectedBooking">
-          <h5>Session Information</h5>
-          <div class="session-info-grid">
-            <div class="session-info-item">
-              <label>Date</label>
-              <span>{{ formatDate(selectedBooking.date) }}</span>
-            </div>
-            <div class="session-info-item">
-              <label>Time Slot</label>
-              <span>{{ selectedBooking.timeSlot }}</span>
-            </div>
-            <div class="session-info-item">
-              <label>Session Type</label>
-              <span>{{ formatSessionType(selectedBooking.sessionType) }}</span>
-            </div>
-            <div class="session-info-item">
-              <label>Current Status</label>
-              <span
-                class="status-badge"
-                [ngClass]="getStatusClass(selectedBooking.status)"
-              >
-                {{ selectedBooking.status | titlecase }}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Status Update Section -->
-        <div *ngIf="selectedBooking" class="status-update-section">
-          <label for="statusSelect">Change Status:</label>
-          <select
-            id="statusSelect"
-            class="status-select"
-            [ngModel]="selectedBooking.status"
-            (ngModelChange)="updateBookingStatus($event)"
-          >
-            <option
-              *ngFor="
-                let status of getAvailableStatuses(selectedBooking.status)
-              "
-              [value]="status"
-            >
-              {{ status | titlecase }}
-            </option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <app-video-call
   [session]="selectedSession"
   [isCallModalOpen]="isVideoCallOpen"
-  [role]="'trainer'"
-  (callEnded)="onCallEnded()"
-  >>
+  [role]="'user'"
+  (callEnded)="onCallEnded()">
 </app-video-call>
+

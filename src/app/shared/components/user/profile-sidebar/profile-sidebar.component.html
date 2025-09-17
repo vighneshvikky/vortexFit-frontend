@@ -1,9 +1,12 @@
-<div class="w-64 bg-black text-white shadow-lg h-full flex flex-col border-r border-gray-700">
+<div
+  class="w-64 bg-black text-white shadow-lg h-full flex flex-col border-r border-gray-700"
+>
   <!-- Logo Section with Mobile Close Button -->
-  <div class="p-4 lg:p-6 border-b border-gray-700 flex items-center justify-between">
-
+  <div
+    class="p-4 lg:p-6 border-b border-gray-700 flex items-center justify-between"
+  >
     <!-- Close button for mobile -->
-    <button 
+    <button
       class="lg:hidden text-gray-400 hover:text-white p-1 rounded-md hover:bg-gray-700 transition-colors"
       (click)="closeSidebar()"
       aria-label="Close menu"
@@ -11,8 +14,6 @@
       <i class="fas fa-times text-lg"></i>
     </button>
   </div>
-
-
 
   <!-- Navigation Menu -->
   <nav class="flex-1 overflow-y-auto px-3 lg:px-4 py-4 lg:py-6">
@@ -25,34 +26,53 @@
           (click)="onMobileNavClick()"
         >
           <!-- Active indicator -->
-          <div class="absolute left-0 top-0 h-full w-1 bg-orange-400 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity" 
-               routerLinkActive="opacity-100"></div>
-          
-          <i [class]="item.icon + ' w-4 lg:w-5 text-center mr-2.5 lg:mr-3 text-sm lg:text-base'" 
-             routerLinkActive="text-white"></i>
-          <span class="text-sm lg:text-base font-medium truncate">{{ item.label }}</span>
-          
+          <div
+            class="absolute left-0 top-0 h-full w-1 bg-orange-400 rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity"
+            routerLinkActive="opacity-100"
+          ></div>
+
+          <i
+            [class]="
+              item.icon +
+              ' w-4 lg:w-5 text-center mr-2.5 lg:mr-3 text-sm lg:text-base'
+            "
+            routerLinkActive="text-white"
+          ></i>
+          <span class="text-sm lg:text-base font-medium truncate">{{
+            item.label
+          }}</span>
+
           <!-- Badge for notifications (optional) -->
           @if (item.badge && item.badge > 0) {
-            <span class="ml-auto bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full min-w-[20px] text-center">
-              {{ item.badge > 99 ? '99+' : item.badge }}
-            </span>
+          <span
+            class="ml-auto bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full min-w-[20px] text-center"
+          >
+            {{ item.badge > 99 ? "99+" : item.badge }}
+          </span>
           }
         </a>
       </li>
     </ul>
 
     <!-- Quick Stats Section (Optional) -->
-    <div class="mt-6 lg:mt-8 p-3 lg:p-4 bg-gray-700 bg-opacity-50 rounded-lg border border-gray-600">
-      <h4 class="text-xs lg:text-sm font-semibold text-orange-400 mb-2">Quick Stats</h4>
+    <div
+      class="mt-6 lg:mt-8 p-3 lg:p-4 bg-gray-700 bg-opacity-50 rounded-lg border border-gray-600"
+    >
+      <h4 class="text-xs lg:text-sm font-semibold text-orange-400 mb-2">
+        Quick Stats
+      </h4>
       <div class="space-y-1">
         <div class="flex justify-between text-xs text-gray-300">
           <span>Workouts</span>
-          <span class="text-white font-medium">{{ userStats?.workouts || 0 }}</span>
+          <span class="text-white font-medium">{{
+            userStats?.workouts || 0
+          }}</span>
         </div>
         <div class="flex justify-between text-xs text-gray-300">
           <span>Streak</span>
-          <span class="text-white font-medium">{{ userStats?.streak || 0 }} days</span>
+          <span class="text-white font-medium"
+            >{{ userStats?.streak || 0 }} days</span
+          >
         </div>
       </div>
     </div>
@@ -63,7 +83,9 @@
         (click)="onLogout()"
         class="w-full flex items-center px-3 lg:px-4 py-2.5 lg:py-3 text-gray-300 hover:bg-red-600 hover:text-white rounded-lg transition-colors group"
       >
-        <i class="fas fa-sign-out-alt w-4 lg:w-5 text-center mr-2.5 lg:mr-3 text-sm lg:text-base"></i>
+        <i
+          class="fas fa-sign-out-alt w-4 lg:w-5 text-center mr-2.5 lg:mr-3 text-sm lg:text-base"
+        ></i>
         <span class="text-sm lg:text-base font-medium">Logout</span>
       </button>
     </div>

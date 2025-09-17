@@ -47,10 +47,20 @@ export class BookingService {
     limit: String(limit),
   };
 
-  console.log('page', page);
-console.log('liimit', limit)
+
     return this.http.get<{ bookings: BookingSession[], totalRecords: number }>(
       `${this.apiUrl}${API_ROUTES.BOOKING.GET_BOOKINGS}`
+      , {params}
+    );
+  }
+
+    getUserBooking(page: number = 1, limit: number = 5 ): Observable<{ bookings: BookingSession[], totalRecords: number }> {
+      const params = {
+    page: String(page),
+    limit: String(limit),
+  };
+    return this.http.get<{ bookings: BookingSession[], totalRecords: number }>(
+      `${this.apiUrl}${API_ROUTES.BOOKING.GET_USER_BOOKINGS}`
       , {params}
     );
   }
@@ -81,10 +91,32 @@ getFilteredBookings(
     page: String(page),
     limit: String(limit),
   };
-console.log('page', page);
-console.log('liimit', limit)
+
   return this.http.get<{ bookings: BookingSession[]; totalRecords: number }>(
     `${this.apiUrl}${API_ROUTES.BOOKING.GET_BOOKINGS_BY_FILTER}`,
+    { params }
+  );
+}
+
+getUserFilteredBookings(
+  filters: BookingFilters,
+  page: number = 1,
+  limit: number = 5
+): Observable<{ bookings: BookingSession[]; totalRecords: number }> {
+  const params: Record<string, string> = {
+    ...Object.keys(filters).reduce((acc, key) => {
+      const value = filters[key as keyof BookingFilters];
+      if (value !== undefined && value !== '') {
+        acc[key] = String(value); 
+      }
+      return acc;
+    }, {} as Record<string, string>),
+    page: String(page),
+    limit: String(limit),
+  };
+
+  return this.http.get<{ bookings: BookingSession[]; totalRecords: number }>(
+    `${this.apiUrl}${API_ROUTES.BOOKING.GET_USER_BOOKINGS_BY_FILTER}`,
     { params }
   );
 }

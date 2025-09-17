@@ -1,29 +1,34 @@
-export interface BookingSession {
-  _id: string;
-  userId: {
+  export interface BookingSession {
     _id: string;
-    name: string;
-  };
-  trainerId: string;
-  date: string;          
-  timeSlot: string;     
-  status: "pending" | "confirmed" | "cancelled" | string;
-  amount: number;
-  currency: string;      
-  paymentId: string;
-  orderId: string;
-  sessionType: "one-to-one" | "group" | string;
-  paymentSignature: string;
-  createdAt: string;     
-  updatedAt: string;     
+    userId: {
+      _id: string;
+      name: string;
+      image: string;
+    };
+    trainerId: {
+      _id: string;
+      name: string;
+      image: string;
+    };
+    date: string;          
+    timeSlot: string;     
+    status: "pending" | "confirmed" | "cancelled" | string;
+    amount: number;
+    currency: string;      
+    paymentId: string;
+    orderId: string;
+    sessionType: "one-to-one" | "group" | string;
+    paymentSignature: string;
+    createdAt: string;     
+    updatedAt: string;     
 
-}
+  }
 
 
-export enum BookingStatus {
-  PENDING = 'pending',
-  CONFIRMED = 'confirmed',
-  CANCELLED = 'cancelled',
-  COMPLETED = 'completed',
-  FAILED = 'failed'
-}
+  export enum BookingStatus {
+    PENDING = 'pending',
+    CONFIRMED = 'confirmed',
+    CANCELLED = 'cancelled',
+    COMPLETED = 'completed',
+    FAILED = 'failed'
+  }

@@ -32,10 +32,12 @@ export const API_ROUTES = {
   BOOKING: {
     BASE: '/bookings',
     GET_BOOKINGS: '/getBookings',
+    GET_USER_BOOKINGS: '/getUserBookings',
     CHANGE_STATUS: '/changeStatus',
     GET_BOOKINGS_BY_FILTER: '/getFilteredBookings',
     GET_CLIENTS: '/getClients',
     GET_STATS: '/stats',
+    GET_USER_BOOKINGS_BY_FILTER: '/getUserFilteredBookings'
   },
 CHAT: {
   BASE: '/chat',

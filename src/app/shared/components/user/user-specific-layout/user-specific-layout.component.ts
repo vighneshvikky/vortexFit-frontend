@@ -35,7 +35,7 @@ export class UserSpecificLayoutComponent {
 
   navItems: NavItem[] = [
     { icon: 'fas fa-tachometer-alt', label: 'Dashboard', route: '/user/dashboard' },
-    { icon: 'fas fa-calendar-check', label: 'My Sessions', route: '/user/sessions' },
+    { icon: 'fas fa-calendar-check', label: 'My Sessions', route: '/user/my-sessions' },
     { icon: 'fas fa-comments', label: 'Messages', route: '/user/messages', badge: 3 },
     { icon: 'fas fa-dumbbell', label: 'Workouts', route: '/user/workouts' },
     { icon: 'fas fa-chart-line', label: 'Progress', route: '/user/progress' },

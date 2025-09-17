@@ -19,7 +19,7 @@ export class ChatService {
   private messages$ = new BehaviorSubject<ChatMessage[]>([]);
 
   constructor(private http: HttpClient, private socket: SocketService) {
-    this.socket.getMessages().subscribe((msg) => {
+    this.socket.on<ChatMessage>('chat', 'message').subscribe((msg) => {
       if (msg) {
         const current = this.messages$.value;
         this.messages$.next([...current, msg]);
@@ -57,11 +57,10 @@ export class ChatService {
     };
 
     // optimistic update
-    const current = this.messages$.value;
-    this.messages$.next([...current, message]);
+    this.messages$.next([...this.messages$.value, message]);
 
-    // emit via socket → backend will persist + broadcast
-    this.socket.sendMessage(message);
+    // emit via socket (namespace chat)
+    this.socket.emit('chat', 'send-message', message);
   }
 
   private generateRoomId(user1: string, user2: string): string {
@@ -128,23 +127,23 @@ export class ChatService {
   }
 
   connect(userId: string): void {
-    this.socket.connect(userId);
+    this.socket.connect('chat', userId);
 
-    this.socket.getMessages().subscribe((msg) => {
+    this.socket.on<ChatMessage>('chat', 'message').subscribe((msg) => {
       if (msg) this.addMessageToStream(msg);
     });
   }
 
   disconnect(): void {
-    this.socket.disconnect();
+    this.socket.disconnect('chat');
   }
 
   joinRoom(roomId: string): void {
-    this.socket.joinRoom(roomId);
+    this.socket.emit('chat', 'join-room', roomId);
   }
 
   leaveRoomSocket(roomId: string): void {
-    this.socket.leaveRoom(roomId);
+    this.socket.emit('chat', 'leave-room', roomId);
   }
 
   leaveRoom(roomId: string, userId: string): Observable<any> {

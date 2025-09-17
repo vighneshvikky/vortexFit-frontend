@@ -98,11 +98,10 @@ export class ChatComponent implements OnInit, OnDestroy {
       const service =
         this.sender === 'user' ? this.trainerService : this.userService;
 
-      // the user id am getting from the url is the receiver id is the one we are trying to communicate with;
       this.isLoading = true;
       service.getUserData(userId).subscribe({
         next: (res: User | Trainer) => {
-          this.userData = res; // peer (receiver) data
+          this.userData = res; 
           this.isLoading = false;
         },
         error: (error) => {
@@ -145,20 +144,16 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Add missing methods
+
   showMobileConversationList() {
-    // Navigate back or show conversation list
     this.router.navigate(['/conversations']);
   }
 
   toggleMobileMenu() {
-    // Toggle mobile menu visibility
-    // You might want to emit an event to parent component or use a service
     console.log('Toggle mobile menu');
   }
 
   selectConversation() {
-    // Handle conversation selection
     console.log('Conversation selected');
   }
 
@@ -178,19 +173,18 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     console.log('Sending message...', this.peerId, this.text, this.senderId);
 
-    // Show typing indicator briefly
+
     this.isTyping = true;
 
     this.chat.send(this.peerId, this.senderId, this.text.trim());
     this.text = '';
 
-    // Hide typing indicator after a short delay
+ 
     setTimeout(() => {
       this.isTyping = false;
     }, 1000);
   }
 
-  // Get appropriate avatar based on role
   getCurrentUserAvatar(): string {
     if (this.currentUserRole.isTrainer) {
       return 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80';

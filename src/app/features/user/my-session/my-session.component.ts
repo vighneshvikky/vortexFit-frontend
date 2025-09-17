@@ -1,34 +1,31 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import {
-  BookingService,
-  BookingFilters,
-} from '../../services/bookings.service';
-import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import {
   BookingSession,
   BookingStatus,
-} from './interface/trainer.session.interface';
-import { User } from '../../../admin/services/admin.service';
-import { TrainerService } from '../../services/trainer.service';
-import { FormsModule } from '@angular/forms';
+} from '../../trainer/pages/trainer-session/interface/trainer.session.interface';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
-import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
+import {
+  BookingFilters,
+  BookingService,
+} from '../../trainer/services/bookings.service';
 import { Router } from '@angular/router';
-import { VideoCallComponent } from '../../../../core/video-call/video-call.component';
+import { User } from '../../admin/services/admin.service';
+import { CommonModule } from '@angular/common';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { FormsModule } from '@angular/forms';
+import { VideoCallComponent } from '../../../core/video-call/video-call.component';
 
 @Component({
-  selector: 'app-trainer-session',
-  imports: [CommonModule, FormsModule, PaginationComponent, VideoCallComponent],
-  templateUrl: './trainer-session.component.html',
-  styleUrl: './trainer-session.component.scss',
+  selector: 'app-my-session',
+  imports: [CommonModule, PaginationComponent, FormsModule, VideoCallComponent],
+  templateUrl: './my-session.component.html',
+  styleUrl: './my-session.component.scss',
 })
-export class TrainerSessionComponent implements OnInit, OnDestroy {
-  // Data properties
+export class MySessionComponent {
   bookingData: BookingSession[] = [];
   filteredBookingData: BookingSession[] = [];
   availableClients: { id: string; name: string }[] = [];
 
-  // State properties
   loading = true;
   filterLoading = false;
   userData!: User;
@@ -38,7 +35,7 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
   currentStatus: BookingStatus = BookingStatus.PENDING;
   currentPage: number = 1;
   totalPages: number = 1;
-  pageSize: number = 5;
+  pageSize: number = 4;
 
   useServerSideFiltering = true;
   filters = {
@@ -58,7 +55,7 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
 
   constructor(
     private bookingService: BookingService,
-    private trainerService: TrainerService,
+
     private router: Router
   ) {
     this.filterSubject
@@ -84,7 +81,7 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
     this.currentPage = page;
 
     this.bookingService
-      .getBooking(this.currentPage, this.pageSize)
+      .getUserBooking(this.currentPage, this.pageSize)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
@@ -93,7 +90,7 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
           this.filteredBookingData = [...this.bookingData];
           this.totalPages = Math.ceil(data.totalRecords / this.pageSize) || 1;
 
-          this.loadClientNames();
+          this.loadTrainerNames();
           if (!this.useServerSideFiltering) {
             this.extractFilterOptions();
           }
@@ -110,10 +107,10 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
       });
   }
 
-  loadClientNames(): void {
+  loadTrainerNames(): void {
     this.availableClients = this.bookingData
-      .filter((b) => b.userId && b.userId._id && b.userId.name)
-      .map((b) => ({ id: b.userId._id, name: b.userId.name }));
+      .filter((b) => b.trainerId && b.trainerId._id && b.trainerId.name)
+      .map((b) => ({ id: b.trainerId._id, name: b.trainerId.name }));
 
     this.availableClients = this.availableClients.filter(
       (client, index, self) =>
@@ -141,7 +138,7 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
     });
 
     this.bookingService
-      .getFilteredBookings(filters, page, this.pageSize)
+      .getUserFilteredBookings(filters, page, this.pageSize)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
@@ -161,7 +158,7 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
   extractFilterOptions(): void {
     const uniqueUsers = new Map<string, string>();
 
-    this.bookingData.forEach((booking) => {     
+    this.bookingData.forEach((booking) => {
       if (booking.userId?._id && booking.userId?.name?.trim()) {
         uniqueUsers.set(booking.userId._id, booking.userId.name.trim());
       }
@@ -263,22 +260,6 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
     return `status-${status.toLowerCase()}`;
   }
 
-  viewSession(bookingId: string, userId: string): void {
-    this.selectedBooking = this.bookingData.find(
-      (booking) => booking._id === bookingId
-    )!;
-    this.loadingUserData = true;
-    this.showModal = true;
-
-    this.trainerService.getUserData(userId).subscribe({
-      next: (res: User) => {
-        this.userData = res;
-        this.loadingUserData = false;
-        console.log('User data loaded:', res);
-      },
-    });
-  }
-
   startVideoCall(session: BookingSession): void {
     if (session.status === 'confirmed') {
       this.selectedSession = session;
@@ -289,51 +270,6 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
   onCallEnded(): void {
     this.isVideoCallOpen = false;
     this.selectedSession = null;
-  }
-
-  closeModal(): void {
-    this.showModal = false;
-    this.userData = {} as User;
-    this.selectedBooking = {} as BookingSession;
-  }
-
-  updateBookingStatus(newStatus: string): void {
-    if (!this.selectedBooking) {
-      console.error('No booking selected for status update');
-      return;
-    }
-
-    this.bookingService
-      .updateBookingStatus(this.selectedBooking._id, newStatus)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          if (response) {
-            const bookingIndex = this.bookingData.findIndex(
-              (b) => b._id === this.selectedBooking._id
-            );
-            if (bookingIndex !== -1) {
-              this.bookingData[bookingIndex].status = newStatus;
-            }
-
-            const filteredIndex = this.filteredBookingData.findIndex(
-              (b) => b._id === this.selectedBooking._id
-            );
-            if (filteredIndex !== -1) {
-              this.filteredBookingData[filteredIndex].status = newStatus;
-            }
-
-            this.selectedBooking.status = newStatus;
-
-            console.log('Status updated successfully:', response);
-          } else {
-            console.error('Failed to update booking status');
-          }
-        },
-        error: (error) => {
-          console.error('Error updating status:', error);
-        },
-      });
   }
 
   getAvailableStatuses(currentStatus: string): BookingStatus[] {
@@ -375,10 +311,5 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
     }
 
     return age;
-  }
-
-  goToMessage(userId: string) {
-    console.log('userId', userId);
-    this.router.navigate(['/trainer/chat', userId]);
   }
 }
