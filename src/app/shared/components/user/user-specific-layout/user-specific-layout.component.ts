@@ -36,15 +36,15 @@ export class UserSpecificLayoutComponent {
   navItems: NavItem[] = [
     { icon: 'fas fa-tachometer-alt', label: 'Dashboard', route: '/user/dashboard' },
     { icon: 'fas fa-calendar-check', label: 'My Sessions', route: '/user/my-sessions' },
-    { icon: 'fas fa-comments', label: 'Messages', route: '/user/messages', badge: 3 },
-    { icon: 'fas fa-dumbbell', label: 'Workouts', route: '/user/workouts' },
-    { icon: 'fas fa-chart-line', label: 'Progress', route: '/user/progress' },
+    // { icon: 'fas fa-comments', label: 'Messages', route: '/user/messages', badge: 3 },
+    // { icon: 'fas fa-dumbbell', label: 'Workouts', route: '/user/workouts' },
+    // { icon: 'fas fa-chart-line', label: 'Progress', route: '/user/progress' },
     { icon: 'fas fa-users', label: 'Trainers', route: '/user/trainers' },
-    { icon: 'fas fa-calendar-alt', label: 'Schedule', route: '/user/schedule' },
-    { icon: 'fas fa-trophy', label: 'Achievements', route: '/user/achievements' },
-    { icon: 'fas fa-heart', label: 'Health Metrics', route: '/user/health' },
+    // { icon: 'fas fa-calendar-alt', label: 'Schedule', route: '/user/schedule' },
+    // { icon: 'fas fa-trophy', label: 'Achievements', route: '/user/achievements' },
+    // { icon: 'fas fa-heart', label: 'Health Metrics', route: '/user/health' },
     { icon: 'fas fa-credit-card', label: 'Billing', route: '/user/billing' },
-    { icon: 'fas fa-cog', label: 'Settings', route: '/user/settings' }
+    // { icon: 'fas fa-cog', label: 'Settings', route: '/user/settings' }
   ];
 
   // User statistics (you can fetch this from your store/service)

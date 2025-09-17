@@ -71,7 +71,7 @@ export class VideoCallComponent implements OnDestroy {
   }
 
   private setupSubscriptions() {
-    // Subscribe to remote stream
+
     const remoteStreamSub = this.webRTCService
       .getRemoteStream$()
       .subscribe((stream) => {
@@ -83,7 +83,7 @@ export class VideoCallComponent implements OnDestroy {
         }
       });
 
-    // Subscribe to connection state changes
+
     const connectionStateSub = this.webRTCService
       .getConnectionState$()
       .subscribe((state) => {
@@ -96,7 +96,7 @@ export class VideoCallComponent implements OnDestroy {
         }
       });
 
-    // Subscribe to signaling messages
+
     const messagesSub = this.signalingService
       .onMessage()
       .subscribe(async (msg) => {
@@ -114,7 +114,7 @@ export class VideoCallComponent implements OnDestroy {
 
   private async initializeCall() {
     try {
-      // 1. Get local media first
+
       this.localStream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
@@ -122,7 +122,7 @@ export class VideoCallComponent implements OnDestroy {
       this.localVideoElement.nativeElement.srcObject = this.localStream;
       this.hasLocalStream = true;
 
-      // 2. Set up WebRTC service
+   
       this.webRTCService.setLocalStream(this.localStream);
 
       console.log('[VideoCall] session object', this.session);
@@ -132,15 +132,14 @@ export class VideoCallComponent implements OnDestroy {
         this.role === 'trainer' ? this.session!.trainerId : this.session!.userId
       );
 
-      // 3. Connect to signaling server
+
       this.signalingService.connect(currentUserId, this.session!._id);
 
-      // 4. Set up subscriptions AFTER connecting
+ 
       this.setupSubscriptions();
 
-      // 5. Handle role-specific logic
+      
       if (this.role === 'user') {
-        // User sends join request after connecting
         const targetUserId = this.getUserId(this.session!.trainerId);
 
         this.signalingService.sendMessage({
@@ -187,12 +186,10 @@ export class VideoCallComponent implements OnDestroy {
   private async handleUserMessages(msg: SignalingMessage) {
     switch (msg.type) {
       case 'approval':
-        // Trainer approved, wait for offer
         console.log('[User] Trainer approved, waiting for offer');
         break;
 
       case 'offer':
-        // Receive offer and set up as callee
         await this.webRTCService.initializeAsCallee(
           msg.data as RTCSessionDescriptionInit,
           this.session!._id,
@@ -219,13 +216,13 @@ export class VideoCallComponent implements OnDestroy {
     }
   }
 
-  // Call this when trainer clicks "Approve" in modal
+
   approveUser() {
     if (!this.pendingUser || !this.session) return;
 
     const trainerId = this.getUserId(this.session.trainerId);
 
-    // 1. Notify user of approval
+    
     this.signalingService.sendMessage({
       type: 'approval',
       sessionId: this.session._id,
@@ -234,20 +231,19 @@ export class VideoCallComponent implements OnDestroy {
       data: {},
     });
 
-    // 2. Initialize WebRTC as caller and create offer
     this.webRTCService.initializeAsCaller(this.session._id, this.pendingUser);
 
-    // 3. Reset state
+    
     this.pendingUser = null;
     this.showApprovalModal = false;
   }
-  // Call this when trainer clicks "Reject" in modal
+
   rejectUser() {
     if (!this.pendingUser || !this.session) return;
 
     const trainerId = this.session.trainerId._id ?? this.session.trainerId;
 
-    // Notify user of rejection (optional)
+
     this.signalingService.sendMessage({
       type: 'rejection',
       sessionId: this.session._id,
@@ -256,12 +252,12 @@ export class VideoCallComponent implements OnDestroy {
       data: { message: 'Call request was declined' },
     });
 
-    // Reset pending user
+ 
     this.pendingUser = null;
     this.showApprovalModal = false;
   }
 
-  /** Get local camera + microphone and attach to video element */
+
   private async startLocalStream() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -271,12 +267,12 @@ export class VideoCallComponent implements OnDestroy {
 
       this.localStream = stream;
 
-      // Set video srcObject
+    
       if (this.localVideoElement) {
         this.localVideoElement.nativeElement.srcObject = stream;
       }
       console.log('stream', stream);
-      // Pass to WebRTCService for peer connection
+    
       this.webRTCService.setLocalStream(stream);
       this.hasLocalStream = true;
     } catch (err) {
@@ -292,7 +288,7 @@ export class VideoCallComponent implements OnDestroy {
     }, 1000);
   }
 
-  /** Toggle microphone on/off */
+
   toggleMicrophone() {
     if (this.localStream) {
       const audioTracks = this.localStream.getAudioTracks();
@@ -303,7 +299,6 @@ export class VideoCallComponent implements OnDestroy {
     }
   }
 
-  /** Toggle camera on/off */
   toggleCamera() {
     if (this.localStream) {
       const videoTracks = this.localStream.getVideoTracks();
@@ -314,17 +309,17 @@ export class VideoCallComponent implements OnDestroy {
     }
   }
 
-  /** Toggle screen sharing */
+
   async toggleScreenShare() {
     try {
       if (!this.isScreenSharing) {
-        // Start screen sharing
+
         const screenStream = await navigator.mediaDevices.getDisplayMedia({
           video: true,
           audio: true,
         });
 
-        // Replace video track with screen share
+    
         const videoTrack = screenStream.getVideoTracks()[0];
         if (this.localStream) {
           const sender = this.webRTCService.replaceTrack(
@@ -333,7 +328,6 @@ export class VideoCallComponent implements OnDestroy {
           );
 
           videoTrack.onended = () => {
-            // Screen sharing ended, switch back to camera
             this.stopScreenShare();
           };
         }
@@ -350,7 +344,6 @@ export class VideoCallComponent implements OnDestroy {
 
   private async stopScreenShare() {
     try {
-      // Get camera stream again
       const cameraStream = await navigator.mediaDevices.getUserMedia({
         video: this.isCameraOn,
         audio: this.isMicrophoneOn,
@@ -358,13 +351,12 @@ export class VideoCallComponent implements OnDestroy {
 
       const videoTrack = cameraStream.getVideoTracks()[0];
       if (this.localStream) {
-        // Replace screen share track with camera track
         this.webRTCService.replaceTrack(
           this.localStream.getVideoTracks()[0],
           videoTrack
         );
 
-        // Update local stream
+  
         this.localStream = cameraStream;
         if (this.localVideoElement) {
           this.localVideoElement.nativeElement.srcObject = cameraStream;
@@ -377,47 +369,47 @@ export class VideoCallComponent implements OnDestroy {
     }
   }
 
-  /** Toggle chat panel */
+  
   toggleChat() {
     this.isChatOpen = !this.isChatOpen;
   }
 
-  /** Minimize call window */
+ 
   minimizeCall() {
     this.callMinimized.emit();
   }
 
-  /** End the call */
+
   endCall() {
     this.cleanup();
     this.callEnded.emit();
   }
 
   private cleanup() {
-    // Stop all tracks
+   
     if (this.localStream) {
       this.localStream.getTracks().forEach((track) => track.stop());
     }
 
-    // Clear timer
+   
     if (this.callTimer) {
       clearInterval(this.callTimer);
     }
 
-    // End WebRTC call
+ 
     this.webRTCService.endCall();
 
-    // Leave signaling room
+ 
     if (this.session) {
       const currentUserId = this.session.userId._id;
       this.signalingService.leaveRoom(this.session._id, currentUserId);
     }
   }
 
-  /** Get user initials for avatar */
+ 
 
 
-  /** Format call duration to MM:SS */
+
   formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -426,18 +418,18 @@ export class VideoCallComponent implements OnDestroy {
       .padStart(2, '0')}`;
   }
 
-  /** Handle errors gracefully */
+
   private handleError(error: any, message: string) {
     console.error(message, error);
     this.errorMessage = message;
 
-    // Clear error after 5 seconds
+
     setTimeout(() => {
       this.errorMessage = '';
     }, 5000);
   }
 
-  /** Check if user has granted media permissions */
+
   private async checkMediaPermissions(): Promise<boolean> {
     try {
       const permissions = await Promise.all([
@@ -451,11 +443,11 @@ export class VideoCallComponent implements OnDestroy {
       );
     } catch (error) {
       console.warn('Could not check media permissions:', error);
-      return true; // Assume permissions are available
+      return true;
     }
   }
 
-  /** Retry connection if it fails */
+
   async retryConnection() {
     this.errorMessage = '';
     this.isConnecting = true;

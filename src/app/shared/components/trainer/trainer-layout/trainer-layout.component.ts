@@ -24,7 +24,7 @@ export class TrainerLayoutComponent {
     { icon: 'fas fa-calendar-check', label: 'Sessions', route: '/trainer/sessions' },
     { icon: 'fas fa-dumbbell', label: 'Availability', route: '/trainer/scheduling' },
     { icon: 'fas fa-chart-line', label: 'Client Progress', route: '/trainer/progress' },
-    { icon: 'fas fa-comment-alt', label: 'Messaging', route: '/trainer/messaging' },
+    // { icon: 'fas fa-comment-alt', label: 'Messaging', route: '/trainer/messaging' },
     { icon: 'fas fa-bell', label: 'Notifications', route: '/trainer/notifications' },
     { icon: 'fas fa-dollar-sign', label: 'Revenue', route: '/trainer/revenue' },
   ];

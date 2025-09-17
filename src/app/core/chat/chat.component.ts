@@ -41,7 +41,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   sender: string = '';
   senderId: string = '';
 
-  // Add missing properties
+ 
   isMobileChatView = false;
   isDesktop = false;
   isTyping = false;
@@ -171,7 +171,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   send() {
     if (!this.peerId || !this.text?.trim()) return;
 
-    console.log('Sending message...', this.peerId, this.text, this.senderId);
+    
 
 
     this.isTyping = true;

@@ -1,4 +1,3 @@
-// chat.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
@@ -42,7 +41,7 @@ export class ChatService {
     return this.messages$.asObservable();
   }
 
-  // send message
+  
   send(peerId: string, senderId: string, content: string) {
     const roomId = this.generateRoomId(senderId, peerId);
     const message: ChatMessage = {
@@ -56,10 +55,8 @@ export class ChatService {
       isDelivered: false,
     };
 
-    // optimistic update
     this.messages$.next([...this.messages$.value, message]);
 
-    // emit via socket (namespace chat)
     this.socket.emit('chat', 'send-message', message);
   }
 
@@ -67,7 +64,6 @@ export class ChatService {
     return [user1, user2].sort().join('_');
   }
 
-  // Get all chat rooms for a user
   getChatRooms(userId: string): Observable<ChatRoom[]> {
     return this.http.get<ChatRoom[]>(
       `${this.apiUrl}${this.CHAT.ROOMS.GET_BY_USER(userId)}`
@@ -84,7 +80,6 @@ export class ChatService {
     });
   }
 
-  // Get or create a chat room between two users
   getOrCreateRoom(userId1: string, userId2: string): Observable<ChatRoom> {
     return this.http.post<ChatRoom>(
       `${this.apiUrl}${this.CHAT.ROOMS.GET_OR_CREATE}`,

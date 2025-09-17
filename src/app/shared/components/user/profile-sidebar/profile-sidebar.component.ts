@@ -39,12 +39,12 @@ export class ProfileSidebarComponent {
       label: 'My Sessions',
       route: '/my-sessions',
     },
-    {
-      icon: 'fas fa-comments',
-      label: 'Messages',
-      route: '/user/messages',
-      badge: 3, // Example badge count
-    },
+    // {
+    //   icon: 'fas fa-comments',
+    //   label: 'Messages',
+    //   route: '/user/messages',
+    //   badge: 3, // Example badge count
+    // },
     {
       icon: 'fas fa-dumbbell',
       label: 'Workouts',
