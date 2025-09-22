@@ -1,92 +1,15 @@
-<!-- Training Sessions Template -->
 <div class="space-y-6">
-  <!-- Filters Section -->
-  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <!-- Client Filter -->
-      <div class="flex flex-col">
-        <label for="clientFilter" class="text-xs font-medium text-gray-600 mb-1"
-          >Filter by Client</label
-        >
-        <select
-          id="clientFilter"
-          class="w-full rounded-lg border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
-          [(ngModel)]="filters.client"
-        >
-          <option [ngValue]="null">All Clients</option>
-          <option *ngFor="let client of availableClients" [ngValue]="client">
-            {{ client.name }}
-          </option>
-        </select>
-      </div>
+  <app-filter
+[config]="filterConfig"
+    [entityOptions]="availableClients"
+    [loading]="filterLoading"
+    [autoApply]="true"
+    (filtersApplied)="onFiltersApplied($event)"
+    (filtersCleared)="onFiltersCleared()"
+    (searchPerformed)="onSearchPerformed($event)">
+  >
+  </app-filter>
 
-      <!-- Status Filter -->
-      <div class="flex flex-col">
-        <label for="statusFilter" class="text-xs font-medium text-gray-600 mb-1"
-          >Filter by Status</label
-        >
-        <select
-          id="statusFilter"
-          class="w-full rounded-lg border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
-          [(ngModel)]="filters.status"
-        >
-          <option value="">All Sessions</option>
-          <option *ngFor="let status of availableStatuses" [value]="status">
-            {{ status | titlecase }}
-          </option>
-        </select>
-      </div>
-
-      <!-- Date From -->
-      <div class="flex flex-col">
-        <label
-          for="dateFromFilter"
-          class="text-xs font-medium text-gray-600 mb-1"
-          >Date From</label
-        >
-        <input
-          type="date"
-          id="dateFromFilter"
-          class="w-full rounded-lg border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
-          [(ngModel)]="filters.dateFrom"
-        />
-      </div>
-
-      <!-- Date To -->
-      <div class="flex flex-col">
-        <label for="dateToFilter" class="text-xs font-medium text-gray-600 mb-1"
-          >Date To</label
-        >
-        <input
-          type="date"
-          id="dateToFilter"
-          class="w-full rounded-lg border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
-          [(ngModel)]="filters.dateTo"
-        />
-      </div>
-    </div>
-
-    <!-- Actions -->
-    <div
-      class="mt-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-end"
-    >
-      <button
-        class="group inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 hover:bg-red-800 text-white text-sm font-semibold px-4 py-2 shadow-sm transition-colors"
-        (click)="applyFilters()"
-      >
-        <span class="text-red-200 group-hover:text-white">🔍</span>
-        Apply Filters
-      </button>
-      <button
-        class="inline-flex items-center justify-center gap-2 rounded-lg border border-red-300 text-red-700 hover:bg-red-50 text-sm font-medium px-4 py-2 transition-colors"
-        (click)="clearFilters()"
-      >
-        ✖ Clear Filters
-      </button>
-    </div>
-  </div>
-
-  <!-- Results Summary -->
   <div
     class="flex items-center justify-between text-sm text-gray-600"
     *ngIf="!loading"

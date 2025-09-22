@@ -1,0 +1,168 @@
+ <div [ngClass]="getContainerClasses()">
+      
+      <!-- Search Filter -->
+      <div *ngIf="config.showSearchFilter" class="mb-4">
+        <form 
+          [ngClass]="getSearchFormClasses()"
+          (ngSubmit)="onSearchSubmit()"
+        >
+          <input
+            type="text"
+            [(ngModel)]="filters.searchTerm"
+            name="searchTerm"
+            [placeholder]="config.searchPlaceholder || 'Search...'"
+            [ngClass]="getSearchInputClasses()"
+            (keyup.enter)="onSearchSubmit()"
+            
+          />
+          <button
+            type="submit"
+            [ngClass]="getSearchButtonClasses()"
+            [disabled]="loading"
+          >
+            <span [ngClass]="getSearchIconClasses()">
+              {{ loading ? '⏳' : '🔍' }}
+            </span>
+            {{ config.theme === 'user' ? 'Find Coaches' : 'Search' }}
+          </button>
+        </form>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Entity Filter (Client/Trainer) -->
+        <div class="flex flex-col" *ngIf="config.showEntityFilter">
+          <label 
+            [for]="'entityFilter_' + componentId" 
+            [ngClass]="getLabelClasses()"
+          >
+            Filter by {{ config.entityLabel }}
+          </label>
+          <select
+            [id]="'entityFilter_' + componentId"
+            [ngClass]="getSelectClasses()"
+            [(ngModel)]="filters.entity"
+            (ngModelChange)="onFilterChange()"
+          >
+            <option [ngValue]="null">{{ config.entityPlaceholder }}</option>
+            <option *ngFor="let option of entityOptions" [ngValue]="option">
+              {{ option.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Status Filter -->
+        <div class="flex flex-col" *ngIf="config.showStatusFilter">
+          <label 
+            [for]="'statusFilter_' + componentId" 
+            [ngClass]="getLabelClasses()"
+          >
+            Filter by Status
+          </label>
+          <select
+            [id]="'statusFilter_' + componentId"
+            [ngClass]="getSelectClasses()"
+            [(ngModel)]="filters.status"
+            (ngModelChange)="onFilterChange()"
+          >
+            <option value="">All Sessions</option>
+            <option 
+              *ngFor="let status of (config.statusOptions || defaultStatuses)" 
+              [value]="status"
+            >
+              {{ status | titlecase }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Date From -->
+        <div class="flex flex-col" *ngIf="config.showDateFilters">
+          <label
+            [for]="'dateFromFilter_' + componentId"
+            [ngClass]="getLabelClasses()"
+          >
+            Date From
+          </label>
+          <input
+            type="date"
+            [id]="'dateFromFilter_' + componentId"
+            [ngClass]="getInputClasses()"
+            [(ngModel)]="filters.dateFrom"
+            (ngModelChange)="onFilterChange()"
+          />
+        </div>
+
+        <!-- Date To -->
+        <div class="flex flex-col" *ngIf="config.showDateFilters">
+          <label 
+            [for]="'dateToFilter_' + componentId" 
+            [ngClass]="getLabelClasses()"
+          >
+            Date To
+          </label>
+          <input
+            type="date"
+            [id]="'dateToFilter_' + componentId"
+            [ngClass]="getInputClasses()"
+            [(ngModel)]="filters.dateTo"
+            (ngModelChange)="onFilterChange()"
+          />
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-end">
+        <!-- <button
+          [ngClass]="getApplyButtonClasses()"
+          (click)="applyFilters()"
+          [disabled]="loading"
+        >
+          <span [ngClass]="getButtonIconClasses()">
+            {{ loading ? '⏳' : '🔍' }}
+          </span>
+          {{ loading ? 'Applying...' : 'Apply Filters' }}
+        </button> -->
+        <button
+          [ngClass]="getClearButtonClasses()"
+          (click)="clearFilters()"
+          [disabled]="loading"
+        >
+          ✖ Clear Filters
+        </button>
+      </div>
+
+      <!-- Active Filters Indicator -->
+      <div *ngIf="hasActiveFilters()" class="mt-3 flex flex-wrap gap-2">
+        <span [ngClass]="getActiveFiltersLabelClasses()">Active filters:</span>
+        <span 
+          *ngIf="filters.entity" 
+          [ngClass]="getActiveFilterChipClasses()"
+        >
+          {{ config.entityLabel }}: {{ filters.entity.name }}
+        </span>
+        <span 
+          *ngIf="filters.status" 
+          [ngClass]="getActiveFilterChipClasses()"
+        >
+          Status: {{ filters.status | titlecase }}
+        </span>
+        <span 
+          *ngIf="filters.searchTerm" 
+          [ngClass]="getActiveFilterChipClasses()"
+        >
+          Search: {{ filters.searchTerm }}
+        </span>
+        <span 
+          *ngIf="filters.dateFrom" 
+          [ngClass]="getActiveFilterChipClasses()"
+        >
+          From: {{ filters.dateFrom }}
+        </span>
+        <span 
+          *ngIf="filters.dateTo" 
+          [ngClass]="getActiveFilterChipClasses()"
+        >
+          To: {{ filters.dateTo }}
+        </span>
+      </div>
+    </div>

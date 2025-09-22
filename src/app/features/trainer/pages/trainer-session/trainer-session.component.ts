@@ -15,20 +15,29 @@ import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { Router } from '@angular/router';
 import { VideoCallComponent } from '../../../../core/video-call/video-call.component';
+import {
+  FilterComponent,
+  FilterConfig,
+  FilterValues,
+  FilterOption,
+} from '../../../../shared/components/filter/filter.component';
 
 @Component({
   selector: 'app-trainer-session',
-  imports: [CommonModule, FormsModule, PaginationComponent, VideoCallComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    PaginationComponent,
+    VideoCallComponent,
+    FilterComponent,
+  ],
   templateUrl: './trainer-session.component.html',
   styleUrl: './trainer-session.component.scss',
 })
 export class TrainerSessionComponent implements OnInit, OnDestroy {
-  // Data properties
   bookingData: BookingSession[] = [];
   filteredBookingData: BookingSession[] = [];
-  availableClients: { id: string; name: string }[] = [];
 
-  // State properties
   loading = true;
   filterLoading = false;
   userData!: User;
@@ -38,14 +47,27 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
   currentStatus: BookingStatus = BookingStatus.PENDING;
   currentPage: number = 1;
   totalPages: number = 1;
-  pageSize: number = 5;
+  pageSize: number = 3;
 
   useServerSideFiltering = true;
+  
   filters = {
     client: null as { id: string; name: string } | null,
     status: '',
     dateFrom: '',
     dateTo: '',
+    searchTerm: '',
+  };
+
+  filterConfig: FilterConfig = {
+    entityLabel: 'Client',
+    entityPlaceholder: 'All Clients',
+    showEntityFilter: true,
+    showDateFilters: true,
+    showStatusFilter: true,
+    showSearchFilter: true,
+    searchPlaceholder: 'Search by client name, date, time, or status...',
+    statusOptions: Object.values(BookingStatus),
   };
 
   selectedSession: BookingSession | null = null;
@@ -93,7 +115,7 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
           this.filteredBookingData = [...this.bookingData];
           this.totalPages = Math.ceil(data.totalRecords / this.pageSize) || 1;
 
-          this.loadClientNames();
+          // this.loadClientNames();
           if (!this.useServerSideFiltering) {
             this.extractFilterOptions();
           }
@@ -110,42 +132,42 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
       });
   }
 
-  loadClientNames(): void {
-    this.availableClients = this.bookingData
-      .filter((b) => b.userId && b.userId._id && b.userId.name)
-      .map((b) => ({ id: b.userId._id, name: b.userId.name }));
-
-    this.availableClients = this.availableClients.filter(
-      (client, index, self) =>
-        index === self.findIndex((c) => c.id === client.id)
-    );
-  }
-
   loadFilteredDataFromServer(page: number = 1): void {
     this.filterLoading = true;
     this.currentPage = page;
 
+    
     const filters: BookingFilters = {
-      clientId: this.filters.client ? this.filters.client.id : undefined,
-      status: this.filters.status || undefined,
-      dateFrom: this.filters.dateFrom || undefined,
-      dateTo: this.filters.dateTo || undefined,
       sortBy: 'createdAt',
       sortOrder: 'desc',
     };
 
-    // Remove empty filters
-    Object.keys(filters).forEach((key) => {
-      if (!filters[key as keyof BookingFilters])
-        delete filters[key as keyof BookingFilters];
-    });
+
+    if (this.filters.client?.id) {
+      filters.clientId = this.filters.client.id;
+    }
+    if (this.filters.status) {
+      filters.status = this.filters.status;
+    }
+    if (this.filters.dateFrom) {
+      filters.dateFrom = this.filters.dateFrom;
+    }
+    if (this.filters.dateTo) {
+      filters.dateTo = this.filters.dateTo;
+    }
+
+    if (this.filters.searchTerm?.trim()) {
+      filters.searchTerm = this.filters.searchTerm.trim();
+    }
+
+    console.log('Sending filters to backend:', filters);
 
     this.bookingService
       .getFilteredBookings(filters, page, this.pageSize)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
-          console.log('data from the backend', data);
+          console.log('Filtered data from backend:', data);
           this.filteredBookingData = data.bookings;
           this.totalPages = Math.ceil(data.totalRecords / this.pageSize);
           this.filterLoading = false;
@@ -158,18 +180,27 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
       });
   }
 
+
+   clearSearchOnly(): void {
+    this.filters.searchTerm = '';
+    this.loadFilteredDataFromServer();
+  }
+
+  quickSearch(term: string): void {
+    this.filters.searchTerm = term;
+    this.currentPage = 1;
+    this.loadFilteredDataFromServer();
+  }
+
+
   extractFilterOptions(): void {
     const uniqueUsers = new Map<string, string>();
 
-    this.bookingData.forEach((booking) => {     
+    this.bookingData.forEach((booking) => {
       if (booking.userId?._id && booking.userId?.name?.trim()) {
         uniqueUsers.set(booking.userId._id, booking.userId.name.trim());
       }
     });
-
-    this.availableClients = Array.from(uniqueUsers.entries())
-      .map(([id, name]) => ({ id, name }))
-      .sort((a, b) => a.name.localeCompare(b.name));
   }
 
   applyFilters(): void {
@@ -178,13 +209,35 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Reset all filters
-  clearFilters(): void {
+  
+onFiltersCleared(): void {
+
+    this.filters = {
+      client: null,
+      status: '',
+      dateFrom: '',
+      dateTo: '',
+      searchTerm: '', 
+    };
+    this.currentPage = 1;
+    this.loadFilteredDataFromServer();
+  }
+
+   onSearchPerformed(searchTerm: string): void {
+    this.filters.searchTerm = searchTerm;
+    this.currentPage = 1;
+    this.loadFilteredDataFromServer();
+  }
+
+
+
+ clearFilters(): void {
     this.filters = {
       client: null as { id: string; name: string } | null,
       status: '',
       dateFrom: '',
       dateTo: '',
+      searchTerm: '', // Include search term in reset
     };
 
     if (this.useServerSideFiltering) {
@@ -209,10 +262,33 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
       this.filters.client ||
       this.filters.status ||
       this.filters.dateFrom ||
-      this.filters.dateTo
+      this.filters.dateTo ||
+      this.filters.searchTerm?.trim()
     );
   }
 
+  get availableClients(): FilterOption[] {
+    return this.bookingData
+      .filter((b) => b.userId && b.userId._id && b.userId.name)
+      .map((b) => ({ id: b.userId._id, name: b.userId.name }))
+      .filter(
+        (client, index, self) =>
+          index === self.findIndex((c) => c.id === client.id)
+      );
+  }
+  onFiltersApplied(filterValues: FilterValues): void {
+    console.log('Filters applied:', filterValues);
+    
+ 
+    this.filters.client = filterValues.entity;
+    this.filters.status = filterValues.status;
+    this.filters.dateFrom = filterValues.dateFrom;
+    this.filters.dateTo = filterValues.dateTo;
+    this.filters.searchTerm = filterValues.searchTerm || ''; 
+
+    this.currentPage = 1;
+    this.loadFilteredDataFromServer();
+  }
   // Formatting methods
   formatDate(dateString: string): string {
     if (!dateString) return '';

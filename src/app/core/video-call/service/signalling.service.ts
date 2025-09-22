@@ -1,14 +1,49 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { SocketService } from '../../chat/services/socket.service';
-
-export interface SignalingMessage {
-  type: 'offer' | 'answer' | 'ice-candidate' | 'user-join-request' | 'approval' | 'rejection';
-  data?: RTCSessionDescriptionInit | RTCIceCandidateInit | any;
-  sessionId: string;
-  from: string;
-  to?: string;
+export interface RejectionPayload {
+  message: string;
 }
+
+export interface ApprovalPayload {
+  approved: boolean;
+}
+export type SignalingMessage =
+  | {
+      type: 'offer' | 'answer';
+      data: RTCSessionDescriptionInit;
+      sessionId: string;
+      from: string;
+      to?: string;
+    }
+  | {
+      type: 'ice-candidate';
+      data: RTCIceCandidateInit;
+      sessionId: string;
+      from: string;
+      to?: string;
+    }
+  | {
+      type: 'rejection';
+      data: RejectionPayload;
+      sessionId: string;
+      from: string;
+      to?: string;
+    }
+  | {
+      type: 'approval';
+      data: ApprovalPayload;
+      sessionId: string;
+      from: string;
+      to?: string;
+    }
+  | {
+      type: 'user-join-request';
+      data?: undefined;
+      sessionId: string;
+      from: string;
+      to?: string;
+    };
 
 @Injectable({
   providedIn: 'root',
@@ -22,13 +57,14 @@ export class SignalingService {
     console.log('Connecting signaling service', { userId, sessionId });
     this.socketService.connect('video', userId);
 
-
     this.socketService.emit('video', 'join-video-room', { sessionId, userId });
 
-    this.socketService.on<SignalingMessage>('video', 'signal').subscribe((msg) => {
-      console.log('[SignalingService] Received signal:', msg);
-      this.messages$.next(msg);
-    });
+    this.socketService
+      .on<SignalingMessage>('video', 'signal')
+      .subscribe((msg) => {
+        console.log('[SignalingService] Received signal:', msg);
+        this.messages$.next(msg);
+      });
 
     this.socketService.on<any>('video', 'user-joined').subscribe((msg) => {
       console.log('[SignalingService] User joined:', msg);
@@ -39,7 +75,11 @@ export class SignalingService {
     });
   }
 
-  sendOffer(sessionId: string, offer: RTCSessionDescriptionInit, targetUserId: string) {
+  sendOffer(
+    sessionId: string,
+    offer: RTCSessionDescriptionInit,
+    targetUserId: string
+  ) {
     const message: SignalingMessage = {
       type: 'offer',
       sessionId,
@@ -50,7 +90,11 @@ export class SignalingService {
     this.sendMessage(message);
   }
 
-  sendAnswer(sessionId: string, answer: RTCSessionDescriptionInit, targetUserId: string) {
+  sendAnswer(
+    sessionId: string,
+    answer: RTCSessionDescriptionInit,
+    targetUserId: string
+  ) {
     const message: SignalingMessage = {
       type: 'answer',
       sessionId,
@@ -61,7 +105,11 @@ export class SignalingService {
     this.sendMessage(message);
   }
 
-  sendIceCandidate(sessionId: string, candidate: RTCIceCandidateInit, targetUserId: string) {
+  sendIceCandidate(
+    sessionId: string,
+    candidate: RTCIceCandidateInit,
+    targetUserId: string
+  ) {
     const message: SignalingMessage = {
       type: 'ice-candidate',
       sessionId,
@@ -74,7 +122,6 @@ export class SignalingService {
 
   sendMessage(msg: SignalingMessage) {
     console.log('[SignalingService] Sending message:', msg);
-    
 
     this.socketService.emit('video', 'signal', {
       sessionId: msg.sessionId,
@@ -94,7 +141,6 @@ export class SignalingService {
   }
 
   private getCurrentUserId(): string {
-
     return this.socketService.getSocketId('video');
   }
 }

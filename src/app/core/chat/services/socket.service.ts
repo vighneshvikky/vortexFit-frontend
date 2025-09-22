@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { environment } from '../../../../enviorments/environment';
-import { ChatMessage } from '../interfaces/chat.interface';
 
 @Injectable({
   providedIn: 'root',

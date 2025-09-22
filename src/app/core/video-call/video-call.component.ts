@@ -112,50 +112,46 @@ export class VideoCallComponent implements OnDestroy {
     this.subscriptions.push(remoteStreamSub, connectionStateSub, messagesSub);
   }
 
-  private async initializeCall() {
-    try {
+private async initializeCall() {
+  try {
+    this.localStream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+    this.localVideoElement.nativeElement.srcObject = this.localStream;
+    this.hasLocalStream = true;
 
-      this.localStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
+    this.webRTCService.setLocalStream(this.localStream);
+
+    console.log('[VideoCall] session object', this.session);
+    console.log('[VideoCall] role', this.role);
+
+    const currentUserId = this.getUserId(
+      this.role === 'trainer' ? this.session!.trainerId : this.session!.userId
+    );
+
+    this.signalingService.connect(currentUserId, this.session!._id);
+
+    this.setupSubscriptions();
+
+    if (this.role === 'user') {
+      const targetUserId = this.getUserId(this.session!.trainerId);
+
+      this.signalingService.sendMessage({
+        type: 'user-join-request',
+        from: currentUserId,
+        to: targetUserId,
+        sessionId: this.session!._id,
+        // ❌ remove data: {}
+        // ✅ just omit it
       });
-      this.localVideoElement.nativeElement.srcObject = this.localStream;
-      this.hasLocalStream = true;
-
-   
-      this.webRTCService.setLocalStream(this.localStream);
-
-      console.log('[VideoCall] session object', this.session);
-      console.log('[VideoCall] role', this.role);
-
-      const currentUserId = this.getUserId(
-        this.role === 'trainer' ? this.session!.trainerId : this.session!.userId
-      );
-
-
-      this.signalingService.connect(currentUserId, this.session!._id);
-
- 
-      this.setupSubscriptions();
-
-      
-      if (this.role === 'user') {
-        const targetUserId = this.getUserId(this.session!.trainerId);
-
-        this.signalingService.sendMessage({
-          type: 'user-join-request',
-          from: currentUserId,
-          to: targetUserId,
-          sessionId: this.session!._id,
-          data: {},
-        });
-      }
-    } catch (err) {
-      console.error('Error initializing call', err);
-      this.errorMessage = 'Failed to start video call';
     }
+  } catch (err) {
+    console.error('Error initializing call', err);
+    this.errorMessage = 'Failed to start video call';
   }
-
+}
+  
   private getUserId(user: any): string {
     console.log('[VideoCall] Getting user ID:', user);
     return typeof user === 'string' ? user : user._id || user.id;
@@ -216,27 +212,25 @@ export class VideoCallComponent implements OnDestroy {
     }
   }
 
+approveUser() {
+  if (!this.pendingUser || !this.session) return;
 
-  approveUser() {
-    if (!this.pendingUser || !this.session) return;
+  const trainerId = this.getUserId(this.session.trainerId);
 
-    const trainerId = this.getUserId(this.session.trainerId);
+  this.signalingService.sendMessage({
+    type: 'approval',
+    sessionId: this.session._id,
+    from: trainerId,
+    to: this.pendingUser,
+    data: { approved: true }, 
+  });
 
-    
-    this.signalingService.sendMessage({
-      type: 'approval',
-      sessionId: this.session._id,
-      from: trainerId,
-      to: this.pendingUser,
-      data: {},
-    });
+  this.webRTCService.initializeAsCaller(this.session._id, this.pendingUser);
 
-    this.webRTCService.initializeAsCaller(this.session._id, this.pendingUser);
+  this.pendingUser = null;
+  this.showApprovalModal = false;
+}
 
-    
-    this.pendingUser = null;
-    this.showApprovalModal = false;
-  }
 
   rejectUser() {
     if (!this.pendingUser || !this.session) return;

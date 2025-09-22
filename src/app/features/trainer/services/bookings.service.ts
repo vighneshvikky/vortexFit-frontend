@@ -13,6 +13,7 @@ export interface BookingFilters {
   limit?: number;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
+  searchTerm?: string;
 }
 
 export interface BookingResponse {

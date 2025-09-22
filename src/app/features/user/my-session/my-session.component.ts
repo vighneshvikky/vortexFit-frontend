@@ -14,17 +14,40 @@ import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { FormsModule } from '@angular/forms';
 import { VideoCallComponent } from '../../../core/video-call/video-call.component';
+import {
+  FilterComponent,
+  FilterConfig,
+  FilterValues,
+  FilterOption,
+} from '../../../shared/components/filter/filter.component';
 
 @Component({
   selector: 'app-my-session',
-  imports: [CommonModule, PaginationComponent, FormsModule, VideoCallComponent],
+  imports: [
+    CommonModule,
+    PaginationComponent,
+    FormsModule,
+    VideoCallComponent,
+    FilterComponent,
+  ],
   templateUrl: './my-session.component.html',
   styleUrl: './my-session.component.scss',
 })
 export class MySessionComponent {
   bookingData: BookingSession[] = [];
   filteredBookingData: BookingSession[] = [];
-  availableClients: { id: string; name: string }[] = [];
+  // availableClients: { id: string; name: string }[] = [];
+  filterConfig: FilterConfig = {
+    entityLabel: 'Trainer',
+    entityPlaceholder: 'All Trainers',
+    showEntityFilter: true,
+    showStatusFilter: true,
+    showDateFilters: true,
+    showSearchFilter: true,
+    searchPlaceholder: 'Search by trainer name, date, time, or status...',
+    statusOptions: Object.values(BookingStatus),
+    theme: 'user',
+  };
 
   loading = true;
   filterLoading = false;
@@ -35,7 +58,7 @@ export class MySessionComponent {
   currentStatus: BookingStatus = BookingStatus.PENDING;
   currentPage: number = 1;
   totalPages: number = 1;
-  pageSize: number = 4;
+  pageSize: number = 3;
 
   useServerSideFiltering = true;
   filters = {
@@ -43,6 +66,7 @@ export class MySessionComponent {
     status: '',
     dateFrom: '',
     dateTo: '',
+    searchTerm: '',
   };
 
   selectedSession: BookingSession | null = null;
@@ -90,7 +114,6 @@ export class MySessionComponent {
           this.filteredBookingData = [...this.bookingData];
           this.totalPages = Math.ceil(data.totalRecords / this.pageSize) || 1;
 
-          this.loadTrainerNames();
           if (!this.useServerSideFiltering) {
             this.extractFilterOptions();
           }
@@ -107,15 +130,14 @@ export class MySessionComponent {
       });
   }
 
-  loadTrainerNames(): void {
-    this.availableClients = this.bookingData
+  get availableTrainers(): FilterOption[] {
+    return this.bookingData
       .filter((b) => b.trainerId && b.trainerId._id && b.trainerId.name)
-      .map((b) => ({ id: b.trainerId._id, name: b.trainerId.name }));
-
-    this.availableClients = this.availableClients.filter(
-      (client, index, self) =>
-        index === self.findIndex((c) => c.id === client.id)
-    );
+      .map((b) => ({ id: b.trainerId._id, name: b.trainerId.name }))
+      .filter(
+        (trainer, index, self) =>
+          index === self.findIndex((t) => t.id === trainer.id)
+      );
   }
 
   loadFilteredDataFromServer(page: number = 1): void {
@@ -126,15 +148,17 @@ export class MySessionComponent {
       clientId: this.filters.client ? this.filters.client.id : undefined,
       status: this.filters.status || undefined,
       dateFrom: this.filters.dateFrom || undefined,
+      searchTerm: this.filters.searchTerm || undefined,
       dateTo: this.filters.dateTo || undefined,
       sortBy: 'createdAt',
       sortOrder: 'desc',
     };
 
-    // Remove empty filters
     Object.keys(filters).forEach((key) => {
-      if (!filters[key as keyof BookingFilters])
+      const value = filters[key as keyof BookingFilters];
+      if (!value || (typeof value === 'string' && value.trim() === '')) {
         delete filters[key as keyof BookingFilters];
+      }
     });
 
     this.bookingService
@@ -163,10 +187,6 @@ export class MySessionComponent {
         uniqueUsers.set(booking.userId._id, booking.userId.name.trim());
       }
     });
-
-    this.availableClients = Array.from(uniqueUsers.entries())
-      .map(([id, name]) => ({ id, name }))
-      .sort((a, b) => a.name.localeCompare(b.name));
   }
 
   applyFilters(): void {
@@ -175,13 +195,55 @@ export class MySessionComponent {
     }
   }
 
-  // Reset all filters
-  clearFilters(): void {
+  onSearchPerformed(searchTerm: string): void {
+    this.filters.searchTerm = searchTerm;
+    this.currentPage = 1;
+    this.loadFilteredDataFromServer();
+  }
+
+  onFiltersApplied(filterValues: FilterValues): void {
+    this.filters.client = filterValues.entity;
+    this.filters.status = filterValues.status;
+    this.filters.dateFrom = filterValues.dateFrom;
+    this.filters.dateTo = filterValues.dateTo;
+    this.filters.searchTerm = filterValues.searchTerm;
+
+    this.currentPage = 1;
+    this.loadFilteredDataFromServer();
+  }
+
+   onFiltersCleared(): void {
+    console.log('Filters cleared');
+    this.filters = {
+      client: null,
+      status: '',
+      dateFrom: '',
+      dateTo: '',
+      searchTerm: '', 
+    };
+    this.currentPage = 1;
+    this.loadFilteredDataFromServer();
+  }
+
+  quickSearch(term: string): void {
+    this.filters.searchTerm = term;
+    this.currentPage = 1;
+    this.loadFilteredDataFromServer();
+  }
+
+ 
+  clearSearchOnly(): void {
+    this.filters.searchTerm = '';
+    this.loadFilteredDataFromServer();
+  }
+
+ clearFilters(): void {
     this.filters = {
       client: null as { id: string; name: string } | null,
       status: '',
       dateFrom: '',
       dateTo: '',
+      searchTerm: '', 
     };
 
     if (this.useServerSideFiltering) {

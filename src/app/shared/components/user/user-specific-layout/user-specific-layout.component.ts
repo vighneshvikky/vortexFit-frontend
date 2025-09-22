@@ -60,9 +60,9 @@ export class UserSpecificLayoutComponent {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: any): void {
-    this.checkScreenSize();
-  }
+  // onResize(event: any): void {
+  //   this.checkScreenSize();
+  // }
 
   checkScreenSize(): void {
     this.isDesktop = window.innerWidth >= 1024; // lg breakpoint
