@@ -1,0 +1,109 @@
+<!-- pricing-plans.component.html -->
+<div class="plans-container">
+  <div class="plans-grid">
+    <div
+      *ngFor="let plan of plans"
+      class="plan-card"
+      [class.inactive]="!plan.isActive"
+      [class.trainer-plan]="plan.role === 'trainer'"
+    >
+      <!-- Plan Header -->
+      <div class="plan-header">
+        <div class="plan-title-section">
+          <h3 class="plan-title">{{ plan.name }}</h3>
+          <span 
+            class="status-badge" 
+            [class.active]="plan.isActive" 
+            [class.inactive]="!plan.isActive"
+          >
+            {{ plan.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </div>
+        <span 
+          class="role-badge"
+          [class.user-role]="plan.role === 'user'"
+          [class.trainer-role]="plan.role === 'trainer'"
+        >
+          {{ plan.role }}
+        </span>
+        <p class="plan-description">{{ plan.description }}</p>
+      </div>
+
+      <!-- Pricing Section -->
+      <div class="plan-pricing">
+        <span class="price">${{ plan.price }}</span>
+        <span class="billing-cycle">/ {{ plan.billingCycle }}</span>
+      </div>
+
+      <!-- Features Section -->
+      <div class="features-section" *ngIf="plan.features && plan.features.length > 0">
+        <h4 class="section-title">Features</h4>
+        <ul class="features-list">
+          <li 
+            *ngFor="let feature of plan.features" 
+            class="feature-item"
+            [class.empty]="!feature || feature.trim() === ''"
+          >
+            <span class="checkmark">✓</span>
+            <span class="feature-text">{{ feature || 'No feature specified' }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Usage Limits Section -->
+      <div class="limits-section">
+        <h4 class="section-title">Usage Limits</h4>
+        <div class="limits-grid">
+          <div class="limit-item">
+            <span class="limit-label">1:1 Sessions</span>
+            <span class="limit-value">
+              {{ plan.limits.oneOnOneSessions === 'unlimited' ? 'Unlimited' : plan.limits.oneOnOneSessions }}
+            </span>
+          </div>
+          <div class="limit-item">
+            <span class="limit-label">AI Queries</span>
+            <span class="limit-value">
+              {{ plan.limits.aiQueries === 'unlimited' ? 'Unlimited' : plan.limits.aiQueries }}
+            </span>
+          </div>
+          <div class="limit-item">
+            <span class="limit-label">Chat Access</span>
+            <span class="limit-value" [class.enabled]="plan.limits.chatAccess">
+              {{ plan.limits.chatAccess ? 'Yes' : 'No' }}
+            </span>
+          </div>
+          <div class="limit-item">
+            <span class="limit-label">Video Access</span>
+            <span class="limit-value" [class.enabled]="plan.limits.videoAccess">
+              {{ plan.limits.videoAccess ? 'Yes' : 'No' }}
+            </span>
+          </div>
+          <div class="limit-item">
+            <span class="limit-label">Community Access</span>
+            <span class="limit-value" [class.enabled]="plan.limits.communityAccess">
+              {{ plan.limits.communityAccess ? 'Yes' : 'No' }}
+            </span>
+          </div>
+          <div class="limit-item">
+            <span class="limit-label">Priority Support</span>
+            <span class="limit-value" [class.enabled]="plan.limits.prioritySupport">
+              {{ plan.limits.prioritySupport ? 'Yes' : 'No' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="plan-actions">
+        <button 
+          class="choose-btn" 
+          [class.disabled]="!plan.isActive"
+          [disabled]="!plan.isActive"
+          (click)="confirmSubscription(plan._id)"
+        >
+          {{ plan.isActive ? 'Choose Plan' : 'Unavailable' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

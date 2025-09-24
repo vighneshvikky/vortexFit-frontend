@@ -19,7 +19,7 @@ export const adminRoutes: Routes = [
       },
       {
         path: 'dashboard',
-        loadComponent: () =>  
+        loadComponent: () =>
           import('./pages/admin-dashboard/admin-dashboard.component').then(
             (m) => m.AdminDashboardComponent
           ),
@@ -32,6 +32,15 @@ export const adminRoutes: Routes = [
           import(
             './pages/admin-user-listing/admin-user-listing.component'
           ).then((m) => m.AdminUserListingComponent),
+        canActivate: [RoleGuard()],
+        data: { role: 'admin' },
+      },
+      {
+        path: 'plans',
+        loadComponent: () =>
+          import('./pages/admin-plan/admin-plan.component').then(
+            (m) => m.AdminPlanComponent
+          ),
         canActivate: [RoleGuard()],
         data: { role: 'admin' },
       },

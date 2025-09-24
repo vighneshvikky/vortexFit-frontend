@@ -28,6 +28,8 @@ export const API_ROUTES = {
     BASE: '/payments',
     CREATE_ORDER: '/create-order',
     VERIFY_PAYMENT: '/verify-payment',
+    CREATE_SUBSCRIPTION_PAYMENT: '/create-subscription-order',
+    VERIFY_SUBSCRIPTION_PAYMENT: '/verify-subscription-payment'
   },
   BOOKING: {
     BASE: '/bookings',
@@ -37,28 +39,42 @@ export const API_ROUTES = {
     GET_BOOKINGS_BY_FILTER: '/getFilteredBookings',
     GET_CLIENTS: '/getClients',
     GET_STATS: '/stats',
-    GET_USER_BOOKINGS_BY_FILTER: '/getUserFilteredBookings'
-  },
-CHAT: {
-  BASE: '/chat',
-
-  MESSAGES: {
-    BASE: '/chat/messages',
-    GET: (roomId: string, page = 1, limit = 3) =>
-      `/chat/messages/${roomId}?page=${page}&limit=${limit}`,
-    SEND: '/chat/messages',
-    MARK_AS_READ: '/chat/messages/read',
-    UNREAD_COUNT: (userId: string) => `/chat/messages/unread-count/${userId}`,
-    SEARCH: (roomId: string, query: string) =>
-      `/chat/messages/search/${roomId}?q=${encodeURIComponent(query)}`,
+    GET_USER_BOOKINGS_BY_FILTER: '/getUserFilteredBookings',
   },
 
-  ROOMS: {
-    BASE: '/chat/rooms',
-    GET_BY_USER: (userId: string) => `/chat/rooms/${userId}`,
-    CREATE: '/chat/rooms',
-    GET_OR_CREATE: '/chat/rooms/get-or-create',
+  PLANS: {
+    BASE: '/plans',
+    CREATE: '/create',
+    GET_PLAN: (id: string) => {
+      `/getPlanData/${id}`;
+    },
+    UPDATE: (planId: string) => `/${planId}`,
+    GET_USER_SPECIFIC_PLAN: '/userPlan',
   },
-}
+  CHAT: {
+    BASE: '/chat',
 
+    MESSAGES: {
+      BASE: '/chat/messages',
+      GET: (roomId: string, page = 1, limit = 3) =>
+        `/chat/messages/${roomId}?page=${page}&limit=${limit}`,
+      SEND: '/chat/messages',
+      MARK_AS_READ: '/chat/messages/read',
+      UNREAD_COUNT: (userId: string) => `/chat/messages/unread-count/${userId}`,
+      SEARCH: (roomId: string, query: string) =>
+        `/chat/messages/search/${roomId}?q=${encodeURIComponent(query)}`,
+    },
+
+    ROOMS: {
+      BASE: '/chat/rooms',
+      GET_BY_USER: (userId: string) => `/chat/rooms/${userId}`,
+      CREATE: '/chat/rooms',
+      GET_OR_CREATE: '/chat/rooms/get-or-create',
+    },
+  },
+  SUBSCRIPTION: {
+    BASE: '/subscriptions',
+    CREATE: '/createSubscription',
+    VERIFY: '/verify-subscription-payment',
+  },
 };

@@ -24,22 +24,32 @@ export interface UserStats {
   selector: 'app-user-specific-layout',
   imports: [ProfileSidebarComponent, RouterModule, CommonModule],
   templateUrl: './user-specific-layout.component.html',
-  styleUrl: './user-specific-layout.component.scss'
+  styleUrl: './user-specific-layout.component.scss',
 })
 export class UserSpecificLayoutComponent {
   private store = inject(Store<AppState>);
-    
+
   // Responsive properties
   isSidebarOpen = false;
   isDesktop = true;
 
   navItems: NavItem[] = [
-    { icon: 'fas fa-tachometer-alt', label: 'Dashboard', route: '/user/dashboard' },
-    { icon: 'fas fa-calendar-check', label: 'My Sessions', route: '/user/my-sessions' },
+    {
+      icon: 'fas fa-tachometer-alt',
+      label: 'Dashboard',
+      route: '/user/dashboard',
+    },
+    {
+      icon: 'fas fa-calendar-check',
+      label: 'My Sessions',
+      route: '/user/my-sessions',
+    },
     // { icon: 'fas fa-comments', label: 'Messages', route: '/user/messages', badge: 3 },
     // { icon: 'fas fa-dumbbell', label: 'Workouts', route: '/user/workouts' },
     // { icon: 'fas fa-chart-line', label: 'Progress', route: '/user/progress' },
     { icon: 'fas fa-users', label: 'Trainers', route: '/user/trainers' },
+    { icon: 'fas fa-file-contract', label: 'Plans', route: '/user/plans' },
+
     // { icon: 'fas fa-calendar-alt', label: 'Schedule', route: '/user/schedule' },
     // { icon: 'fas fa-trophy', label: 'Achievements', route: '/user/achievements' },
     // { icon: 'fas fa-heart', label: 'Health Metrics', route: '/user/health' },
@@ -52,7 +62,7 @@ export class UserSpecificLayoutComponent {
     workouts: 25,
     streak: 7,
     totalHours: 45,
-    achievements: 12
+    achievements: 12,
   };
 
   constructor() {
@@ -63,7 +73,6 @@ export class UserSpecificLayoutComponent {
   // onResize(event: any): void {
   //   this.checkScreenSize();
   // }
-
   checkScreenSize(): void {
     this.isDesktop = window.innerWidth >= 1024; // lg breakpoint
     if (this.isDesktop) {
@@ -90,7 +99,9 @@ export class UserSpecificLayoutComponent {
 
   // Method to update message badge count (you can call this from your messaging service)
   updateMessageBadge(count: number): void {
-    const messagesItem = this.navItems.find(item => item.route === '/user/messages');
+    const messagesItem = this.navItems.find(
+      (item) => item.route === '/user/messages'
+    );
     if (messagesItem) {
       messagesItem.badge = count > 0 ? count : undefined;
     }

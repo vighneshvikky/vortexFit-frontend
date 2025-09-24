@@ -1,0 +1,345 @@
+// pricing-plans.component.scss
+
+.admin-plan-container {
+  @apply min-h-screen p-6;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  
+  .plans-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8;
+  }
+
+  .plan-card {
+    @apply bg-gray-800 rounded-lg p-6 shadow-xl border border-gray-700;
+    background: linear-gradient(145deg, #2a2a3a, #1e1e2e);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      @apply shadow-2xl transform scale-105;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    &.inactive {
+      @apply opacity-60;
+      
+      .plan-card {
+        @apply bg-gray-900;
+      }
+    }
+  }
+
+  .plan-header {
+    @apply mb-4;
+    
+    .plan-title {
+      @apply mb-3;
+      
+      .plan-name-role {
+        @apply flex items-center justify-between mb-2;
+        
+        h2 {
+          @apply text-xl font-bold text-white;
+        }
+        
+        .role-badge {
+          @apply px-2 py-1 rounded-full text-xs font-semibold uppercase tracking-wide;
+          
+          &.user {
+            @apply bg-blue-500 text-white;
+          }
+          
+          &.trainer {
+            @apply bg-purple-500 text-white;
+          }
+        }
+      }
+      
+      .status-badge {
+        @apply px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide;
+        
+        &.active {
+          @apply bg-green-500 text-white;
+        }
+        
+        &.inactive {
+          @apply bg-gray-500 text-gray-300;
+        }
+      }
+    }
+    
+    .plan-description {
+      @apply text-gray-300 text-sm leading-relaxed;
+    }
+  }
+
+  .plan-pricing {
+    @apply mb-6 flex items-baseline;
+    
+    .price {
+      @apply text-3xl font-bold text-white mr-2;
+    }
+    
+    .billing-cycle {
+      @apply text-gray-400 text-sm;
+    }
+  }
+
+  .plan-features {
+    @apply mb-6;
+    
+    h3 {
+      @apply text-gray-200 font-semibold text-sm uppercase tracking-wide mb-3;
+      color: #9CA3AF;
+    }
+    
+    ul {
+      @apply space-y-2;
+      
+      .feature-item {
+        @apply flex items-start text-gray-300 text-sm;
+        
+        .icon-check {
+          @apply text-green-400 mr-3 mt-0.5 flex-shrink-0;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+
+  .plan-limits {
+    @apply mb-6;
+    
+    h3 {
+      @apply text-gray-200 font-semibold text-sm uppercase tracking-wide mb-3;
+      color: #9CA3AF;
+    }
+    
+    .limits-grid {
+      @apply grid grid-cols-2 gap-3;
+      
+      .limit-item {
+        @apply flex flex-col;
+        
+        .limit-label {
+          @apply text-gray-400 text-xs font-medium mb-1;
+        }
+        
+        .limit-value {
+          @apply text-white text-sm font-semibold;
+          
+          &.enabled {
+            @apply text-green-400;
+          }
+        }
+      }
+    }
+  }
+
+  .plan-actions {
+    @apply flex gap-2 pt-4 border-t border-gray-700;
+    
+    button {
+      @apply px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex-1;
+      
+      &.btn-edit {
+        @apply bg-blue-600 text-white hover:bg-blue-700 border border-blue-600;
+      }
+      
+      &.btn-toggle {
+        @apply text-white border;
+        
+        &.deactivate {
+          @apply bg-yellow-600 hover:bg-yellow-700 border-yellow-600;
+        }
+        
+        &.activate {
+          @apply bg-green-600 hover:bg-green-700 border-green-600;
+        }
+      }
+      
+      &.btn-delete {
+        @apply bg-red-600 text-white hover:bg-red-700 border border-red-600;
+      }
+      
+      &:hover {
+        @apply transform scale-105 shadow-lg;
+      }
+    }
+  }
+
+  // Modal Styles
+  .modal-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-content {
+    @apply bg-gray-800 rounded-lg max-w-2xl w-full mx-4 max-h-screen overflow-y-auto;
+    background: linear-gradient(145deg, #2a2a3a, #1e1e2e);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-header {
+    @apply flex items-center justify-between p-6 border-b border-gray-700;
+    
+    h2 {
+      @apply text-xl font-bold text-white;
+    }
+    
+    .btn-close {
+      @apply text-gray-400 hover:text-white text-2xl font-bold p-2 hover:bg-gray-700 rounded-full transition-colors;
+    }
+  }
+
+  .modal-body {
+    @apply p-6;
+    
+    .plan-form {
+      @apply space-y-6;
+      
+      .form-row {
+        @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+      }
+      
+      .form-group {
+        @apply space-y-2;
+        
+        label {
+          @apply block text-gray-300 text-sm font-semibold;
+        }
+        
+        input, select, textarea {
+          @apply w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all;
+        }
+        
+        textarea {
+          @apply resize-none;
+        }
+      }
+      
+      .form-section {
+        @apply space-y-4;
+        
+        h3 {
+          @apply text-lg font-semibold text-white border-b border-gray-700 pb-2;
+        }
+      }
+      
+      .features-list {
+        @apply space-y-3;
+        
+        .feature-input-group {
+          @apply flex items-center gap-2;
+          
+          input {
+            @apply flex-1;
+          }
+          
+          .btn-remove {
+            @apply bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors;
+          }
+        }
+        
+        .btn-add-feature {
+          @apply bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold;
+        }
+      }
+      
+      .limits-form {
+        @apply space-y-4;
+        
+        .form-checkboxes {
+          @apply grid grid-cols-2 gap-4;
+          
+          .checkbox-label {
+            @apply flex items-center space-x-3 text-gray-300 cursor-pointer hover:text-white transition-colors;
+            
+            input[type="checkbox"] {
+              @apply sr-only;
+              
+              &:checked + .checkbox-custom {
+                @apply bg-blue-600 border-blue-600;
+                
+                &::after {
+                  @apply opacity-100;
+                }
+              }
+            }
+            
+            .checkbox-custom {
+              @apply w-5 h-5 border-2 border-gray-600 rounded bg-gray-700 relative transition-all;
+              
+              &::after {
+                content: '✓';
+                @apply absolute inset-0 flex items-center justify-center text-white text-xs opacity-0 transition-opacity;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .modal-footer {
+    @apply flex justify-end gap-3 p-6 border-t border-gray-700;
+    
+    .btn-cancel {
+      @apply px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-semibold;
+    }
+    
+    .btn-save {
+      @apply px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold;
+    }
+  }
+
+  // Header styles
+  .header {
+    @apply flex items-center justify-between mb-8;
+    
+    h1 {
+      @apply text-3xl font-bold text-white;
+    }
+    
+    .btn-add-plan {
+      @apply bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-200 flex items-center gap-2 font-semibold;
+      
+      &:hover {
+        @apply transform scale-105 shadow-lg;
+      }
+      
+      .icon-plus {
+        @apply text-lg;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .admin-plan-container {
+    @apply p-4;
+    
+    .plans-grid {
+      @apply grid-cols-1 gap-4;
+    }
+    
+    .plan-actions {
+      @apply flex-col;
+      
+      button {
+        @apply w-full;
+      }
+    }
+    
+    .modal-content {
+      @apply mx-2;
+    }
+    
+    .form-row {
+      @apply grid-cols-1 !important;
+    }
+    
+    .limits-form .form-checkboxes {
+      @apply grid-cols-1;
+    }
+  }
+}

@@ -1,0 +1,278 @@
+  <div class="admin-plan-container">
+    <div class="header">
+      <h1>Subscription Plans</h1>
+      <button class="btn-add-plan" (click)="openAddPlanModal()">
+        <i class="icon-plus">+</i>
+        Add New Plan
+      </button>
+    </div>
+
+    <div class="plans-grid">
+      <div 
+        *ngFor="let plan of plans; trackBy: trackByPlanId" 
+        class="plan-card"
+        [class.inactive]="!plan.isActive"
+      >
+        <div class="plan-header">
+          <div class="plan-title">
+            <div class="plan-name-role">
+              <h2>{{ plan.name }}</h2>
+              <span 
+                class="role-badge" 
+                [class]="getRoleClass(plan.role)"
+              >
+                {{ getRoleDisplayName(plan.role) }}
+              </span>
+            </div>
+            <span 
+              class="status-badge" 
+              [class.active]="plan.isActive" 
+              [class.inactive]="!plan.isActive"
+            >
+              {{ plan.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+          <p class="plan-description">{{ plan.description }}</p>
+        </div>
+
+        <div class="plan-pricing">
+          <span class="price">${{ plan.price }}</span>
+          <span class="billing-cycle">/ {{ plan.billingCycle }}</span>
+        </div>
+
+        <div class="plan-features">
+          <h3>Features</h3>
+          <ul>
+            <li *ngFor="let feature of plan.features" class="feature-item">
+              <i class="icon-check">✓</i>
+              {{ feature }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="plan-limits">
+          <h3>Usage Limits</h3>
+          <div class="limits-grid">
+            <div class="limit-item">
+              <span class="limit-label">1:1 Sessions</span>
+              <span class="limit-value">
+                {{ plan.limits.oneOnOneSessions === 'unlimited' ? 'Unlimited' : plan.limits.oneOnOneSessions }}
+              </span>
+            </div>
+            <div class="limit-item">
+              <span class="limit-label">AI Queries</span>
+              <span class="limit-value">
+                {{ plan.limits.aiQueries === 'unlimited' ? 'Unlimited' : plan.limits.aiQueries }}
+              </span>
+            </div>
+            <div class="limit-item">
+              <span class="limit-label">Chat Access</span>
+              <span class="limit-value" [class.enabled]="plan.limits.chatAccess">
+                {{ plan.limits.chatAccess ? 'Yes' : 'No' }}
+              </span>
+            </div>
+            <div class="limit-item">
+              <span class="limit-label">Video Access</span>
+              <span class="limit-value" [class.enabled]="plan.limits.videoAccess">
+                {{ plan.limits.videoAccess ? 'Yes' : 'No' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan-actions">
+          <button class="btn-edit" (click)="openEditPlan(plan)">Edit</button>
+          <button 
+            class="btn-toggle" 
+            (click)="togglePlanStatus(plan)"
+            [class.deactivate]="plan.isActive"
+            [class.activate]="!plan.isActive"
+          >
+            {{ plan.isActive ? 'Deactivate' : 'Activate' }}
+          </button>
+          <button class="btn-delete" (click)="deletePlan(plan._id)">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add/Edit Plan Modal -->
+    <div class="modal-overlay" *ngIf="showAddPlanModal" (click)="closeModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ editingPlan ? 'Edit Plan' : 'Add New Plan' }}</h2>
+          <button class="btn-close" (click)="closeModal()">×</button>
+        </div>
+
+        <div class="modal-body">
+          <form class="plan-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="planName">Plan Name</label>
+                <input 
+                  type="text" 
+                  id="planName" 
+                  [(ngModel)]="newPlan.name" 
+                  name="planName"
+                  placeholder="e.g., Basic, Premium"
+                  required
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="planRole">Role</label>
+                <select 
+                  id="planRole" 
+                  [(ngModel)]="newPlan.role" 
+                  name="planRole"
+                  required
+                >
+                  <option value="user">User</option>
+                  <option value="trainer">Trainer</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="planDescription">Description</label>
+              <textarea 
+                id="planDescription" 
+                [(ngModel)]="newPlan.description" 
+                name="planDescription"
+                placeholder="Brief description of the plan"
+                rows="3"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="planPrice">Price ($)</label>
+                <input 
+                  type="number" 
+                  id="planPrice" 
+                  [(ngModel)]="newPlan.price" 
+                  name="planPrice"
+                  min="0"
+                  step="0.01"
+                  required
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="billingCycle">Billing Cycle</label>
+                <select 
+                  id="billingCycle" 
+                  [(ngModel)]="newPlan.billingCycle" 
+                  name="billingCycle"
+                >
+                  <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- <div class="form-section">
+              <h3>Features</h3>
+              <div class="features-list">
+                <div 
+                  *ngFor="let feature of newPlan.features; let i = index" 
+                  class="feature-input-group"
+                >
+                  <input 
+                    type="text" 
+                    [(ngModel)]="newPlan.features![i]" 
+                    [name]="'feature' + i"
+                    placeholder="Feature description"
+                  >
+                  <button type="button" class="btn-remove" (click)="removeFeature(i)">×</button>
+                </div>
+                <button type="button" class="btn-add-feature" (click)="addFeature()">
+                  + Add Feature
+                </button>
+              </div>
+            </div> -->
+
+            <div class="form-section">
+              <h3>Usage Limits</h3>
+              <div class="limits-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="oneOnOneSessions">1:1 Sessions per month</label>
+                    <input 
+                      type="number" 
+                      id="oneOnOneSessions" 
+                      [(ngModel)]="newPlan.limits!.oneOnOneSessions" 
+                      name="oneOnOneSessions"
+                      min="0"
+                      placeholder="0 for none"
+                    >
+                  </div>
+
+                  <div class="form-group">
+                    <label for="aiQueries">AI Queries per month</label>
+                    <input 
+                      type="number" 
+                      id="aiQueries" 
+                      [(ngModel)]="newPlan.limits!.aiQueries" 
+                      name="aiQueries"
+                      min="0"
+                      placeholder="0 for none"
+                    >
+                  </div>
+                </div>
+
+                <div class="form-checkboxes">
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      [(ngModel)]="newPlan.limits!.chatAccess" 
+                      name="chatAccess"
+                    >
+                    <span class="checkbox-custom"></span>
+                    Chat Access
+                  </label>
+
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      [(ngModel)]="newPlan.limits!.videoAccess" 
+                      name="videoAccess"
+                    >
+                    <span class="checkbox-custom"></span>
+                    Video Access
+                  </label>
+
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      [(ngModel)]="newPlan.limits!.communityAccess" 
+                      name="communityAccess"
+                    >
+                    <span class="checkbox-custom"></span>
+                    Community Access
+                  </label>
+
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      [(ngModel)]="newPlan.limits!.prioritySupport" 
+                      name="prioritySupport"
+                    >
+                    <span class="checkbox-custom"></span>
+                    Priority Support
+                  </label>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-cancel" (click)="closeModal()">Cancel</button>
+          <button class="btn-save" (click)="savePlan()">
+            {{ editingPlan ? 'Update Plan' : 'Create Plan' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

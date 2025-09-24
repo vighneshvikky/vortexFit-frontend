@@ -10,23 +10,44 @@ import { CommonModule } from '@angular/common';
   selector: 'app-trainer-layout',
   imports: [TrainerSidebarComponent, RouterModule, CommonModule],
   templateUrl: './trainer-layout.component.html',
-  styleUrl: './trainer-layout.component.scss'
+  styleUrl: './trainer-layout.component.scss',
 })
 export class TrainerLayoutComponent {
   private store = inject(Store<AppState>);
-  
+
   // Responsive properties
   isSidebarOpen = false;
   isDesktop = true;
 
   navItems = [
-    { icon: 'fas fa-tachometer-alt', label: 'Dashboard', route: '/trainer/dashboard' },
-    { icon: 'fas fa-calendar-check', label: 'Sessions', route: '/trainer/sessions' },
-    { icon: 'fas fa-dumbbell', label: 'Availability', route: '/trainer/scheduling' },
-    { icon: 'fas fa-chart-line', label: 'Client Progress', route: '/trainer/progress' },
+    {
+      icon: 'fas fa-tachometer-alt',
+      label: 'Dashboard',
+      route: '/trainer/dashboard',
+    },
+    {
+      icon: 'fas fa-calendar-check',
+      label: 'Sessions',
+      route: '/trainer/sessions',
+    },
+    {
+      icon: 'fas fa-dumbbell',
+      label: 'Availability',
+      route: '/trainer/scheduling',
+    },
+    {
+      icon: 'fas fa-chart-line',
+      label: 'Client Progress',
+      route: '/trainer/progress',
+    },
     // { icon: 'fas fa-comment-alt', label: 'Messaging', route: '/trainer/messaging' },
-    { icon: 'fas fa-bell', label: 'Notifications', route: '/trainer/notifications' },
+    {
+      icon: 'fas fa-bell',
+      label: 'Notifications',
+      route: '/trainer/notifications',
+    },
     { icon: 'fas fa-dollar-sign', label: 'Revenue', route: '/trainer/revenue' },
+    { icon: 'fas fa-file-contract', label: 'Plans', route: '/trainer/plans' },
   ];
 
   constructor() {
@@ -37,7 +58,6 @@ export class TrainerLayoutComponent {
   // onResize(event: any): void {
   //   this.checkScreenSize();
   // }
-
   checkScreenSize(): void {
     this.isDesktop = window.innerWidth >= 1024; // lg breakpoint
     if (this.isDesktop) {

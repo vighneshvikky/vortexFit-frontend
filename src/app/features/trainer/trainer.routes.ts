@@ -7,6 +7,7 @@ import { TrainerLayoutComponent } from '../../shared/components/trainer/trainer-
 import { TrainerSchedulingComponent } from './pages/trainer-scheduling/trainer-scheduling.component';
 import { TrainerSessionComponent } from './pages/trainer-session/trainer-session.component';
 import { ChatComponent } from '../../core/chat/chat.component';
+import { PlanComponent } from '../../core/plan/plan.component';
 
 export const trainerRoutes: Routes = [
   {
@@ -21,6 +22,7 @@ export const trainerRoutes: Routes = [
       { path: 'scheduling', component: TrainerSchedulingComponent },
       { path: 'chat/:id', component: ChatComponent, data: { role: 'trainer' } },
       { path: 'sessions', component: TrainerSessionComponent },
+      {path: 'plans', component: PlanComponent, data: {role: 'trainer'}},
       { path: '**', redirectTo: 'dashboard' },
     ],
   },

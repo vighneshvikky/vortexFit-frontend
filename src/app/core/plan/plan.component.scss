@@ -1,0 +1,341 @@
+
+.plans-container {
+  @apply min-h-screen p-6;
+  background: linear-gradient(135deg, #000000 0%, #111827 50%, #1f2937 100%);
+  
+  .plans-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto;
+  }
+
+  .plan-card {
+    @apply relative rounded-xl p-6 shadow-2xl border transition-all duration-300;
+    background: linear-gradient(145deg, #1f2937, #111827);
+    border-color: #374151;
+    min-height: 500px;
+    
+    &:hover {
+      @apply transform scale-105 shadow-2xl;
+      box-shadow: 0 25px 50px rgba(59, 130, 246, 0.15);
+      border-color: #3b82f6;
+    }
+
+    &.inactive {
+      @apply opacity-70;
+      background: linear-gradient(145deg, #374151, #1f2937);
+      
+      &:hover {
+        @apply transform-none scale-100;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        border-color: #6b7280;
+      }
+    }
+    
+    // Trainer plan styling
+    &.trainer-plan {
+      background: linear-gradient(145deg, #7f1d1d, #991b1b);
+      border-color: #b91c1c;
+      
+      &:hover {
+        box-shadow: 0 25px 50px rgba(127, 29, 29, 0.15);
+        border-color: #dc2626;
+      }
+      
+      .plan-title {
+        color: #fecaca !important;
+      }
+      
+      .plan-description {
+        color: #fee2e2 !important;
+      }
+      
+      .section-title {
+        color: #fca5a5 !important;
+        border-bottom-color: #b91c1c !important;
+      }
+      
+      .feature-item {
+        color: #fee2e2 !important;
+        
+        .checkmark {
+          color: #22c55e !important;
+        }
+      }
+      
+      .limit-item {
+        background: rgba(185, 28, 28, 0.3) !important;
+        border-color: #b91c1c !important;
+        
+        .limit-label {
+          color: #fca5a5 !important;
+        }
+        
+        .limit-value {
+          color: #fecaca !important;
+          
+          &.enabled {
+            color: #22c55e !important;
+          }
+        }
+      }
+      
+      .choose-btn {
+        background: linear-gradient(135deg, #7f1d1d, #991b1b) !important;
+        box-shadow: 0 8px 25px rgba(127, 29, 29, 0.3) !important;
+        
+        &:hover:not(:disabled) {
+          background: linear-gradient(135deg, #991b1b, #b91c1c) !important;
+          box-shadow: 0 12px 35px rgba(127, 29, 29, 0.4) !important;
+        }
+      }
+    }
+  }
+
+  .plan-header {
+    @apply mb-6 pb-4 border-b border-gray-700;
+    
+    .plan-title-section {
+      @apply flex items-start justify-between mb-3;
+      
+      .plan-title {
+        @apply text-2xl font-bold text-white leading-tight flex-1 mr-3;
+        font-family: 'Inter', sans-serif;
+      }
+      
+      .status-badge {
+        @apply px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex-shrink-0;
+        
+        &.active {
+          @apply bg-blue-600 text-white;
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        &.inactive {
+          @apply bg-gray-600 text-gray-300;
+        }
+      }
+    }
+    
+    .role-badge {
+      @apply inline-block px-2 py-1 rounded-md text-xs font-semibold mb-3;
+      text-transform: capitalize;
+      
+      &.user-role {
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        color: white;
+      }
+      
+      &.trainer-role {
+        background: linear-gradient(135deg, #7f1d1d, #991b1b);
+        color: #fecaca;
+        box-shadow: 0 2px 8px rgba(127, 29, 29, 0.3);
+      }
+    }
+    
+    .plan-description {
+      @apply text-gray-300 text-sm leading-relaxed;
+      line-height: 1.6;
+    }
+  }
+
+  .plan-pricing {
+    @apply mb-6 flex items-baseline;
+    
+    .price {
+      @apply text-4xl font-bold text-white mr-2;
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .billing-cycle {
+      @apply text-gray-400 text-sm font-medium;
+    }
+  }
+
+  .features-section, .limits-section {
+    @apply mb-6;
+    
+    .section-title {
+      @apply text-gray-300 font-semibold text-sm uppercase tracking-wider mb-4;
+      color: #9ca3af;
+      border-bottom: 1px solid #374151;
+      padding-bottom: 8px;
+    }
+  }
+
+  .features-list {
+    @apply space-y-3;
+    
+    .feature-item {
+      @apply flex items-start text-gray-300 text-sm;
+      
+      &.empty {
+        @apply opacity-50;
+        
+        .feature-text {
+          @apply italic;
+        }
+      }
+      
+      .checkmark {
+        @apply text-blue-400 mr-3 mt-0.5 flex-shrink-0 font-bold;
+        font-size: 14px;
+      }
+      
+      .feature-text {
+        @apply leading-relaxed;
+      }
+    }
+  }
+
+  .limits-grid {
+    @apply grid grid-cols-2 gap-4;
+    
+    .limit-item {
+      @apply flex flex-col p-3 rounded-lg;
+      background: rgba(55, 65, 81, 0.3);
+      border: 1px solid #374151;
+      
+      .limit-label {
+        @apply text-gray-400 text-xs font-medium mb-2 uppercase tracking-wide;
+      }
+      
+      .limit-value {
+        @apply text-white text-sm font-bold;
+        
+        &.enabled {
+          @apply text-blue-400;
+        }
+      }
+    }
+  }
+
+  .plan-actions {
+    @apply mt-auto pt-6;
+    
+    .choose-btn {
+      @apply w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 transform;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+      
+      &:hover:not(:disabled) {
+        @apply scale-105;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+      }
+      
+      &:active:not(:disabled) {
+        @apply scale-95;
+      }
+      
+      &.disabled, &:disabled {
+        @apply cursor-not-allowed opacity-50 transform-none;
+        background: linear-gradient(135deg, #6b7280, #4b5563);
+        box-shadow: none;
+        
+        &:hover {
+          @apply scale-100;
+          background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .plans-container {
+    .plans-grid {
+      @apply grid-cols-1 md:grid-cols-2 gap-6;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .plans-container {
+    @apply p-4;
+    
+    .plans-grid {
+      @apply grid-cols-1 gap-4;
+    }
+    
+    .plan-card {
+      @apply p-4;
+      min-height: auto;
+      
+      &:hover {
+        @apply transform-none scale-100;
+      }
+    }
+    
+    .plan-header {
+      .plan-title-section {
+        @apply flex-col items-start gap-2;
+        
+        .plan-title {
+          @apply text-xl mr-0;
+        }
+        
+        .status-badge {
+          @apply self-start;
+        }
+      }
+    }
+    
+    .plan-pricing {
+      .price {
+        @apply text-3xl;
+      }
+    }
+    
+    .limits-grid {
+      @apply grid-cols-1 gap-2;
+      
+      .limit-item {
+        @apply p-2;
+      }
+    }
+    
+    .plan-actions {
+      .choose-btn {
+        @apply py-3 text-base;
+      }
+    }
+  }
+}
+
+// Animation keyframes
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.plan-card:hover .status-badge.active {
+  animation: pulse 2s infinite;
+}
+
+// Custom scrollbar for any scrollable content
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111827;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 4px;
+  
+  &:hover {
+    background: #4b5563;
+  }
+}

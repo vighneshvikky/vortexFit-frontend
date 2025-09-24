@@ -33,17 +33,17 @@ export class UserBookingComponent implements OnInit {
   private notyf = inject(NotyService);
   private ngZone = inject(NgZone);
 
-  // Trainer data
+  
   trainer: Trainer | null = null;
   trainerId: string = '';
   isLoading: boolean = true;
 
-  // Session selection
+
   selectedSessionType: string = '';
   sessionTypes: SessionType[] = [];
   selectedPrice!: number;
 
-  // Calendar and date selection
+
   currentDate: Date = new Date();
   selectedDate: Date | null = null;
   calendarDays: CalendarDay[] = [];
