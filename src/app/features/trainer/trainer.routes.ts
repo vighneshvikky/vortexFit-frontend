@@ -8,6 +8,8 @@ import { TrainerSchedulingComponent } from './pages/trainer-scheduling/trainer-s
 import { TrainerSessionComponent } from './pages/trainer-session/trainer-session.component';
 import { ChatComponent } from '../../core/chat/chat.component';
 import { PlanComponent } from '../../core/plan/plan.component';
+import { TransactionsComponent } from '../../core/transactions/transactions.component';
+
 
 export const trainerRoutes: Routes = [
   {
@@ -22,7 +24,12 @@ export const trainerRoutes: Routes = [
       { path: 'scheduling', component: TrainerSchedulingComponent },
       { path: 'chat/:id', component: ChatComponent, data: { role: 'trainer' } },
       { path: 'sessions', component: TrainerSessionComponent },
-      {path: 'plans', component: PlanComponent, data: {role: 'trainer'}},
+      { path: 'plans', component: PlanComponent, data: { role: 'trainer' } },
+      {
+        path: 'transactions',
+        component: TransactionsComponent,
+        data: { role: 'trainer' },
+      },
       { path: '**', redirectTo: 'dashboard' },
     ],
   },

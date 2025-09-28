@@ -46,7 +46,7 @@ export class TrainerLayoutComponent {
       label: 'Notifications',
       route: '/trainer/notifications',
     },
-    { icon: 'fas fa-dollar-sign', label: 'Revenue', route: '/trainer/revenue' },
+    { icon: 'fas fa-dollar-sign', label: 'Transactions', route: '/trainer/transactions' },
     { icon: 'fas fa-file-contract', label: 'Plans', route: '/trainer/plans' },
   ];
 

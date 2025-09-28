@@ -25,6 +25,18 @@ export interface SubscriptionPlan {
   updatedAt: Date;
 }
 
+interface ValidationErrors {
+  name?: string;
+  description?: string;
+  price?: string;
+  role?: string;
+  features?: string;
+  limits?: {
+    oneOnOneSessions?: string;
+    aiQueries?: string;
+  };
+}
+
 @Component({
   selector: 'app-admin-plan',
   imports: [CommonModule, FormsModule],
@@ -36,6 +48,7 @@ export class AdminPlanComponent implements OnInit {
 
   showAddPlanModal = false;
   editingPlan: SubscriptionPlan | null = null;
+  isSubmitting = false;
 
   newPlan: Partial<SubscriptionPlan> = {
     name: '',
@@ -43,7 +56,7 @@ export class AdminPlanComponent implements OnInit {
     price: 0,
     billingCycle: 'monthly',
     role: 'user', // Default role
-    features: [],
+   
     limits: {
       oneOnOneSessions: 0,
       aiQueries: 0,
@@ -53,6 +66,9 @@ export class AdminPlanComponent implements OnInit {
       prioritySupport: false,
     },
   };
+
+  validationErrors: ValidationErrors = {};
+  newFeature = '';
 
   constructor(private adminPlanService: PlanService) {
     console.log('AdminPlanComponent initialized');
@@ -65,12 +81,11 @@ export class AdminPlanComponent implements OnInit {
   loadPlans(): void {
     this.adminPlanService.getPlans().subscribe({
       next: (data) => {
-        console.log('Plans loaded:', data);
         this.plans = data;
       },
       error: (error) => {
         console.error('Error loading plans:', error);
-      }
+      },
     });
   }
 
@@ -78,23 +93,135 @@ export class AdminPlanComponent implements OnInit {
     this.showAddPlanModal = true;
     this.editingPlan = null;
     this.resetNewPlan();
+    this.clearValidationErrors();
   }
 
   openEditPlan(plan: SubscriptionPlan): void {
     this.editingPlan = plan;
     this.showAddPlanModal = true;
-    // Deep copy the plan to avoid modifying the original
     this.newPlan = {
       ...plan,
       features: [...plan.features],
-      limits: { ...plan.limits }
+      limits: { ...plan.limits },
     };
+  }
+
+  clearValidationErrors(): void {
+    this.validationErrors = {};
+  }
+
+  validatePlan(): boolean {
+    this.clearValidationErrors();
+    let isValid = true;
+
+    if (!this.newPlan.name || this.newPlan.name.trim().length === 0) {
+      this.validationErrors.name = 'Plan name is required';
+      isValid = false;
+    } else if (this.newPlan.name.trim().length < 2) {
+      this.validationErrors.name =
+        'Plan name must be at least 2 characters long';
+      isValid = false;
+    } else if (this.newPlan.name.trim().length > 50) {
+      this.validationErrors.name = 'Plan name must be less than 50 characters';
+      isValid = false;
+    } else {
+      const duplicateName = this.plans.find(
+        (plan) =>
+          plan.name.toLowerCase() === this.newPlan.name!.trim().toLowerCase() &&
+          (!this.editingPlan || plan._id !== this.editingPlan._id)
+      );
+      if (duplicateName) {
+        this.validationErrors.name = 'A plan with this name already exists';
+        isValid = false;
+      }
+    }
+
+    if (
+      !this.newPlan.description ||
+      this.newPlan.description.trim().length === 0
+    ) {
+      this.validationErrors.description = 'Description is required';
+      isValid = false;
+    } else if (this.newPlan.description.trim().length < 10) {
+      this.validationErrors.description =
+        'Description must be at least 10 characters long';
+      isValid = false;
+    } else if (this.newPlan.description.trim().length > 500) {
+      this.validationErrors.description =
+        'Description must be less than 500 characters';
+      isValid = false;
+    }
+
+    if (this.newPlan.price === undefined || this.newPlan.price === null) {
+      this.validationErrors.price = 'Price is required';
+      isValid = false;
+    } else if (this.newPlan.price < 0) {
+      this.validationErrors.price = 'Price must be greater than or equal to 0';
+      isValid = false;
+    } else if (this.newPlan.price > 999999) {
+      this.validationErrors.price = 'Price must be less than $999,999';
+      isValid = false;
+    }
+
+    if (!this.newPlan.role) {
+      this.validationErrors.role = 'Role is required';
+      isValid = false;
+    } else if (!['user', 'trainer'].includes(this.newPlan.role)) {
+      this.validationErrors.role = 'Invalid role selected';
+      isValid = false;
+    }
+
+    // if (!this.newPlan.features || this.newPlan.features.length === 0) {
+    //   this.validationErrors.features = 'At least one feature is required';
+    //   isValid = false;
+    // } else {
+    //   const hasEmptyFeatures = this.newPlan.features.some(
+    //     (feature) => !feature || feature.trim().length === 0
+    //   );
+    //   if (hasEmptyFeatures) {
+    //     this.validationErrors.features = 'All features must have descriptions';
+    //     isValid = false;
+    //   }
+    // }
+
+    if (!this.validationErrors.limits) {
+      this.validationErrors.limits = {};
+    }
+
+    if (this.newPlan.limits) {
+      if (typeof this.newPlan.limits.oneOnOneSessions === 'number') {
+        if (this.newPlan.limits.oneOnOneSessions < 0) {
+          this.validationErrors.limits.oneOnOneSessions =
+            '1:1 Sessions cannot be negative';
+          isValid = false;
+        } else if (this.newPlan.limits.oneOnOneSessions > 1000) {
+          this.validationErrors.limits.oneOnOneSessions =
+            '1:1 Sessions limit seems too high (max 1000)';
+          isValid = false;
+        }
+      }
+
+      if (typeof this.newPlan.limits.aiQueries === 'number') {
+        if (this.newPlan.limits.aiQueries < 0) {
+          this.validationErrors.limits.aiQueries =
+            'AI Queries cannot be negative';
+          isValid = false;
+        } else if (this.newPlan.limits.aiQueries > 100000) {
+          this.validationErrors.limits.aiQueries =
+            'AI Queries limit seems too high (max 100,000)';
+          isValid = false;
+        }
+      }
+    }
+
+    return isValid;
   }
 
   closeModal(): void {
     this.showAddPlanModal = false;
     this.editingPlan = null;
     this.resetNewPlan();
+    this.isSubmitting = false;
   }
 
   resetNewPlan(): void {
@@ -103,7 +230,7 @@ export class AdminPlanComponent implements OnInit {
       description: '',
       price: 0,
       billingCycle: 'monthly',
-      role: 'user', // Default role
+      role: 'user',
       features: [],
       limits: {
         oneOnOneSessions: 0,
@@ -117,75 +244,55 @@ export class AdminPlanComponent implements OnInit {
   }
 
   savePlan(): void {
-    // Validate required fields
-    if (!this.newPlan.name || !this.newPlan.description || this.newPlan.price === undefined) {
-      alert('Please fill in all required fields');
+    if (this.isSubmitting) {
+      return; // Prevent double submission
+    }
+
+    // Trim string values
+    if (this.newPlan.name) {
+      this.newPlan.name = this.newPlan.name.trim();
+    }
+    if (this.newPlan.description) {
+      this.newPlan.description = this.newPlan.description.trim();
+    }
+
+    if (!this.validatePlan()) {
+      console.log('Validation failed:', this.validationErrors);
       return;
     }
 
+    this.isSubmitting = true;
     console.log('Saving plan:', this.newPlan);
 
     if (this.editingPlan) {
-      this.adminPlanService.updatePlan(this.editingPlan._id, this.newPlan).subscribe({
-        next: (updatedPlan) => {
-          console.log('Plan updated:', updatedPlan);
-          const index = this.plans.findIndex(p => p._id === this.editingPlan!._id);
-          if (index !== -1) {
-            this.plans[index] = updatedPlan;
-          }
-          this.closeModal();
-        },
-        error: (error) => {
-          console.error('Error updating plan:', error);
-          alert('Error updating plan. Please try again.');
-        }
-      });
+      this.adminPlanService
+        .updatePlan(this.editingPlan._id, this.newPlan)
+        .subscribe({
+          next: (updatedPlan) => {
+            console.log('Plan updated:', updatedPlan);
+            const index = this.plans.findIndex(
+              (p) => p._id === this.editingPlan!._id
+            );
+            if (index !== -1) {
+              this.plans[index] = updatedPlan;
+            }
+            this.closeModal();
+          },
+        });
     } else {
-    
       this.adminPlanService.createPlan(this.newPlan).subscribe({
         next: (newPlan) => {
           console.log('Plan created:', newPlan);
           this.plans.push(newPlan);
           this.closeModal();
         },
-        error: (error) => {
-          console.error('Error creating plan:', error);
-          alert('Error creating plan. Please try again.');
-        }
       });
     }
   }
 
-  togglePlanStatus(plan: SubscriptionPlan): void {
-    // const updatedStatus = !plan.isActive;
-    
-    // this.adminPlanService.updatePlanStatus(plan._id, updatedStatus).subscribe({
-    //   next: (updatedPlan) => {
-    //     console.log('Plan status updated:', updatedPlan);
-    //     plan.isActive = updatedStatus;
-    //     plan.updatedAt = new Date();
-    //   },
-    //   error: (error) => {
-    //     console.error('Error updating plan status:', error);
-    //     alert('Error updating plan status. Please try again.');
-    //   }
-    // });
-  }
+  togglePlanStatus(plan: SubscriptionPlan): void {}
 
-  deletePlan(planId: string): void {
-    // if (confirm('Are you sure you want to delete this plan? This action cannot be undone.')) {
-    //   this.adminPlanService.deletePlan(planId).subscribe({
-    //     next: () => {
-    //       console.log('Plan deleted successfully');
-    //       this.plans = this.plans.filter(p => p._id !== planId);
-    //     },
-    //     error: (error) => {
-    //       console.error('Error deleting plan:', error);
-    //       alert('Error deleting plan. Please try again.');
-    //     }
-    //   });
-    // }
-  }
+  deletePlan(planId: string): void {}
 
   addFeature(): void {
     if (!this.newPlan.features) {
@@ -204,13 +311,19 @@ export class AdminPlanComponent implements OnInit {
     return plan._id;
   }
 
-  // Helper method to get role display name
   getRoleDisplayName(role: 'user' | 'trainer'): string {
     return role === 'user' ? 'User' : 'Trainer';
   }
 
-  // Helper method to get role CSS class
   getRoleClass(role: 'user' | 'trainer'): string {
     return role === 'user' ? 'user' : 'trainer';
+  }
+
+  hasError(field: string): boolean {
+    return !!(this.validationErrors as any)[field];
+  }
+
+  getErrorMessage(field: string): string {
+    return (this.validationErrors as any)[field] || '';
   }
 }

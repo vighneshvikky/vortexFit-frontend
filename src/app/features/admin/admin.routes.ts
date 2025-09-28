@@ -45,6 +45,15 @@ export const adminRoutes: Routes = [
         data: { role: 'admin' },
       },
       {
+        path: 'transactions',
+        loadComponent: () =>
+          import('../../core/transactions/transactions.component').then(
+            (m) => m.TransactionsComponent
+          ),
+        canActivate: [RoleGuard()],
+        data: { role: 'admin' },
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',

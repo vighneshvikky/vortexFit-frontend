@@ -1,0 +1,173 @@
+<div class="transactions-container">
+  <!-- Header -->
+  <div class="transactions-header">
+    <h2 class="title">
+      {{ canViewAllTransactions() ? 'All Transactions' : 'My Transactions' }}
+    </h2>
+
+  </div>
+
+  <!-- Summary Cards (if enabled) -->
+  <div class="summary-cards" *ngIf="showSummary">
+    <div class="card earnings" *ngIf="canShowEarnings()">
+      <div class="card-header">
+        <h3>Total Earnings</h3>
+      </div>
+      <div class="card-content">
+        <span class="amount positive">{{ formatCurrency(summary.totalEarnings) }}</span>
+      </div>
+    </div>
+
+    <div class="card expenses" *ngIf="canShowExpenses()">
+      <div class="card-header">
+        <h3>Total Expenses</h3>
+      </div>
+      <div class="card-content">
+        <span class="amount negative">{{ formatCurrency(summary.totalExpenses) }}</span>
+      </div>
+    </div>
+
+    <div class="card total-transactions">
+      <div class="card-header">
+        <h3>Total Transactions</h3>
+      </div>
+      <div class="card-content">
+        <span class="count">{{ summary.transactionCount }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters (if enabled) -->
+  <div class="filters-section" *ngIf="showFilters">
+    <div class="filters-row">
+      <!-- Search -->
+      <div class="filter-group">
+        <label for="search">Search</label>
+        <input 
+          id="search"
+          type="text" 
+          placeholder="Search by Payment ID, Order ID, or Amount"
+          (input)="searchTransactions($any($event.target).value)"
+          class="form-control">
+      </div>
+
+      <!-- Source Type Filter -->
+      <div class="filter-group">
+        <label for="sourceType">Transaction Type</label>
+        <select 
+          id="sourceType"
+          (change)="filterBySourceType($any($event.target).value)"
+          class="form-control">
+          <option value="ALL">All Types</option>
+          <option value="BOOKING">Booking</option>
+          <option value="SUBSCRIPTION">Subscription</option>
+        </select>
+      </div>
+
+      <!-- Date Range -->
+      <div class="filter-group">
+        <label for="fromDate">From Date</label>
+        <input 
+          id="fromDate"
+          type="date" 
+          #fromDate
+          class="form-control">
+      </div>
+
+      <div class="filter-group">
+        <label for="toDate">To Date</label>
+        <input 
+          id="toDate"
+          type="date" 
+          #toDate
+          (change)="filterByDateRange(fromDate.value, toDate.value)"
+          class="form-control">
+      </div>
+    </div>
+
+    <!-- Export Button -->
+    <div class="actions-row">
+      <button 
+        class="btn btn-secondary" 
+        (click)="exportTransactions()"
+        [disabled]="loading || filteredTransactions.length === 0">
+        Export Transactions
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="loading-spinner"></div>
+    <p>Loading transactions...</p>
+  </div>
+
+  <!-- Error State -->
+
+
+  <!-- Transactions Table -->
+  <div class="transactions-table-container" *ngIf="!loading && !error">
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredTransactions.length === 0">
+      <div class="empty-icon">📊</div>
+      <h3>No Transactions Found</h3>
+      <p>There are no transactions matching your criteria.</p>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="table-wrapper" *ngIf="filteredTransactions.length > 0">
+      <table class="transactions-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Payment ID</th>
+            <th>Order ID</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th *ngIf="canViewAllTransactions()">From User</th>
+            <th *ngIf="canViewAllTransactions()">To User</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let transaction of getPaginatedTransactions()" class="transaction-row">
+            <td class="date-cell">
+              {{ formatDate(transaction.createdAt) }}
+            </td>
+            <td class="payment-id-cell">
+              <span class="payment-id">{{ transaction.paymentId }}</span>
+            </td>
+            <td class="order-id-cell">
+              <span class="order-id">{{ transaction.orderId }}</span>
+            </td>
+            <td class="type-cell">
+              <span class="transaction-type" [class]="transaction.sourceType.toLowerCase()">
+                {{ getTransactionTypeLabel(transaction.sourceType) }}
+              </span>
+            </td>
+            <td class="amount-cell">
+              <span class="amount" [class.positive]="transaction.amount > 0">
+                {{ formatCurrency(transaction.amount, transaction.currency) }}
+              </span>
+            </td>
+            <td class="user-cell" *ngIf="canViewAllTransactions()">
+              {{ transaction.fromUser }}
+            </td>
+            <td class="user-cell" *ngIf="canViewAllTransactions()">
+              {{ transaction.toUser }}
+            </td>
+            <td class="status-cell">
+              <span class="status-badge" 
+                    [class.completed]="transaction.paymentSignature"
+                    [class.pending]="!transaction.paymentSignature">
+                {{ transaction.paymentSignature ? 'Completed' : 'Pending' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+   
+  </div>
+</div>

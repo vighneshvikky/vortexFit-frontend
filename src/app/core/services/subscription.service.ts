@@ -11,12 +11,13 @@ export class SubscriptionService {
   private api = environment.api + API_ROUTES.SUBSCRIPTION.BASE;
   private paymentApi = environment.api + API_ROUTES.PAYMENT.BASE;
   createOrder(planId: string, userId: string) {
-    console.log('response for creating a order', planId, userId);
-    console.log('Full url', `${this.api}${API_ROUTES.SUBSCRIPTION.CREATE}`);
-    return this.http.post<any>(`${this.paymentApi}${API_ROUTES.PAYMENT.CREATE_SUBSCRIPTION_PAYMENT}`, {
-      planId,
-      userId,
-    });
+    return this.http.post<any>(
+      `${this.paymentApi}${API_ROUTES.PAYMENT.CREATE_SUBSCRIPTION_PAYMENT}`,
+      {
+        planId,
+        userId,
+      }
+    );
   }
 
   verifyOrder(response: any) {

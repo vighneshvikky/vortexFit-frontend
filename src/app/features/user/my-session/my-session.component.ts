@@ -36,7 +36,6 @@ import {
 export class MySessionComponent {
   bookingData: BookingSession[] = [];
   filteredBookingData: BookingSession[] = [];
-  // availableClients: { id: string; name: string }[] = [];
   filterConfig: FilterConfig = {
     entityLabel: 'Trainer',
     entityPlaceholder: 'All Trainers',
@@ -212,14 +211,14 @@ export class MySessionComponent {
     this.loadFilteredDataFromServer();
   }
 
-   onFiltersCleared(): void {
+  onFiltersCleared(): void {
     console.log('Filters cleared');
     this.filters = {
       client: null,
       status: '',
       dateFrom: '',
       dateTo: '',
-      searchTerm: '', 
+      searchTerm: '',
     };
     this.currentPage = 1;
     this.loadFilteredDataFromServer();
@@ -231,19 +230,18 @@ export class MySessionComponent {
     this.loadFilteredDataFromServer();
   }
 
- 
   clearSearchOnly(): void {
     this.filters.searchTerm = '';
     this.loadFilteredDataFromServer();
   }
 
- clearFilters(): void {
+  clearFilters(): void {
     this.filters = {
       client: null as { id: string; name: string } | null,
       status: '',
       dateFrom: '',
       dateTo: '',
-      searchTerm: '', 
+      searchTerm: '',
     };
 
     if (this.useServerSideFiltering) {

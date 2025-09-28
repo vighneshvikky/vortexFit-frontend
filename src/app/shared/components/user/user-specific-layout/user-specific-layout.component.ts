@@ -44,17 +44,13 @@ export class UserSpecificLayoutComponent {
       label: 'My Sessions',
       route: '/user/my-sessions',
     },
-    // { icon: 'fas fa-comments', label: 'Messages', route: '/user/messages', badge: 3 },
-    // { icon: 'fas fa-dumbbell', label: 'Workouts', route: '/user/workouts' },
-    // { icon: 'fas fa-chart-line', label: 'Progress', route: '/user/progress' },
     { icon: 'fas fa-users', label: 'Trainers', route: '/user/trainers' },
     { icon: 'fas fa-file-contract', label: 'Plans', route: '/user/plans' },
-
-    // { icon: 'fas fa-calendar-alt', label: 'Schedule', route: '/user/schedule' },
-    // { icon: 'fas fa-trophy', label: 'Achievements', route: '/user/achievements' },
-    // { icon: 'fas fa-heart', label: 'Health Metrics', route: '/user/health' },
-    { icon: 'fas fa-credit-card', label: 'Billing', route: '/user/billing' },
-    // { icon: 'fas fa-cog', label: 'Settings', route: '/user/settings' }
+    {
+      icon: 'fas fa-credit-card',
+      label: 'Transactions',
+      route: '/user/transactions',
+    },
   ];
 
   // User statistics (you can fetch this from your store/service)

@@ -4,6 +4,7 @@ import {
   HttpInterceptor,
   HttpRequest,
   HttpErrorResponse,
+  HttpStatusCode,
 } from '@angular/common/http';
 import { Injectable, NgZone, inject } from '@angular/core';
 import {
@@ -52,25 +53,27 @@ export class AuthInterceptor implements HttpInterceptor {
         console.log('error from the backend', error);
         console.log('error status', error.status);
 
-        if (error.status === 400) {
+        if (error.status === HttpStatusCode.BadRequest) {
           this.notify.showError(error.error?.message || 'Bad request');
           return throwError(() => error);
         }
 
-        if (error.status === 401) {
+        if (error.status === HttpStatusCode.Unauthorized) {
           console.log('calling hangle');
           return this.handle401Error(clonedRequest, next);
         }
-        if (error.status === 409) {
+        if (error.status === HttpStatusCode.Conflict) {
           this.notify.showError(error.error?.message || 'Conflict error');
           return throwError(() => error);
         }
-        if (error.status === 500) {
-          this.notify.showError(error.error?.message || 'Internal server error');
+        if (error.status === HttpStatusCode.InternalServerError) {
+          this.notify.showError(
+            error.error?.message || 'Internal server error'
+          );
           return throwError(() => error);
         }
         if (
-          error.status === 403 &&
+          error.status === HttpStatusCode.Forbidden &&
           (error.error?.message === 'User is blocked or not found' ||
             error.error?.message === 'Trainer is blocked or not found')
         ) {

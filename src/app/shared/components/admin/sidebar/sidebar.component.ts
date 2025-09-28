@@ -12,16 +12,14 @@ export interface SidebarMenuItem {
 export interface GetUsersQuery {
   page?: number;
   limit?: number;
-  
 }
-
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
   @Input() sidebarOpen = true;
@@ -29,14 +27,14 @@ export class SidebarComponent {
   @Input() userInfo = {
     name: 'Admin User',
     email: 'admin@vortexfit.com',
-    avatar: 'https://randomuser.me/api/portraits/men/92.jpg'
+    avatar: 'https://randomuser.me/api/portraits/men/92.jpg',
   };
   @Input() menuItems: SidebarMenuItem[] = [
     { id: 'dashboard', label: 'Dashboard', icon: 'fa-tachometer-alt' },
     { id: 'users', label: 'Users', icon: 'fa-users' },
     { id: 'verifications', label: 'Verifications', icon: 'fa-check-circle' },
     { id: 'plans', label: 'Plans', icon: 'fa-list-alt' },
-    { id: 'earnings', label: 'Earnings', icon: 'fa-dollar-sign' },
+    { id: 'transactions', label: 'Earnings', icon: 'fa-dollar-sign' },
   ];
 
   @Output() menuItemClick = new EventEmitter<string>();
@@ -55,4 +53,4 @@ export class SidebarComponent {
   onLogout(): void {
     this.logout.emit();
   }
-} 
+}

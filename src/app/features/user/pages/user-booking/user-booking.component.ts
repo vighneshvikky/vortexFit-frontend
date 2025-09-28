@@ -33,16 +33,13 @@ export class UserBookingComponent implements OnInit {
   private notyf = inject(NotyService);
   private ngZone = inject(NgZone);
 
-  
   trainer: Trainer | null = null;
   trainerId: string = '';
   isLoading: boolean = true;
 
-
   selectedSessionType: string = '';
   sessionTypes: SessionType[] = [];
   selectedPrice!: number;
-
 
   currentDate: Date = new Date();
   selectedDate: Date | null = null;
@@ -223,9 +220,8 @@ export class UserBookingComponent implements OnInit {
     });
   }
 
-  // Helper method to format date for API
   private formatDateForAPI(date: Date): string {
-    return this.formatDateLocal(date); // You can modify this format if your API expects a different format
+    return this.formatDateLocal(date);
   }
 
   onDayHover(day: CalendarDay) {
