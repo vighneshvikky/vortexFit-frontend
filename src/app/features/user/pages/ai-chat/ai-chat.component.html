@@ -1,0 +1,65 @@
+<div class="chat-wrapper">
+  <div class="chat-container">
+    <!-- Header -->
+    <div class="chat-header">
+      <div class="header-content">
+        <div class="robot-icon">🤖</div>
+        <div class="header-text">
+          <h2>AI Workout Assistant</h2>
+          <p class="subtitle">Your personal fitness companion</p>
+        </div>
+      </div>
+      <div class="header-glow"></div>
+    </div>
+
+    <!-- Personality Selector -->
+    <div class="personality-section">
+      <label class="personality-label">Select AI Personality:</label>
+      <div class="personality-grid">
+        <div 
+          *ngFor="let p of personalities"
+          class="personality-card"
+          [class.active]="selectedPersonality === p.value"
+          (click)="selectedPersonality = p.value">
+          <span class="personality-icon">{{p.label.split(' ')[0]}}</span>
+          <span class="personality-name">{{p.label.split(' ')[1]}}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Box -->
+    <div class="chat-box" #chatBox>
+      <div *ngIf="messages.length === 0" class="empty-state">
+        <div class="empty-icon">💬</div>
+        <p>Start a conversation with your AI assistant!</p>
+      </div>
+      <div *ngFor="let msg of messages; let i = index" 
+           class="message-wrapper"
+           [class.user-wrapper]="msg.sender === 'user'"
+           [class.ai-wrapper]="msg.sender === 'ai'"
+           [style.animation-delay.ms]="i * 100">
+        <div class="message" [ngClass]="msg.sender">
+          <p>{{msg.text}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="input-area">
+      <div class="input-container">
+        <input 
+          [(ngModel)]="userMessage" 
+          (keypress)="onKeyPress($event)"
+          placeholder="Ask your question..." 
+          class="message-input"
+        />
+        <button (click)="send()" class="send-button" [disabled]="!userMessage.trim()">
+          <span class="button-text">Send</span>
+          <svg class="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -7,6 +7,7 @@ import {
 import { forkJoin, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { WalletService } from '../services/wallet.service';
+import { ActivatedRoute } from '@angular/router';
 
 interface TrasactionFilters {
   sourceType?: 'BOOKING' | 'SUBSCRIPTION';
@@ -28,7 +29,8 @@ interface TransactionSummary {
   styleUrl: './transactions.component.scss',
 })
 export class TransactionsComponent implements OnInit {
- @Input() role: Role = Role.User;
+//  @Input() role: Role = Role.User;
+ role!: Role;
   @Input() filters: TrasactionFilters = {};
   @Input() showSummary: boolean = true;
   @Input() showFilters: boolean = true;
@@ -71,9 +73,10 @@ export class TransactionsComponent implements OnInit {
 
   private destroy$ = new Subject<void>();
 
-  constructor(private transactionService: TransactionService, private walletService: WalletService) {}
+  constructor(private transactionService: TransactionService, private walletService: WalletService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.role = this.route.snapshot.data['role'];
     this.loadTransactions();
     this.walletService.getBalance().subscribe((res) => {
     this.balance = res.balance;
@@ -88,6 +91,7 @@ export class TransactionsComponent implements OnInit {
   private loadTransactions(): void {
     this.loading = true;
     this.error = null;
+   
 
     const config = this.roleConfig[this.role];
     const mergedFilters = { ...config.defaultFilters, ...this.filters };

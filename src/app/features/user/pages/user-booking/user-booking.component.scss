@@ -971,6 +971,7 @@ $shadow-blue: rgba(59, 130, 246, 0.3);
 }
 
 // Order Summary
+// Order Summary - Fixed Button Layout
 .order-summary {
   position: sticky;
   bottom: 2rem;
@@ -1031,25 +1032,94 @@ $shadow-blue: rgba(59, 130, 246, 0.3);
     }
   }
   
+  // Fixed button layout
+  .summary-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
   .confirm-booking-btn {
     width: 100%;
-    background: linear-gradient(135deg, $primary-blue, $primary-orange);
-    color: $text-white;
     border: none;
     border-radius: 0.75rem;
     padding: 1rem;
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    // RazorPay button (primary)
+    &:first-child {
+      background: linear-gradient(135deg, $primary-blue, $primary-orange);
+      color: $text-white;
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
     }
     
-    &:active {
-      transform: translateY(0);
+    // Wallet button (secondary)
+    &:last-child {
+      background: rgba(0, 0, 0, 0.4);
+      color: $text-white;
+      border: 2px solid $primary-blue;
+      
+      &:hover {
+        background: rgba(59, 130, 246, 0.2);
+        border-color: $primary-orange;
+        transform: translateY(-2px);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+// Alternative: Side-by-side layout for larger screens
+@media (min-width: 640px) {
+  .order-summary {
+    .summary-actions {
+      flex-direction: row;
+      
+      .confirm-booking-btn {
+        flex: 1;
+        font-size: 0.875rem;
+        padding: 0.875rem 0.75rem;
+      }
+    }
+  }
+}
+
+// Mobile optimization
+@media (max-width: 768px) {
+  .order-summary {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 1rem 1rem 0 0;
+    margin: 0;
+    z-index: 100;
+    
+    .summary-actions {
+      gap: 0.5rem;
+      
+      .confirm-booking-btn {
+        padding: 0.875rem;
+        font-size: 0.875rem;
+      }
     }
   }
 }

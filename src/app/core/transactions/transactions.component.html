@@ -42,8 +42,8 @@
             <th>Payment Method</th>
             <th>Type</th>
             <th>Amount</th>
-            <th *ngIf="canViewAllTransactions()">From User</th>
-            <th *ngIf="canViewAllTransactions()">To User</th>
+            <!-- <th *ngIf="canViewAllTransactions()">From User</th>
+            <th *ngIf="canViewAllTransactions()">To User</th> -->
             <th>Status</th>
           </tr>
         </thead>
@@ -74,12 +74,12 @@
                 {{ formatCurrency(transaction.amount, transaction.currency) }}
               </span>
             </td>
-            <td class="user-cell" *ngIf="canViewAllTransactions()">
+            <!-- <td class="user-cell" *ngIf="canViewAllTransactions()">
               {{ transaction.fromUser }}
             </td>
             <td class="user-cell" *ngIf="canViewAllTransactions()">
               {{ transaction.toUser }}
-            </td>
+            </td> -->
             <td class="status-cell">
               <span
                 class="status-badge"

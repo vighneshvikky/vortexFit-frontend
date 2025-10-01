@@ -14,7 +14,7 @@ import { MySessionComponent } from './my-session/my-session.component';
 import { PlanComponent } from '../../core/plan/plan.component';
 import { TransactionsComponent } from '../../core/transactions/transactions.component';
 import { NotificationComponent } from '../../core/notification/notification.component';
-
+import { AiChatComponent } from './pages/ai-chat/ai-chat.component';
 
 export const userRoutes: Routes = [
   {
@@ -43,15 +43,18 @@ export const userRoutes: Routes = [
           {
             path: 'notifications',
             component: NotificationComponent,
-            data: {role: 'user'}
-          }
+            data: { role: 'user' },
+          },
+          {
+            path: 'ask-ai',
+            component: AiChatComponent,
+          },
         ],
       },
 
       { path: 'booking/:id', component: UserBookingComponent },
       { path: 'confirmBooking', component: UserConfirmBookingComponent },
       { path: 'chat/:id', component: ChatComponent, data: { role: 'user' } },
-      
     ],
   },
 ];

@@ -56,6 +56,11 @@ export class UserSpecificLayoutComponent {
       label: 'Notifications',
       route: '/user/notifications',
     },
+    {
+          icon:  'fas fa-robot',
+      label: 'Ai-Assistant',
+      route: '/user/ask-ai',
+    }
   ];
 
   // User statistics (you can fetch this from your store/service)

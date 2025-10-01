@@ -35,18 +35,17 @@ export class TrainerLayoutComponent {
       label: 'Availability',
       route: '/trainer/scheduling',
     },
-    {
-      icon: 'fas fa-chart-line',
-      label: 'Client Progress',
-      route: '/trainer/progress',
-    },
-    // { icon: 'fas fa-comment-alt', label: 'Messaging', route: '/trainer/messaging' },
+
     {
       icon: 'fas fa-bell',
       label: 'Notifications',
       route: '/trainer/notifications',
     },
-    { icon: 'fas fa-dollar-sign', label: 'Transactions', route: '/trainer/transactions' },
+    {
+      icon: 'fas fa-dollar-sign',
+      label: 'Transactions',
+      route: '/trainer/transactions',
+    },
     { icon: 'fas fa-file-contract', label: 'Plans', route: '/trainer/plans' },
   ];
 

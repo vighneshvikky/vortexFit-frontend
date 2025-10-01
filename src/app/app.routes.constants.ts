@@ -93,5 +93,9 @@ PAY: '/pay'
 
   NOTIFICATION: {
     BASE:'/notifications'
+  },
+  AI:{
+    BASE: '/ai/chat',
+  
   }
 };

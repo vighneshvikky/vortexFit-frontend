@@ -102,12 +102,12 @@ export class UserBookingComponent implements OnInit {
           description:
             'Personalized training session with warm-up, workout & cool-down',
         },
-        {
-          id: 'workout-plan',
-          name: 'Workout Plan',
-          price: this.trainer.pricing.workoutPlan,
-          description: 'Custom plan for you to follow independently',
-        },
+          // {
+          //   id: 'workout-plan',
+          //   name: 'Workout Plan',
+          //   price: this.trainer.pricing.workoutPlan,
+          //   description: 'Custom plan for you to follow independently',
+          // },
       ];
     }
   }

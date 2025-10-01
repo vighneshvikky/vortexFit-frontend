@@ -198,6 +198,7 @@
     </div>
 
     <!-- Order Summary Panel (Sticky) -->
+    <!-- Order Summary Panel (Sticky) -->
     <div
       class="order-summary"
       *ngIf="selectedSessionType && selectedDate && selectedTimeSlot"
@@ -227,12 +228,18 @@
           <span class="value">₹{{ getSessionPrice() }}</span>
         </div>
       </div>
-      <button class="confirm-booking-btn" (click)="confirmBooking()">
-       Book with RazorPay
-      </button>
-           <button class="confirm-booking-btn" (click)="bookingUsingWallet()">
-       Book with Wallet: {{balance}}
-      </button>
+
+      <!-- Wrapped buttons in a container -->
+      <div class="summary-actions">
+        <button class="confirm-booking-btn" (click)="confirmBooking()">
+          <i class="fas fa-credit-card"></i>
+          Book with RazorPay
+        </button>
+        <button class="confirm-booking-btn" (click)="bookingUsingWallet()">
+          <i class="fas fa-wallet"></i>
+          Wallet: ₹{{ balance }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

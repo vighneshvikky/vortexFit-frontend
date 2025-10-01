@@ -66,6 +66,6 @@ export class TransactionService {
         }
       });
     }
-    return this.http.get<Transaction[]>(`${this.api}`, { params });
+    return this.http.get<Transaction[]>(`${this.api}/user`, { params });
   }
 }
