@@ -342,4 +342,50 @@
       @apply grid-cols-1;
     }
   }
+
+  
+}
+
+// Add these styles to your existing SCSS file
+
+.form-group {
+  @apply space-y-2;
+  
+  label {
+    @apply block text-gray-300 text-sm font-semibold;
+  }
+  
+  input, select, textarea {
+    @apply w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all;
+    
+    // Error state styling
+    &.error {
+      @apply border-red-500 focus:ring-red-500;
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+  }
+  
+  textarea {
+    @apply resize-none;
+  }
+  
+  // Helper text styling
+  .helper-text {
+    @apply text-gray-400 text-xs italic;
+    margin-top: 4px;
+  }
+  
+  // Error message styling
+  .error-message {
+    @apply text-red-400 text-xs font-medium;
+    margin-top: 4px;
+    display: flex;
+  
+    
+    &::before {
+      content: '⚠';
+      margin-right: 4px;
+      color: #EF4444;
+    }
+  }
 }

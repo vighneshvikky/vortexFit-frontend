@@ -12,9 +12,11 @@ export class SocketService {
 
   constructor() {}
 
-
-  connect(namespace: 'chat' | 'video', userId: string, serverUrl: string = environment.api): void {
-   
+  connect(
+    namespace: string,
+    userId: string,
+    serverUrl: string = environment.api
+  ): void {
     if (this.sockets[namespace]?.connected) return;
 
     const url = `${serverUrl}/${namespace}`;
@@ -36,25 +38,25 @@ export class SocketService {
       this.connected$[namespace].next(false);
     });
 
-    socket.on('error', (err) => console.error(`[${namespace}] socket error:`, err));
+    socket.on('error', (err) =>
+      console.error(`[${namespace}] socket error:`, err)
+    );
 
     this.sockets[namespace] = socket;
   }
 
-
-  emit(namespace: 'chat' | 'video', event: string, data?: any): void {
+  emit(namespace: string, event: string, data?: any): void {
     console.log('data', data);
     this.sockets[namespace]?.emit(event, data);
   }
 
-  on<T>(namespace: 'chat' | 'video', event: string): Observable<T> {
+  on<T>(namespace:string, event: string): Observable<T> {
     const subject = new Subject<T>();
     this.sockets[namespace]?.on(event, (data: T) => subject.next(data));
     return subject.asObservable();
   }
 
-
-  disconnect(namespace: 'chat' | 'video'): void {
+  disconnect(namespace: string): void {
     if (this.sockets[namespace]) {
       this.sockets[namespace].disconnect();
       delete this.sockets[namespace];
@@ -62,21 +64,18 @@ export class SocketService {
     }
   }
 
-
-
-
-
-  getConnectionStatus(namespace: 'chat' | 'video'): Observable<boolean> {
-    return this.connected$[namespace]?.asObservable() || new BehaviorSubject(false).asObservable();
+  getConnectionStatus(namespace: string): Observable<boolean> {
+    return (
+      this.connected$[namespace]?.asObservable() ||
+      new BehaviorSubject(false).asObservable()
+    );
   }
 
-  
-  isConnected(namespace: 'chat' | 'video'): boolean {
+  isConnected(namespace: string): boolean {
     return !!this.sockets[namespace]?.connected;
   }
 
- 
-  getSocketId(namespace: 'chat' | 'video'): string {
+  getSocketId(namespace: string): string {
     return this.sockets[namespace]?.id || '';
   }
 }

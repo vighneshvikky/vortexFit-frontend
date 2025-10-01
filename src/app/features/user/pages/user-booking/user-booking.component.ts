@@ -17,6 +17,7 @@ import {
   TimeSlot,
   TimeSlotsResponse,
 } from './interface/user-booking.interface';
+import { WalletService } from '../../../../core/services/wallet.service';
 
 @Component({
   selector: 'app-user-booking',
@@ -32,6 +33,7 @@ export class UserBookingComponent implements OnInit {
   private paymentService = inject(PaymentService);
   private notyf = inject(NotyService);
   private ngZone = inject(NgZone);
+  private walletService = inject(WalletService);
 
   trainer: Trainer | null = null;
   trainerId: string = '';
@@ -48,11 +50,12 @@ export class UserBookingComponent implements OnInit {
   trainerRules: SchedulingRule[] = [];
   hoverMessage: string | null = null;
 
-  // Time slots
   selectedTimeSlot: TimeSlot | null = null;
   availableTimeSlots: TimeSlot[] = [];
   isLoadingSlots: boolean = false;
   slotsErrorMessage: string = '';
+
+  balance: number = 0;
 
   // Confirmation modal
   showConfirmationModal: boolean = false;
@@ -65,6 +68,10 @@ export class UserBookingComponent implements OnInit {
       this.notyf.showError('Trainer ID not found');
     }
     // Initialize calendar without trainer rules
+
+    this.walletService.getBalance().subscribe((res) => {
+      this.balance = res.balance;
+    });
     this.generateCalendar();
     this.updateCurrentMonthYear();
   }
@@ -274,6 +281,55 @@ export class UserBookingComponent implements OnInit {
     this.selectedTimeSlot = slot;
   }
 
+  bookingUsingWallet() {
+    if (this.balance < this.selectedPrice) {
+      this.notyf.showError('Insufficient Wallet Balance');
+      return;
+    }
+
+    const payload = {
+      trainerId: this.trainerId,
+      amount: this.selectedPrice,
+      sessionType: this.selectedSessionType,
+      date: this.formatDateForAPI(this.selectedDate!),
+      timeSlot: this.selectedTimeSlot,
+    };
+
+    this.walletService.payWithWallet(payload).subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.balance = res.balance;
+
+          this.ngZone.run(() => {
+            this.balance = res.balance;
+            this.availableTimeSlots = this.availableTimeSlots.filter(
+              (slot) => slot !== this.selectedTimeSlot
+            );
+          });
+
+          this.notyf.showSuccess('Booking confirmed successfully!');
+
+          const bookingData = {
+            bookingId: res.bookingId, // coming from backend
+            trainerName: this.getTrainerName(),
+            sessionType: this.selectedSessionType,
+            date: this.formatDateForAPI(this.selectedDate!),
+            timeSlot: this.selectedTimeSlot,
+            amount: this.selectedPrice,
+          };
+
+          this.router.navigate(['user/confirmBooking'], {
+            state: { bookingData },
+          });
+        }
+      },
+      error: (err) => {
+        console.error('Wallet payment failed:', err);
+        this.notyf.showError(err.error?.message || 'Wallet payment failed');
+      },
+    });
+  }
+
   confirmBooking() {
     if (!this.selectedSessionType) {
       this.notyf.showError('Please select a session type');
@@ -393,10 +449,39 @@ export class UserBookingComponent implements OnInit {
 
     rzp.on('payment.failed', (response: RazorpayPaymentFailedResponse) => {
       console.error('Payment failed:', response);
+      this.handleFailedPayment(response, order.amount);
+
       this.notyf.showError('Payment failed: ' + response.error.description);
     });
 
     rzp.open();
+  }
+
+  private handleFailedPayment(
+    response: RazorpayPaymentFailedResponse,
+    amount: number
+  ) {
+    const payload = {
+      orderId: response.error.metadata.order_id,
+      paymentId: response.error.metadata.payment_id,
+      amount: amount,
+      reason: response.error.description,
+    };
+
+    this.ngZone.run(() => {
+      this.balance += this.selectedPrice
+      this.walletService.addFailedPayment(payload).subscribe({
+      
+        next: () => {
+          this.notyf.showSuccess('Payment failed, money added to your wallet');
+        },
+        error: () => {
+          this.notyf.showError(
+            'Could not update wallet, please contact support'
+          );
+        },
+      });
+    });
   }
   private verifyPaymentInBackground(response: PaymentSuccessResponse) {
     this.paymentService

@@ -83,4 +83,15 @@ export const API_ROUTES = {
     EARNINGS: '/earnings',
     EXPENSES: '/expenses',
   },
+
+  WALLET:{
+BASE:'/wallet',
+FAILED_PAYMENT: '/failed-payment',
+BALANCE: '/balance',
+PAY: '/pay'
+  },
+
+  NOTIFICATION: {
+    BASE:'/notifications'
+  }
 };

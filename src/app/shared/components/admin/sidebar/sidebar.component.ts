@@ -35,6 +35,9 @@ export class SidebarComponent {
     { id: 'verifications', label: 'Verifications', icon: 'fa-check-circle' },
     { id: 'plans', label: 'Plans', icon: 'fa-list-alt' },
     { id: 'transactions', label: 'Earnings', icon: 'fa-dollar-sign' },
+    {
+      id: 'notifications', label: 'Notifications', icon: 'fa-bell '
+    }
   ];
 
   @Output() menuItemClick = new EventEmitter<string>();

@@ -6,6 +6,7 @@ import {
 } from '../services/transaction.service';
 import { forkJoin, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { WalletService } from '../services/wallet.service';
 
 interface TrasactionFilters {
   sourceType?: 'BOOKING' | 'SUBSCRIPTION';
@@ -40,7 +41,7 @@ export class TransactionsComponent implements OnInit {
     totalExpenses: 0,
     transactionCount: 0,
   };
-
+  balance: number = 0;
   loading = false;
   error: string | null = null;
   currentPage = 1;
@@ -70,10 +71,13 @@ export class TransactionsComponent implements OnInit {
 
   private destroy$ = new Subject<void>();
 
-  constructor(private transactionService: TransactionService) {}
+  constructor(private transactionService: TransactionService, private walletService: WalletService) {}
 
   ngOnInit(): void {
     this.loadTransactions();
+    this.walletService.getBalance().subscribe((res) => {
+    this.balance = res.balance;
+    })
   }
 
   ngOnDestroy(): void {
@@ -94,12 +98,12 @@ export class TransactionsComponent implements OnInit {
 
     const requests = [transactionRequest];
 
-    // Add summary requests based on role permissions
+  
     if (config.showEarnings) {
-      // requests.push(this.transactionService.getEarnings());
+    
     }
     if (config.showExpenses) {
-      // requests.push(this.transactionService.getExpenses());
+      
     }
 
     forkJoin(requests)

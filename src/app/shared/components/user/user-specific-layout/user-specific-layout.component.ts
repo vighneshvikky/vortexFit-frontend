@@ -51,6 +51,11 @@ export class UserSpecificLayoutComponent {
       label: 'Transactions',
       route: '/user/transactions',
     },
+        {
+      icon:  'fas fa-bell',
+      label: 'Notifications',
+      route: '/user/notifications',
+    },
   ];
 
   // User statistics (you can fetch this from your store/service)

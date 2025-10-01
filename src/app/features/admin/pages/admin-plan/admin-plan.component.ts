@@ -56,7 +56,7 @@ export class AdminPlanComponent implements OnInit {
     price: 0,
     billingCycle: 'monthly',
     role: 'user', // Default role
-   
+
     limits: {
       oneOnOneSessions: 0,
       aiQueries: 0,
@@ -125,14 +125,22 @@ export class AdminPlanComponent implements OnInit {
       this.validationErrors.name = 'Plan name must be less than 50 characters';
       isValid = false;
     } else {
-      const duplicateName = this.plans.find(
-        (plan) =>
-          plan.name.toLowerCase() === this.newPlan.name!.trim().toLowerCase() &&
-          (!this.editingPlan || plan._id !== this.editingPlan._id)
-      );
-      if (duplicateName) {
-        this.validationErrors.name = 'A plan with this name already exists';
+      const namePattern = /^[A-Z\s]+$/;
+      if (!namePattern.test(this.newPlan.name.trim())) {
+        this.validationErrors.name =
+          'Plan name must contain only capital letters and spaces';
         isValid = false;
+      } else {
+        const duplicateName = this.plans.find(
+          (plan) =>
+            plan.name.toLowerCase() ===
+              this.newPlan.name!.trim().toLowerCase() &&
+            (!this.editingPlan || plan._id !== this.editingPlan._id)
+        );
+        if (duplicateName) {
+          this.validationErrors.name = 'A plan with this name already exists';
+          isValid = false;
+        }
       }
     }
 
@@ -156,10 +164,11 @@ export class AdminPlanComponent implements OnInit {
       this.validationErrors.price = 'Price is required';
       isValid = false;
     } else if (this.newPlan.price < 0) {
-      this.validationErrors.price = 'Price must be greater than or equal to 0';
+      this.validationErrors.price = 'Price must be greater than 0';
       isValid = false;
-    } else if (this.newPlan.price > 999999) {
-      this.validationErrors.price = 'Price must be less than $999,999';
+    } else if (this.newPlan.price > 100000) {
+      this.validationErrors.price =
+        'Price must be less than or equal to ₹1,00,000';
       isValid = false;
     }
 
@@ -171,44 +180,31 @@ export class AdminPlanComponent implements OnInit {
       isValid = false;
     }
 
-    // if (!this.newPlan.features || this.newPlan.features.length === 0) {
-    //   this.validationErrors.features = 'At least one feature is required';
-    //   isValid = false;
-    // } else {
-    //   const hasEmptyFeatures = this.newPlan.features.some(
-    //     (feature) => !feature || feature.trim().length === 0
-    //   );
-    //   if (hasEmptyFeatures) {
-    //     this.validationErrors.features = 'All features must have descriptions';
-    //     isValid = false;
-    //   }
-    // }
-
     if (!this.validationErrors.limits) {
       this.validationErrors.limits = {};
     }
 
     if (this.newPlan.limits) {
       if (typeof this.newPlan.limits.oneOnOneSessions === 'number') {
-        if (this.newPlan.limits.oneOnOneSessions < 0) {
+        if (this.newPlan.limits.oneOnOneSessions < 1) {
           this.validationErrors.limits.oneOnOneSessions =
-            '1:1 Sessions cannot be negative';
+            '1:1 Sessions must be between 1 and 100';
           isValid = false;
-        } else if (this.newPlan.limits.oneOnOneSessions > 1000) {
+        } else if (this.newPlan.limits.oneOnOneSessions > 100) {
           this.validationErrors.limits.oneOnOneSessions =
-            '1:1 Sessions limit seems too high (max 1000)';
+            '1:1 Sessions must be between 1 and 100';
           isValid = false;
         }
       }
 
       if (typeof this.newPlan.limits.aiQueries === 'number') {
-        if (this.newPlan.limits.aiQueries < 0) {
+        if (this.newPlan.limits.aiQueries < 1) {
           this.validationErrors.limits.aiQueries =
-            'AI Queries cannot be negative';
+            'AI Queries must be between 1 and 100';
           isValid = false;
-        } else if (this.newPlan.limits.aiQueries > 100000) {
+        } else if (this.newPlan.limits.aiQueries > 100) {
           this.validationErrors.limits.aiQueries =
-            'AI Queries limit seems too high (max 100,000)';
+            'AI Queries must be between 1 and 100';
           isValid = false;
         }
       }
@@ -319,11 +315,14 @@ export class AdminPlanComponent implements OnInit {
     return role === 'user' ? 'user' : 'trainer';
   }
 
-  hasError(field: string): boolean {
-    return !!(this.validationErrors as any)[field];
-  }
+getErrorMessage(field: string): string {
+  return field
+    .split('.')
+    .reduce((acc: any, key) => acc?.[key], this.validationErrors) || '';
+}
 
-  getErrorMessage(field: string): string {
-    return (this.validationErrors as any)[field] || '';
-  }
+hasError(field: string): boolean {
+  return !!this.getErrorMessage(field);
+}
+
 }

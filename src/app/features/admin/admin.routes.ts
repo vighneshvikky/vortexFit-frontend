@@ -54,6 +54,16 @@ export const adminRoutes: Routes = [
         data: { role: 'admin' },
       },
       {
+        path: 'notifications',
+        loadComponent: () =>
+          import('../../core/notification/notification.component').then(
+            (m) => m.NotificationComponent
+          ),
+        canActivate: [RoleGuard()],
+        data: { role: 'admin' },
+      },
+
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',

@@ -13,6 +13,7 @@ import { UserSpecificLayoutComponent } from '../../shared/components/user/user-s
 import { MySessionComponent } from './my-session/my-session.component';
 import { PlanComponent } from '../../core/plan/plan.component';
 import { TransactionsComponent } from '../../core/transactions/transactions.component';
+import { NotificationComponent } from '../../core/notification/notification.component';
 
 
 export const userRoutes: Routes = [
@@ -39,12 +40,18 @@ export const userRoutes: Routes = [
             component: TransactionsComponent,
             data: { role: 'user' },
           },
+          {
+            path: 'notifications',
+            component: NotificationComponent,
+            data: {role: 'user'}
+          }
         ],
       },
 
       { path: 'booking/:id', component: UserBookingComponent },
       { path: 'confirmBooking', component: UserConfirmBookingComponent },
       { path: 'chat/:id', component: ChatComponent, data: { role: 'user' } },
+      
     ],
   },
 ];

@@ -9,6 +9,7 @@ import { TrainerSessionComponent } from './pages/trainer-session/trainer-session
 import { ChatComponent } from '../../core/chat/chat.component';
 import { PlanComponent } from '../../core/plan/plan.component';
 import { TransactionsComponent } from '../../core/transactions/transactions.component';
+import { NotificationComponent } from '../../core/notification/notification.component';
 
 
 export const trainerRoutes: Routes = [
@@ -25,6 +26,7 @@ export const trainerRoutes: Routes = [
       { path: 'chat/:id', component: ChatComponent, data: { role: 'trainer' } },
       { path: 'sessions', component: TrainerSessionComponent },
       { path: 'plans', component: PlanComponent, data: { role: 'trainer' } },
+      {path: 'notifications', component: NotificationComponent, data: {role: 'trainer'}},
       {
         path: 'transactions',
         component: TransactionsComponent,

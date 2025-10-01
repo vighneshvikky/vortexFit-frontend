@@ -6,7 +6,11 @@ import { Observable } from 'rxjs';
 
 export interface Transaction {
   _id: string;
-  fromUser: string;
+  fromUser: {
+    _id: string,
+    name: string,
+    email: string
+  };
   toUser: string;
   amount: number;
   sourceType: 'BOOKING' | 'SUBSCRIPTION';
@@ -17,6 +21,7 @@ export interface Transaction {
   paymentSignature?: string;
   createdAt: string;
   updatedAt: string;
+  bookingMethod: string;
 }
 
 @Injectable({

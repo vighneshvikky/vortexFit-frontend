@@ -1,98 +1,17 @@
+
+
+
 <div class="transactions-container">
-  <!-- Header -->
-  <div class="transactions-header">
-    <h2 class="title">
-      {{ canViewAllTransactions() ? 'All Transactions' : 'My Transactions' }}
-    </h2>
 
-  </div>
-
-  <!-- Summary Cards (if enabled) -->
-  <div class="summary-cards" *ngIf="showSummary">
-    <div class="card earnings" *ngIf="canShowEarnings()">
-      <div class="card-header">
-        <h3>Total Earnings</h3>
+  <div class="wallet-balance-section" *ngIf="role === 
+  'user'">
+    <div class="wallet-card">
+      <div class="wallet-header">
+        <h3>💰 Wallet Balance</h3>
+        
+          <span class="refresh-icon">🔄 {{balance }}</span>
+     
       </div>
-      <div class="card-content">
-        <span class="amount positive">{{ formatCurrency(summary.totalEarnings) }}</span>
-      </div>
-    </div>
-
-    <div class="card expenses" *ngIf="canShowExpenses()">
-      <div class="card-header">
-        <h3>Total Expenses</h3>
-      </div>
-      <div class="card-content">
-        <span class="amount negative">{{ formatCurrency(summary.totalExpenses) }}</span>
-      </div>
-    </div>
-
-    <div class="card total-transactions">
-      <div class="card-header">
-        <h3>Total Transactions</h3>
-      </div>
-      <div class="card-content">
-        <span class="count">{{ summary.transactionCount }}</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Filters (if enabled) -->
-  <div class="filters-section" *ngIf="showFilters">
-    <div class="filters-row">
-      <!-- Search -->
-      <div class="filter-group">
-        <label for="search">Search</label>
-        <input 
-          id="search"
-          type="text" 
-          placeholder="Search by Payment ID, Order ID, or Amount"
-          (input)="searchTransactions($any($event.target).value)"
-          class="form-control">
-      </div>
-
-      <!-- Source Type Filter -->
-      <div class="filter-group">
-        <label for="sourceType">Transaction Type</label>
-        <select 
-          id="sourceType"
-          (change)="filterBySourceType($any($event.target).value)"
-          class="form-control">
-          <option value="ALL">All Types</option>
-          <option value="BOOKING">Booking</option>
-          <option value="SUBSCRIPTION">Subscription</option>
-        </select>
-      </div>
-
-      <!-- Date Range -->
-      <div class="filter-group">
-        <label for="fromDate">From Date</label>
-        <input 
-          id="fromDate"
-          type="date" 
-          #fromDate
-          class="form-control">
-      </div>
-
-      <div class="filter-group">
-        <label for="toDate">To Date</label>
-        <input 
-          id="toDate"
-          type="date" 
-          #toDate
-          (change)="filterByDateRange(fromDate.value, toDate.value)"
-          class="form-control">
-      </div>
-    </div>
-
-    <!-- Export Button -->
-    <div class="actions-row">
-      <button 
-        class="btn btn-secondary" 
-        (click)="exportTransactions()"
-        [disabled]="loading || filteredTransactions.length === 0">
-        Export Transactions
-      </button>
     </div>
   </div>
 
@@ -103,7 +22,6 @@
   </div>
 
   <!-- Error State -->
-
 
   <!-- Transactions Table -->
   <div class="transactions-table-container" *ngIf="!loading && !error">
@@ -120,8 +38,8 @@
         <thead>
           <tr>
             <th>Date</th>
-            <th>Payment ID</th>
-            <th>Order ID</th>
+            <th>Name</th>
+            <th>Payment Method</th>
             <th>Type</th>
             <th>Amount</th>
             <th *ngIf="canViewAllTransactions()">From User</th>
@@ -130,18 +48,24 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let transaction of getPaginatedTransactions()" class="transaction-row">
+          <tr
+            *ngFor="let transaction of getPaginatedTransactions()"
+            class="transaction-row"
+          >
             <td class="date-cell">
               {{ formatDate(transaction.createdAt) }}
             </td>
             <td class="payment-id-cell">
-              <span class="payment-id">{{ transaction.paymentId }}</span>
+              <span class="payment-id">{{ transaction.fromUser.name }}</span>
             </td>
             <td class="order-id-cell">
-              <span class="order-id">{{ transaction.orderId }}</span>
+              <span class="order-id">{{ transaction.bookingMethod }}</span>
             </td>
             <td class="type-cell">
-              <span class="transaction-type" [class]="transaction.sourceType.toLowerCase()">
+              <span
+                class="transaction-type"
+                [class]="transaction.sourceType.toLowerCase()"
+              >
                 {{ getTransactionTypeLabel(transaction.sourceType) }}
               </span>
             </td>
@@ -157,17 +81,17 @@
               {{ transaction.toUser }}
             </td>
             <td class="status-cell">
-              <span class="status-badge" 
-                    [class.completed]="transaction.paymentSignature"
-                    [class.pending]="!transaction.paymentSignature">
-                {{ transaction.paymentSignature ? 'Completed' : 'Pending' }}
+              <span
+                class="status-badge"
+                [class.completed]="transaction.paymentSignature"
+                [class.pending]="!transaction.paymentSignature"
+              >
+                {{ transaction.paymentSignature ? "Completed" : "Pending" }}
               </span>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-
-   
   </div>
 </div>
