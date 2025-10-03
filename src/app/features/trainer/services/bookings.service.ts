@@ -3,7 +3,7 @@ import { environment } from '../../../../enviorments/environment';
 import { API_ROUTES } from '../../../app.routes.constants';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, map, Observable, of } from 'rxjs';
-import { BookingSession } from '../pages/trainer-session/interface/trainer.session.interface';
+import { BookingSession, BookingStatus } from '../pages/trainer-session/interface/trainer.session.interface';
 export interface BookingFilters {
   clientId?: string;
   status?: string;
@@ -70,6 +70,7 @@ export class BookingService {
     bookingId: string,
     bookingStatus: string
   ): Observable<BookingSession> {
+
     return this.http.patch<BookingSession>(
       `${this.apiUrl}${API_ROUTES.BOOKING.CHANGE_STATUS}`,
       { bookingId, bookingStatus }

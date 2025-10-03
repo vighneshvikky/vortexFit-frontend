@@ -15,6 +15,7 @@ import { login } from '../../../auth/store/actions/auth.actions';
 import { Subject, takeUntil } from 'rxjs';
 import { selectAuthError, selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';
 import { AppState } from '../../../../store/app.state';
+import { environment } from '../../../../../enviorments/environment';
 
 @Component({
   selector: 'app-admin-login',
@@ -86,7 +87,8 @@ onSubmit(): void {
       login({
         email,
         password,
-        role: 'admin'
+        role: 'admin',
+        _id: environment.adminId
       })
     );
   }

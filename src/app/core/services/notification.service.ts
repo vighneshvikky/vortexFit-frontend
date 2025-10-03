@@ -27,28 +27,28 @@ export class NotificationService {
   constructor(private http: HttpClient, private socketService: SocketService) {}
 
   connect(userId: string) {
-this.socketService.connect(this.namespace, userId, environment.api);
-  this.socketService.emit(this.namespace, 'joinRoom', userId);
-  
-  this.socketService
-    .on<Notification>(this.namespace, 'newNotification')
-    .subscribe((notification) => {
-      const current = this.notifications$.value;
-      const exists = current.some((n) => n._id === notification._id);
-      
-      if (!exists) {
-        this.notifications$.next([notification, ...current]); 
-      }
-    });
+    this.socketService.connect(this.namespace, userId, environment.api);
+    this.socketService.emit(this.namespace, 'joinRoom', userId);
+
+    this.socketService
+      .on<Notification>(this.namespace, 'newNotification')
+      .subscribe((notification) => {
+        const current = this.notifications$.value;
+        const exists = current.some((n) => n._id === notification._id);
+
+        if (!exists) {
+          this.notifications$.next([notification, ...current]);
+        }
+      });
   }
 
   loadInitialNotifications(): Observable<Notification[]> {
+    console.log('hai');
     return this.http.get<Notification[]>(`${this.api}`);
   }
-deleteNotification(id: string): Observable<Notification>{
-return this.http.delete<Notification>(`${this.api}/${id}`)
-}
-
+  deleteNotification(id: string): Observable<Notification> {
+    return this.http.delete<Notification>(`${this.api}/${id}`);
+  }
 
   setInitialNotifications(list: Notification[]) {
     this.notifications$.next(list);
@@ -63,6 +63,7 @@ return this.http.delete<Notification>(`${this.api}/${id}`)
   }
 
   getNotifications(): Observable<Notification[]> {
+    console.log('getNotification');
     return this.http.get<Notification[]>(`${this.api}`);
   }
 

@@ -40,7 +40,7 @@ export class NotificationComponent implements OnInit {
       .pipe(take(1))
       .subscribe((userId) => {
         this.userId = userId;
-
+        console.log('userId', userId)
         if (this.userId) {
           this.notificationService.connect(this.userId);
 
@@ -61,6 +61,7 @@ export class NotificationComponent implements OnInit {
   }
 
   loadNotifications() {
+    console.log('loading notification')
     this.loading = true;
     this.notificationService.getNotifications().subscribe({
       next: (res) => {

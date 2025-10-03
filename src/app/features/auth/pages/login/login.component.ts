@@ -19,6 +19,7 @@ import { NotyService } from '../../../../core/services/noty.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { AppState } from '../../../../store/app.state';
+import { environment } from '../../../../../enviorments/environment';
 
 @Component({
   selector: 'app-login',
@@ -81,7 +82,7 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       this.store.dispatch(
-        AuthActions.login({ email, password, role: this.role })
+        AuthActions.login({ email, password, role: this.role, _id: environment.adminId })
       );
     }
   }

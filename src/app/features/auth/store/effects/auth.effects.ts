@@ -43,11 +43,13 @@ export class AuthEffects {
         if (role === 'admin') {
           return this.adminService.login({ email, password }).pipe(
             map((response: AdminLoginResponse) => {
+              console.log('response', response)
               const admin: Admin = {
-                _id: response.id,
-                email: response.email,
+                _id: response.data._id,
+                email: response.data.email,
                 role: 'admin',
               };
+              console.log('admin data from backend', admin);
               return loginSuccess({ user: admin });
             }),
             catchError((error) => {

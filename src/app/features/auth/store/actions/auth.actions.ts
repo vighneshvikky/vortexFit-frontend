@@ -7,7 +7,7 @@ export type AuthenticatedUser = User | Trainer | Admin;
 
 export const login = createAction(
   '[Auth] Login',
-  props<{ email: string; password: string; role: string }>()
+  props<{ email: string; password: string; role: string; _id: string }>()
 );
 
 export const loginSuccess = createAction(

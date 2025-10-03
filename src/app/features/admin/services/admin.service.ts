@@ -5,6 +5,7 @@ import { environment } from '../../../../enviorments/environment';
 import { GetUsersQuery } from '../../../shared/components/admin/sidebar/sidebar.component';
 import { Trainer } from '../../trainer/models/trainer.interface';
 import { API_ROUTES } from '../../../app.routes.constants';
+import { Admin } from '../models/admin.interface';
 
 export interface AdminLoginRequest {
   email: string;
@@ -12,9 +13,7 @@ export interface AdminLoginRequest {
 }
 
 export interface AdminLoginResponse {
-  id: string;
-  email: string;
-  name: string;
+data: Admin
 }
 
 export interface User {
