@@ -34,6 +34,7 @@
 
       provideEffects([AuthEffects, UsersEffects]),
       provideAnimations(),
+      
       {
         provide: HTTP_INTERCEPTORS,
         useClass: AuthInterceptor,

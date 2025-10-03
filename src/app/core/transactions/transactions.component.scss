@@ -1,460 +1,901 @@
-// Modern Professional Transactions Styles
-$primary-blue: #3B82F6;
-$primary-indigo: #6366F1;
-$success-green: #10B981;
-$warning-amber: #F59E0B;
-$error-red: #EF4444;
-$dark-bg: #0F172A;
-$dark-card: #1E293B;
-$dark-border: #334155;
-$text-primary: #F1F5F9;
-$text-secondary: #94A3B8;
-$text-muted: #64748B;
+// Base variables
+$transition: all 0.3s ease;
+$border-radius: 12px;
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+$shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
 
+// User Theme (Blue/Orange)
+$user-primary: #3b82f6;
+$user-primary-dark: #2563eb;
+$user-primary-light: #60a5fa;
+$user-accent: #f97316;
+$user-accent-dark: #ea580c;
+$user-bg: #000000;
+$user-bg-secondary: #111827;
+$user-bg-card: #1f2937;
+$user-border: #374151;
+$user-text: #ffffff;
+$user-text-secondary: #9ca3af;
+$user-text-muted: #6b7280;
+
+// Trainer Theme (Reddish)
+$trainer-primary: #ef4444;
+$trainer-primary-dark: #dc2626;
+$trainer-primary-light: #f87171;
+$trainer-accent: #f59e0b;
+$trainer-accent-dark: #d97706;
+$trainer-bg: #0f0a0a;
+$trainer-bg-secondary: #1a1111;
+$trainer-bg-card: #2d1818;
+$trainer-border: #4a2525;
+$trainer-text: #ffffff;
+$trainer-text-secondary: #d1a9a9;
+$trainer-text-muted: #9f7a7a;
+
+// Admin Theme (Dark)
+$admin-primary: #8b5cf6;
+$admin-primary-dark: #7c3aed;
+$admin-primary-light: #a78bfa;
+$admin-accent: #06b6d4;
+$admin-accent-dark: #0891b2;
+$admin-bg: #030712;
+$admin-bg-secondary: #0f172a;
+$admin-bg-card: #1e293b;
+$admin-border: #334155;
+$admin-text: #ffffff;
+$admin-text-secondary: #cbd5e1;
+$admin-text-muted: #94a3b8;
+
+// Mixins
+@mixin theme-colors(
+  $primary,
+  $primary-dark,
+  $primary-light,
+  $accent,
+  $accent-dark,
+  $bg,
+  $bg-secondary,
+  $bg-card,
+  $border,
+  $text,
+  $text-secondary,
+  $text-muted
+) {
+  background: $bg;
+  color: $text;
+
+  .wallet-card,
+  .revenue-card,
+  .filters-section,
+  .table-wrapper {
+    background: $bg-card;
+    border: 1px solid $border;
+  }
+
+  .wallet-card {
+    .wallet-icon {
+      background: linear-gradient(135deg, $primary, $primary-dark);
+    }
+    .balance-amount {
+      color: $primary-light;
+    }
+    .refresh-btn:hover {
+      background: $primary;
+    }
+  }
+
+  .revenue-header h2 {
+    color: $text;
+  }
+
+  .period-selector button {
+    color: $text-secondary;
+    border: 1px solid $border;
+
+    &.active {
+      background: $primary;
+      color: $text;
+      border-color: $primary;
+    }
+
+    &:hover:not(.active) {
+      background: $bg-secondary;
+      border-color: $primary-light;
+    }
+  }
+
+  .revenue-card {
+    &.total .card-icon {
+      background: linear-gradient(135deg, $primary, $primary-dark);
+    }
+    &.count .card-icon {
+      background: linear-gradient(135deg, $accent, $accent-dark);
+    }
+    &.average .card-icon {
+      background: linear-gradient(135deg, $primary-light, $primary);
+    }
+
+    .card-label {
+      color: $text-muted;
+    }
+    .card-value {
+      color: $text;
+    }
+  }
+
+  .breakdown-item {
+    background: $bg-secondary;
+    border-left: 3px solid $primary;
+
+    &:hover {
+      background: $bg-card;
+      border-left-color: $accent;
+    }
+  }
+
+  .filters-header h3 {
+    color: $text;
+  }
+
+  .reset-btn,
+  .export-btn,
+  .retry-btn {
+    background: $primary;
+    color: $text;
+
+    &:hover {
+      background: $primary-dark;
+    }
+  }
+
+  .filter-input,
+  .filter-select {
+    background: $bg-secondary;
+    border: 1px solid $border;
+    color: $text;
+
+    &:focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba($primary, 0.1);
+    }
+
+    &::placeholder {
+      color: $text-muted;
+    }
+  }
+
+  .table-header h3 {
+    color: $text;
+  }
+
+  .table-count {
+    color: $text-muted;
+  }
+
+  .transactions-table {
+    thead {
+      background: $bg-secondary;
+      th {
+        color: $text-secondary;
+        border-bottom: 2px solid $border;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid $border;
+
+        &:hover {
+          background: $bg-secondary;
+        }
+      }
+
+      td {
+        color: $text;
+      }
+    }
+  }
+
+  .user-avatar {
+    background: linear-gradient(135deg, $primary, $primary-dark);
+    color: $text;
+  }
+
+  .transaction-type {
+    &.booking {
+      background: rgba($primary, 0.15);
+      color: $primary-light;
+      border: 1px solid rgba($primary, 0.3);
+    }
+
+    &.subscription {
+      background: rgba($accent, 0.15);
+      color: $accent;
+      border: 1px solid rgba($accent, 0.3);
+    }
+  }
+
+  .amount {
+    &.positive {
+      color: #10b981;
+    }
+    &.negative {
+      color: #ef4444;
+    }
+  }
+
+  .status-badge {
+    &.completed {
+      background: rgba(#10b981, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(#10b981, 0.3);
+    }
+
+    &.pending {
+      background: rgba($accent, 0.15);
+      color: $accent;
+      border: 1px solid rgba($accent, 0.3);
+    }
+  }
+
+  .pagination-btn {
+    background: $bg-card;
+    border: 1px solid $border;
+    color: $text-secondary;
+
+    &:hover:not(:disabled) {
+      background: $primary;
+      border-color: $primary;
+      color: $text;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  .pagination-number {
+    background: $bg-card;
+    border: 1px solid $border;
+    color: $text-secondary;
+
+    &.active {
+      background: $primary;
+      border-color: $primary;
+      color: $text;
+    }
+
+    &:hover:not(.active) {
+      background: $bg-secondary;
+      border-color: $primary-light;
+    }
+  }
+
+  .loading-spinner {
+    border: 4px solid $border;
+    border-top-color: $primary;
+  }
+
+  .empty-icon,
+  .error-icon {
+    background: $bg-card;
+    border: 2px solid $border;
+  }
+}
+
+// Base container styles
 .transactions-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, $dark-bg 0%, #1a1f35 100%);
-  padding: 2rem 1.5rem;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
 
-  // Wallet Balance Section
-  .wallet-balance-section {
-    margin-bottom: 2rem;
-    
-    .wallet-card {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(99, 102, 241, 0.2);
-      border-radius: 1rem;
-      padding: 2rem;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-      position: relative;
-      overflow: hidden;
-      
-      &::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
-        animation: pulse 3s ease-in-out infinite;
-      }
-      
-      .wallet-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: relative;
-        z-index: 1;
-        
-        h3 {
-          font-size: 1.25rem;
-          font-weight: 600;
-          color: $text-primary;
-          margin: 0;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-        
-        .refresh-icon {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 0.75rem 1.5rem;
-          background: linear-gradient(135deg, $primary-indigo, $primary-blue);
-          color: white;
-          border-radius: 0.75rem;
-          font-weight: 600;
-          font-size: 1.125rem;
-          box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-          transition: all 0.3s ease;
-          cursor: pointer;
-          
-          &:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-          }
-        }
-      }
-    }
+  // Apply themes based on role
+  &[data-role='user'] {
+    @include theme-colors(
+      $user-primary,
+      $user-primary-dark,
+      $user-primary-light,
+      $user-accent,
+      $user-accent-dark,
+      $user-bg,
+      $user-bg-secondary,
+      $user-bg-card,
+      $user-border,
+      $user-text,
+      $user-text-secondary,
+      $user-text-muted
+    );
   }
 
-  // Loading State
-  .loading-container {
+  &[data-role='trainer'] {
+    @include theme-colors(
+      $trainer-primary,
+      $trainer-primary-dark,
+      $trainer-primary-light,
+      $trainer-accent,
+      $trainer-accent-dark,
+      $trainer-bg,
+      $trainer-bg-secondary,
+      $trainer-bg-card,
+      $trainer-border,
+      $trainer-text,
+      $trainer-text-secondary,
+      $trainer-text-muted
+    );
+  }
+
+  &[data-role='admin'] {
+    @include theme-colors(
+      $admin-primary,
+      $admin-primary-dark,
+      $admin-primary-light,
+      $admin-accent,
+      $admin-accent-dark,
+      $admin-bg,
+      $admin-bg-secondary,
+      $admin-bg-card,
+      $admin-border,
+      $admin-text,
+      $admin-text-secondary,
+      $admin-text-muted
+    );
+  }
+}
+
+// Wallet Balance Section
+.wallet-balance-section {
+  margin-bottom: 2rem;
+}
+
+.wallet-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  border-radius: $border-radius;
+  box-shadow: $shadow-md;
+  transition: $transition;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+  }
+
+  .wallet-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 4rem 2rem;
-    
-    .loading-spinner {
-      width: 3rem;
-      height: 3rem;
-      border: 3px solid rgba(99, 102, 241, 0.2);
-      border-top-color: $primary-indigo;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 1.5rem;
-    }
-    
-    p {
-      color: $text-secondary;
-      font-size: 1rem;
-      font-weight: 500;
-    }
+    font-size: 2rem;
+    flex-shrink: 0;
   }
 
-  // Empty State
-  .empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: rgba(30, 41, 59, 0.6);
-    backdrop-filter: blur(10px);
-    border-radius: 1rem;
-    border: 1px solid $dark-border;
-    
-    .empty-icon {
-      font-size: 4rem;
-      margin-bottom: 1.5rem;
-      opacity: 0.6;
-    }
-    
+  .wallet-content {
+    flex: 1;
+
     h3 {
-      color: $text-primary;
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-    }
-    
-    p {
-      color: $text-secondary;
+      margin: 0 0 0.5rem 0;
       font-size: 1rem;
-    }
-  }
-
-  // Transactions Table Container
-  .transactions-table-container {
-    .table-wrapper {
-      background: rgba(30, 41, 59, 0.6);
-      backdrop-filter: blur(10px);
-      border-radius: 1rem;
-      overflow: hidden;
-      border: 1px solid $dark-border;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-      
-      .transactions-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        
-        thead {
-          background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
-          
-          th {
-            padding: 1.25rem 1.5rem;
-            text-align: left;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: $text-primary;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-bottom: 1px solid $dark-border;
-            white-space: nowrap;
-            
-            &:first-child {
-              border-top-left-radius: 1rem;
-            }
-            
-            &:last-child {
-              border-top-right-radius: 1rem;
-            }
-          }
-        }
-        
-        tbody {
-          .transaction-row {
-            transition: all 0.2s ease;
-            
-            &:hover {
-              background: rgba(99, 102, 241, 0.05);
-            }
-            
-            &:not(:last-child) td {
-              border-bottom: 1px solid rgba(51, 65, 85, 0.5);
-            }
-            
-            td {
-              padding: 1.25rem 1.5rem;
-              font-size: 0.875rem;
-              color: $text-secondary;
-              vertical-align: middle;
-              
-              &.date-cell {
-                color: $text-muted;
-                font-size: 0.8125rem;
-              }
-              
-              &.payment-id-cell {
-                .payment-id {
-                  color: $text-primary;
-                  font-weight: 500;
-                }
-              }
-              
-              &.order-id-cell {
-                .order-id {
-                  display: inline-flex;
-                  padding: 0.375rem 0.75rem;
-                  background: rgba(99, 102, 241, 0.1);
-                  border: 1px solid rgba(99, 102, 241, 0.2);
-                  border-radius: 0.5rem;
-                  font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
-                  font-size: 0.75rem;
-                  color: $primary-indigo;
-                  font-weight: 500;
-                }
-              }
-              
-              &.type-cell {
-                .transaction-type {
-                  display: inline-flex;
-                  padding: 0.375rem 1rem;
-                  border-radius: 9999px;
-                  font-size: 0.75rem;
-                  font-weight: 600;
-                  text-transform: uppercase;
-                  letter-spacing: 0.025em;
-                  
-                  &.booking {
-                    background: rgba(59, 130, 246, 0.15);
-                    color: #60A5FA;
-                    border: 1px solid rgba(59, 130, 246, 0.3);
-                  }
-                  
-                  &.subscription {
-                    background: rgba(245, 158, 11, 0.15);
-                    color: #FBBF24;
-                    border: 1px solid rgba(245, 158, 11, 0.3);
-                  }
-                }
-              }
-              
-              &.amount-cell {
-                .amount {
-                  font-weight: 700;
-                  font-size: 1rem;
-                  
-                  &.positive {
-                    color: $success-green;
-                  }
-                }
-              }
-              
-              &.status-cell {
-                .status-badge {
-                  display: inline-flex;
-                  align-items: center;
-                  gap: 0.375rem;
-                  padding: 0.375rem 1rem;
-                  border-radius: 9999px;
-                  font-size: 0.75rem;
-                  font-weight: 600;
-                  
-                  &::before {
-                    content: '';
-                    width: 6px;
-                    height: 6px;
-                    border-radius: 50%;
-                  }
-                  
-                  &.completed {
-                    background: rgba(16, 185, 129, 0.15);
-                    color: $success-green;
-                    border: 1px solid rgba(16, 185, 129, 0.3);
-                    
-                    &::before {
-                      background: $success-green;
-                      box-shadow: 0 0 6px $success-green;
-                    }
-                  }
-                  
-                  &.pending {
-                    background: rgba(245, 158, 11, 0.15);
-                    color: $warning-amber;
-                    border: 1px solid rgba(245, 158, 11, 0.3);
-                    
-                    &::before {
-                      background: $warning-amber;
-                      box-shadow: 0 0 6px $warning-amber;
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // Pagination
-  .pagination-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 1.5rem;
-    padding: 1rem 1.5rem;
-    background: rgba(30, 41, 59, 0.6);
-    backdrop-filter: blur(10px);
-    border-radius: 0.75rem;
-    border: 1px solid $dark-border;
-    
-    .pagination-info {
-      font-size: 0.875rem;
-      color: $text-secondary;
       font-weight: 500;
+      opacity: 0.8;
     }
-    
-    .pagination-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      
-      .page-numbers {
-        display: flex;
-        gap: 0.375rem;
-        
-        .page-btn {
-          min-width: 2.5rem;
-          height: 2.5rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 0.5rem;
-          font-size: 0.875rem;
-          font-weight: 500;
-          color: $text-secondary;
-          background: rgba(30, 41, 59, 0.6);
-          border: 1px solid $dark-border;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          
-          &:hover:not(.active):not(:disabled) {
-            background: rgba(99, 102, 241, 0.1);
-            border-color: rgba(99, 102, 241, 0.3);
-            color: $text-primary;
-          }
-          
-          &.active {
-            background: linear-gradient(135deg, $primary-indigo, $primary-blue);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
-          }
-          
-          &:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-          }
-        }
-      }
-      
-      .btn {
-        padding: 0.625rem 1.25rem;
-        border-radius: 0.5rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        border: 1px solid $dark-border;
-        background: rgba(30, 41, 59, 0.6);
-        color: $text-secondary;
-        
-        &:hover:not(:disabled) {
-          background: rgba(99, 102, 241, 0.1);
-          border-color: rgba(99, 102, 241, 0.3);
-          color: $text-primary;
-        }
-        
-        &:disabled {
-          opacity: 0.4;
-          cursor: not-allowed;
-        }
-      }
+
+    .balance-amount {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
     }
   }
 
-  // Animations
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-  
-  @keyframes pulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 0.8; }
-  }
+  .refresh-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: $transition;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
 
-  // Responsive Design
-  @media (max-width: 1024px) {
-    padding: 1.5rem 1rem;
-    
-    .wallet-balance-section .wallet-card {
-      padding: 1.5rem;
-      
-      .wallet-header {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: stretch;
-        
-        .refresh-icon {
-          justify-content: center;
-        }
-      }
+    &:active {
+      transform: rotate(180deg);
     }
   }
+}
 
-  @media (max-width: 768px) {
+// Revenue Section
+.revenue-section {
+  margin-bottom: 2rem;
+}
+
+.revenue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+}
+
+.period-selector {
+  display: flex;
+  gap: 0.5rem;
+
+  button {
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: $transition;
+    background: transparent;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.revenue-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.revenue-card {
+  padding: 1.5rem;
+  border-radius: $border-radius;
+  box-shadow: $shadow-sm;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  transition: $transition;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+
+  .card-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    flex-shrink: 0;
+  }
+
+  .card-content {
+    flex: 1;
+  }
+
+  .card-label {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .card-value {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+}
+
+.revenue-breakdown {
+  padding: 1.5rem;
+  border-radius: $border-radius;
+
+  h3 {
+    margin: 0 0 1.25rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+}
+
+.breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.breakdown-item {
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: $transition;
+  cursor: pointer;
+}
+
+.breakdown-period {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .period-label {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .period-count {
+    font-size: 0.875rem;
+    opacity: 0.7;
+  }
+}
+
+.breakdown-amount {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+// Filters Section
+.filters-section {
+  padding: 1.5rem;
+  border-radius: $border-radius;
+  margin-bottom: 2rem;
+  box-shadow: $shadow-sm;
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+}
+
+.reset-btn,
+.export-btn,
+.retry-btn {
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: $transition;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    opacity: 0.9;
+  }
+}
+
+.filter-input,
+.filter-select {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: $transition;
+  outline: none;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.filters-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+// Loading State
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+
+  p {
+    font-size: 1rem;
+    opacity: 0.8;
+  }
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Error State
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+  text-align: center;
+
+  .error-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  p {
+    margin: 0;
+    opacity: 0.8;
+  }
+}
+
+// Empty State
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+  text-align: center;
+
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  p {
+    margin: 0;
+    opacity: 0.8;
+  }
+}
+
+// Transactions Table
+.transactions-table-container {
+  margin-bottom: 2rem;
+}
+
+.table-wrapper {
+  border-radius: $border-radius;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid;
+
+  h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .table-count {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+}
+
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead th {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  tbody {
+    tr {
+      transition: $transition;
+    }
+
+    td {
+      padding: 1.25rem 1.5rem;
+      font-size: 0.9375rem;
+    }
+  }
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+.transaction-type,
+.status-badge {
+  display: inline-block;
+  padding: 0.375rem 0.875rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.amount {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+// Pagination
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-top: 1px solid;
+}
+
+.pagination-btn,
+.pagination-number {
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: $transition;
+}
+
+.pagination-numbers {
+  display: flex;
+  gap: 0.5rem;
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .transactions-container {
+    padding: 1.5rem;
+  }
+
+  .revenue-cards {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .filters-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .transactions-container {
     padding: 1rem;
-    
-    .transactions-table-container .table-wrapper {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      
-      .transactions-table {
-        min-width: 800px;
-        
-        thead th,
-        tbody td {
-          padding: 1rem;
-          font-size: 0.8125rem;
-          
-          &:first-child {
-            position: sticky;
-            left: 0;
-            background: inherit;
-            z-index: 1;
-          }
-        }
-      }
+  }
+
+  .revenue-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .revenue-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  .transactions-table {
+    min-width: 800px;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .wallet-card {
+    flex-direction: column;
+    text-align: center;
+
+    .wallet-content .balance-amount {
+      font-size: 1.75rem;
     }
-    
-    .pagination-container {
-      flex-direction: column;
-      gap: 1rem;
-      
-      .pagination-controls {
-        width: 100%;
-        justify-content: center;
-        
-        .page-numbers {
-          flex-wrap: wrap;
-          justify-content: center;
-        }
-      }
-    }
+  }
+
+  .revenue-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .breakdown-item {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
   }
 }

@@ -15,6 +15,7 @@ import { PlanComponent } from '../../core/plan/plan.component';
 import { TransactionsComponent } from '../../core/transactions/transactions.component';
 import { NotificationComponent } from '../../core/notification/notification.component';
 import { AiChatComponent } from './pages/ai-chat/ai-chat.component';
+import { UserProfileDashboardComponent } from './pages/user-profile-dashboard/user-profile-dashboard.component';
 
 export const userRoutes: Routes = [
   {
@@ -49,6 +50,10 @@ export const userRoutes: Routes = [
             path: 'ask-ai',
             component: AiChatComponent,
           },
+          {
+            path:'statistics',
+            component: UserProfileDashboardComponent
+          }
         ],
       },
 

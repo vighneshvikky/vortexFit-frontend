@@ -37,8 +37,8 @@ export class UserSpecificLayoutComponent {
     {
       icon: 'fas fa-tachometer-alt',
       label: 'Dashboard',
-      route: '/user/dashboard',
-    },
+      route: '/user/statistics',
+    },  
     {
       icon: 'fas fa-calendar-check',
       label: 'My Sessions',
@@ -51,16 +51,16 @@ export class UserSpecificLayoutComponent {
       label: 'Transactions',
       route: '/user/transactions',
     },
-        {
-      icon:  'fas fa-bell',
+    {
+      icon: 'fas fa-bell',
       label: 'Notifications',
       route: '/user/notifications',
     },
     {
-          icon:  'fas fa-robot',
+      icon: 'fas fa-robot',
       label: 'Ai-Assistant',
       route: '/user/ask-ai',
-    }
+    },
   ];
 
   // User statistics (you can fetch this from your store/service)

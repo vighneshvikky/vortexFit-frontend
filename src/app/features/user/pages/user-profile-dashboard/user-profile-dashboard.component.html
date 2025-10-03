@@ -1,0 +1,147 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1>My Dashboard</h1>
+    <p class="subtitle">Welcome back! Here's your fitness overview</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading your dashboard...</p>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!loading && stats" class="dashboard-content">
+    
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon blue">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Total Bookings</p>
+          <h3 class="stat-value">{{ stats.totalBookings }}</h3>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon orange">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Upcoming Sessions</p>
+          <h3 class="stat-value">{{ stats.upcomingBookings }}</h3>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon blue">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Completed</p>
+          <h3 class="stat-value">{{ stats.completedBookings }}</h3>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon orange">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Wallet Balance</p>
+          <h3 class="stat-value">₹{{ stats.walletBalance }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="content-grid">
+      
+      <!-- Spending Summary -->
+      <div class="card spending-card">
+        <h2 class="card-title">Spending Summary</h2>
+        <div class="chart-container">
+          <canvas id="spendingChart"></canvas>
+        </div>
+        <div *ngIf="spendingSummary" class="spending-details">
+          <div class="spending-item">
+            <span class="spending-label">Total Spent</span>
+            <span class="spending-value total">₹{{ spendingSummary.totalSpent }}</span>
+          </div>
+          <div class="spending-breakdown">
+            <div class="breakdown-item">
+              <span class="dot blue"></span>
+              <span>Bookings: ₹{{ spendingSummary.bookingSpent }}</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="dot orange"></span>
+              <span>Subscriptions: ₹{{ spendingSummary.subscriptionSpent }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Bookings -->
+      <div class="card bookings-card">
+        <h2 class="card-title">Recent Bookings</h2>
+        <div class="bookings-list">
+          <div *ngFor="let booking of recentBookings" class="booking-item">
+            <div class="booking-info">
+              <!-- <p class="booking-trainer">{{ booking.trainerId?.name }}</p> -->
+              <p class="booking-date">{{ formatDate(booking.date) }} • {{ booking.timeSlot }}</p>
+            </div>
+            <div class="booking-meta">
+              <span [class]="'status-badge ' + getStatusClass(booking.status)">
+                {{ booking.status }}
+              </span>
+              <span class="booking-amount">₹{{ booking.amount }}</span>
+            </div>
+          </div>
+          <!-- <div *ngIf="recentBookings.length === 0" class="empty-state">
+            <p>No bookings yet</p>
+          </div> -->
+        </div>
+      </div>
+
+      <!-- Recent Transactions -->
+      <div class="card transactions-card">
+        <h2 class="card-title">Recent Transactions</h2>
+        <div class="transactions-list">
+          <div *ngFor="let transaction of recentTransactions" class="transaction-item">
+            <div class="transaction-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+            </div>
+            <div class="transaction-info">
+              <p class="transaction-type">{{ transaction.sourceType }}</p>
+              <p class="transaction-date">{{ formatDate(transaction.createdAt) }}</p>
+            </div>
+            <span class="transaction-amount">₹{{ transaction.amount }}</span>
+          </div>
+          <!-- <div *ngIf="recentTransactions.length === 0" class="empty-state">
+            <p>No transactions yet</p>
+          </div> -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

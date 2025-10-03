@@ -1,5 +1,148 @@
+<div class="trainer-dashboard">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading dashboard...</p>
+  </div>
 
-    <div class="p-8">
-      <h2 class="text-2xl font-bold mb-6">Trainer Dashboard</h2>
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <p>{{ error }}</p>
+    <button class="retry-button" (click)="loadDashboardData()">Retry</button>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!loading && !error" class="dashboard-content">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <h1>Trainer Dashboard</h1>
+      <p class="subtitle">Welcome back! Here's your performance overview</p>
     </div>
 
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon booking-icon">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Total Bookings</p>
+          <h2 class="stat-value">{{ stats?.totalBookings || 0 }}</h2>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon revenue-icon">
+          <i class="fas fa-rupee-sign"></i>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Total Revenue</p>
+          <h2 class="stat-value">{{ formatCurrency(stats?.totalRevenue || 0) }}</h2>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon subscription-icon">
+          <i class="fas fa-crown"></i>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Active Subscriptions</p>
+          <h2 class="stat-value">{{ stats?.activeSubscriptions || 0 }}</h2>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon pending-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Pending Bookings</p>
+          <h2 class="stat-value">{{ stats?.pendingBookings || 0 }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-grid">
+      <!-- Revenue Breakdown Pie Chart -->
+      <div class="chart-card">
+        <h3 class="chart-title">Revenue Breakdown</h3>
+        <div class="chart-container">
+          <canvas 
+            baseChart
+            [type]="'pie'"
+            [data]="revenueChartData"
+            [options]="pieChartOptions">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Booking Status Pie Chart -->
+      <div class="chart-card">
+        <h3 class="chart-title">Booking Status</h3>
+        <div class="chart-container">
+          <canvas 
+            baseChart
+            [type]="'pie'"
+            [data]="bookingStatusChartData"
+            [options]="pieChartOptions">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monthly Revenue Chart -->
+    <div class="chart-card full-width">
+      <h3 class="chart-title">Monthly Revenue Trend</h3>
+      <div class="chart-container-large">
+        <canvas 
+          baseChart
+          [type]="'line'"
+          [data]="monthlyRevenueChartData"
+          [options]="lineChartOptions">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Recent Bookings Table -->
+    <div class="table-card">
+      <h3 class="table-title">Recent Bookings</h3>
+      <div class="table-container">
+        <table class="bookings-table">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Date</th>
+              <th>Time Slot</th>
+              <th>Session Type</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let booking of recentBookings">
+              <td>
+                <div class="client-info">
+                  <strong>{{ booking.userId.name }}</strong>
+                  <small>{{ booking.userId.email }}</small>
+                </div>
+              </td>
+              <td>{{ booking.date | date: 'MMM dd, yyyy' }}</td>
+              <td>{{ booking.timeSlot }}</td>
+              <td>{{ booking.sessionType || 'N/A' }}</td>
+              <td class="amount">{{ formatCurrency(booking.amount) }}</td>
+              <td>
+                <span [class]="'status-badge ' + getStatusClass(booking.status)">
+                  {{ booking.status }}
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="recentBookings.length === 0">
+              <td colspan="6" class="no-data">No bookings found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

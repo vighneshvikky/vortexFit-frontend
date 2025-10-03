@@ -1,0 +1,408 @@
+.dashboard-container {
+  min-height: 100vh;
+  background: #000000;
+  padding: 2rem;
+  color: #ffffff;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: #ffffff;
+}
+
+.subtitle {
+  color: #9ca3af;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: #9ca3af;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #1f2937;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: #111827;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #1f2937;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+}
+
+.stat-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon.blue {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.stat-icon.orange {
+  background: rgba(249, 115, 22, 0.15);
+  color: #f97316;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-label {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  margin: 0 0 0.25rem 0;
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+}
+
+/* Content Grid */
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: #111827;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #1f2937;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+  color: #ffffff;
+}
+
+/* Spending Card */
+.spending-card {
+  grid-column: span 1;
+}
+
+.chart-container {
+  height: 280px;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.spending-details {
+  border-top: 1px solid #1f2937;
+  padding-top: 1.5rem;
+}
+
+.spending-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.spending-label {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.spending-value.total {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+.spending-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.breakdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #e5e7eb;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.dot.blue {
+  background: #3b82f6;
+}
+
+.dot.orange {
+  background: #f97316;
+}
+
+/* Bookings Card */
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.booking-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #1f2937;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.booking-item:hover {
+  background: #374151;
+}
+
+.booking-info {
+  flex: 1;
+}
+
+.booking-trainer {
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 0.25rem 0;
+}
+
+.booking-date {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.booking-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-pending {
+  background: rgba(249, 115, 22, 0.15);
+  color: #f97316;
+}
+
+.status-confirmed {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.status-completed {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.status-cancelled {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.booking-amount {
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+/* Transactions Card */
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.transactions-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.transactions-list::-webkit-scrollbar-track {
+  background: #1f2937;
+  border-radius: 3px;
+}
+
+.transactions-list::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 3px;
+}
+
+.transactions-list::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+.transaction-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #1f2937;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.transaction-item:hover {
+  background: #374151;
+}
+
+.transaction-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(249, 115, 22, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f97316;
+  flex-shrink: 0;
+}
+
+.transaction-info {
+  flex: 1;
+}
+
+.transaction-type {
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 0.25rem 0;
+  text-transform: capitalize;
+}
+
+.transaction-date {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.transaction-amount {
+  font-weight: 700;
+  color: #ef4444;
+  font-size: 1rem;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #9ca3af;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .booking-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .booking-meta {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+  }
+}

@@ -97,5 +97,8 @@ PAY: '/pay'
   AI:{
     BASE: '/ai/chat',
   
+  },
+  ADMIN_DASHBOARD:{
+    BASE: '/adminDashboard'
   }
 };

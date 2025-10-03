@@ -1,17 +1,176 @@
-
-
-
-<div class="transactions-container">
-
-  <div class="wallet-balance-section" *ngIf="role === 
-  'user'">
+<div class="transactions-container" [attr.data-role]="role">
+  <!-- Wallet Balance for Users -->
+  <div class="wallet-balance-section" *ngIf="role === Role.User">
     <div class="wallet-card">
-      <div class="wallet-header">
-        <h3>💰 Wallet Balance</h3>
-        
-          <span class="refresh-icon">🔄 {{balance }}</span>
-     
+      <div class="wallet-icon">💰</div>
+      <div class="wallet-content">
+        <h3>Wallet Balance</h3>
+        <p class="balance-amount">{{ formatCurrency(balance) }}</p>
       </div>
+      <button class="refresh-btn" (click)="loadWalletBalance()">
+        <span>🔄</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Revenue Analytics for Admin/Trainer -->
+  <div class="revenue-section" *ngIf="canShowRevenue() && !loading">
+    <div class="revenue-header">
+      <h2>Revenue Analytics</h2>
+      <div class="period-selector">
+        <button
+          [class.active]="selectedPeriod === 'day'"
+          (click)="selectedPeriod = 'day'; onPeriodChange()"
+        >
+          Daily
+        </button>
+        <button
+          [class.active]="selectedPeriod === 'week'"
+          (click)="selectedPeriod = 'week'; onPeriodChange()"
+        >
+          Weekly
+        </button>
+        <button
+          [class.active]="selectedPeriod === 'month'"
+          (click)="selectedPeriod = 'month'; onPeriodChange()"
+        >
+          Monthly
+        </button>
+      </div>
+    </div>
+
+    <div class="revenue-cards">
+      <div class="revenue-card total">
+        <div class="card-icon">💵</div>
+        <div class="card-content">
+          <p class="card-label">Total Revenue</p>
+          <h3 class="card-value">{{ formatCurrency(summary.totalEarnings) }}</h3>
+        </div>
+      </div>
+      <div class="revenue-card count">
+        <div class="card-icon">📊</div>
+        <div class="card-content">
+          <p class="card-label">Total Transactions</p>
+          <h3 class="card-value">{{ summary.transactionCount }}</h3>
+        </div>
+      </div>
+      <div class="revenue-card average">
+        <div class="card-icon">📈</div>
+        <div class="card-content">
+          <p class="card-label">Average Transaction</p>
+          <h3 class="card-value">
+            {{
+              formatCurrency(
+                summary.transactionCount > 0
+                  ? summary.totalEarnings / summary.transactionCount
+                  : 0
+              )
+            }}
+          </h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="revenue-breakdown" *ngIf="revenueByPeriod.length > 0">
+      <h3>Revenue Breakdown</h3>
+      <div class="breakdown-list">
+        <div
+          class="breakdown-item"
+          *ngFor="let item of revenueByPeriod"
+        >
+          <div class="breakdown-period">
+            <span class="period-label">{{ item.period }}</span>
+            <span class="period-count">{{ item.count }} transactions</span>
+          </div>
+          <div class="breakdown-amount">
+            {{ formatCurrency(item.amount) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section" *ngIf="showFilters && !loading">
+    <div class="filters-header">
+      <h3>Filters</h3>
+      <button class="reset-btn" (click)="resetFilters()">Reset</button>
+    </div>
+
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label>Search</label>
+        <input
+          type="text"
+          [(ngModel)]="filterForm.searchTerm"
+          (ngModelChange)="onLocalFilterChange()"
+          placeholder="Search by name, type..."
+          class="filter-input"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label>Type</label>
+        <select
+          [(ngModel)]="filterForm.sourceType"
+          (ngModelChange)="onFilterChange()"
+          class="filter-select"
+        >
+          <option value="ALL">All Types</option>
+          <option value="BOOKING">Booking</option>
+          <option value="SUBSCRIPTION">Subscription</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>From Date</label>
+        <input
+          type="date"
+          [(ngModel)]="filterForm.fromDate"
+          (ngModelChange)="onFilterChange()"
+          class="filter-input"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label>To Date</label>
+        <input
+          type="date"
+          [(ngModel)]="filterForm.toDate"
+          (ngModelChange)="onFilterChange()"
+          class="filter-input"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label>Sort By</label>
+        <select
+          [(ngModel)]="filterForm.sortBy"
+          (ngModelChange)="onLocalFilterChange()"
+          class="filter-select"
+        >
+          <option value="createdAt">Date</option>
+          <option value="amount">Amount</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Order</label>
+        <select
+          [(ngModel)]="filterForm.sortOrder"
+          (ngModelChange)="onLocalFilterChange()"
+          class="filter-select"
+        >
+          <option value="desc">Descending</option>
+          <option value="asc">Ascending</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="filters-actions">
+      <button class="export-btn" (click)="exportTransactions()">
+        📥 Export CSV
+      </button>
     </div>
   </div>
 
@@ -22,6 +181,12 @@
   </div>
 
   <!-- Error State -->
+  <!-- <div class="error-container" *ngIf="error && !loading">
+    <div class="error-icon">⚠️</div>
+    <h3>Error</h3>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="loadTransactions()">Retry</button>
+  </div> -->
 
   <!-- Transactions Table -->
   <div class="transactions-table-container" *ngIf="!loading && !error">
@@ -34,6 +199,13 @@
 
     <!-- Transactions Table -->
     <div class="table-wrapper" *ngIf="filteredTransactions.length > 0">
+      <div class="table-header">
+        <h3>Transactions</h3>
+        <span class="table-count"
+          >{{ filteredTransactions.length }} total</span
+        >
+      </div>
+
       <table class="transactions-table">
         <thead>
           <tr>
@@ -42,8 +214,6 @@
             <th>Payment Method</th>
             <th>Type</th>
             <th>Amount</th>
-            <!-- <th *ngIf="canViewAllTransactions()">From User</th>
-            <th *ngIf="canViewAllTransactions()">To User</th> -->
             <th>Status</th>
           </tr>
         </thead>
@@ -55,31 +225,39 @@
             <td class="date-cell">
               {{ formatDate(transaction.createdAt) }}
             </td>
-            <td class="payment-id-cell">
-              <span class="payment-id">{{ transaction.fromUser.name }}</span>
+            <td class="name-cell">
+              <div class="user-info">
+                <!-- <div class="user-avatar">
+                  {{ transaction.fromUser.name || "U" }}
+                </div> -->
+                <span class="user-name">{{
+                  transaction.fromUser.name || "Unknown"
+                }}</span>
+              </div>
             </td>
-            <td class="order-id-cell">
-              <span class="order-id">{{ transaction.bookingMethod }}</span>
+            <td class="payment-method-cell">
+              <span class="payment-method">{{
+                transaction.bookingMethod || "N/A"
+              }}</span>
             </td>
             <td class="type-cell">
               <span
                 class="transaction-type"
-                [class]="transaction.sourceType.toLowerCase()"
+                [class.booking]="transaction.sourceType === 'BOOKING'"
+                [class.subscription]="transaction.sourceType === 'SUBSCRIPTION'"
               >
                 {{ getTransactionTypeLabel(transaction.sourceType) }}
               </span>
             </td>
             <td class="amount-cell">
-              <span class="amount" [class.positive]="transaction.amount > 0">
+              <span
+                class="amount"
+                [class.positive]="transaction.amount > 0"
+                [class.negative]="transaction.amount < 0"
+              >
                 {{ formatCurrency(transaction.amount, transaction.currency) }}
               </span>
             </td>
-            <!-- <td class="user-cell" *ngIf="canViewAllTransactions()">
-              {{ transaction.fromUser }}
-            </td>
-            <td class="user-cell" *ngIf="canViewAllTransactions()">
-              {{ transaction.toUser }}
-            </td> -->
             <td class="status-cell">
               <span
                 class="status-badge"
@@ -92,6 +270,36 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- Pagination -->
+      <div class="pagination" *ngIf="totalPages > 1">
+        <button
+          class="pagination-btn"
+          (click)="previousPage()"
+          [disabled]="currentPage === 1"
+        >
+          ‹ Previous
+        </button>
+
+        <div class="pagination-numbers">
+          <button
+            *ngFor="let page of getPageNumbers()"
+            class="pagination-number"
+            [class.active]="page === currentPage"
+            (click)="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+        </div>
+
+        <button
+          class="pagination-btn"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+        >
+          Next ›
+        </button>
+      </div>
     </div>
   </div>
 </div>
