@@ -37,4 +37,8 @@ updatePlan(planId: string, newPlan: Partial<SubscriptionPlan>): Observable<Subsc
 getUserSpecificPlans(){
     return this.http.get<SubscriptionPlan[]>(`${this.apiUrl}${API_ROUTES.PLANS.GET_USER_SPECIFIC_PLAN}`)
 }
+
+deletPlan(id: string){
+    return this.http.delete<SubscriptionPlan>(`${this.apiUrl}${API_ROUTES.PLANS.DELETE(id)}`)
+}
 }

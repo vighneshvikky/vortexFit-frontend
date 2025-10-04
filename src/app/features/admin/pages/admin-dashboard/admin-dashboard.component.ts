@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Chart, registerables } from 'chart.js';
-import { environment } from '../../../../../enviorments/environment';
 import { AdminDashboardService } from '../../services/adminDashboard.service';
 
 Chart.register(...registerables);

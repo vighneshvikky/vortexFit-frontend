@@ -125,7 +125,7 @@ export class AdminPlanComponent implements OnInit {
       this.validationErrors.name = 'Plan name must be less than 50 characters';
       isValid = false;
     } else {
-      const namePattern = /^[A-Z\s]+$/;
+      const namePattern = /^[A-Z\s_]+$/;
       if (!namePattern.test(this.newPlan.name.trim())) {
         this.validationErrors.name =
           'Plan name must contain only capital letters and spaces';
@@ -288,7 +288,13 @@ export class AdminPlanComponent implements OnInit {
 
   togglePlanStatus(plan: SubscriptionPlan): void {}
 
-  deletePlan(planId: string): void {}
+  deletePlan(planId: string): void {
+    this.adminPlanService.deletPlan(planId).subscribe((res) => {
+      if(res){
+        this.plans = this.plans.filter((plan) => plan._id !== planId)
+      }
+    })
+  }
 
   addFeature(): void {
     if (!this.newPlan.features) {

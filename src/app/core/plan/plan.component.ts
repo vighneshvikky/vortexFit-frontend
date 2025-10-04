@@ -118,11 +118,11 @@
       const rzp = new Razorpay(options);
 
 
-      // Handle payment failure
+   
       rzp.on('payment.failed', (response: any) => {
         console.error('Payment failed:', response);
         this.ngZone.run(() => {
-          // this.isProcessing = false;
+        
           this.notyf.showError(`Payment failed: ${response.error.description || 'Unknown error'}`);
         });
       });

@@ -33,14 +33,14 @@
       </div>
 
       <div class="plan-pricing">
-        <span class="price">${{ plan.price }}</span>
+        <span class="price"><i class="fas fa-rupee-sign"></i>{{ plan.price }}</span>
         <span class="billing-cycle">/ {{ plan.billingCycle }}</span>
       </div>
 
       <div class="plan-features">
         <h3>Features</h3>
         <ul>
-          <li *ngFor="let feature of plan.features" class="feature-item">
+          <li *ngFor="let feature of plan.features" class="feature-item">f
             <i class="icon-check">✓</i>
             {{ feature }}
           </li>
@@ -86,15 +86,6 @@
       </div>
 
       <div class="plan-actions">
-        <button class="btn-edit" (click)="openEditPlan(plan)">Edit</button>
-        <button
-          class="btn-toggle"
-          (click)="togglePlanStatus(plan)"
-          [class.deactivate]="plan.isActive"
-          [class.activate]="!plan.isActive"
-        >
-          {{ plan.isActive ? "Deactivate" : "Activate" }}
-        </button>
         <button class="btn-delete" (click)="deletePlan(plan._id)">
           Delete
         </button>

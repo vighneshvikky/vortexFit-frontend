@@ -4,7 +4,7 @@ import {
   Transaction,
   TransactionService,
 } from '../services/transaction.service';
-import { forkJoin, Subject, takeUntil } from 'rxjs';
+import {  Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { WalletService } from '../services/wallet.service';
 import { ActivatedRoute } from '@angular/router';
@@ -55,7 +55,6 @@ export class TransactionsComponent implements OnInit {
   currentPage = 1;
   totalPages = 1;
 
-  // Filter form values
   filterForm = {
     sourceType: 'ALL' as 'BOOKING' | 'SUBSCRIPTION' | 'ALL',
     fromDate: '',
@@ -65,7 +64,7 @@ export class TransactionsComponent implements OnInit {
     sortOrder: 'desc' as 'asc' | 'desc',
   };
 
-  // Revenue analytics
+
   revenueByPeriod: RevenueData[] = [];
   selectedPeriod: 'day' | 'week' | 'month' = 'month';
 

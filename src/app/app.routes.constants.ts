@@ -50,6 +50,7 @@ export const API_ROUTES = {
     },
     UPDATE: (planId: string) => `/${planId}`,
     GET_USER_SPECIFIC_PLAN: '/userPlan',
+    DELETE: (id: string) =>`/${id}`
   },
   CHAT: {
     BASE: '/chat',

@@ -1,391 +1,656 @@
-// pricing-plans.component.scss
-
+/* Admin Plan Container - Professional Dark Theme */
 .admin-plan-container {
-  @apply min-h-screen p-6;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  
+  background: #0a0e1a;
+  min-height: 100vh;
+  padding: 2rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #e2e8f0;
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #1e293b;
+}
+
+.header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.btn-add-plan {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-add-plan:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+.icon-plus {
+  font-size: 1.2rem;
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Plans Grid */
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Plan Card */
+.plan-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+  border-radius: 1rem;
+  padding: 1.75rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.plan-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+}
+
+.plan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  border-color: #475569;
+}
+
+.plan-card.inactive {
+  opacity: 0.6;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+.plan-card.inactive::before {
+  background: #64748b;
+}
+
+/* Plan Header */
+.plan-header {
+  margin-bottom: 1.5rem;
+}
+
+.plan-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  gap: 1rem;
+}
+
+.plan-name-role {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.plan-name-role h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.role-badge.user {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.role-badge.trainer {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.status-badge {
+  padding: 0.375rem 0.875rem;
+  border-radius: 0.375rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.active {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.status-badge.inactive {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.plan-description {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Pricing */
+.plan-pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid #334155;
+  margin-bottom: 1.5rem;
+}
+
+.price {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.price i {
+  font-size: 1.5rem;
+  font-style: normal;
+}
+
+.billing-cycle {
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+/* Features */
+.plan-features {
+  margin-bottom: 1.5rem;
+}
+
+.plan-features h3,
+.plan-limits h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 1rem 0;
+}
+
+.plan-features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.icon-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: bold;
+  font-style: normal;
+  flex-shrink: 0;
+}
+
+/* Limits */
+.plan-limits {
+  margin-bottom: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #334155;
+}
+
+.limits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.limit-item {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 0.875rem;
+  border-radius: 0.5rem;
+  border: 1px solid #334155;
+}
+
+.limit-label {
+  display: block;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  margin-bottom: 0.375rem;
+}
+
+.limit-value {
+  display: block;
+  color: #f8fafc;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.limit-value.enabled {
+  color: #4ade80;
+}
+
+/* Plan Actions */
+.plan-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.plan-actions button {
+  flex: 1;
+  padding: 0.625rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-edit {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.btn-edit:hover {
+  background: rgba(59, 130, 246, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-toggle {
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.btn-toggle.activate {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.btn-toggle.deactivate {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.btn-toggle:hover {
+  transform: translateY(-1px);
+}
+
+.btn-toggle.activate:hover {
+  background: rgba(34, 197, 94, 0.25);
+}
+
+.btn-toggle.deactivate:hover {
+  background: rgba(251, 191, 36, 0.25);
+}
+
+.btn-delete {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-delete:hover {
+  background: rgba(239, 68, 68, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #334155;
+  position: sticky;
+  top: 0;
+  background: #1e293b;
+  z-index: 10;
+}
+
+.modal-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+}
+
+.btn-close:hover {
+  background: rgba(148, 163, 184, 0.1);
+  color: #f8fafc;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 2rem;
+}
+
+.plan-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: #f8fafc;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #64748b;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group input.error,
+.form-group textarea.error {
+  border-color: #ef4444;
+}
+
+.error-message {
+  color: #f87171;
+  font-size: 0.8rem;
+  margin-top: -0.25rem;
+}
+
+/* Form Section */
+.form-section {
+  padding: 1.5rem;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid #334155;
+  border-radius: 0.75rem;
+}
+
+.form-section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f8fafc;
+  margin: 0 0 1.25rem 0;
+}
+
+.limits-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Checkboxes */
+.form-checkboxes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: background 0.2s ease;
+}
+
+.checkbox-label:hover {
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.checkbox-label input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox-custom {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #475569;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border-color: #3b82f6;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom::after {
+  content: '✓';
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+/* Modal Footer */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #334155;
+  background: rgba(15, 23, 42, 0.4);
+  position: sticky;
+  bottom: 0;
+}
+
+.btn-cancel,
+.btn-save {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel {
+  background: rgba(100, 116, 139, 0.15);
+  color: #cbd5e1;
+  border: 1px solid #475569;
+}
+
+.btn-cancel:hover {
+  background: rgba(100, 116, 139, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Scrollbar Styling */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-plan-container {
+    padding: 1rem;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
   .plans-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8;
+    grid-template-columns: 1fr;
   }
 
-  .plan-card {
-    @apply bg-gray-800 rounded-lg p-6 shadow-xl border border-gray-700;
-    background: linear-gradient(145deg, #2a2a3a, #1e1e2e);
-    transition: all 0.3s ease;
-    
-    &:hover {
-      @apply shadow-2xl transform scale-105;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    }
-
-    &.inactive {
-      @apply opacity-60;
-      
-      .plan-card {
-        @apply bg-gray-900;
-      }
-    }
+  .form-row,
+  .form-checkboxes {
+    grid-template-columns: 1fr;
   }
 
-  .plan-header {
-    @apply mb-4;
-    
-    .plan-title {
-      @apply mb-3;
-      
-      .plan-name-role {
-        @apply flex items-center justify-between mb-2;
-        
-        h2 {
-          @apply text-xl font-bold text-white;
-        }
-        
-        .role-badge {
-          @apply px-2 py-1 rounded-full text-xs font-semibold uppercase tracking-wide;
-          
-          &.user {
-            @apply bg-blue-500 text-white;
-          }
-          
-          &.trainer {
-            @apply bg-purple-500 text-white;
-          }
-        }
-      }
-      
-      .status-badge {
-        @apply px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide;
-        
-        &.active {
-          @apply bg-green-500 text-white;
-        }
-        
-        &.inactive {
-          @apply bg-gray-500 text-gray-300;
-        }
-      }
-    }
-    
-    .plan-description {
-      @apply text-gray-300 text-sm leading-relaxed;
-    }
-  }
-
-  .plan-pricing {
-    @apply mb-6 flex items-baseline;
-    
-    .price {
-      @apply text-3xl font-bold text-white mr-2;
-    }
-    
-    .billing-cycle {
-      @apply text-gray-400 text-sm;
-    }
-  }
-
-  .plan-features {
-    @apply mb-6;
-    
-    h3 {
-      @apply text-gray-200 font-semibold text-sm uppercase tracking-wide mb-3;
-      color: #9CA3AF;
-    }
-    
-    ul {
-      @apply space-y-2;
-      
-      .feature-item {
-        @apply flex items-start text-gray-300 text-sm;
-        
-        .icon-check {
-          @apply text-green-400 mr-3 mt-0.5 flex-shrink-0;
-          font-size: 12px;
-        }
-      }
-    }
-  }
-
-  .plan-limits {
-    @apply mb-6;
-    
-    h3 {
-      @apply text-gray-200 font-semibold text-sm uppercase tracking-wide mb-3;
-      color: #9CA3AF;
-    }
-    
-    .limits-grid {
-      @apply grid grid-cols-2 gap-3;
-      
-      .limit-item {
-        @apply flex flex-col;
-        
-        .limit-label {
-          @apply text-gray-400 text-xs font-medium mb-1;
-        }
-        
-        .limit-value {
-          @apply text-white text-sm font-semibold;
-          
-          &.enabled {
-            @apply text-green-400;
-          }
-        }
-      }
-    }
-  }
-
-  .plan-actions {
-    @apply flex gap-2 pt-4 border-t border-gray-700;
-    
-    button {
-      @apply px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex-1;
-      
-      &.btn-edit {
-        @apply bg-blue-600 text-white hover:bg-blue-700 border border-blue-600;
-      }
-      
-      &.btn-toggle {
-        @apply text-white border;
-        
-        &.deactivate {
-          @apply bg-yellow-600 hover:bg-yellow-700 border-yellow-600;
-        }
-        
-        &.activate {
-          @apply bg-green-600 hover:bg-green-700 border-green-600;
-        }
-      }
-      
-      &.btn-delete {
-        @apply bg-red-600 text-white hover:bg-red-700 border border-red-600;
-      }
-      
-      &:hover {
-        @apply transform scale-105 shadow-lg;
-      }
-    }
-  }
-
-  // Modal Styles
-  .modal-overlay {
-    @apply fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50;
-    backdrop-filter: blur(4px);
+  .limits-grid {
+    grid-template-columns: 1fr;
   }
 
   .modal-content {
-    @apply bg-gray-800 rounded-lg max-w-2xl w-full mx-4 max-h-screen overflow-y-auto;
-    background: linear-gradient(145deg, #2a2a3a, #1e1e2e);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
   }
 
-  .modal-header {
-    @apply flex items-center justify-between p-6 border-b border-gray-700;
-    
-    h2 {
-      @apply text-xl font-bold text-white;
-    }
-    
-    .btn-close {
-      @apply text-gray-400 hover:text-white text-2xl font-bold p-2 hover:bg-gray-700 rounded-full transition-colors;
-    }
-  }
-
-  .modal-body {
-    @apply p-6;
-    
-    .plan-form {
-      @apply space-y-6;
-      
-      .form-row {
-        @apply grid grid-cols-1 md:grid-cols-2 gap-4;
-      }
-      
-      .form-group {
-        @apply space-y-2;
-        
-        label {
-          @apply block text-gray-300 text-sm font-semibold;
-        }
-        
-        input, select, textarea {
-          @apply w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all;
-        }
-        
-        textarea {
-          @apply resize-none;
-        }
-      }
-      
-      .form-section {
-        @apply space-y-4;
-        
-        h3 {
-          @apply text-lg font-semibold text-white border-b border-gray-700 pb-2;
-        }
-      }
-      
-      .features-list {
-        @apply space-y-3;
-        
-        .feature-input-group {
-          @apply flex items-center gap-2;
-          
-          input {
-            @apply flex-1;
-          }
-          
-          .btn-remove {
-            @apply bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors;
-          }
-        }
-        
-        .btn-add-feature {
-          @apply bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold;
-        }
-      }
-      
-      .limits-form {
-        @apply space-y-4;
-        
-        .form-checkboxes {
-          @apply grid grid-cols-2 gap-4;
-          
-          .checkbox-label {
-            @apply flex items-center space-x-3 text-gray-300 cursor-pointer hover:text-white transition-colors;
-            
-            input[type="checkbox"] {
-              @apply sr-only;
-              
-              &:checked + .checkbox-custom {
-                @apply bg-blue-600 border-blue-600;
-                
-                &::after {
-                  @apply opacity-100;
-                }
-              }
-            }
-            
-            .checkbox-custom {
-              @apply w-5 h-5 border-2 border-gray-600 rounded bg-gray-700 relative transition-all;
-              
-              &::after {
-                content: '✓';
-                @apply absolute inset-0 flex items-center justify-center text-white text-xs opacity-0 transition-opacity;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .modal-footer {
-    @apply flex justify-end gap-3 p-6 border-t border-gray-700;
-    
-    .btn-cancel {
-      @apply px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-semibold;
-    }
-    
-    .btn-save {
-      @apply px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold;
-    }
-  }
-
-  // Header styles
-  .header {
-    @apply flex items-center justify-between mb-8;
-    
-    h1 {
-      @apply text-3xl font-bold text-white;
-    }
-    
-    .btn-add-plan {
-      @apply bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-200 flex items-center gap-2 font-semibold;
-      
-      &:hover {
-        @apply transform scale-105 shadow-lg;
-      }
-      
-      .icon-plus {
-        @apply text-lg;
-      }
-    }
-  }
-}
-
-// Responsive adjustments
-@media (max-width: 768px) {
-  .admin-plan-container {
-    @apply p-4;
-    
-    .plans-grid {
-      @apply grid-cols-1 gap-4;
-    }
-    
-    .plan-actions {
-      @apply flex-col;
-      
-      button {
-        @apply w-full;
-      }
-    }
-    
-    .modal-content {
-      @apply mx-2;
-    }
-    
-    .form-row {
-      @apply grid-cols-1 !important;
-    }
-    
-    .limits-form .form-checkboxes {
-      @apply grid-cols-1;
-    }
-  }
-
-  
-}
-
-// Add these styles to your existing SCSS file
-
-.form-group {
-  @apply space-y-2;
-  
-  label {
-    @apply block text-gray-300 text-sm font-semibold;
-  }
-  
-  input, select, textarea {
-    @apply w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all;
-    
-    // Error state styling
-    &.error {
-      @apply border-red-500 focus:ring-red-500;
-      background-color: rgba(239, 68, 68, 0.1);
-    }
-  }
-  
-  textarea {
-    @apply resize-none;
-  }
-  
-  // Helper text styling
-  .helper-text {
-    @apply text-gray-400 text-xs italic;
-    margin-top: 4px;
-  }
-  
-  // Error message styling
-  .error-message {
-    @apply text-red-400 text-xs font-medium;
-    margin-top: 4px;
-    display: flex;
-  
-    
-    &::before {
-      content: '⚠';
-      margin-right: 4px;
-      color: #EF4444;
-    }
+  .plan-actions {
+    flex-direction: column;
   }
 }

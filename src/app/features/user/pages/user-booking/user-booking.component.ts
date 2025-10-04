@@ -17,7 +17,15 @@ import {
   TimeSlot,
   TimeSlotsResponse,
 } from './interface/user-booking.interface';
-import { WalletService } from '../../../../core/services/wallet.service';
+import {
+  Wallet,
+  WalletService,
+} from '../../../../core/services/wallet.service';
+
+export interface WalletResponse {
+  success: boolean;
+  wallet: Wallet;
+}
 
 @Component({
   selector: 'app-user-booking',
@@ -102,12 +110,12 @@ export class UserBookingComponent implements OnInit {
           description:
             'Personalized training session with warm-up, workout & cool-down',
         },
-          // {
-          //   id: 'workout-plan',
-          //   name: 'Workout Plan',
-          //   price: this.trainer.pricing.workoutPlan,
-          //   description: 'Custom plan for you to follow independently',
-          // },
+        // {
+        //   id: 'workout-plan',
+        //   name: 'Workout Plan',
+        //   price: this.trainer.pricing.workoutPlan,
+        //   description: 'Custom plan for you to follow independently',
+        // },
       ];
     }
   }
@@ -469,11 +477,15 @@ export class UserBookingComponent implements OnInit {
     };
 
     this.ngZone.run(() => {
-      this.balance += this.selectedPrice
       this.walletService.addFailedPayment(payload).subscribe({
-      
-        next: () => {
+        next: (res: WalletResponse) => {
+          console.log('res', res);
+          if (res && res.wallet.balance !== undefined) {
+            this.balance = res.wallet.balance;
+          }
+
           this.notyf.showSuccess('Payment failed, money added to your wallet');
+          this.router.navigate([`/user/booking/${this.trainerId}`]);
         },
         error: () => {
           this.notyf.showError(
