@@ -68,6 +68,16 @@ export class AdminUserListingComponent implements OnInit {
     this.searchSubject.next(term);
   }
 
+//   onSearchFrontEnd(term: string){
+// console.log('term', term);
+// this.users$.subscribe((res) =>{
+//   console.log('res', res);
+// })
+
+//   }
+
+
+
   loadUsers(searchTerm: string = '', page: number = 1): void {
     this.currentPage = page;
     const params: GetUsersParams = {

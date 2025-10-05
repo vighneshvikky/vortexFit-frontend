@@ -1,420 +1,268 @@
-// admin-dashboard.component.scss
-.dashboard-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  padding: 2rem;
-  color: #f1f5f9;
+/* admin-dashboard.component.scss */
 
-  // Loading State
-  .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(15, 23, 42, 0.95);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-
-    .spinner {
-      width: 60px;
-      height: 60px;
-      border: 4px solid rgba(139, 92, 246, 0.2);
-      border-top-color: #8b5cf6;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    p {
-      margin-top: 1.5rem;
-      font-size: 1.1rem;
-      color: #cbd5e1;
-    }
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
+  to {
+    opacity: 1;
   }
+}
 
-  // Error State
-  .error-message {
-    max-width: 500px;
-    margin: 5rem auto;
-    text-align: center;
-    background: rgba(239, 68, 68, 0.1);
-    border: 2px solid #ef4444;
-    border-radius: 12px;
-    padding: 3rem;
-
-    .error-icon {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-    }
-
-    h3 {
-      color: #ef4444;
-      margin-bottom: 0.5rem;
-    }
-
-    p {
-      color: #cbd5e1;
-      margin-bottom: 1.5rem;
-    }
-
-    .retry-btn {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 0.75rem 2rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-
-      &:hover {
-        background: #dc2626;
-        transform: translateY(-2px);
-      }
-    }
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
-
-  // Dashboard Content
-  .dashboard-content {
-    max-width: 1400px;
-    margin: 0 auto;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
 
-  // Header
-  .dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .refresh-btn {
-      background: rgba(139, 92, 246, 0.1);
-      border: 2px solid #8b5cf6;
-      color: #8b5cf6;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.3s;
-
-      &:hover {
-        background: #8b5cf6;
-        color: white;
-        transform: translateY(-2px);
-      }
-
-      span {
-        font-size: 1.2rem;
-      }
-    }
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
   }
-
-  // Stats Grid
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
   }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
 
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Animation Classes */
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out backwards;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom Spinner */
+.spinner {
+  @apply border-4 border-gray-200 border-t-blue-600 rounded-full;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Stat Cards Hover Effects */
+.stat-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.stat-card:hover::before {
+  left: 100%;
+}
+
+/* Chart Card Styles */
+.chart-card {
+  transition: all 0.3s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Table Responsive Styles */
+.table-container {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Rank Badge Animation */
+.rank-badge {
+  transition: all 0.3s ease;
+}
+
+.rank-badge:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Revenue Amount Pulse */
+.revenue-amount {
+  transition: all 0.3s ease;
+}
+
+tr:hover .revenue-amount {
+  transform: scale(1.05);
+  color: #059669;
+}
+
+/* Booking Count Badge */
+.booking-count {
+  transition: all 0.3s ease;
+}
+
+tr:hover .booking-count {
+  transform: scale(1.05);
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  backdrop-filter: blur(4px);
+}
+
+/* Error Message */
+.error-message {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Responsive Grid Adjustments */
+@media (max-width: 640px) {
   .stat-card {
-    background: rgba(30, 41, 59, 0.6);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s;
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    .stat-icon {
-      font-size: 3rem;
-      padding: 1rem;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .stat-content {
-      flex: 1;
-
-      h3 {
-        font-size: 0.9rem;
-        color: #cbd5e1;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-      }
-
-      .stat-number {
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-      }
-
-      .stat-badge {
-        display: inline-block;
-        background: rgba(255, 255, 255, 0.1);
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        color: #cbd5e1;
-      }
-    }
-
-    &.purple {
-      border-color: rgba(139, 92, 246, 0.3);
-      .stat-icon { background: rgba(139, 92, 246, 0.2); }
-    }
-
-    &.pink {
-      border-color: rgba(236, 72, 153, 0.3);
-      .stat-icon { background: rgba(236, 72, 153, 0.2); }
-    }
-
-    &.cyan {
-      border-color: rgba(6, 182, 212, 0.3);
-      .stat-icon { background: rgba(6, 182, 212, 0.2); }
-    }
-
-    &.green {
-      border-color: rgba(16, 185, 129, 0.3);
-      .stat-icon { background: rgba(16, 185, 129, 0.2); }
-    }
-
-    &.revenue {
-      &.purple-gradient {
-        background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(109, 40, 217, 0.1) 100%);
-        border-color: rgba(139, 92, 246, 0.4);
-      }
-
-      &.pink-gradient {
-        background: linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(219, 39, 119, 0.1) 100%);
-        border-color: rgba(236, 72, 153, 0.4);
-      }
-    }
+    padding: 1.25rem;
   }
-
-  // Charts Grid
-  .charts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+  
+  .stat-number {
+    font-size: 1.875rem;
   }
-
-  .chart-card {
-    background: rgba(30, 41, 59, 0.6);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    height: 350px;
-    transition: all 0.3s;
-
-    &:hover {
-      border-color: rgba(139, 92, 246, 0.3);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    &.wide {
-      grid-column: span 2;
-    }
-
-    canvas {
-      max-height: 100%;
-    }
+  
+  .stat-icon {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
   }
+}
 
-  // Table Card
-  .table-card {
-    background: rgba(30, 41, 59, 0.6);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+/* Chart Container Responsive */
+.chart-container {
+  position: relative;
+  min-height: 300px;
+}
 
-    h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
-      color: #f1f5f9;
-    }
-
-    .table-container {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-
-      thead {
-        tr {
-          border-bottom: 2px solid rgba(139, 92, 246, 0.3);
-
-          th {
-            text-align: left;
-            padding: 1rem;
-            font-weight: 600;
-            color: #cbd5e1;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-          }
-        }
-      }
-
-      tbody {
-        tr {
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-          transition: all 0.3s;
-
-          &:hover {
-            background: rgba(139, 92, 246, 0.1);
-          }
-
-          td {
-            padding: 1rem;
-
-            .rank-badge {
-              display: inline-block;
-              width: 35px;
-              height: 35px;
-              line-height: 35px;
-              text-align: center;
-              border-radius: 50%;
-              background: rgba(255, 255, 255, 0.1);
-              font-weight: 600;
-
-              &.top-3 {
-                background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-                color: white;
-              }
-            }
-
-            &.trainer-name {
-              font-weight: 600;
-              color: #f1f5f9;
-            }
-
-            &.trainer-email {
-              color: #94a3b8;
-              font-size: 0.9rem;
-            }
-
-            .booking-count {
-              display: inline-block;
-              background: rgba(139, 92, 246, 0.2);
-              color: #a78bfa;
-              padding: 0.25rem 0.75rem;
-              border-radius: 20px;
-              font-weight: 600;
-            }
-
-            &.revenue-amount {
-              color: #10b981;
-              font-weight: 700;
-              font-size: 1.1rem;
-            }
-          }
-        }
-      }
-    }
+@media (max-width: 768px) {
+  .chart-container {
+    min-height: 250px;
   }
+}
 
-  // Responsive Design
-  @media (max-width: 1200px) {
-    .charts-grid {
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+/* Smooth Transitions */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
 
-      .chart-card.wide {
-        grid-column: span 1;
-      }
-    }
+/* Table Row Hover Effect */
+tbody tr {
+  transition: all 0.2s ease;
+}
+
+tbody tr:hover {
+  background-color: rgba(249, 250, 251, 0.8);
+  transform: scale(1.01);
+}
+
+/* Gradient Text Animation */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
   }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 
-  @media (max-width: 768px) {
+.stat-card.revenue {
+  background-size: 200% 200%;
+  animation: gradient 5s ease infinite;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .dashboard-container {
     padding: 1rem;
-
-    .dashboard-header {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: stretch;
-
-      h1 {
-        font-size: 2rem;
-        text-align: center;
-      }
-
-      .refresh-btn {
-        justify-content: center;
-      }
-    }
-
-    .stats-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .charts-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .chart-card {
-      height: 300px;
-    }
-
-    .table-card {
-      padding: 1rem;
-
-      table {
-        font-size: 0.85rem;
-
-        thead th,
-        tbody td {
-          padding: 0.75rem 0.5rem;
-        }
-      }
-    }
   }
+  
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .table-card {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-radius: 0;
+  }
+}
 
-  @media (max-width: 480px) {
-    .stat-card {
-      flex-direction: column;
-      text-align: center;
-
-      .stat-icon {
-        font-size: 2.5rem;
-        padding: 0.75rem;
-      }
-
-      .stat-content {
-        .stat-number {
-          font-size: 1.75rem;
-        }
-      }
-    }
+/* Print Styles */
+@media print {
+  .animate-slide-up,
+  .animate-fade-in {
+    animation: none !important;
+  }
+  
+  .stat-card,
+  .chart-card,
+  .table-card {
+    break-inside: avoid;
+    box-shadow: none;
   }
 }

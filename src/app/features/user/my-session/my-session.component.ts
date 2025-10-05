@@ -20,6 +20,7 @@ import {
   FilterValues,
   FilterOption,
 } from '../../../shared/components/filter/filter.component';
+import { NotyService } from '../../../core/services/noty.service';
 
 @Component({
   selector: 'app-my-session',
@@ -78,7 +79,7 @@ export class MySessionComponent {
 
   constructor(
     private bookingService: BookingService,
-
+    private notify: NotyService,
     private router: Router
   ) {
     this.filterSubject
@@ -326,6 +327,19 @@ export class MySessionComponent {
       this.isVideoCallOpen = true;
     }
   }
+
+  cancelBooking(id: string) {
+  if (confirm('Are you sure you want to cancel this booking?')) {
+    this.bookingService.cancelBooking(id).subscribe({
+      next: (res) => {
+        console.log('res');
+         this.notify.showSuccess('Booking cancelled and refund initiated!');
+      this.loadFilteredDataFromServer();
+      },
+    });
+  }
+}
+
 
   onCallEnded(): void {
     this.isVideoCallOpen = false;

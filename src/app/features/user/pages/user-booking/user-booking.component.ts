@@ -27,6 +27,14 @@ export interface WalletResponse {
   wallet: Wallet;
 }
 
+export interface LockSlotRequest {
+  trainerId: string;
+  date: string;
+  timeSlot: TimeSlot;
+  amount: number;
+  sessionType: string;
+}
+
 @Component({
   selector: 'app-user-booking',
   styleUrls: ['./user-booking.component.scss'],
@@ -354,7 +362,7 @@ export class UserBookingComponent implements OnInit {
       return;
     }
 
-    const bookingData: SessionBookingRequest = {
+    const lockData: LockSlotRequest = {
       trainerId: this.trainerId,
       amount: this.selectedPrice,
       sessionType: this.selectedSessionType,
@@ -362,14 +370,34 @@ export class UserBookingComponent implements OnInit {
       timeSlot: this.selectedTimeSlot,
     };
 
-    this.paymentService.createOrder(bookingData).subscribe({
+    // Step 1: Lock the slot first
+    this.paymentService.lockSlot(lockData).subscribe({
       next: (res) => {
-        console.log('Order creation response:', res);
-        this.openRazorpayCheckout(res.order);
+        console.log('Slot locked successfully:', res);
+
+        // Step 2: Only if lock succeeded, create Razorpay order
+        const bookingData: SessionBookingRequest = {
+          trainerId: this.trainerId,
+          amount: this.selectedPrice,
+          sessionType: this.selectedSessionType,
+          date: this.formatDateForAPI(this.selectedDate!),
+          timeSlot: this.selectedTimeSlot!,
+        };
+
+        this.paymentService.createOrder(bookingData).subscribe({
+          next: (orderRes) => {
+            console.log('Order creation response:', orderRes);
+            this.openRazorpayCheckout(orderRes.order);
+          },
+          error: (err) => {
+            console.error('Order creation failed', err);
+            this.notyf.showError('Something went wrong while starting payment');
+          },
+        });
       },
       error: (err) => {
-        console.error('Order creation failed', err);
-        this.notyf.showError('Something went wrong while starting payment');
+        console.error('Slot locking failed', err);
+        this.notyf.showError(err.error?.message || 'Slot is already booked');
       },
     });
   }

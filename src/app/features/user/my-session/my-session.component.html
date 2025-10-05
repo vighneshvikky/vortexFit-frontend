@@ -9,7 +9,6 @@
     (filtersApplied)="onFiltersApplied($event)"
     (filtersCleared)="onFiltersCleared()"
     (searchPerformed)="onSearchPerformed($event)"
-  
   >
   </app-filter>
 
@@ -155,6 +154,9 @@
               title="Start Video Call"
             >
               <span class="text-red-200 group-hover:text-white">🎥</span>
+            </button>
+            <button class="btn btn-danger" (click)="cancelBooking(booking._id)">
+              Cancel Booking
             </button>
           </div>
         </div>

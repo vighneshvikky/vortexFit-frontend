@@ -30,6 +30,7 @@ export const API_ROUTES = {
     VERIFY_PAYMENT: '/verify-payment',
     CREATE_SUBSCRIPTION_PAYMENT: '/create-subscription-order',
     VERIFY_SUBSCRIPTION_PAYMENT: '/verify-subscription-payment',
+    LOCK_SLOT: '/lock-slot'
   },
   BOOKING: {
     BASE: '/bookings',
@@ -40,6 +41,7 @@ export const API_ROUTES = {
     GET_CLIENTS: '/getClients',
     GET_STATS: '/stats',
     GET_USER_BOOKINGS_BY_FILTER: '/getUserFilteredBookings',
+    CANCEL_BOOKING: (id: string) => `/${id}/cancel`
   },
 
   PLANS: {

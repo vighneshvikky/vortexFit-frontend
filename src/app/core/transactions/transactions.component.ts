@@ -4,7 +4,7 @@ import {
   Transaction,
   TransactionService,
 } from '../services/transaction.service';
-import {  Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { WalletService } from '../services/wallet.service';
 import { ActivatedRoute } from '@angular/router';
@@ -63,7 +63,6 @@ export class TransactionsComponent implements OnInit {
     sortBy: 'createdAt' as 'createdAt' | 'amount',
     sortOrder: 'desc' as 'asc' | 'desc',
   };
-
 
   revenueByPeriod: RevenueData[] = [];
   selectedPeriod: 'day' | 'week' | 'month' = 'month';
@@ -186,8 +185,6 @@ export class TransactionsComponent implements OnInit {
 
   private applyLocalFilters(): void {
     let filtered = [...this.transactions];
-
-    // Apply search filter
     if (this.filterForm.searchTerm) {
       const term = this.filterForm.searchTerm.toLowerCase();
       filtered = filtered.filter(
@@ -198,7 +195,6 @@ export class TransactionsComponent implements OnInit {
       );
     }
 
-    // Apply sorting
     filtered.sort((a, b) => {
       const aVal =
         this.filterForm.sortBy === 'createdAt'
@@ -215,23 +211,7 @@ export class TransactionsComponent implements OnInit {
     this.filteredTransactions = filtered;
   }
 
-  private updateSummary(): void {
-    const config = this.roleConfig[this.role];
-
-    this.summary.transactionCount = this.transactions.length;
-
-    if (config.showEarnings) {
-      this.summary.totalEarnings = this.transactions
-        .filter((t) => t.amount > 0)
-        .reduce((sum, t) => sum + t.amount, 0);
-    }
-
-    if (config.showExpenses) {
-      this.summary.totalExpenses = this.transactions
-        .filter((t) => t.amount < 0)
-        .reduce((sum, t) => sum + Math.abs(t.amount), 0);
-    }
-  }
+  private updateSummary(): void {}
 
   private calculateRevenueBrBreakdown(): void {
     const grouped = new Map<string, { amount: number; count: number }>();
@@ -307,7 +287,6 @@ export class TransactionsComponent implements OnInit {
     this.currentPage = Math.min(this.currentPage, this.totalPages || 1);
   }
 
-  
   onFilterChange(): void {
     this.currentPage = 1;
     this.loadTransactions();

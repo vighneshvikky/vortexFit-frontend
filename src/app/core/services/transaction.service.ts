@@ -22,6 +22,7 @@ export interface Transaction {
   createdAt: string;
   updatedAt: string;
   bookingMethod: string;
+  isCancelled: boolean
 }
 
 @Injectable({

@@ -1,139 +1,315 @@
-<div class="trainer-dashboard">
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading-container">
-    <div class="spinner"></div>
-    <p>Loading dashboard...</p>
+<div class="min-h-screen bg-gradient-to-br from-gray-950 via-red-950/20 to-gray-950">
+  <!-- Loading State with Animation -->
+  <div *ngIf="loading" class="flex items-center justify-center min-h-[70vh]">
+    <div class="text-center">
+      <div class="relative w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6">
+        <div class="absolute inset-0 border-4 border-red-900/30 rounded-full"></div>
+        <div class="absolute inset-0 border-4 border-t-red-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+        <div class="absolute inset-2 border-4 border-t-transparent border-r-red-400 border-b-transparent border-l-transparent rounded-full animate-spin" style="animation-duration: 1.5s; animation-direction: reverse;"></div>
+      </div>
+      <p class="text-gray-300 text-base sm:text-lg font-medium animate-pulse">Loading dashboard...</p>
+    </div>
   </div>
 
-  <!-- Error State -->
-  <div *ngIf="error && !loading" class="error-container">
-    <p>{{ error }}</p>
-    <button class="retry-button" (click)="loadDashboardData()">Retry</button>
+  <!-- Error State with Animation -->
+  <div *ngIf="error && !loading" class="flex items-center justify-center min-h-[70vh] px-4">
+    <div class="bg-gradient-to-br from-red-900/30 to-red-950/30 border border-red-800 rounded-2xl p-8 sm:p-10 max-w-md w-full text-center backdrop-blur-sm animate-fade-in shadow-2xl">
+      <div class="w-16 h-16 mx-auto mb-6 bg-red-900/50 rounded-full flex items-center justify-center animate-bounce">
+        <i class="fas fa-exclamation-triangle text-red-400 text-3xl"></i>
+      </div>
+      <h3 class="text-white text-xl font-bold mb-3">Oops! Something went wrong</h3>
+      <p class="text-gray-300 mb-8 text-sm">{{ error }}</p>
+      <button 
+        class="w-full px-6 py-3.5 bg-red-900 hover:bg-red-800 text-white rounded-xl transition-all duration-300 active:scale-95 font-semibold shadow-lg hover:shadow-red-900/50 flex items-center justify-center space-x-2"
+        (click)="loadDashboardData()">
+        <i class="fas fa-redo"></i>
+        <span>Try Again</span>
+      </button>
+    </div>
   </div>
 
   <!-- Dashboard Content -->
-  <div *ngIf="!loading && !error" class="dashboard-content">
+  <div *ngIf="!loading && !error" class="space-y-6 sm:space-y-8 animate-fade-in-up">
 
-    <!-- Stats Cards -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon booking-icon">
-          <i class="fas fa-calendar-check"></i>
+    <!-- Header Section -->
+    <div class="bg-gradient-to-r from-red-900 to-red-800 rounded-2xl p-6 sm:p-8 border border-red-700 shadow-2xl">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+        <div>
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">Dashboard Overview</h1>
+          <p class="text-red-200 text-sm sm:text-base">Track your performance and manage bookings</p>
         </div>
-        <div class="stat-content">
-          <p class="stat-label">Total Bookings</p>
-          <h2 class="stat-value">{{ stats?.totalBookings || 0 }}</h2>
+        <div class="flex items-center space-x-2 bg-red-950/50 px-4 py-2 rounded-lg">
+          <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span class="text-red-100 text-sm font-medium">Live</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards with Stagger Animation -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+      <!-- Total Bookings -->
+      <div class="stat-card-animate bg-gradient-to-br from-red-900 via-red-900 to-red-950 rounded-2xl p-5 sm:p-6 lg:p-7 border border-red-800 hover:border-red-600 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/40 hover:-translate-y-1 group cursor-pointer" style="animation-delay: 0.1s;">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex-1">
+            <p class="text-red-200 text-xs sm:text-sm font-semibold mb-3 uppercase tracking-wide">Total Bookings</p>
+            <h2 class="text-white text-3xl sm:text-4xl lg:text-5xl font-bold group-hover:scale-110 transition-transform duration-300">{{ stats?.totalBookings || 0 }}</h2>
+          </div>
+          <div class="bg-red-800/60 p-3 sm:p-4 rounded-xl group-hover:bg-red-700/60 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110">
+            <i class="fas fa-calendar-check text-red-300 text-xl sm:text-2xl"></i>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2 text-green-400 text-xs sm:text-sm">
+          <i class="fas fa-arrow-up"></i>
+          <span class="font-semibold">All time</span>
         </div>
       </div>
 
-      <div class="stat-card">
-        <div class="stat-icon revenue-icon">
-          <i class="fas fa-rupee-sign"></i>
+      <!-- Total Revenue -->
+      <div class="stat-card-animate bg-gradient-to-br from-red-900 via-red-900 to-red-950 rounded-2xl p-5 sm:p-6 lg:p-7 border border-red-800 hover:border-red-600 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/40 hover:-translate-y-1 group cursor-pointer" style="animation-delay: 0.2s;">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex-1 min-w-0">
+            <p class="text-red-200 text-xs sm:text-sm font-semibold mb-3 uppercase tracking-wide">Total Revenue</p>
+            <h2 class="text-white text-2xl sm:text-3xl lg:text-4xl font-bold group-hover:scale-110 transition-transform duration-300 truncate">{{ formatCurrency(stats?.totalRevenue || 0) }}</h2>
+          </div>
+          <div class="bg-green-900/60 p-3 sm:p-4 rounded-xl group-hover:bg-green-800/60 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110 flex-shrink-0">
+            <i class="fas fa-rupee-sign text-green-400 text-xl sm:text-2xl"></i>
+          </div>
         </div>
-        <div class="stat-content">
-          <p class="stat-label">Total Revenue</p>
-          <h2 class="stat-value">{{ formatCurrency(stats?.totalRevenue || 0) }}</h2>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon subscription-icon">
-          <i class="fas fa-crown"></i>
-        </div>
-        <div class="stat-content">
-          <p class="stat-label">Active Subscriptions</p>
-          <h2 class="stat-value">{{ stats?.activeSubscriptions || 0 }}</h2>
+        <div class="flex items-center space-x-2 text-green-400 text-xs sm:text-sm">
+          <i class="fas fa-chart-line"></i>
+          <span class="font-semibold">Revenue earned</span>
         </div>
       </div>
 
-      <div class="stat-card">
-        <div class="stat-icon pending-icon">
-          <i class="fas fa-clock"></i>
+      <!-- Active Subscriptions -->
+      <div class="stat-card-animate bg-gradient-to-br from-red-900 via-red-900 to-red-950 rounded-2xl p-5 sm:p-6 lg:p-7 border border-red-800 hover:border-red-600 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/40 hover:-translate-y-1 group cursor-pointer" style="animation-delay: 0.3s;">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex-1">
+            <p class="text-red-200 text-xs sm:text-sm font-semibold mb-3 uppercase tracking-wide">Active Plans</p>
+            <h2 class="text-white text-3xl sm:text-4xl lg:text-5xl font-bold group-hover:scale-110 transition-transform duration-300">{{ stats?.activeSubscriptions || 0 }}</h2>
+          </div>
+          <div class="bg-yellow-900/60 p-3 sm:p-4 rounded-xl group-hover:bg-yellow-800/60 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110">
+            <i class="fas fa-crown text-yellow-400 text-xl sm:text-2xl"></i>
+          </div>
         </div>
-        <div class="stat-content">
-          <p class="stat-label">Pending Bookings</p>
-          <h2 class="stat-value">{{ stats?.pendingBookings || 0 }}</h2>
+        <div class="flex items-center space-x-2 text-yellow-400 text-xs sm:text-sm">
+          <i class="fas fa-users"></i>
+          <span class="font-semibold">Subscriptions</span>
+        </div>
+      </div>
+
+      <!-- Pending Bookings -->
+      <div class="stat-card-animate bg-gradient-to-br from-red-900 via-red-900 to-red-950 rounded-2xl p-5 sm:p-6 lg:p-7 border border-red-800 hover:border-red-600 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/40 hover:-translate-y-1 group cursor-pointer" style="animation-delay: 0.4s;">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex-1">
+            <p class="text-red-200 text-xs sm:text-sm font-semibold mb-3 uppercase tracking-wide">Pending</p>
+            <h2 class="text-white text-3xl sm:text-4xl lg:text-5xl font-bold group-hover:scale-110 transition-transform duration-300">{{ stats?.pendingBookings || 0 }}</h2>
+          </div>
+          <div class="bg-orange-900/60 p-3 sm:p-4 rounded-xl group-hover:bg-orange-800/60 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110">
+            <i class="fas fa-clock text-orange-400 text-xl sm:text-2xl"></i>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2 text-orange-400 text-xs sm:text-sm">
+          <i class="fas fa-hourglass-half"></i>
+          <span class="font-semibold">Needs action</span>
         </div>
       </div>
     </div>
 
     <!-- Charts Section -->
-    <div class="charts-grid">
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8">
       <!-- Revenue Breakdown Pie Chart -->
-      <div class="chart-card">
-        <h3 class="chart-title">Revenue Breakdown</h3>
-        <div class="chart-container">
-          <canvas 
-            baseChart
-            [type]="'pie'"
-            [data]="revenueChartData"
-            [options]="pieChartOptions">
-          </canvas>
+      <div class="chart-card-animate bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl p-5 sm:p-6 lg:p-8 border border-red-900/50 hover:border-red-800 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/30" style="animation-delay: 0.5s;">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-white text-lg sm:text-xl lg:text-2xl font-bold flex items-center">
+            <div class="w-10 h-10 bg-red-900/50 rounded-lg flex items-center justify-center mr-3">
+              <i class="fas fa-chart-pie text-red-400"></i>
+            </div>
+            <span>Revenue Breakdown</span>
+          </h3>
+        </div>
+        <div class="w-full" style="height: 280px; max-height: 280px;">
+          <div class="w-full h-full flex items-center justify-center">
+            <div class="w-full max-w-[280px] h-[280px]">
+              <canvas 
+                baseChart
+                [type]="'pie'"
+                [data]="revenueChartData"
+                [options]="pieChartOptions">
+              </canvas>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Booking Status Pie Chart -->
-      <div class="chart-card">
-        <h3 class="chart-title">Booking Status</h3>
-        <div class="chart-container">
-          <canvas 
-            baseChart
-            [type]="'pie'"
-            [data]="bookingStatusChartData"
-            [options]="pieChartOptions">
-          </canvas>
+      <div class="chart-card-animate bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl p-5 sm:p-6 lg:p-8 border border-red-900/50 hover:border-red-800 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/30" style="animation-delay: 0.6s;">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-white text-lg sm:text-xl lg:text-2xl font-bold flex items-center">
+            <div class="w-10 h-10 bg-red-900/50 rounded-lg flex items-center justify-center mr-3">
+              <i class="fas fa-chart-pie text-red-400"></i>
+            </div>
+            <span>Booking Status</span>
+          </h3>
+        </div>
+        <div class="w-full" style="height: 280px; max-height: 280px;">
+          <div class="w-full h-full flex items-center justify-center">
+            <div class="w-full max-w-[280px] h-[280px]">
+              <canvas 
+                baseChart
+                [type]="'pie'"
+                [data]="bookingStatusChartData"
+                [options]="pieChartOptions">
+              </canvas>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Monthly Revenue Chart -->
-    <div class="chart-card full-width">
-      <h3 class="chart-title">Monthly Revenue Trend</h3>
-      <div class="chart-container-large">
-        <canvas 
-          baseChart
-          [type]="'line'"
-          [data]="monthlyRevenueChartData"
-          [options]="lineChartOptions">
-        </canvas>
+    <div class="chart-card-animate bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl p-5 sm:p-6 lg:p-8 border border-red-900/50 hover:border-red-800 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/30" style="animation-delay: 0.7s;">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-3 sm:space-y-0">
+        <h3 class="text-white text-lg sm:text-xl lg:text-2xl font-bold flex items-center">
+          <div class="w-10 h-10 bg-red-900/50 rounded-lg flex items-center justify-center mr-3">
+            <i class="fas fa-chart-line text-red-400"></i>
+          </div>
+          <span>Monthly Revenue Trend</span>
+        </h3>
+        <div class="flex items-center space-x-2 bg-red-900/30 px-4 py-2 rounded-lg">
+          <i class="fas fa-calendar text-red-400 text-sm"></i>
+          <span class="text-red-200 text-sm font-medium">Last 12 Months</span>
+        </div>
+      </div>
+      <div class="w-full overflow-hidden">
+        <div class="min-h-[280px] sm:min-h-[320px] lg:min-h-[400px]">
+          <canvas 
+            baseChart
+            [type]="'line'"
+            [data]="monthlyRevenueChartData"
+            [options]="lineChartOptions">
+          </canvas>
+        </div>
       </div>
     </div>
 
     <!-- Recent Bookings Table -->
-    <div class="table-card">
-      <h3 class="table-title">Recent Bookings</h3>
-      <div class="table-container">
-        <table class="bookings-table">
-          <thead>
+    <div class="table-card-animate bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl border border-red-900/50 overflow-hidden hover:border-red-800 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/30" style="animation-delay: 0.8s;">
+      <div class="p-5 sm:p-6 lg:p-8 border-b border-red-900/50 bg-red-950/20">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+          <h3 class="text-white text-lg sm:text-xl lg:text-2xl font-bold flex items-center">
+            <div class="w-10 h-10 bg-red-900/50 rounded-lg flex items-center justify-center mr-3">
+              <i class="fas fa-list text-red-400"></i>
+            </div>
+            <span>Recent Bookings</span>
+          </h3>
+          <div class="flex items-center space-x-2 text-red-300 text-sm">
+            <i class="fas fa-clock"></i>
+            <span>Latest activities</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Card View (visible on small screens) -->
+      <div class="md:hidden">
+        <div *ngFor="let booking of recentBookings; let i = index" 
+             class="p-4 sm:p-5 border-b border-red-900/30 hover:bg-red-950/30 transition-all duration-300 cursor-pointer"
+             [style.animation-delay]="(0.9 + i * 0.1) + 's'"
+             style="animation: slideInLeft 0.5s ease-out both;">
+          <div class="space-y-4">
+            <div class="flex items-start justify-between">
+              <div class="flex-1 min-w-0 mr-3">
+                <p class="text-white font-bold text-base mb-1 truncate">{{ booking.userId.name }}</p>
+                <p class="text-gray-400 text-sm truncate">{{ booking.userId.email }}</p>
+              </div>
+              <span [class]="'px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap flex-shrink-0 ' + getStatusClass(booking.status)">
+                {{ booking.status }}
+              </span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-red-950/30 rounded-lg p-3">
+                <p class="text-red-300 text-xs font-semibold mb-1 uppercase">Date</p>
+                <p class="text-white text-sm font-medium">{{ booking.date | date: 'MMM dd, yyyy' }}</p>
+              </div>
+              <div class="bg-red-950/30 rounded-lg p-3">
+                <p class="text-red-300 text-xs font-semibold mb-1 uppercase">Time</p>
+                <p class="text-white text-sm font-medium">{{ booking.timeSlot }}</p>
+              </div>
+              <div class="bg-red-950/30 rounded-lg p-3">
+                <p class="text-red-300 text-xs font-semibold mb-1 uppercase">Type</p>
+                <p class="text-white text-sm font-medium">{{ booking.sessionType || 'N/A' }}</p>
+              </div>
+              <div class="bg-green-950/30 rounded-lg p-3 border border-green-900/50">
+                <p class="text-green-300 text-xs font-semibold mb-1 uppercase">Amount</p>
+                <p class="text-green-400 text-base font-bold">{{ formatCurrency(booking.amount) }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div *ngIf="recentBookings.length === 0" class="p-12 text-center">
+          <div class="w-20 h-20 mx-auto mb-4 bg-red-950/30 rounded-full flex items-center justify-center">
+            <i class="fas fa-inbox text-red-700 text-3xl"></i>
+          </div>
+          <p class="text-gray-400 text-base font-medium">No bookings found</p>
+          <p class="text-gray-500 text-sm mt-2">Your recent bookings will appear here</p>
+        </div>
+      </div>
+
+      <!-- Desktop Table View (hidden on small screens) -->
+      <div class="hidden md:block overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-red-950/40 backdrop-blur-sm">
             <tr>
-              <th>Client</th>
-              <th>Date</th>
-              <th>Time Slot</th>
-              <th>Session Type</th>
-              <th>Amount</th>
-              <th>Status</th>
+              <th class="px-4 lg:px-6 py-4 text-left text-xs font-bold text-red-200 uppercase tracking-wider">Client</th>
+              <th class="px-4 lg:px-6 py-4 text-left text-xs font-bold text-red-200 uppercase tracking-wider">Date</th>
+              <th class="px-4 lg:px-6 py-4 text-left text-xs font-bold text-red-200 uppercase tracking-wider">Time Slot</th>
+              <th class="px-4 lg:px-6 py-4 text-left text-xs font-bold text-red-200 uppercase tracking-wider">Session Type</th>
+              <th class="px-4 lg:px-6 py-4 text-left text-xs font-bold text-red-200 uppercase tracking-wider">Amount</th>
+              <th class="px-4 lg:px-6 py-4 text-left text-xs font-bold text-red-200 uppercase tracking-wider">Status</th>
             </tr>
           </thead>
-          <tbody>
-            <tr *ngFor="let booking of recentBookings">
-              <td>
-                <div class="client-info">
-                  <strong>{{ booking.userId.name }}</strong>
-                  <small>{{ booking.userId.email }}</small>
+          <tbody class="divide-y divide-red-900/30">
+            <tr *ngFor="let booking of recentBookings; let i = index" 
+                class="hover:bg-red-950/30 transition-all duration-300 cursor-pointer group"
+                [style.animation-delay]="(0.9 + i * 0.05) + 's'"
+                style="animation: fadeInUp 0.5s ease-out both;">
+              <td class="px-4 lg:px-6 py-5">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 bg-red-900/50 rounded-full flex items-center justify-center group-hover:bg-red-800/50 transition-colors">
+                    <i class="fas fa-user text-red-300 text-sm"></i>
+                  </div>
+                  <div class="flex flex-col min-w-0">
+                    <span class="text-white font-semibold text-sm truncate group-hover:text-red-200 transition-colors">{{ booking.userId.name }}</span>
+                    <span class="text-gray-400 text-xs truncate">{{ booking.userId.email }}</span>
+                  </div>
                 </div>
               </td>
-              <td>{{ booking.date | date: 'MMM dd, yyyy' }}</td>
-              <td>{{ booking.timeSlot }}</td>
-              <td>{{ booking.sessionType || 'N/A' }}</td>
-              <td class="amount">{{ formatCurrency(booking.amount) }}</td>
-              <td>
-                <span [class]="'status-badge ' + getStatusClass(booking.status)">
+              <td class="px-4 lg:px-6 py-5 text-gray-200 text-sm whitespace-nowrap font-medium">{{ booking.date | date: 'MMM dd, yyyy' }}</td>
+              <td class="px-4 lg:px-6 py-5 text-gray-200 text-sm font-medium">{{ booking.timeSlot }}</td>
+              <td class="px-4 lg:px-6 py-5 text-gray-200 text-sm font-medium">{{ booking.sessionType || 'N/A' }}</td>
+              <td class="px-4 lg:px-6 py-5">
+                <span class="text-green-400 font-bold text-sm flex items-center">
+                  <i class="fas fa-rupee-sign text-xs mr-1"></i>
+                  {{ formatCurrency(booking.amount) }}
+                </span>
+              </td>
+              <td class="px-4 lg:px-6 py-5">
+                <span [class]="'px-3 py-1.5 rounded-full text-xs font-bold inline-flex items-center ' + getStatusClass(booking.status)">
+                  <span class="w-1.5 h-1.5 rounded-full mr-2" [class.bg-green-400]="booking.status === 'confirmed'" [class.bg-yellow-400]="booking.status === 'pending'" [class.bg-red-400]="booking.status === 'cancelled'"></span>
                   {{ booking.status }}
                 </span>
               </td>
             </tr>
             <tr *ngIf="recentBookings.length === 0">
-              <td colspan="6" class="no-data">No bookings found</td>
+              <td colspan="6" class="px-6 py-16 text-center">
+                <div class="w-24 h-24 mx-auto mb-6 bg-red-950/30 rounded-full flex items-center justify-center">
+                  <i class="fas fa-inbox text-red-700 text-4xl"></i>
+                </div>
+                <p class="text-gray-400 text-lg font-semibold mb-2">No bookings found</p>
+                <p class="text-gray-500 text-sm">Your recent bookings will appear here</p>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -141,3 +317,61 @@
     </div>
   </div>
 </div>
+
+<style>
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.stat-card-animate {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.chart-card-animate {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.table-card-animate {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+canvas {
+  max-width: 100% !important;
+  height: auto !important;
+}
+</style>

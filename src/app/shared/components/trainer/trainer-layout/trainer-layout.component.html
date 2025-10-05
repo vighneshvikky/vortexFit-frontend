@@ -10,9 +10,10 @@
 
   <!-- Sidebar -->
   <aside
-    class="fixed inset-y-0 left-0 z-40 w-72 h-screen transform bg-white shadow-lg transition-transform duration-300 ease-in-out lg:static lg:h-auto lg:w-64 lg:shadow-none"
-    [class.-translate-x-full]="!isSidebarOpen && !isDesktop"
-    [class.translate-x-0]="isSidebarOpen || isDesktop"
+    class="fixed inset-y-0 left-0 z-40 w-72 sm:w-80 h-screen transform bg-white shadow-lg transition-transform duration-300 ease-in-out lg:static lg:h-auto lg:w-64 xl:w-72 lg:shadow-none"
+    [class.-translate-x-full]="!isSidebarOpen"
+    [class.translate-x-0]="isSidebarOpen"
+    [class.lg:translate-x-0]="true"
   >
     <app-trainer-sidebar
       [navItems]="navItems"
@@ -23,25 +24,25 @@
   </aside>
 
   <!-- Main Content -->
-  <div class="flex-1 min-h-screen flex flex-col">
+  <div class="flex-1 min-h-screen flex flex-col lg:ml-0">
     <!-- Mobile Header (shown only on mobile) -->
-    <header class="lg:hidden bg-white/80 backdrop-blur border-b border-gray-200 sticky top-0 z-20">
-      <div class="flex items-center justify-between px-4 py-3">
+    <header class="lg:hidden bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-20">
+      <div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
         <button
           (click)="toggleSidebar()"
-          class="text-gray-600 hover:text-gray-800 p-2 rounded-md hover:bg-gray-100 transition-colors"
+          class="text-gray-600 hover:text-gray-800 p-2 rounded-lg hover:bg-gray-100 transition-all active:scale-95"
           [attr.aria-label]="isSidebarOpen ? 'Close menu' : 'Open menu'"
         >
-          <i class="fas fa-bars text-xl"></i>
+          <i class="fas fa-bars text-xl sm:text-2xl"></i>
         </button>
-        <h1 class="text-lg font-semibold text-gray-800">VortexFit Trainer</h1>
-        <div class="w-10"></div>
+        <h1 class="text-base sm:text-lg font-semibold text-gray-800 truncate px-2">VortexFit Trainer</h1>
+        <div class="w-10 sm:w-12"></div>
       </div>
     </header>
 
     <!-- Routed Content Wrapper -->
-    <main class="flex-1 overflow-y-auto">
-      <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+    <main class="flex-1 overflow-y-auto bg-gray-50">
+      <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
         <router-outlet></router-outlet>
       </div>
     </main>

@@ -88,6 +88,7 @@ import { CATEGORIES, CATEGORY_TO_SPECIALIZATIONS } from '../../../../shared/cons
 
       this.currentTrainer$.pipe(take(1)).subscribe((trainer) => {
         if (trainer) {
+          console.log('trainer', trainer)
           this.certPreviewUrl = this.formatKey(trainer.certificationUrl);
           this.imagePreviewUrl = trainer.image;
           this.profileForm.patchValue({
@@ -107,10 +108,7 @@ import { CATEGORIES, CATEGORY_TO_SPECIALIZATIONS } from '../../../../shared/cons
           this.profileForm.get('specializations')?.setValue([]);
         });
     }
-  // onCategoryChange(category: string) {
-  //   this.availableSpecializations = this.categoryToSpecializations[category] || [];
-  //   this.profileForm.get('specialization')?.setValue(''); 
-  // }
+
     onImageError(event: Event) {
       const target = event.target as HTMLImageElement;
       target.src = 'assets/images/default-user.png';

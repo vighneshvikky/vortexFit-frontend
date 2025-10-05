@@ -39,37 +39,6 @@
       </div>
     </div>
 
-    <div class="revenue-cards">
-      <div class="revenue-card total">
-        <div class="card-icon">💵</div>
-        <div class="card-content">
-          <p class="card-label">Total Revenue</p>
-          <h3 class="card-value">{{ formatCurrency(summary.totalEarnings) }}</h3>
-        </div>
-      </div>
-      <div class="revenue-card count">
-        <div class="card-icon">📊</div>
-        <div class="card-content">
-          <p class="card-label">Total Transactions</p>
-          <h3 class="card-value">{{ summary.transactionCount }}</h3>
-        </div>
-      </div>
-      <div class="revenue-card average">
-        <div class="card-icon">📈</div>
-        <div class="card-content">
-          <p class="card-label">Average Transaction</p>
-          <h3 class="card-value">
-            {{
-              formatCurrency(
-                summary.transactionCount > 0
-                  ? summary.totalEarnings / summary.transactionCount
-                  : 0
-              )
-            }}
-          </h3>
-        </div>
-      </div>
-    </div>
 
     <div class="revenue-breakdown" *ngIf="revenueByPeriod.length > 0">
       <h3>Revenue Breakdown</h3>
@@ -180,14 +149,6 @@
     <p>Loading transactions...</p>
   </div>
 
-  <!-- Error State -->
-  <!-- <div class="error-container" *ngIf="error && !loading">
-    <div class="error-icon">⚠️</div>
-    <h3>Error</h3>
-    <p>{{ error }}</p>
-    <button class="retry-btn" (click)="loadTransactions()">Retry</button>
-  </div> -->
-
   <!-- Transactions Table -->
   <div class="transactions-table-container" *ngIf="!loading && !error">
     <!-- Empty State -->
@@ -264,7 +225,7 @@
                 [class.completed]="transaction.paymentSignature"
                 [class.pending]="!transaction.paymentSignature"
               >
-                {{ transaction.paymentSignature ? "Completed" : "Pending" }}
+                {{ transaction.isCancelled ? "Cancelled" : "Completed" }}
               </span>
             </td>
           </tr>
