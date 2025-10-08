@@ -51,9 +51,19 @@ export const userRoutes: Routes = [
             component: AiChatComponent,
           },
           {
-            path:'statistics',
-            component: UserProfileDashboardComponent
-          }
+            path: 'statistics',
+            component: UserProfileDashboardComponent,
+          },
+          {
+            path: 'chat',
+            component: ChatComponent,
+            data: { role: 'user' },
+          },
+          {
+            path: 'chat/:id',
+            component: ChatComponent,
+            data: { role: 'user' },
+          },
         ],
       },
 

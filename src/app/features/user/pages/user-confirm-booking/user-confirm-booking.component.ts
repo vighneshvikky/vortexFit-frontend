@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { TimeSlot } from '../user-booking/interface/user-booking.interface';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';

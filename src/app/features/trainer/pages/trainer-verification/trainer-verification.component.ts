@@ -10,7 +10,7 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Observable, take, tap, map } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { TrainerService } from '../../services/trainer.service';
 import { NotyService } from '../../../../core/services/noty.service';
 import { Router } from '@angular/router';

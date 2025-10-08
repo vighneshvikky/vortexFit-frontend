@@ -2,7 +2,6 @@ import { createReducer, on } from '@ngrx/store';
 import * as UsersActions from './users.actions';
 import { Trainer } from '../../../features/trainer/models/trainer.interface';
 import {
-  PaginatedResponse,
   User,
 } from '../../../features/admin/services/admin.service';
 

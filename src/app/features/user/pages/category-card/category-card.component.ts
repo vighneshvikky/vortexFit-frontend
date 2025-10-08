@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import {
   CATEGORIES,
-  CATEGORY_IMAGES,
 } from '../../../../shared/constants/filter-options';
 import { CommonModule } from '@angular/common';
 

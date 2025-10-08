@@ -38,7 +38,7 @@ export class UserSpecificLayoutComponent {
       icon: 'fas fa-tachometer-alt',
       label: 'Dashboard',
       route: '/user/statistics',
-    },  
+    },
     {
       icon: 'fas fa-calendar-check',
       label: 'My Sessions',
@@ -55,6 +55,11 @@ export class UserSpecificLayoutComponent {
       icon: 'fas fa-bell',
       label: 'Notifications',
       route: '/user/notifications',
+    },
+    {
+      icon: 'fas fa-message',
+      label: 'Messages',
+      route: '/user/chat',
     },
     {
       icon: 'fas fa-robot',

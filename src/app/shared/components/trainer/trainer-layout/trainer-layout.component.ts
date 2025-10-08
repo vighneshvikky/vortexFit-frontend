@@ -36,6 +36,12 @@ export class TrainerLayoutComponent {
       route: '/trainer/scheduling',
     },
 
+        {
+      icon: 'fas fa-message',
+      label: 'Messages',
+      route: '/trainer/chat',
+    },
+
     {
       icon: 'fas fa-bell',
       label: 'Notifications',

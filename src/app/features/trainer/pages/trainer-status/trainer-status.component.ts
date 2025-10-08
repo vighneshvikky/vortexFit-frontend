@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { map, Observable, tap, Subscription } from 'rxjs';
+import {  Observable, tap, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
   selectCurrentUser,
@@ -9,10 +9,9 @@ import { Router, RouterModule } from '@angular/router';
 import {
   AuthenticatedUser,
   fetchCurrentUser,
-  fetchCurrentUserSuccess,
+  
 } from '../../../auth/store/actions/auth.actions';
 import { AppState } from '../../../../store/app.state';
-import { Trainer } from '../../models/trainer.interface';
 import { isTrainer } from '../../../../core/guards/user-type-guards';
 
 @Component({

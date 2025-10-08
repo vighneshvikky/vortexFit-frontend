@@ -3,7 +3,6 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   ValidationErrors,
   ValidatorFn,

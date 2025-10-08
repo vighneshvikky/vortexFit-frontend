@@ -9,6 +9,7 @@ import { environment } from '../../../../enviorments/environment';
 export class SocketService {
   private sockets: { [namespace: string]: Socket } = {};
   private connected$: { [namespace: string]: BehaviorSubject<boolean> } = {};
+  private error$ = new Subject<{ namespace: string; message: string }>();
 
   constructor() {}
 
@@ -38,9 +39,10 @@ export class SocketService {
       this.connected$[namespace].next(false);
     });
 
-    socket.on('error', (err) =>
-      console.error(`[${namespace}] socket error:`, err)
-    );
+    socket.on('error', (err) => {
+      console.error(`[${namespace}] socket error:`, err);
+      this.error$.next({ namespace, message: err?.message });
+    });
 
     this.sockets[namespace] = socket;
   }
@@ -50,7 +52,7 @@ export class SocketService {
     this.sockets[namespace]?.emit(event, data);
   }
 
-  on<T>(namespace:string, event: string): Observable<T> {
+  on<T>(namespace: string, event: string): Observable<T> {
     const subject = new Subject<T>();
     this.sockets[namespace]?.on(event, (data: T) => subject.next(data));
     return subject.asObservable();
@@ -77,5 +79,9 @@ export class SocketService {
 
   getSocketId(namespace: string): string {
     return this.sockets[namespace]?.id || '';
+  }
+
+  getSocketErrors(): Observable<{ namespace: string; message: string }> {
+    return this.error$.asObservable();
   }
 }

@@ -36,6 +36,13 @@ export class ChatService {
     );
   }
 
+    getAllMessages(
+  ): Observable<ChatMessage[]> {
+    return this.http.get<ChatMessage[]>(
+      `${this.apiUrl}/messages`
+    );
+  }
+
   // expose observable for components
   getMessagesStream() {
     return this.messages$.asObservable();

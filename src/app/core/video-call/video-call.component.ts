@@ -17,6 +17,9 @@ import {
   SignalingService,
 } from './service/signalling.service';
 import { BookingSession } from '../../features/trainer/pages/trainer-session/interface/trainer.session.interface';
+import { SocketService } from '../chat/services/socket.service';
+import { Router } from '@angular/router';
+import { NotyService } from '../services/noty.service';
 
 @Component({
   selector: 'app-video-call',
@@ -56,7 +59,10 @@ export class VideoCallComponent implements OnDestroy {
 
   constructor(
     private webRTCService: WebRTCService,
-    private signalingService: SignalingService
+    private signalingService: SignalingService,
+    private socketService: SocketService,
+    private router: Router,
+    private notify: NotyService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -70,8 +76,31 @@ export class VideoCallComponent implements OnDestroy {
     this.cleanup();
   }
 
+  ngOnInit() {
+    this.subscriptions.push(
+      this.socketService
+        .getSocketErrors()
+        .subscribe(({ namespace, message }) => {
+          console.log('message', message);
+          if (namespace === 'video') {
+            if (message === 'Unauthorized: No user ID') {
+              this.endCall();
+              this.router.navigate(['/login']);
+            } else if (message === 'No active subscription') {
+              this.endCall();
+              if (this.role === 'trainer') {
+                this.router.navigate(['/trainer/plans']);
+                this.notify.showInfo('Subscribe plan for this Feature');
+              } else {
+                this.router.navigate(['/user/plans']);
+                 this.notify.showInfo('Subscribe plan for this Feature');
+              }
+            }
+          }
+        })
+    );
+  }
   private setupSubscriptions() {
-
     const remoteStreamSub = this.webRTCService
       .getRemoteStream$()
       .subscribe((stream) => {
@@ -82,7 +111,6 @@ export class VideoCallComponent implements OnDestroy {
           this.hasRemoteStream = false;
         }
       });
-
 
     const connectionStateSub = this.webRTCService
       .getConnectionState$()
@@ -95,7 +123,6 @@ export class VideoCallComponent implements OnDestroy {
           this.startCallTimer();
         }
       });
-
 
     const messagesSub = this.signalingService
       .onMessage()
@@ -112,46 +139,46 @@ export class VideoCallComponent implements OnDestroy {
     this.subscriptions.push(remoteStreamSub, connectionStateSub, messagesSub);
   }
 
-private async initializeCall() {
-  try {
-    this.localStream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    });
-    this.localVideoElement.nativeElement.srcObject = this.localStream;
-    this.hasLocalStream = true;
-
-    this.webRTCService.setLocalStream(this.localStream);
-
-    console.log('[VideoCall] session object', this.session);
-    console.log('[VideoCall] role', this.role);
-
-    const currentUserId = this.getUserId(
-      this.role === 'trainer' ? this.session!.trainerId : this.session!.userId
-    );
-
-    this.signalingService.connect(currentUserId, this.session!._id);
-
-    this.setupSubscriptions();
-
-    if (this.role === 'user') {
-      const targetUserId = this.getUserId(this.session!.trainerId);
-
-      this.signalingService.sendMessage({
-        type: 'user-join-request',
-        from: currentUserId,
-        to: targetUserId,
-        sessionId: this.session!._id,
-        // ❌ remove data: {}
-        // ✅ just omit it
+  private async initializeCall() {
+    try {
+      this.localStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
       });
+      this.localVideoElement.nativeElement.srcObject = this.localStream;
+      this.hasLocalStream = true;
+
+      this.webRTCService.setLocalStream(this.localStream);
+
+      console.log('[VideoCall] session object', this.session);
+      console.log('[VideoCall] role', this.role);
+
+      const currentUserId = this.getUserId(
+        this.role === 'trainer' ? this.session!.trainerId : this.session!.userId
+      );
+
+      this.signalingService.connect(currentUserId, this.session!._id);
+
+      this.setupSubscriptions();
+
+      if (this.role === 'user') {
+        const targetUserId = this.getUserId(this.session!.trainerId);
+
+        this.signalingService.sendMessage({
+          type: 'user-join-request',
+          from: currentUserId,
+          to: targetUserId,
+          sessionId: this.session!._id,
+          // ❌ remove data: {}
+          // ✅ just omit it
+        });
+      }
+    } catch (err) {
+      console.error('Error initializing call', err);
+      this.errorMessage = 'Failed to start video call';
     }
-  } catch (err) {
-    console.error('Error initializing call', err);
-    this.errorMessage = 'Failed to start video call';
   }
-}
-  
+
   private getUserId(user: any): string {
     console.log('[VideoCall] Getting user ID:', user);
     return typeof user === 'string' ? user : user._id || user.id;
@@ -212,31 +239,29 @@ private async initializeCall() {
     }
   }
 
-approveUser() {
-  if (!this.pendingUser || !this.session) return;
+  approveUser() {
+    if (!this.pendingUser || !this.session) return;
 
-  const trainerId = this.getUserId(this.session.trainerId);
+    const trainerId = this.getUserId(this.session.trainerId);
 
-  this.signalingService.sendMessage({
-    type: 'approval',
-    sessionId: this.session._id,
-    from: trainerId,
-    to: this.pendingUser,
-    data: { approved: true }, 
-  });
+    this.signalingService.sendMessage({
+      type: 'approval',
+      sessionId: this.session._id,
+      from: trainerId,
+      to: this.pendingUser,
+      data: { approved: true },
+    });
 
-  this.webRTCService.initializeAsCaller(this.session._id, this.pendingUser);
+    this.webRTCService.initializeAsCaller(this.session._id, this.pendingUser);
 
-  this.pendingUser = null;
-  this.showApprovalModal = false;
-}
-
+    this.pendingUser = null;
+    this.showApprovalModal = false;
+  }
 
   rejectUser() {
     if (!this.pendingUser || !this.session) return;
 
     const trainerId = this.session.trainerId._id ?? this.session.trainerId;
-
 
     this.signalingService.sendMessage({
       type: 'rejection',
@@ -246,11 +271,9 @@ approveUser() {
       data: { message: 'Call request was declined' },
     });
 
- 
     this.pendingUser = null;
     this.showApprovalModal = false;
   }
-
 
   private async startLocalStream() {
     try {
@@ -261,12 +284,11 @@ approveUser() {
 
       this.localStream = stream;
 
-    
       if (this.localVideoElement) {
         this.localVideoElement.nativeElement.srcObject = stream;
       }
       console.log('stream', stream);
-    
+
       this.webRTCService.setLocalStream(stream);
       this.hasLocalStream = true;
     } catch (err) {
@@ -281,7 +303,6 @@ approveUser() {
       this.callDuration++;
     }, 1000);
   }
-
 
   toggleMicrophone() {
     if (this.localStream) {
@@ -303,17 +324,14 @@ approveUser() {
     }
   }
 
-
   async toggleScreenShare() {
     try {
       if (!this.isScreenSharing) {
-
         const screenStream = await navigator.mediaDevices.getDisplayMedia({
           video: true,
           audio: true,
         });
 
-    
         const videoTrack = screenStream.getVideoTracks()[0];
         if (this.localStream) {
           const sender = this.webRTCService.replaceTrack(
@@ -350,7 +368,6 @@ approveUser() {
           videoTrack
         );
 
-  
         this.localStream = cameraStream;
         if (this.localVideoElement) {
           this.localVideoElement.nativeElement.srcObject = cameraStream;
@@ -363,16 +380,13 @@ approveUser() {
     }
   }
 
-  
   toggleChat() {
     this.isChatOpen = !this.isChatOpen;
   }
 
- 
   minimizeCall() {
     this.callMinimized.emit();
   }
-
 
   endCall() {
     this.cleanup();
@@ -380,29 +394,21 @@ approveUser() {
   }
 
   private cleanup() {
-   
     if (this.localStream) {
       this.localStream.getTracks().forEach((track) => track.stop());
     }
 
-   
     if (this.callTimer) {
       clearInterval(this.callTimer);
     }
 
- 
     this.webRTCService.endCall();
 
- 
     if (this.session) {
       const currentUserId = this.session.userId._id;
       this.signalingService.leaveRoom(this.session._id, currentUserId);
     }
   }
-
- 
-
-
 
   formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
@@ -412,17 +418,14 @@ approveUser() {
       .padStart(2, '0')}`;
   }
 
-
   private handleError(error: any, message: string) {
     console.error(message, error);
     this.errorMessage = message;
-
 
     setTimeout(() => {
       this.errorMessage = '';
     }, 5000);
   }
-
 
   private async checkMediaPermissions(): Promise<boolean> {
     try {
@@ -440,7 +443,6 @@ approveUser() {
       return true;
     }
   }
-
 
   async retryConnection() {
     this.errorMessage = '';

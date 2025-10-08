@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../enviorments/environment';
 import { API_ROUTES } from '../../app.routes.constants';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { BookingData } from '../../features/user/pages/user-confirm-booking/user-confirm-booking.component';
 import { TimeSlot } from '../../features/user/pages/user-booking/interface/user-booking.interface';
 import { WalletResponse } from '../../features/user/pages/user-booking/user-booking.component';
 

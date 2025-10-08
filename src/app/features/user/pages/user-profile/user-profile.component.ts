@@ -1,4 +1,4 @@
-import { AsyncPipe, CommonModule } from '@angular/common';
+import {  CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -325,8 +325,7 @@ onEquipmentToggle(equipment: string): void {
       this.isLoading = true;
       console.log('Updating profile with changes:', changedFields);
 
-      // Create FormData with only changed fields
-      const formData = new FormData();
+
 
 
       Object.keys(this.profileForm.controls).forEach((key) => {

@@ -1,8 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { Trainer } from '../../../trainer/models/trainer.interface';
 import * as AuthActions from '../actions/auth.actions';
-import { User } from '../../../admin/services/admin.service';
-import { Admin } from '../../../admin/models/admin.interface';
 import { AuthenticatedUser } from '../actions/auth.actions';
 
 export interface AuthState {

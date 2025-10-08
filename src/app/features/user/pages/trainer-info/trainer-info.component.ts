@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Trainer } from '../../../trainer/models/trainer.interface';
 import { UserService } from '../../services/user.service';
 import { NotyService } from '../../../../core/services/noty.service';

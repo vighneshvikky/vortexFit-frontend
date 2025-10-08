@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {  Observable } from 'rxjs';
 import {
   SchedulingRule,
-  TimeSlot,
-  DaySlots,
-  SchedulingFormData,
 } from '../models/scheduling.interface';
 import { environment } from '../../../../enviorments/environment';
 import { HttpClient } from '@angular/common/http';

@@ -5,14 +5,14 @@ export const CATEGORIES = [
   { value: 'fitness', label: 'Fitness' },
 ];
 
-export const CATEGORY_TO_SPECIALIZATIONS: { [key: string]: string[] } = {
+export const CATEGORY_TO_SPECIALIZATIONS: Record<string, string[]> = {
   cardio: ['HIIT', 'Zumba', 'Endurance Training'],
   yoga: ['Hatha Yoga', 'Vinyasa', 'Power Yoga'],
   martial_arts: ['Karate', 'Taekwondo', 'Kickboxing'],
   fitness: ['Weight Lifting', 'CrossFit', 'Bodybuilding'],
 };
 
-export const CATEGORY_IMAGES: { [key: string]: string } = {
+export const CATEGORY_IMAGES: Record<string, string> = {
   cardio:
     'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1000&q=80',
   yoga: 'https://images.unsplash.com/photo-1552196563-55cd4e45efb3?auto=format&fit=crop&w=1000&q=80',
@@ -21,6 +21,7 @@ export const CATEGORY_IMAGES: { [key: string]: string } = {
   fitness:
     'https://images.unsplash.com/photo-1599058917212-d750089bc07d?auto=format&fit=crop&w=1000&q=80',
 };
+
 
 export const REJECTION_REASONS = [
   { value: 'certification', label: 'Certification is not proper' },

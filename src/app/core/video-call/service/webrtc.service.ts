@@ -17,8 +17,7 @@ export class WebRTCService {
   private readonly iceServers: RTCIceServer[] = [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
-    // Add TURN servers for production
-    // { urls: 'turn:your-turn-server.com:3478', username: 'user', credential: 'pass' }
+
   ];
 
   constructor(private signalingService: SignalingService) {}

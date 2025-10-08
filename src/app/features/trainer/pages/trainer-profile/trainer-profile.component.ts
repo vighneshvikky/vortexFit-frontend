@@ -9,12 +9,11 @@
   import { TrainerService } from '../../services/trainer.service';
   import { map, Observable, take } from 'rxjs';
   import {
-    AuthenticatedUser,
     updateCurrentUser,
   } from '../../../auth/store/actions/auth.actions';
   import { selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';
   import { CommonModule } from '@angular/common';
-  import { isTrainer, isUser } from '../../../../core/guards/user-type-guards';
+  import { isTrainer } from '../../../../core/guards/user-type-guards';
   import { Trainer } from '../../models/trainer.interface';
   import { NotyService } from '../../../../core/services/noty.service';
   import { Router } from '@angular/router';

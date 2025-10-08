@@ -11,7 +11,6 @@ import { PlanComponent } from '../../core/plan/plan.component';
 import { TransactionsComponent } from '../../core/transactions/transactions.component';
 import { NotificationComponent } from '../../core/notification/notification.component';
 
-
 export const trainerRoutes: Routes = [
   {
     path: '',
@@ -24,9 +23,14 @@ export const trainerRoutes: Routes = [
       { path: 'profile', component: TrainerProfileComponent },
       { path: 'scheduling', component: TrainerSchedulingComponent },
       { path: 'chat/:id', component: ChatComponent, data: { role: 'trainer' } },
+      { path: 'chat', component: ChatComponent, data: { role: 'trainer' } },
       { path: 'sessions', component: TrainerSessionComponent },
       { path: 'plans', component: PlanComponent, data: { role: 'trainer' } },
-      {path: 'notifications', component: NotificationComponent, data: {role: 'trainer'}},
+      {
+        path: 'notifications',
+        component: NotificationComponent,
+        data: { role: 'trainer' },
+      },
       {
         path: 'transactions',
         component: TransactionsComponent,
