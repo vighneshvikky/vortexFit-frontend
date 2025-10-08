@@ -246,7 +246,7 @@ onCategoryChange(event: Event): void {
     }
 
     @HostListener('document:keydown.escape', ['$event'])
-    onEscapeKey(event: KeyboardEvent) {
+    onEscapeKey() {
       if (this.showEditModal) {
         this.closeEditModal();
       }

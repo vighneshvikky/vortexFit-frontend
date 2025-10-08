@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 import { AdminService } from '../../services/admin.service';
 import { NotyService } from '../../../../core/services/noty.service';
 import { select, Store } from '@ngrx/store';
-import { AuthState } from '../../../auth/store/auth.state';
 import { login } from '../../../auth/store/actions/auth.actions';
 import { Subject, takeUntil } from 'rxjs';
 import { selectAuthError, selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';

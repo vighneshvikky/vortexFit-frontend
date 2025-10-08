@@ -1,5 +1,5 @@
 
-import { CanActivateFn, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { map, take } from 'rxjs/operators';
@@ -8,8 +8,7 @@ import { selectCurrentUser } from '../../features/auth/store/selectors/auth.sele
 import { isTrainer, isUser } from './user-type-guards';
 
 export const UnauthenticatedGuard: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot
+
 ) => {
   const store = inject(Store<AuthState>);
   const router = inject(Router);

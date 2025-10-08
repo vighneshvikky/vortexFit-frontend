@@ -2,7 +2,7 @@
   import { PlanService } from '../../features/admin/services/admin-plan.service';
   import { CommonModule } from '@angular/common';
   import { SubscriptionService } from '../services/subscription.service';
-  import { State, Store } from '@ngrx/store';
+  import {  Store } from '@ngrx/store';
   import { AppState } from '../../store/app.state';
   import { selectCurrentUserId } from '../../features/auth/store/selectors/auth.selectors';
   import { environment } from '../../../enviorments/environment';

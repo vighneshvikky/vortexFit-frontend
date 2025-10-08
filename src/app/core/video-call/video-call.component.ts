@@ -3,7 +3,6 @@ import {
   ElementRef,
   Input,
   ViewChild,
-  OnInit,
   OnDestroy,
   Output,
   EventEmitter,
@@ -334,10 +333,10 @@ export class VideoCallComponent implements OnDestroy {
 
         const videoTrack = screenStream.getVideoTracks()[0];
         if (this.localStream) {
-          const sender = this.webRTCService.replaceTrack(
-            this.localStream.getVideoTracks()[0],
-            videoTrack
-          );
+          // const sender = this.webRTCService.replaceTrack(
+          //   this.localStream.getVideoTracks()[0],
+          //   videoTrack
+          // );
 
           videoTrack.onended = () => {
             this.stopScreenShare();

@@ -16,7 +16,6 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.component';
 import { NotyService } from '../../../../core/services/noty.service';
-import { AuthService } from '../../../../core/services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { AppState } from '../../../../store/app.state';
 import { environment } from '../../../../../enviorments/environment';
@@ -39,7 +38,6 @@ export class LoginComponent implements OnInit {
     private store: Store<AppState>,
     private router: Router,
     private notyService: NotyService,
-    private authService: AuthService,
     private route: ActivatedRoute
   ) {
     const roleParam = this.route.snapshot.queryParamMap.get('role');
@@ -66,7 +64,8 @@ export class LoginComponent implements OnInit {
           try {
             const user: AuthActions.AuthenticatedUser = JSON.parse(userJson);
             this.store.dispatch(AuthActions.loginSuccess({ user }));
-          } catch (error) {
+          } catch (err) {
+            console.log(err);
             this.notyService.showError('Invalid user data format');
             this.router.navigate(['/auth/login']);
           }

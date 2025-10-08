@@ -2,7 +2,6 @@
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SidebarComponent } from '../../../../shared/components/admin/sidebar/sidebar.component';
-import { AdminService } from '../../services/admin.service';
 import { AppState } from '../../../../store/app.state';
 import { Store } from '@ngrx/store';
 import { logout } from '../../../auth/store/actions/auth.actions';

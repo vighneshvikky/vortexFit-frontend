@@ -153,7 +153,6 @@ export class UserBookingComponent implements OnInit {
     const month = this.currentDate.getMonth();
 
     const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
     const startDate = new Date(firstDay);
     startDate.setDate(startDate.getDate() - firstDay.getDay());
 
@@ -375,7 +374,7 @@ export class UserBookingComponent implements OnInit {
       next: (res) => {
         console.log('Slot locked successfully:', res);
 
-        // Step 2: Only if lock succeeded, create Razorpay order
+       
         const bookingData: SessionBookingRequest = {
           trainerId: this.trainerId,
           amount: this.selectedPrice,

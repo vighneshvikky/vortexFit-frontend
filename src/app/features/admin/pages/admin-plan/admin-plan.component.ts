@@ -55,7 +55,7 @@ export class AdminPlanComponent implements OnInit {
     description: '',
     price: 0,
     billingCycle: 'monthly',
-    role: 'user', // Default role
+    role: 'user',
 
     limits: {
       oneOnOneSessions: 0,
@@ -241,10 +241,10 @@ export class AdminPlanComponent implements OnInit {
 
   savePlan(): void {
     if (this.isSubmitting) {
-      return; // Prevent double submission
+      return; 
     }
 
-    // Trim string values
+   
     if (this.newPlan.name) {
       this.newPlan.name = this.newPlan.name.trim();
     }
@@ -286,7 +286,7 @@ export class AdminPlanComponent implements OnInit {
     }
   }
 
-  togglePlanStatus(plan: SubscriptionPlan): void {}
+
 
   deletePlan(planId: string): void {
     this.adminPlanService.deletPlan(planId).subscribe((res) => {

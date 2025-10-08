@@ -331,8 +331,8 @@ export class MySessionComponent {
   cancelBooking(id: string) {
     if (confirm('Are you sure you want to cancel this booking?')) {
       this.bookingService.cancelBooking(id).subscribe({
-        next: (res) => {
-          console.log('res');
+        next: () => {
+
           this.notify.showSuccess('Booking cancelled and refund initiated!');
           this.loadFilteredDataFromServer();
         },

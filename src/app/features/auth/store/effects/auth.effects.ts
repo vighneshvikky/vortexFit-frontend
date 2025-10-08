@@ -11,8 +11,6 @@ import {
   loginSuccess,
   loginFailure,
   googleLogin,
-  fetchCurrentUser,
-  setUser,
   logout,
   logoutSuccess,
   logoutFailure,

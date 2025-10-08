@@ -4,7 +4,7 @@ import {
   Notification,
   NotificationService,
 } from '../services/notification.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app.state';
 import { selectCurrentUserId } from '../../features/auth/store/selectors/auth.selectors';

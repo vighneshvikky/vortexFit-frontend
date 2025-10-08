@@ -69,38 +69,30 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   async loadDashboardData(): Promise<void> {
-    try {
-      this.loading = true;
-      this.error = null;
+    this.loading = true;
+    this.error = null;
 
-      // Fetch all dashboard data in parallel
-      const [stats, revenue, bookings, subscriptions, users] =
-        await Promise.all([
-          this.adminDashboardService.getDashboardStats().toPromise(),
-          this.adminDashboardService.getRevenueAnalytics().toPromise(),
-          this.adminDashboardService.getBookingAnalytics().toPromise(),
-          this.adminDashboardService.getSubscriptionAnalytics().toPromise(),
-          this.adminDashboardService.getUserAnalytics().toPromise(),
-        ]);
+ 
+    const [stats, revenue, bookings, subscriptions, users] = await Promise.all([
+      this.adminDashboardService.getDashboardStats().toPromise(),
+      this.adminDashboardService.getRevenueAnalytics().toPromise(),
+      this.adminDashboardService.getBookingAnalytics().toPromise(),
+      this.adminDashboardService.getSubscriptionAnalytics().toPromise(),
+      this.adminDashboardService.getUserAnalytics().toPromise(),
+    ]);
 
-      this.dashboardStats = stats!;
-      this.revenueAnalytics = revenue!;
-      this.bookingAnalytics = bookings!;
-      this.subscriptionAnalytics = subscriptions!;
-      this.userAnalytics = users!;
+    this.dashboardStats = stats!;
+    this.revenueAnalytics = revenue!;
+    this.bookingAnalytics = bookings!;
+    this.subscriptionAnalytics = subscriptions!;
+    this.userAnalytics = users!;
 
-      // Wait for DOM to render before creating charts
-      setTimeout(() => {
-        this.createCharts();
-      }, 0);
+    
+    setTimeout(() => {
+      this.createCharts();
+    }, 0);
 
-      this.loading = false;
-    } catch (err: any) {
-      console.error('Error loading dashboard data:', err);
-      this.error =
-        err.error?.message || err.message || 'Failed to load dashboard data';
-      this.loading = false;
-    }
+    this.loading = false;
   }
 
   private createCharts(): void {

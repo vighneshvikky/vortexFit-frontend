@@ -60,13 +60,11 @@ export class TrainerLayoutComponent {
   }
 
   @HostListener('window:resize', ['$event'])
-  // onResize(event: any): void {
-  //   this.checkScreenSize();
-  // }
+
   checkScreenSize(): void {
-    this.isDesktop = window.innerWidth >= 1024; // lg breakpoint
+    this.isDesktop = window.innerWidth >= 1024;
     if (this.isDesktop) {
-      this.isSidebarOpen = false; // Always closed on desktop since it's always visible
+      this.isSidebarOpen = false; 
     }
   }
 

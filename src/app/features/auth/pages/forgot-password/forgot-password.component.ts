@@ -43,7 +43,7 @@ export class ForgotPasswordComponent implements OnInit {
       const { email } = this.forgotPasswordForm.value;
 
       this.authService.forgotPassword(email, this.role).subscribe({
-        next: (response) => {
+        next: () => {
           this.isLoading = false;
           this.isEmailSent = true;
           this.notyService.showSuccess('Password reset instructions have been sent to your email.');

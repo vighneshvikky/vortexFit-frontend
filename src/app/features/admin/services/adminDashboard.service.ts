@@ -29,7 +29,7 @@ export interface BookingAnalytics {
     bookingCount: number;
     totalRevenue: number;
   }>;
-  recent: Array<any>;
+ 
 }
 
 export interface SubscriptionAnalytics {
@@ -70,7 +70,7 @@ export class AdminDashboardService {
 
   constructor(private http: HttpClient) {}
 
-  // Dashboard Overview
+
   getDashboardStats(): Observable<DashboardStats> {
     return this.http.get<DashboardStats>(`${this.apiUrl}/dashboard`);
   }
@@ -88,21 +88,18 @@ export class AdminDashboardService {
     return this.http.get<{ monthly: number }>(`${this.apiUrl}/revenue/monthly`);
   }
 
-  // Booking Analytics
+
   getBookingAnalytics(): Observable<BookingAnalytics> {
     return this.http.get<BookingAnalytics>(`${this.apiUrl}/bookings/analytics`);
   }
 
-  getRecentBookings(limit: number = 10): Observable<any[]> {
-    const params = new HttpParams().set('limit', limit.toString());
-    return this.http.get<any[]>(`${this.apiUrl}/bookings/recent`, { params });
-  }
+
 
   getBookingCount(): Observable<{ count: number }> {
     return this.http.get<{ count: number }>(`${this.apiUrl}/bookings/count`);
   }
 
-  // Trainer Analytics
+ 
   getTopTrainers(limit: number = 10): Observable<TopTrainer[]> {
     const params = new HttpParams().set('limit', limit.toString());
     return this.http.get<TopTrainer[]>(`${this.apiUrl}/trainers/top`, { params });

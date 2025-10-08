@@ -19,7 +19,6 @@ export interface BookingData {
   styleUrl: './user-confirm-booking.component.scss',
 })
 export class UserConfirmBookingComponent implements OnInit {
-  // Properties for the booking confirmation
   bookingId: string = '';
   trainerName: string = '';
   sessionType: string = '';
@@ -35,12 +34,10 @@ export class UserConfirmBookingComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
-
     const navigation = history.state;
     if (navigation && navigation.bookingData) {
       this.setBookingData(navigation.bookingData);
     } else {
-
       this.route.queryParams.subscribe((params) => {
         if (params['bookingId']) {
           this.bookingId = params['bookingId'];
@@ -48,13 +45,9 @@ export class UserConfirmBookingComponent implements OnInit {
           this.sessionType = params['sessionType'] || '';
           this.date = params['date'] || '';
           this.amount = parseFloat(params['amount']) || 0;
-          
+
           if (params['timeSlot']) {
-            try {
-              this.timeSlot = JSON.parse(params['timeSlot']);
-            } catch (e) {
-              console.error('Error parsing timeSlot:', e);
-            }
+            this.timeSlot = JSON.parse(params['timeSlot']);
           }
         }
       });
@@ -99,13 +92,13 @@ export class UserConfirmBookingComponent implements OnInit {
       };
       return date.toLocaleDateString('en-US', options);
     } catch (error) {
-      return dateString; 
+      console.log('error', error)
+      return dateString;
     }
   }
 
   onMessageTrainer() {
     console.log('Opening chat with trainer...');
-
 
     this.router.navigate(['/user/messages'], {
       queryParams: {
@@ -118,14 +111,9 @@ export class UserConfirmBookingComponent implements OnInit {
   }
 
   onClose() {
-
     this.router.navigate(['/user/dashboard']);
     this.closeModal.emit();
   }
-
-
-
- 
 
   getModalAnimationClass(): string {
     return this.isVerifying

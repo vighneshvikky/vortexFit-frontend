@@ -72,6 +72,7 @@ export class UserProfileDashboardComponent {
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: (result: any) => {
+          console.log('any', result)
           this.stats = result.stats;
           this.spendingSummary = result.spendingSummary;
           this.recentBookings = result.recentBookings;

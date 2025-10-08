@@ -2,7 +2,6 @@
 import {
   CanActivateFn,
   ActivatedRouteSnapshot,
-  RouterStateSnapshot,
   Router,
 } from '@angular/router';
 import { inject } from '@angular/core';
@@ -13,7 +12,7 @@ import { map, take } from 'rxjs/operators';
 
 
 export function RoleGuard(): CanActivateFn {
-  return (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+  return (route: ActivatedRouteSnapshot) => {
     const store = inject(Store<AuthState>);
     const router = inject(Router);
     const allowedRoles = route.data['role'] as string | string[];

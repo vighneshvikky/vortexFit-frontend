@@ -25,8 +25,6 @@ export class PlanService {
    
 createPlan(planData: any): Observable<SubscriptionPlan> {
     console.log('planData', planData);
-    console.log('this.api', this.apiUrl)
-    console.log('ajdklfajlkdj',`${this.apiUrl}${API_ROUTES.PLANS.CREATE}`)
   return this.http.post<SubscriptionPlan>(`${this.apiUrl}${API_ROUTES.PLANS.CREATE}`, planData);
 }
 
