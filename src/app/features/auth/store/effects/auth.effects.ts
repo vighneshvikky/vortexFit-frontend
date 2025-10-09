@@ -22,6 +22,7 @@ import { Admin } from '../../../admin/models/admin.interface';
 
 import { NotyService } from '../../../../core/services/noty.service';
 import { Trainer } from '../../../trainer/models/trainer.interface';
+import { environment } from '../../../../../enviorments/environment';
 
 type UserRole = 'user' | 'trainer' | 'admin';
 
@@ -92,7 +93,7 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(googleLogin),
         tap(({ role }) => {
-          window.location.href = `http://localhost:3000/auth/google/redirect?role=${role}`;
+          window.location.href = `${environment.api}/auth/google/redirect?role=${role}`;
         })
       ),
     { dispatch: false }
