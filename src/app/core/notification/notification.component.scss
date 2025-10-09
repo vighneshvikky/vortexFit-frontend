@@ -683,34 +683,34 @@
 // ADMIN THEME (Dark)
 // ========================================
 .notification-page[data-role="admin"] {
-  background: linear-gradient(135deg, #000000 0%, #18181b 100%);
-  color: #ffffff;
+  background: #111827; 
+  color: #9ca3af;
 
   .page-header {
-    border-bottom-color: #27272a;
+    border-bottom-color: #374151; 
 
     .stat-item {
-      background: rgba(168, 85, 247, 0.1);
+      background: rgba(220, 38, 38, 0.1); 
 
       &.unread-stat {
-        background: rgba(168, 85, 247, 0.15);
+        background: rgba(220, 38, 38, 0.15); 
         .stat-value {
-          color: #c084fc;
+          color: #ef4444; 
         }
       }
     }
 
     .primary-btn {
-      background: linear-gradient(135deg, #a855f7, #7c3aed);
+      background: #dc2626; 
       color: #ffffff;
 
       &:hover {
-        background: linear-gradient(135deg, #9333ea, #6d28d9);
+        background: #ef4444; // Lighter red on hover
       }
     }
   }
-
 }
+
 
   
 

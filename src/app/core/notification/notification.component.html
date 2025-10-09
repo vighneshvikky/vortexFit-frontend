@@ -14,46 +14,33 @@
         </span>
       </div>
     </div>
-    
-    <div class="header-actions">
-      <!-- <button 
-        class="action-button primary-btn" 
-        (click)="markAllAsRead()" 
-        *ngIf="unreadCount > 0"
-        title="Mark all as read">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        Mark All Read
-      </button> -->
-      <!-- <button 
-        class="action-button secondary-btn" 
-        (click)="deleteAllRead()"
-        *ngIf="notifications.some(n => n.status === 'read')"
-        title="Delete all read">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-        </svg>
-        Clear Read
-      </button> -->
-    </div>
+
+    <div class="header-actions"></div>
   </div>
 
-  <!-- Filter Section -->
-
-
-  <!-- Loading State -->
   <div class="loading-container" *ngIf="loading">
     <div class="spinner"></div>
     <p>Loading notifications...</p>
   </div>
 
   <!-- Empty State -->
-  <div class="empty-container" *ngIf="!loading && filteredNotifications.length === 0">
-    <svg class="empty-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+  <div
+    class="empty-container"
+    *ngIf="!loading && filteredNotifications.length === 0"
+  >
+    <svg
+      class="empty-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+      />
     </svg>
     <h3>No notifications found</h3>
     <p *ngIf="selectedFilter !== 'all' || selectedType !== 'all'">
@@ -62,36 +49,61 @@
   </div>
 
   <!-- Notifications Grid -->
-  <div class="notifications-grid" *ngIf="!loading && filteredNotifications.length > 0">
-    <div 
-      *ngFor="let notification of filteredNotifications" 
+  <div
+    class="notifications-grid"
+    *ngIf="!loading && filteredNotifications.length > 0"
+  >
+    <div
+      *ngFor="let notification of filteredNotifications"
       class="notification-card"
       [class.unread]="notification.status === 'unread'"
       [class.type-booking]="notification.type === 'booking'"
       [class.type-subscription]="notification.type === 'subscription'"
       [class.type-payment]="notification.type === 'payment'"
       [class.type-system]="notification.type === 'system'"
-      (click)="markAsRead(notification._id)">
-      
+      (click)="markAsRead(notification._id)"
+    >
       <!-- Card Header -->
       <div class="card-header">
-        <div class="notification-icon" [ngClass]="getNotificationIconClass(notification.type)">
-          <span class="icon-emoji">{{ getNotificationIcon(notification.type) }}</span>
+        <div
+          class="notification-icon"
+          [ngClass]="getNotificationIconClass(notification.type)"
+        >
+          <span class="icon-emoji">{{
+            getNotificationIcon(notification.type)
+          }}</span>
         </div>
-        
+
         <div class="card-meta">
           <span class="notification-type">{{ notification.type }}</span>
-          <span class="notification-time">{{ getTimeAgo(notification.timestamp) }}</span>
+          <span class="notification-time">{{
+            getTimeAgo(notification.timestamp)
+          }}</span>
         </div>
 
         <div class="card-actions">
-          <span class="unread-indicator" *ngIf="notification.status === 'unread'" title="Unread"></span>
-          <button 
-            class="delete-btn" 
+          <span
+            class="unread-indicator"
+            *ngIf="notification.status === 'unread'"
+            title="Unread"
+          ></span>
+          <button
+            class="delete-btn"
             (click)="deleteNotification(notification._id, $event)"
-            title="Delete notification">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            title="Delete notification"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -101,7 +113,9 @@
       <div class="card-body">
         <p class="notification-message">{{ notification.message }}</p>
         <div class="card-footer">
-          <span class="timestamp-full">{{ formatTimestamp(notification.timestamp) }}</span>
+          <span class="timestamp-full">{{
+            formatTimestamp(notification.timestamp)
+          }}</span>
         </div>
       </div>
     </div>

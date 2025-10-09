@@ -33,19 +33,29 @@ $trainer-text: #ffffff;
 $trainer-text-secondary: #d1a9a9;
 $trainer-text-muted: #9f7a7a;
 
-// Admin Theme (Dark)
-$admin-primary: #8b5cf6;
-$admin-primary-dark: #7c3aed;
-$admin-primary-light: #a78bfa;
-$admin-accent: #06b6d4;
-$admin-accent-dark: #0891b2;
-$admin-bg: #030712;
-$admin-bg-secondary: #0f172a;
-$admin-bg-card: #1e293b;
-$admin-border: #334155;
-$admin-text: #ffffff;
-$admin-text-secondary: #cbd5e1;
-$admin-text-muted: #94a3b8;
+// Primary colors
+$admin-primary: #dc2626;        // Crimson (red) for main highlights
+$admin-primary-dark: #b91c1c;   // Darker red for hover / active states
+$admin-primary-light: #ef4444;  // Lighter red for subtle highlights
+
+// Accent colors
+$admin-accent: #dc2626;         // Red accent
+$admin-accent-dark: #b91c1c;    // Darker red for emphasis
+
+// Backgrounds
+$admin-bg: #111827;              // Dark gray primary background (bg-gray-900)
+$admin-bg-secondary: #1f2937;    // Slightly lighter gray for panels / headers (bg-gray-800)
+$admin-bg-card: #374151;         // Card background (bg-gray-700)
+
+// Borders
+$admin-border: #4b5563;          // Gray borders consistent with secondary bg
+
+// Text
+$admin-text: #ffffff;             // White text on red backgrounds
+$admin-text-secondary: #9ca3af;  // Light gray text on dark backgrounds
+$admin-text-muted: #6b7280;      // Muted gray text for less important info
+
+
 
 // Mixins
 @mixin theme-colors(

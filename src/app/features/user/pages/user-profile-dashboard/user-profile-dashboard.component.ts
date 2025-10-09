@@ -78,7 +78,7 @@ export class UserProfileDashboardComponent {
           this.recentBookings = result.recentBookings;
           this.recentTransactions = result.recentTransactions;
 
-          // wait a bit to ensure DOM is ready before drawing chart
+  
           setTimeout(() => this.createSpendingChart(), 100);
         },
       });

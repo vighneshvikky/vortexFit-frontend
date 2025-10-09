@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { AdminDashboardService } from '../../services/adminDashboard.service';
+import { firstValueFrom } from 'rxjs';
 
 Chart.register(...registerables);
 
@@ -72,27 +73,28 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.error = null;
 
- 
-    const [stats, revenue, bookings, subscriptions, users] = await Promise.all([
-      this.adminDashboardService.getDashboardStats().toPromise(),
-      this.adminDashboardService.getRevenueAnalytics().toPromise(),
-      this.adminDashboardService.getBookingAnalytics().toPromise(),
-      this.adminDashboardService.getSubscriptionAnalytics().toPromise(),
-      this.adminDashboardService.getUserAnalytics().toPromise(),
-    ]);
+    try {
+      const [stats, revenue, bookings, subscriptions, users] =
+        await Promise.all([
+          firstValueFrom(this.adminDashboardService.getDashboardStats()),
+          firstValueFrom(this.adminDashboardService.getRevenueAnalytics()),
+          firstValueFrom(this.adminDashboardService.getBookingAnalytics()),
+          firstValueFrom(this.adminDashboardService.getSubscriptionAnalytics()),
+          firstValueFrom(this.adminDashboardService.getUserAnalytics()),
+        ]);
 
-    this.dashboardStats = stats!;
-    this.revenueAnalytics = revenue!;
-    this.bookingAnalytics = bookings!;
-    this.subscriptionAnalytics = subscriptions!;
-    this.userAnalytics = users!;
+      this.dashboardStats = stats;
+      this.revenueAnalytics = revenue;
+      this.bookingAnalytics = bookings;
+      this.subscriptionAnalytics = subscriptions;
+      this.userAnalytics = users;
 
-    
-    setTimeout(() => {
-      this.createCharts();
-    }, 0);
-
-    this.loading = false;
+      setTimeout(() => this.createCharts(), 0);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      this.loading = false;
+    }
   }
 
   private createCharts(): void {
