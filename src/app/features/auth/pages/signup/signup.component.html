@@ -125,83 +125,71 @@
             >
           </div>
         </div>
-<!-- Submit Section -->
-<div class="submit-section flex flex-col gap-4 mt-6">
+        <!-- Submit Section -->
+        <div class="submit-section flex flex-col gap-4 mt-6">
+          <div class="relative">
+            <button
+              type="submit"
+              [disabled]="isLoading"
+              class="submit-btn w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl font-semibold transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+              [ngClass]="role"
+            >
+              <i class="fas fa-user-plus" *ngIf="!isLoading"></i>
+              <span>
+                {{ isLoading ? "Creating Account..." : "Create Account" }}
+              </span>
+            </button>
+          </div>
 
-  <!-- Create Account Button (original styling retained) -->
-  <div class="relative">
-    <app-spinner
-      *ngIf="isLoading"
-      [isLoading]="isLoading"
-      [role]="role"
-      class="absolute left-4 top-1/2 -translate-y-1/2"
-    ></app-spinner>
+          <!-- Change Role Button (styled with Tailwind) -->
+          <a routerLink="/auth/role" class="block">
+            <button
+              type="button"
+              [disabled]="isLoading"
+              class="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-white font-semibold transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+              [ngClass]="{
+                'bg-blue-600 hover:bg-blue-700': !isLoading,
+                'bg-blue-400 cursor-wait': isLoading
+              }"
+            >
+              <ng-container *ngIf="!isLoading; else loadingTemplate">
+                <!-- Heroicon UserPlus -->
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16 14a4 4 0 10-8 0m8 0a4 4 0 01-8 0m8 0v6m4-4h-4m-6 4h6"
+                  />
+                </svg>
+                <span>Change Role</span>
+              </ng-container>
 
-    <button
-      type="submit"
-      [disabled]="isLoading"
-      class="submit-btn w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl font-semibold transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-      [ngClass]="role"
-    >
-      <i class="fas fa-user-plus" *ngIf="!isLoading"></i>
-      <span>
-        {{ isLoading ? "Creating Account..." : "Create Account" }}
-      </span>
-    </button>
-  </div>
-
-  <!-- Change Role Button (styled with Tailwind) -->
-  <a routerLink="/auth/role" class="block">
-    <button
-      type="button"
-      [disabled]="isLoading"
-      class="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-white font-semibold transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-      [ngClass]="{
-        'bg-blue-600 hover:bg-blue-700': !isLoading,
-        'bg-blue-400 cursor-wait': isLoading
-      }"
-    >
-      <ng-container *ngIf="!isLoading; else loadingTemplate">
-        <!-- Heroicon UserPlus -->
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M16 14a4 4 0 10-8 0m8 0a4 4 0 01-8 0m8 0v6m4-4h-4m-6 4h6"
-          />
-        </svg>
-        <span>Change Role</span>
-      </ng-container>
-
-      <ng-template #loadingTemplate>
-        <svg
-          class="w-5 h-5 animate-spin"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v4m0 8v4m8-8h-4M4 12H0m16.95 7.07l-2.83-2.83m-8.49 0L4.05 19.07M16.95 4.93l-2.83 2.83M7.88 7.76L4.05 4.93"
-          />
-        </svg>
-        <span>Choosing Role...</span>
-      </ng-template>
-    </button>
-  </a>
-
-</div>
-
-
+              <ng-template #loadingTemplate>
+                <svg
+                  class="w-5 h-5 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v4m0 8v4m8-8h-4M4 12H0m16.95 7.07l-2.83-2.83m-8.49 0L4.05 19.07M16.95 4.93l-2.83 2.83M7.88 7.76L4.05 4.93"
+                  />
+                </svg>
+                <span>Choosing Role...</span>
+              </ng-template>
+            </button>
+          </a>
+        </div>
       </form>
 
       <!-- Login Link -->

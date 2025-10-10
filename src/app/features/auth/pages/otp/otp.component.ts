@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NotyService } from '../../../../core/services/noty.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
@@ -57,7 +57,9 @@ export class OtpComponent implements OnInit ,OnDestroy{
       },
     });
   }
-
+goToSignUp(){
+  this.router.navigate(['/auth/signup'], {queryParams: {role: this.role}})
+}
   resendOtp() {
     this.authService.resendOtp(this.email, this.role).subscribe({
       next: (res) => {

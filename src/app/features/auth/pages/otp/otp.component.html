@@ -1,241 +1,384 @@
-<div class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md mx-auto">
-    <div class="bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-red-500/20">
-      <!-- Header -->
-      <div class="bg-red-600 px-6 py-8 text-center">
-        <h2 class="text-2xl font-bold text-white">Verify Your Email</h2>
-        <p class="text-red-100 mt-2">Please enter the OTP sent to your email address</p>
+<!-- otp.component.html -->
+<div
+  class="min-h-screen fitness-bg flex items-center justify-center px-4 relative overflow-hidden"
+>
+  <!-- Decorative Elements -->
+  <div
+    class="absolute top-10 left-10 w-20 h-20 rounded-full opacity-20 floating-animation"
+    [ngClass]="{
+      'bg-gradient-to-r from-blue-500 to-purple-600': role === 'user',
+      'bg-gradient-to-r from-red-500 to-pink-600': role === 'trainer'
+    }"
+  ></div>
+  <div
+    class="absolute bottom-10 right-10 w-16 h-16 rounded-full opacity-20 floating-animation animation-delay-1"
+    [ngClass]="{
+      'bg-gradient-to-r from-blue-400 to-cyan-500': role === 'user',
+      'bg-gradient-to-r from-red-400 to-orange-500': role === 'trainer'
+    }"
+  ></div>
+  <div
+    class="absolute top-1/2 right-10 w-12 h-12 rounded-full opacity-20 floating-animation animation-delay-2"
+    [ngClass]="{
+      'bg-gradient-to-r from-indigo-500 to-blue-600': role === 'user',
+      'bg-gradient-to-r from-pink-500 to-red-600': role === 'trainer'
+    }"
+  ></div>
+
+  <div
+    class="max-w-md w-full glass-effect p-8 rounded-3xl shadow-2xl slide-in relative"
+  >
+    <!-- Header -->
+    <div class="text-center relative mb-8">
+      <div class="fitness-icon inline-block mb-4 floating-animation">
+        <i class="fas fa-envelope-open-text text-white text-3xl"></i>
+      </div>
+      <div
+        class="absolute -top-2 left-1/2 transform -translate-x-1/2 w-20 h-20 rounded-full opacity-30 pulse-ring"
+        [ngClass]="{
+          'bg-gradient-to-r from-blue-400 to-cyan-500': role === 'user',
+          'bg-gradient-to-r from-red-400 to-pink-500': role === 'trainer'
+        }"
+      ></div>
+
+      <h1 class="text-4xl font-extrabold vortex-logo mb-2">VortexFit</h1>
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">Verify Your Email</h2>
+      <p class="text-sm text-gray-600">
+        We've sent a verification code to your email
+      </p>
+
+      <div
+        class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 mt-3"
+      >
+        <i
+          class="fas mr-2"
+          [ngClass]="{
+            'fa-user-circle text-blue-500': role === 'user',
+            'fa-dumbbell text-red-500': role === 'trainer'
+          }"
+        >
+        </i>
+        <span>{{
+          role === "user" ? "Member Verification" : "Trainer Verification"
+        }}</span>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    <div
+      *ngIf="message"
+      class="mb-4 p-4 rounded-xl bg-green-50 border-2 border-green-200 slide-down"
+    >
+      <div class="flex items-center">
+        <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
+        <span class="text-green-700 font-medium">{{ message }}</span>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div
+      *ngIf="errorMessage"
+      class="mb-4 p-4 rounded-xl bg-red-50 border-2 border-red-200 slide-down"
+    >
+      <div class="flex items-center">
+        <i class="fas fa-exclamation-triangle text-red-500 text-xl mr-3"></i>
+        <span class="text-red-700 font-medium">{{ errorMessage }}</span>
+      </div>
+    </div>
+
+    <!-- OTP Form -->
+    <form (ngSubmit)="verifyOtp()" class="space-y-5">
+      <!-- Email Field -->
+      <div class="group">
+        <label
+          for="email"
+          class="block text-sm font-semibold text-gray-700 mb-2"
+        >
+          <i class="fas fa-envelope mr-2 text-gray-500"></i>Email Address
+        </label>
+        <div class="relative">
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            required
+            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none transition-all duration-300 bg-white/90"
+            [ngClass]="{
+              'focus:border-blue-500 focus:shadow-blue-100': role === 'user',
+              'focus:border-red-500 focus:shadow-red-100': role === 'trainer'
+            }"
+            placeholder="your.email@example.com"
+          />
+          <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+            <i class="fas fa-at text-gray-400"></i>
+          </div>
+        </div>
       </div>
 
-      <!-- Form -->
-      <form (ngSubmit)="verifyOtp()" class="p-6 space-y-6">
-        <!-- Email Input -->
-        <div class="space-y-2">
-          <label for="email" class="block text-sm font-medium text-gray-200">Email Address</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <i class="fas fa-envelope text-red-500"></i>
-            </div>
-            <input 
-              type="email" 
-              id="email" 
-              [(ngModel)]="email" 
-              name="email" 
-              class="block w-full pl-10 pr-3 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-150"
-              required 
-              placeholder="Enter your email"
-            />
+      <!-- OTP Field -->
+      <div class="group">
+        <label for="otp" class="block text-sm font-semibold text-gray-700 mb-2">
+          <i class="fas fa-key mr-2 text-gray-500"></i>Verification Code
+        </label>
+        <div class="relative">
+          <input
+            id="otp"
+            type="text"
+            [(ngModel)]="otp"
+            name="otp"
+            required
+            maxlength="6"
+            pattern="[0-9]{6}"
+            class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none transition-all duration-300 bg-white/90 text-center text-2xl font-bold tracking-widest"
+            [ngClass]="{
+              'focus:border-blue-500 focus:shadow-blue-100': role === 'user',
+              'focus:border-red-500 focus:shadow-red-100': role === 'trainer'
+            }"
+            placeholder="000000"
+          />
+          <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+            <i class="fas fa-shield-alt text-gray-400"></i>
           </div>
         </div>
+        <p class="mt-2 text-xs text-gray-500 flex items-center">
+          <i class="fas fa-info-circle mr-1"></i>
+          Enter the 6-digit code sent to your email
+        </p>
+      </div>
 
-        <!-- OTP Input -->
-        <div class="space-y-2">
-          <label for="otp" class="block text-sm font-medium text-gray-200">OTP Code</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <i class="fas fa-key text-red-500"></i>
-            </div>
-            <input 
-              type="text" 
-              id="otp" 
-              [(ngModel)]="otp" 
-              name="otp" 
-              class="block w-full pl-10 pr-3 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition duration-150"
-              required 
-              placeholder="Enter OTP"
-              maxlength="6"
-            />
-          </div>
-        </div>
+      <!-- Verify Button -->
+      <button
+        type="submit"
+        class="group relative w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300 shadow-lg hover:shadow-xl"
+        [ngClass]="{
+          'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:ring-blue-500':
+            role === 'user',
+          'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:ring-red-500':
+            role === 'trainer'
+        }"
+      >
+        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+          <i class="fas fa-check-circle group-hover:text-white/80"></i>
+        </span>
+        <span>Verify Email</span>
+      </button>
 
-        <!-- Verify Button -->
-        <button 
-          type="submit" 
-          class="w-full flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 transform hover:-translate-y-0.5 hover:shadow-lg"
+      <!-- Resend Section -->
+      <div class="text-center space-y-3 pt-2">
+        <p class="text-sm text-gray-600">Didn't receive the code?</p>
+
+        <button
+          type="button"
+          (click)="resendOtp()"
+          [disabled]="isResendDisabled"
+          class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          [ngClass]="{
+            'bg-blue-50 text-blue-600 hover:bg-blue-100 border-2 border-blue-200':
+              role === 'user' && !isResendDisabled,
+            'bg-red-50 text-red-600 hover:bg-red-100 border-2 border-red-200':
+              role === 'trainer' && !isResendDisabled,
+            'bg-gray-100 text-gray-400 border-2 border-gray-200':
+              isResendDisabled
+          }"
         >
-          <i class="fas fa-check mr-2"></i>
-          Verify OTP
+          <i
+            class="fas"
+            [ngClass]="isResendDisabled ? 'fa-clock' : 'fa-redo-alt'"
+          ></i>
+          <span>{{
+            isResendDisabled ? "Resend in " + timer + "s" : "Resend Code"
+          }}</span>
         </button>
 
-        <!-- Resend Section -->
-        <div class="mt-6 text-center space-y-4">
-          <button 
-            (click)="resendOtp()" 
-            [disabled]="isResendDisabled"
-            class="inline-flex items-center px-4 py-2 border border-gray-600 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150"
-          >
-            <i class="fas fa-redo mr-2"></i>
-            Resend OTP
-          </button>
-
-          <!-- Timer -->
-          <div *ngIf="isResendDisabled" class="flex items-center justify-center space-x-2 text-sm text-gray-400">
-            <i class="fas fa-clock text-red-500"></i>
-            <span>Resend available in: {{ timer }} seconds</span>
+        <!-- Timer Progress Bar -->
+        <div *ngIf="isResendDisabled" class="w-full max-w-xs mx-auto">
+          <div class="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              class="h-full rounded-full transition-all duration-1000 ease-linear"
+              [ngClass]="{
+                'bg-gradient-to-r from-blue-500 to-blue-600': role === 'user',
+                'bg-gradient-to-r from-red-500 to-red-600': role === 'trainer'
+              }"
+              [style.width.%]="(timer / 60) * 100"
+            ></div>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+
+      <!-- Footer Links -->
+      <div
+        class="flex flex-col space-y-3 text-center pt-4 border-t border-gray-200"
+      >
+        <button
+          type="button"
+          (click)="goToSignUp()"
+          class="text-sm font-medium focus:outline-none focus:underline transition-colors"
+          [ngClass]="{
+            'text-blue-600 hover:text-blue-500': role === 'user',
+            'text-red-600 hover:text-red-500': role === 'trainer'
+          }"
+        >
+          <i class="fas fa-arrow-left mr-1"></i>Back to Sign Up
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 
 <style>
-.otp-container {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  background-color: #1a1a1a;
-}
-
-.otp-card {
-  background-color: #2d2d2d;
-  border-radius: 12px;
-  padding: 2rem;
-  width: 100%;
-  max-width: 500px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #dc2626;
-}
-
-.card-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.title {
-  color: #ffffff;
-  font-size: 1.75rem;
-  margin-bottom: 0.5rem;
-}
-
-.subtitle {
-  color: #b3b3b3;
-  font-size: 1rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-group label {
-  display: block;
-  color: #ffffff;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-
-.input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.input-wrapper i {
-  position: absolute;
-  left: 1rem;
-  color: #dc2626;
-}
-
-.form-control {
-  width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border: 1px solid #404040;
-  border-radius: 6px;
-  background-color: #1a1a1a;
-  color: #ffffff;
-  font-size: 1rem;
-  transition: all 0.2s;
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #dc2626;
-  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
-}
-
-.form-control::placeholder {
-  color: #666666;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  font-weight: 500;
-  font-size: 1rem;
-  transition: all 0.2s;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-}
-
-.btn i {
-  font-size: 1.1rem;
-}
-
-.btn-primary {
-  background-color: #dc2626;
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #b91c1c;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
-}
-
-.btn-secondary {
-  background-color: #404040;
-  color: white;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background-color: #505050;
-  transform: translateY(-2px);
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.resend-section {
-  margin-top: 2rem;
-  text-align: center;
-}
-
-.timer {
-  margin-top: 1rem;
-  color: #b3b3b3;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.timer i {
-  color: #dc2626;
-}
-
-/* Responsive adjustments */
-@media (max-width: 640px) {
-  .otp-card {
-    padding: 1.5rem;
+  /* Fitness Background */
+  .fitness-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
   }
 
-  .title {
-    font-size: 1.5rem;
+  /* Glass Effect */
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
   }
 
-  .btn {
-    padding: 0.625rem 1.25rem;
+  /* Fitness Icon */
+  .fitness-icon {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+    position: relative;
+    z-index: 10;
   }
-}
+
+  /* Vortex Logo */
+  .vortex-logo {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Animations */
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes floating-animation {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  .floating-animation {
+    animation: floating-animation 3s ease-in-out infinite;
+  }
+
+  .animation-delay-1 {
+    animation-delay: 1s;
+  }
+
+  .animation-delay-2 {
+    animation-delay: 2s;
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      transform: translate(-50%, -50%) scale(0.8);
+      opacity: 0.8;
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.2);
+      opacity: 0.4;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(0.8);
+      opacity: 0.8;
+    }
+  }
+
+  .pulse-ring {
+    animation: pulse-ring 3s ease-in-out infinite;
+  }
+
+  @keyframes slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .slide-in {
+    animation: slide-in 0.6s ease-out;
+  }
+
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .slide-down {
+    animation: slide-down 0.4s ease-out;
+  }
+
+  /* Focus Styles */
+  .focus\:shadow-blue-100:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  .focus\:shadow-red-100:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .glass-effect {
+      padding: 1.5rem;
+    }
+
+    .vortex-logo {
+      font-size: 2rem;
+    }
+
+    .fitness-icon {
+      width: 60px;
+      height: 60px;
+    }
+
+    .fitness-icon i {
+      font-size: 1.5rem;
+    }
+  }
+
+  /* Remove any potential scrolling */
+  body,
+  html {
+    overflow-x: hidden;
+  }
 </style>

@@ -14,7 +14,7 @@
 
   <!-- Results Summary -->
   <div
-    class="flex items-center justify-be tween text-sm text-gray-600"
+    class="flex items-center justify-between text-sm text-gray-600"
     *ngIf="!loading"
   >
     <p>
@@ -31,43 +31,43 @@
   <!-- Loading State -->
   <div
     *ngIf="loading"
-    class="bg-white rounded-xl shadow-sm border border-gray-100 p-10 flex flex-col items-center justify-center gap-3"
+    class="bg-gray-900/80 backdrop-blur-sm border border-blue-500/30 rounded-xl shadow-sm p-10 flex flex-col items-center justify-center gap-3"
   >
     <div class="spinner"></div>
-    <p class="text-gray-600">Loading sessions...</p>
+    <p class="text-white">Loading sessions...</p>
   </div>
 
   <!-- Sessions Table Container -->
   <div
-    class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+    class="bg-gray-900/80 backdrop-blur-sm border border-blue-500/30 rounded-xl shadow-sm overflow-hidden"
     *ngIf="!loading"
   >
     <!-- Table Header -->
     <div
-      class="hidden md:grid grid-cols-[1.5fr,1fr,1fr,1fr,0.5fr] items-center bg-red-50 border-b border-gray-200"
+      class="hidden md:grid grid-cols-[1.5fr,1fr,1fr,1fr,0.5fr] items-center bg-gradient-to-r from-blue-500 to-blue-600 border-b border-blue-700"
     >
       <div
-        class="px-4 py-3 text-[11px] font-semibold tracking-wider text-gray-600"
+        class="px-4 py-3 text-[11px] font-semibold tracking-wider text-white uppercase"
       >
         Trainer NAME
       </div>
       <div
-        class="px-4 py-3 text-[11px] font-semibold tracking-wider text-gray-600"
+        class="px-4 py-3 text-[11px] font-semibold tracking-wider text-white uppercase"
       >
         DATE/TIME
       </div>
       <div
-        class="px-4 py-3 text-[11px] font-semibold tracking-wider text-gray-600"
+        class="px-4 py-3 text-[11px] font-semibold tracking-wider text-white uppercase"
       >
         SESSION TYPE
       </div>
       <div
-        class="px-4 py-3 text-[11px] font-semibold tracking-wider text-gray-600"
+        class="px-4 py-3 text-[11px] font-semibold tracking-wider text-white uppercase"
       >
         STATUS
       </div>
       <div
-        class="px-4 py-3 text-[11px] font-semibold tracking-wider text-gray-600 text-right"
+        class="px-4 py-3 text-[11px] font-semibold tracking-wider text-white text-right uppercase"
       >
         ACTIONS
       </div>
@@ -78,7 +78,7 @@
       <!-- No Results Message -->
       <div *ngIf="filteredBookingData.length === 0" class="p-10 text-center">
         <div
-          class="mx-auto mb-2 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center text-red-600"
+          class="mx-auto mb-2 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"
         >
           📅
         </div>
@@ -91,22 +91,22 @@
       <!-- Session Rows -->
       <div
         *ngFor="let booking of filteredBookingData"
-        class="group border-b last:border-0 border-gray-100 hover:bg-red-50/40 transition-colors"
+        class="group border-b last:border-0 border-blue-500/20 hover:bg-blue-500/10 transition-colors"
       >
         <div
           class="grid md:grid-cols-[1.5fr,1fr,1fr,1fr,0.5fr] gap-4 md:gap-0 items-center"
         >
           <!-- Client Info -->
           <div class="px-4 py-4">
-            <div class="text-sm font-medium text-gray-900">
+            <div class="text-sm font-medium text-white">
               {{ booking?.trainerId?.name }}
             </div>
           </div>
 
           <!-- Date/Time -->
-          <div class="px-4 py-4 text-sm text-gray-700">
+          <div class="px-4 py-4 text-sm text-white">
             <div class="font-medium">{{ formatDate(booking.date) }}</div>
-            <div class="text-gray-500">{{ booking.timeSlot }}</div>
+            <div class="text-gray-400">{{ booking.timeSlot }}</div>
           </div>
 
           <!-- Session Type -->
@@ -144,26 +144,29 @@
           </div>
 
           <!-- Actions -->
-          <div class="px-4 py-4 flex md:justify-end">
+          <div class="px-4 py-4 flex md:justify-end gap-2">
             <button
               (click)="startVideoCall(booking)"
-              class="group inline-flex items-center justify-center h-9 w-9 rounded-full bg-red-600 hover:bg-red-800 transition-colors shadow-sm"
+              class="group inline-flex items-center justify-center h-9 w-9 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all shadow-sm"
               [disabled]="booking.status !== 'confirmed'"
               [class.opacity-50]="booking.status !== 'confirmed'"
               [class.cursor-not-allowed]="booking.status !== 'confirmed'"
               title="Start Video Call"
             >
-              <span class="text-red-200 group-hover:text-white">🎥</span>
+              <span class="text-white">🎥</span>
             </button>
-            <button class="btn btn-danger" (click)="cancelBooking(booking._id)">
-              Cancel Booking
+            <button 
+              class="inline-flex items-center justify-center h-9 px-3 rounded-full bg-white border-2 border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-300 transition-all text-xs font-semibold" 
+              (click)="cancelBooking(booking._id)"
+            >
+              Cancel
             </button>
           </div>
         </div>
 
         <!-- Mobile-only labels -->
         <div
-          class="md:hidden grid grid-cols-3 gap-4 text-[11px] text-gray-500 px-4 pb-3"
+          class="md:hidden grid grid-cols-3 gap-4 text-[11px] text-gray-400 px-4 pb-3"
         >
           <div>Client</div>
           <div>Date/Time</div>
@@ -193,3 +196,99 @@
   (callEnded)="onCallEnded()"
 >
 </app-video-call>
+
+<style>
+/* Session Type Badge Styles */
+.session-type-badge {
+  transition: all 0.2s ease;
+}
+
+/* Video Session - Blue Theme */
+.session-type-badge.bg-blue-100 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  color: #2563eb !important;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.session-type-badge.bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  color: #2563eb !important;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* In-Person Session - Orange Theme */
+.session-type-badge.bg-green-100,
+.session-type-badge.bg-purple-100,
+.session-type-badge.bg-emerald-100 {
+  background-color: rgba(249, 115, 22, 0.1) !important;
+  color: #ea580c !important;
+  border: 1px solid rgba(249, 115, 22, 0.2);
+}
+
+/* Status Badge Styles */
+.status-badge {
+  transition: all 0.2s ease;
+}
+
+/* Confirmed Status - Blue Theme */
+.status-badge.bg-green-100 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  color: #2563eb !important;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.status-badge.text-green-800 {
+  color: #2563eb !important;
+}
+
+/* Pending Status - Orange Theme */
+.status-badge.bg-yellow-100,
+.status-badge.bg-orange-100 {
+  background-color: rgba(249, 115, 22, 0.1) !important;
+  color: #ea580c !important;
+  border: 1px solid rgba(249, 115, 22, 0.2);
+}
+
+.status-badge.text-yellow-800,
+.status-badge.text-orange-800 {
+  color: #ea580c !important;
+}
+
+/* Cancelled Status - Gray Theme */
+.status-badge.bg-red-100 {
+  background-color: rgba(156, 163, 175, 0.15) !important;
+  color: #1f2937 !important;
+  border: 1px solid rgba(156, 163, 175, 0.3);
+}
+
+.status-badge.text-red-800 {
+  color: #1f2937 !important;
+}
+
+/* Completed Status - Dark Gray Theme */
+.status-badge.bg-purple-100 {
+  background-color: rgba(17, 24, 39, 0.1) !important;
+  color: #111827 !important;
+  border: 1px solid rgba(17, 24, 39, 0.2);
+}
+
+.status-badge.text-purple-800 {
+  color: #111827 !important;
+}
+
+/* Spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>

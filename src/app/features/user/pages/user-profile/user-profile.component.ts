@@ -1,4 +1,4 @@
-import {  CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -9,7 +9,10 @@ import {
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/app.state';
 import { map, Observable } from 'rxjs';
-import { AuthenticatedUser, updateCurrentUser } from '../../../auth/store/actions/auth.actions';
+import {
+  AuthenticatedUser,
+  updateCurrentUser,
+} from '../../../auth/store/actions/auth.actions';
 import { selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';
 import { UserService } from '../../services/user.service';
 import { isUser } from '../../../../core/guards/user-type-guards';
@@ -20,7 +23,7 @@ import { minimumAgeValidator } from '../../../../core/validators/dob.validator';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [ CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
 })
@@ -90,11 +93,10 @@ export class UserProfileComponent implements OnInit {
 
     this.initializeForm();
 
-
     this.$currentUser.subscribe((user) => {
       if (user) {
-        if(isUser(user)){
-          this.populateForm(user)
+        if (isUser(user)) {
+          this.populateForm(user);
         }
       }
     });
@@ -103,9 +105,16 @@ export class UserProfileComponent implements OnInit {
   private initializeForm(): void {
     this.profileForm = this.fb.group({
       image: [null],
-      name: ['', [Validators.required, Validators.minLength(2),  Validators.pattern(/^[a-zA-Z][a-zA-Z\s\-_']*$/
-)]],
-      email: [{ value: '', disabled: true }], // Email is not editable
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(25),
+          Validators.pattern(/^[a-zA-Z][a-zA-Z\s\-_']*$/),
+        ],
+      ],
+      email: [{ value: '', disabled: true }],
       dob: ['', [minimumAgeValidator(18)]],
       height: [
         '',
@@ -125,36 +134,35 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-private populateForm(user: User): void {
-  const formattedDob = user.dob
-    ? new Date(user.dob).toISOString().split('T')[0]
-    : '';
+  private populateForm(user: User): void {
+    const formattedDob = user.dob
+      ? new Date(user.dob).toISOString().split('T')[0]
+      : '';
 
-  const formValues = {
-    image: user.image || null,
-    name: user.name || '',
-    email: user.email || '',
-    dob: formattedDob,
-    height: user.height || '',
-    heightUnit: user.heightUnit || 'cm',
-    weight: user.weight || '',
-    weightUnit: user.weightUnit || 'kg',
-    fitnessLevel: user.fitnessLevel || '',
-    fitnessGoals: user.fitnessGoals || [],
-    trainingTypes: user.trainingTypes || [],
-    preferredTime: user.preferredTime || '',
-    equipments: user.equipments || [],
-  };
+    const formValues = {
+      image: user.image || null,
+      name: user.name || '',
+      email: user.email || '',
+      dob: formattedDob,
+      height: user.height || '',
+      heightUnit: user.heightUnit || 'cm',
+      weight: user.weight || '',
+      weightUnit: user.weightUnit || 'kg',
+      fitnessLevel: user.fitnessLevel || '',
+      fitnessGoals: user.fitnessGoals || [],
+      trainingTypes: user.trainingTypes || [],
+      preferredTime: user.preferredTime || '',
+      equipments: user.equipments || [],
+    };
 
-  this.profileForm.patchValue(formValues);
+    this.profileForm.patchValue(formValues);
 
-  if (user.image) {
-    this.imagePreviewUrl = user.image;
+    if (user.image) {
+      this.imagePreviewUrl = user.image;
+    }
+
+    this.originalFormValues = { ...formValues };
   }
-
-  this.originalFormValues = { ...formValues };
-}
-
 
   onFileSelect(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -162,7 +170,6 @@ private populateForm(user: User): void {
 
     const file = input.files[0];
 
-  
     if (!file.type.startsWith('image/')) {
       alert('Please select a valid image file');
       return;
@@ -175,7 +182,6 @@ private populateForm(user: User): void {
 
     const contentType = file.type;
     const fileName = file.name;
-
 
     this.isLoading = true;
 
@@ -213,43 +219,41 @@ private populateForm(user: User): void {
       });
   }
 
-onGoalToggle(goal: string): void {
-  const control = this.profileForm.get('fitnessGoals');
-  const goals = control?.value || [];
+  onGoalToggle(goal: string): void {
+    const control = this.profileForm.get('fitnessGoals');
+    const goals = control?.value || [];
 
-  const updatedGoals = goals.includes(goal)
-    ? goals.filter((g: string) => g !== goal)
-    : [...goals, goal];
+    const updatedGoals = goals.includes(goal)
+      ? goals.filter((g: string) => g !== goal)
+      : [...goals, goal];
 
-  control?.setValue(updatedGoals);
-  control?.markAsDirty();
-}
+    control?.setValue(updatedGoals);
+    control?.markAsDirty();
+  }
 
-onTrainingTypeToggle(type: string): void {
-  const control = this.profileForm.get('trainingTypes');
-  const types = control?.value || [];
+  onTrainingTypeToggle(type: string): void {
+    const control = this.profileForm.get('trainingTypes');
+    const types = control?.value || [];
 
-  const updatedTypes = types.includes(type)
-    ? types.filter((t: string) => t !== type)
-    : [...types, type];
+    const updatedTypes = types.includes(type)
+      ? types.filter((t: string) => t !== type)
+      : [...types, type];
 
-  control?.setValue(updatedTypes);
-  control?.markAsDirty();
-}
+    control?.setValue(updatedTypes);
+    control?.markAsDirty();
+  }
 
+  onEquipmentToggle(equipment: string): void {
+    const control = this.profileForm.get('equipments');
+    const equipments = control?.value || [];
 
-onEquipmentToggle(equipment: string): void {
-  const control = this.profileForm.get('equipments');
-  const equipments = control?.value || [];
+    const updatedEquipments = equipments.includes(equipment)
+      ? equipments.filter((e: string) => e !== equipment)
+      : [...equipments, equipment];
 
-  const updatedEquipments = equipments.includes(equipment)
-    ? equipments.filter((e: string) => e !== equipment)
-    : [...equipments, equipment];
-
-  control?.setValue(updatedEquipments);
-  control?.markAsDirty();
-}
-
+    control?.setValue(updatedEquipments);
+    control?.markAsDirty();
+  }
 
   isGoalSelected(goal: string): boolean {
     return this.profileForm.get('fitnessGoals')?.value?.includes(goal) || false;
@@ -271,7 +275,10 @@ onEquipmentToggle(equipment: string): void {
     const field = this.profileForm.get(fieldName);
     if (field?.errors && field.touched) {
       if (field.errors['required']) return `${fieldName} is required`;
-      if (field.errors['minlength']) return `${fieldName} is too short`;
+      if (field.errors['minlength'])
+        return `${fieldName} is too short 2 to 25 characters`;
+      if (field.errors['maxlength'])
+        return `${fieldName} is too long between 2 to 25 characters`;
       if (field.errors['min']) return `${fieldName} value is too low`;
       if (field.errors['max']) return `${fieldName} value is too high`;
     }
@@ -290,13 +297,12 @@ onEquipmentToggle(equipment: string): void {
 
       // Handle arrays (fitness goals, training types, equipments)
       if (Array.isArray(currentValue) && Array.isArray(originalValue)) {
-   if (
-  JSON.stringify([...currentValue].sort()) !==
-  JSON.stringify([...originalValue].sort())
-) {
-  changedFields[key] = currentValue;
-}
-
+        if (
+          JSON.stringify([...currentValue].sort()) !==
+          JSON.stringify([...originalValue].sort())
+        ) {
+          changedFields[key] = currentValue;
+        }
       }
       // Handle other fields including image
       else if (
@@ -325,9 +331,6 @@ onEquipmentToggle(equipment: string): void {
       this.isLoading = true;
       console.log('Updating profile with changes:', changedFields);
 
-
-
-
       Object.keys(this.profileForm.controls).forEach((key) => {
         const control = this.profileForm.get(key);
         if (control?.dirty) {
@@ -343,15 +346,16 @@ onEquipmentToggle(equipment: string): void {
       // // Call the API endpoint using your userService
       this.userService.updateProfile(changedFields).subscribe({
         next: (response: User) => {
-          this.store.dispatch(updateCurrentUser({user: response}))
+          this.store.dispatch(updateCurrentUser({ user: response }));
           this.isLoading = false;
 
           // Update original values with the new ones
-       this.originalFormValues = structuredClone(this.profileForm.getRawValue());
-
+          this.originalFormValues = structuredClone(
+            this.profileForm.getRawValue()
+          );
 
           // Optional: Show success message
-         this.notify.showSuccess('Profile updated successfully.')
+          this.notify.showSuccess('Profile updated successfully.');
 
           // Optional: Update the store with new user data if response contains updated user
           // if (response.user) {
@@ -364,13 +368,19 @@ onEquipmentToggle(equipment: string): void {
 
           // Show user-friendly error message
           if (error.status === 400) {
-            this.notify.showError('Invalid data provided. Please check your inputs.');
+            this.notify.showError(
+              'Invalid data provided. Please check your inputs.'
+            );
           } else if (error.status === 413) {
-             this.notify.showError('File size too large. Please choose a smaller image.');
+            this.notify.showError(
+              'File size too large. Please choose a smaller image.'
+            );
           } else {
-             this.notify.showError('Failed to update profile. Please try again.');
+            this.notify.showError(
+              'Failed to update profile. Please try again.'
+            );
           }
-        }
+        },
       });
     } else {
       // Mark all fields as touched to show validation errors
