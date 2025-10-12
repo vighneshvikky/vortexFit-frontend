@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NotyService } from '../../../../core/services/noty.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './otp.component.html',
   styleUrl: './otp.component.scss',
 })
-export class OtpComponent implements OnInit ,OnDestroy{
+export class OtpComponent implements OnInit, OnDestroy {
   email = '';
   otp = '';
   role: 'user' | 'trainer' = 'user';
@@ -22,7 +22,6 @@ export class OtpComponent implements OnInit ,OnDestroy{
   timer = 60;
   isResendDisabled = true;
   interval: number | undefined;
-
 
   constructor(
     private route: ActivatedRoute,
@@ -41,25 +40,28 @@ export class OtpComponent implements OnInit ,OnDestroy{
   verifyOtp() {
     this.authService.verifyOtp(this.email, this.otp, this.role).subscribe({
       next: (res) => {
-        console.log('res from otp verfication', res)
+        console.log('res from otp verfication', res);
         this.message = res.message;
         this.errorMessage = '';
         this.notyService.showSuccess('Login successfully.');
-        console.log('res.role', res.data.role)
-        this.router.navigate(['/auth/login'], {queryParams: {role: res.data.role}})
+        console.log('res.role', res.data.role);
+        this.router.navigate(['/auth/login'], {
+          queryParams: { role: res.data.role },
+        });
       },
       error: (err) => {
-         console.error('Raw error:', err.error);
+        console.error('Raw error:', err.error);
         this.errorMessage = err.error?.message || 'OTP verification failed.';
         this.message = '';
         this.notyService.showError(err?.error?.message);
-    
       },
     });
   }
-goToSignUp(){
-  this.router.navigate(['/auth/signup'], {queryParams: {role: this.role}})
-}
+  goToSignUp() {
+    this.router.navigate(['/auth/signup'], {
+      queryParams: { role: this.role },
+    });
+  }
   resendOtp() {
     this.authService.resendOtp(this.email, this.role).subscribe({
       next: (res) => {
@@ -80,23 +82,22 @@ goToSignUp(){
       clearInterval(this.interval);
     }
   }
-startTimer() {
-  this.isResendDisabled = true;
-  this.timer = 60;
+  startTimer() {
+    this.isResendDisabled = true;
+    this.timer = 60;
 
-  if (this.interval !== undefined) {
-    clearInterval(this.interval);
-  }
-
-this.interval = window.setInterval(() => {
-  this.timer--;
-  if (this.timer <= 0) {
-    this.isResendDisabled = false;
     if (this.interval !== undefined) {
       clearInterval(this.interval);
     }
-  }
-}, 1000);
-}
 
+    this.interval = window.setInterval(() => {
+      this.timer--;
+      if (this.timer <= 0) {
+        this.isResendDisabled = false;
+        if (this.interval !== undefined) {
+          clearInterval(this.interval);
+        }
+      }
+    }, 1000);
+  }
 }

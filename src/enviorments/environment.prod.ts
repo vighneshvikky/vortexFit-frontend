@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  api: 'http://vortex-fit.space',
+  api: 'https://vortex-fit.space',
   googleClientId:
     '414745868113-lpndqpgeruk3c6493j18lfkmg0v103me.apps.googleusercontent.com',
   razorpayKey: 'rzp_test_OZVJGxiPWQgDaM',
