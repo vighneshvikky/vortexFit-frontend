@@ -93,7 +93,7 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(googleLogin),
         tap(({ role }) => {
-          window.location.href = `${environment.api}/auth/google/redirect?role=${role}`;
+          window.location.href = `${environment.googleUrl}?role=${role}`;
         })
       ),
     { dispatch: false }
