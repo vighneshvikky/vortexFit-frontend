@@ -12,7 +12,7 @@ import { LoginRequest } from '../interfaces/auth/login-request.model';
 
 import { Trainer } from '../../features/trainer/models/trainer.interface';
 import { User } from '../../features/admin/services/admin.service';
-import { environment } from '../../../enviorments/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

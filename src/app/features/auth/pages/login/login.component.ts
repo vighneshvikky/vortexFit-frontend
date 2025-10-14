@@ -93,6 +93,7 @@ export class LoginComponent implements OnInit {
   }
 
   onGoogleLogin() {
+    console.log('hai')
     this.store.dispatch(AuthActions.googleLogin({ role: this.role }));
   }
   redirectTosignup(){
