@@ -3,9 +3,9 @@ import {  Observable } from 'rxjs';
 import {
   SchedulingRule,
 } from '../models/scheduling.interface';
-import { environment } from '../../../../enviorments/environment';
 import { HttpClient } from '@angular/common/http';
 import { API_ROUTES } from '../../../app.routes.constants';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

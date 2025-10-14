@@ -18,7 +18,8 @@ import { SpinnerComponent } from '../../../../shared/components/spinner/spinner.
 import { NotyService } from '../../../../core/services/noty.service';
 import { ActivatedRoute } from '@angular/router';
 import { AppState } from '../../../../store/app.state';
-import { environment } from '../../../../../enviorments/environment';
+import { environment } from '../../../../../environments/environment';
+
 
 @Component({
   selector: 'app-login',

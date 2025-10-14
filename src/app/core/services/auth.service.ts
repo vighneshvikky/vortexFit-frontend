@@ -23,6 +23,7 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User | Trainer | null>(null);
   public user$ = this.userSubject.asObservable();
   registerUser(data: SignupRequest): Observable<ApiResponse<SignupResponse>> {
+    console.log('`${environment.api}/auth`', `${environment.api}/auth`);
     return this.http
       .post<ApiResponse<SignupResponse>>(`${this.api}/signup`, data)
       .pipe(

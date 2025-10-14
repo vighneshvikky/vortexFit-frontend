@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { environment } from "../../../../enviorments/environment";
+
 import { API_ROUTES } from "../../../app.routes.constants";
 import { SubscriptionPlan } from "../pages/admin-plan/admin-plan.component";
+import { environment } from "../../../../environments/environment";
 
 @Injectable({
     providedIn: 'root',

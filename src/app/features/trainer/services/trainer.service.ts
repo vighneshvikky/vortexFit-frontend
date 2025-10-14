@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../enviorments/environment';
+
 import { Trainer } from '../models/trainer.interface';
 import { VerificationStatus } from '../enums/verification-status.enum';
 import { API_ROUTES } from '../../../app.routes.constants';
 import { User } from '../../admin/services/admin.service';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

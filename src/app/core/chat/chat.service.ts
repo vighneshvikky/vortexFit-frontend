@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { ChatMessage, ChatRoom } from './interfaces/chat.interface';
-import { environment } from '../../../enviorments/environment';
+
 import { SocketService } from './services/socket.service';
 import { API_ROUTES } from '../../app.routes.constants';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

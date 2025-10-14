@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../enviorments/environment';
+
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Trainer } from '../../trainer/models/trainer.interface';
 import { User } from '../../admin/services/admin.service';
 import { API_ROUTES } from '../../../app.routes.constants';
 import { TimeSlotsResponse } from '../pages/user-booking/interface/user-booking.interface';
+import { environment } from '../../../../environments/environment';
 
 
 @Injectable({

@@ -5,7 +5,7 @@
   import {  Store } from '@ngrx/store';
   import { AppState } from '../../store/app.state';
   import { selectCurrentUserId } from '../../features/auth/store/selectors/auth.selectors';
-  import { environment } from '../../../enviorments/environment';
+  import { environment } from '../../../environments/environment';
   import { NotyService } from '../services/noty.service';
 
   

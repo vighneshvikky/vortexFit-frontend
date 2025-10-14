@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../enviorments/environment';
+
 import { API_ROUTES } from '../../../app.routes.constants';
 import { PaymentSuccessResponse, SessionBookingRequest } from '../pages/user-booking/interface/user-booking.interface';
 import { BookingSession } from '../../trainer/pages/trainer-session/interface/trainer.session.interface';
+import { environment } from '../../../../environments/environment';
 
 export interface CreateOrderResponse {
   order: {
