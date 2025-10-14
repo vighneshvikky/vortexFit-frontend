@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../../enviorments/environment';
+import { environment } from '../../../environments/environment';
 import { API_ROUTES } from '../../app.routes.constants';
 
 @Injectable({

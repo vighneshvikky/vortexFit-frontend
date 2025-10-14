@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../enviorments/environment';
 import { GetUsersQuery } from '../../../shared/components/admin/sidebar/sidebar.component';
 import { Trainer } from '../../trainer/models/trainer.interface';
 import { API_ROUTES } from '../../../app.routes.constants';
 import { Admin } from '../models/admin.interface';
+import { environment } from '../../../../environments/environment';
 
 export interface AdminLoginRequest {
   email: string;

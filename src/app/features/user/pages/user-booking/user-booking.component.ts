@@ -6,7 +6,7 @@ import { UserService } from '../../services/user.service';
 import { NotyService } from '../../../../core/services/noty.service';
 import { SchedulingRule } from '../../../trainer/models/scheduling.interface';
 import { PaymentService } from '../../services/payment.service';
-import { environment } from '../../../../../enviorments/environment';
+
 
 import {
   CalendarDay,
@@ -21,6 +21,7 @@ import {
   Wallet,
   WalletService,
 } from '../../../../core/services/wallet.service';
+import { environment } from '../../../../../environments/environment';
 
 export interface WalletResponse {
   success: boolean;

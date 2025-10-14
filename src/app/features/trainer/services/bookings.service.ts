@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../enviorments/environment';
+
 import { API_ROUTES } from '../../../app.routes.constants';
 import { HttpClient } from '@angular/common/http';
 import {  Observable} from 'rxjs';
@@ -7,6 +7,7 @@ import {
   BookingSession,
   
 } from '../pages/trainer-session/interface/trainer.session.interface';
+import { environment } from '../../../../environments/environment';
 export interface BookingFilters {
   clientId?: string;
   status?: string;
