@@ -19,11 +19,14 @@ import { environment } from '../../../environments/environment';
 })
 export class AuthService {
   private api = `${environment.api}/auth`;
+
+
   constructor(private http: HttpClient) {}
   private userSubject = new BehaviorSubject<User | Trainer | null>(null);
   public user$ = this.userSubject.asObservable();
   registerUser(data: SignupRequest): Observable<ApiResponse<SignupResponse>> {
     console.log('`${environment.api}/auth`', `${environment.api}/auth`);
+    console.log('Testing')
     return this.http
       .post<ApiResponse<SignupResponse>>(`${this.api}/signup`, data)
       .pipe(
