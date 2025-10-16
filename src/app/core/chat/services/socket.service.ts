@@ -82,6 +82,7 @@ export class SocketService {
   }
 
   getSocketErrors(): Observable<{ namespace: string; message: string }> {
+    console.log('getting socket error')
     return this.error$.asObservable();
   }
 }

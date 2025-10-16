@@ -120,6 +120,7 @@ export class ChatComponent implements OnInit, OnDestroy {
           }
         }
       });
+      console.log('sub errors', this.sub);
     this.loadChatData();
   }
 
