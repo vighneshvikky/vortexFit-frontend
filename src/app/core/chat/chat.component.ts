@@ -88,7 +88,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.checkScreenSize();
-
+console.log('chat component')
     this.store.select(selectCurrentUser).subscribe((currentUser) => {
       this.currentUserRole = { isTrainer: false, isUser: false };
 
