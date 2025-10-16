@@ -11,9 +11,8 @@
           <p class="status-message">
             Your profile is currently being reviewed by our team. We'll notify
             you once the review is complete.
-          
           </p>
-              <button class="action-button retry" (click)="redirectToLogin()">
+          <button class="action-button retry" (click)="redirectToLogin()">
             <i class="fas fa-redo"></i>
             Back to Login
           </button>
@@ -51,6 +50,11 @@
           <button class="action-button retry" (click)="submitFormAgain()">
             <i class="fas fa-redo"></i>
             Resubmit Application
+          </button>
+
+          <button class="action-button" (click)="redirectToLogin()">
+            <i class="fas fa-redo"></i>
+            Try to Login again
           </button>
         </div>
 

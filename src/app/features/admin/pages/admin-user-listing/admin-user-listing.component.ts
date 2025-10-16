@@ -37,7 +37,7 @@ export class AdminUserListingComponent implements OnInit {
   isLoadingUsers = false;
   currentPage = 1;
   totalPages = 1;
-  limit = 1;
+  limit = 6;
   filter: 'all' | 'user' | 'trainer' | 'blocked' = 'all';
 
   constructor(private store: Store, private adminService: AdminService) {

@@ -2,27 +2,40 @@
 <div class="dashboard-container min-h-screen bg-gray-900 p-4 md:p-6 lg:p-8">
   <!-- Header -->
   <div class="dashboard-header mb-6 md:mb-8 animate-fade-in">
-    <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2">Dashboard Overview</h1>
-    <p class="text-sm md:text-base text-gray-400">Welcome back! Here's what's happening with your platform.</p>
+    <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2">
+      Dashboard Overview
+    </h1>
+    <p class="text-sm md:text-base text-gray-400">
+      Welcome back! Here's what's happening with your platform.
+    </p>
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="loading" class="loading-overlay fixed inset-0 bg-gray-900 bg-opacity-95 flex items-center justify-center z-50">
+  <div
+    *ngIf="loading"
+    class="loading-overlay fixed inset-0 bg-gray-900 bg-opacity-95 flex items-center justify-center z-50"
+  >
     <div class="text-center animate-pulse">
-      <div class="spinner w-16 h-16 border-4 border-gray-700 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
+      <div
+        class="spinner w-16 h-16 border-4 border-gray-700 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"
+      ></div>
       <p class="text-gray-300 font-medium">Loading dashboard...</p>
     </div>
   </div>
 
   <!-- Error State -->
   <div *ngIf="error" class="error-message max-w-md mx-auto mt-20 animate-shake">
-    <div class="bg-red-900 bg-opacity-50 border-l-4 border-red-500 rounded-lg p-6 shadow-lg backdrop-blur-sm">
+    <div
+      class="bg-red-900 bg-opacity-50 border-l-4 border-red-500 rounded-lg p-6 shadow-lg backdrop-blur-sm"
+    >
       <div class="flex items-start">
         <div class="error-icon text-4xl mr-4">⚠️</div>
         <div class="flex-1">
-          <h3 class="text-lg font-semibold text-red-300 mb-2">Error Loading Dashboard</h3>
+          <h3 class="text-lg font-semibold text-red-300 mb-2">
+            Error Loading Dashboard
+          </h3>
           <p class="text-red-200 mb-4">{{ error }}</p>
-          <button 
+          <button
             class="retry-btn bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 active:scale-95"
             (click)="loadDashboardData()"
           >
@@ -36,86 +49,168 @@
   <!-- Dashboard Content -->
   <div *ngIf="!loading && !error && dashboardStats" class="dashboard-content">
     <!-- Stats Cards Grid -->
-    <div class="stats-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+    <div
+      class="stats-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8"
+    >
       <!-- Total Users Card -->
-      <div class="stat-card bg-gradient-to-br from-purple-600 to-purple-800 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 animate-slide-up border border-purple-500 border-opacity-20" style="animation-delay: 0.1s">
+      <div
+        class="stat-card bg-gradient-to-br from-purple-600 to-purple-800 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 animate-slide-up border border-purple-500 border-opacity-20"
+        style="animation-delay: 0.1s"
+      >
         <div class="flex items-start justify-between mb-4">
-          <div class="stat-icon text-4xl bg-white bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center backdrop-blur-sm">👥</div>
-          <span class="stat-badge bg-purple-500 bg-opacity-30 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">
+          <div
+            class="stat-icon text-4xl bg-white bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center backdrop-blur-sm"
+          >
+            👥
+          </div>
+          <span
+            class="stat-badge bg-purple-500 bg-opacity-30 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm"
+          >
             +{{ dashboardStats.users.newThisMonth }} this month
           </span>
         </div>
         <div class="stat-content">
           <h3 class="text-sm font-medium text-purple-200 mb-1">Total Users</h3>
-          <p class="stat-number text-3xl md:text-4xl font-bold">{{ dashboardStats.users.total | number }}</p>
+          <p class="stat-number text-3xl md:text-4xl font-bold">
+            {{ dashboardStats.users.total | number }}
+          </p>
         </div>
       </div>
 
       <!-- Trainers Card -->
-      <div class="stat-card bg-gradient-to-br from-pink-600 to-pink-800 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 animate-slide-up border border-pink-500 border-opacity-20" style="animation-delay: 0.2s">
+      <div
+        class="stat-card bg-gradient-to-br from-pink-600 to-pink-800 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 animate-slide-up border border-pink-500 border-opacity-20"
+        style="animation-delay: 0.2s"
+      >
         <div class="flex items-start justify-between mb-4">
-          <div class="stat-icon text-4xl bg-white bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center backdrop-blur-sm">💪</div>
-          <span class="stat-badge bg-pink-500 bg-opacity-30 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">Active</span>
+          <div
+            class="stat-icon text-4xl bg-white bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center backdrop-blur-sm"
+          >
+            💪
+          </div>
+          <span
+            class="stat-badge bg-pink-500 bg-opacity-30 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm"
+            >Active</span
+          >
         </div>
         <div class="stat-content">
           <h3 class="text-sm font-medium text-pink-200 mb-1">Trainers</h3>
-          <p class="stat-number text-3xl md:text-4xl font-bold">{{ dashboardStats.trainers.total | number }}</p>
+          <p class="stat-number text-3xl md:text-4xl font-bold">
+            {{ dashboardStats.trainers.total | number }}
+          </p>
         </div>
       </div>
 
       <!-- Bookings Card -->
-      <div class="stat-card bg-gradient-to-br from-cyan-600 to-cyan-800 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 animate-slide-up border border-cyan-500 border-opacity-20" style="animation-delay: 0.3s">
+      <div
+        class="stat-card bg-gradient-to-br from-cyan-600 to-cyan-800 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 animate-slide-up border border-cyan-500 border-opacity-20"
+        style="animation-delay: 0.3s"
+      >
         <div class="flex items-start justify-between mb-4">
-          <div class="stat-icon text-4xl bg-white bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center backdrop-blur-sm">📅</div>
-          <span class="stat-badge bg-cyan-500 bg-opacity-30 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">Total</span>
+          <div
+            class="stat-icon text-4xl bg-white bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center backdrop-blur-sm"
+          >
+            📅
+          </div>
+          <span
+            class="stat-badge bg-cyan-500 bg-opacity-30 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm"
+            >Total</span
+          >
         </div>
         <div class="stat-content">
           <h3 class="text-sm font-medium text-cyan-200 mb-1">Bookings</h3>
-          <p class="stat-number text-3xl md:text-4xl font-bold">{{ dashboardStats.bookings.total | number }}</p>
+          <p class="stat-number text-3xl md:text-4xl font-bold">
+            {{ dashboardStats.bookings.total | number }}
+          </p>
         </div>
       </div>
 
       <!-- Subscriptions Card -->
-      <div class="stat-card bg-gradient-to-br from-green-600 to-green-800 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 animate-slide-up border border-green-500 border-opacity-20" style="animation-delay: 0.4s">
+      <div
+        class="stat-card bg-gradient-to-br from-green-600 to-green-800 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 animate-slide-up border border-green-500 border-opacity-20"
+        style="animation-delay: 0.4s"
+      >
         <div class="flex items-start justify-between mb-4">
-          <div class="stat-icon text-4xl bg-white bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center backdrop-blur-sm">💳</div>
-          <span class="stat-badge bg-green-500 bg-opacity-30 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">Active</span>
+          <div
+            class="stat-icon text-4xl bg-white bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center backdrop-blur-sm"
+          >
+            💳
+          </div>
+          <span
+            class="stat-badge bg-green-500 bg-opacity-30 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm"
+            >Active</span
+          >
         </div>
         <div class="stat-content">
           <h3 class="text-sm font-medium text-green-200 mb-1">Subscriptions</h3>
-          <p class="stat-number text-3xl md:text-4xl font-bold">{{ dashboardStats.subscriptions.total | number }}</p>
+          <p class="stat-number text-3xl md:text-4xl font-bold">
+            {{ dashboardStats.subscriptions.total | number }}
+          </p>
         </div>
       </div>
 
       <!-- Total Revenue Card -->
-      <div class="stat-card revenue bg-gradient-to-br from-indigo-600 to-purple-700 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 animate-slide-up sm:col-span-2 lg:col-span-1 xl:col-span-2 border border-indigo-500 border-opacity-20" style="animation-delay: 0.5s">
+      <div
+        class="stat-card revenue bg-gradient-to-br from-indigo-600 to-purple-700 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 animate-slide-up sm:col-span-2 lg:col-span-1 xl:col-span-2 border border-indigo-500 border-opacity-20"
+        style="animation-delay: 0.5s"
+      >
         <div class="flex items-start justify-between mb-4">
-          <div class="stat-icon text-4xl bg-white bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center backdrop-blur-sm">💰</div>
-          <span class="stat-badge bg-indigo-500 bg-opacity-30 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">All time</span>
+          <div
+            class="stat-icon text-4xl bg-white bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center backdrop-blur-sm"
+          >
+            💰
+          </div>
+          <span
+            class="stat-badge bg-indigo-500 bg-opacity-30 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm"
+            >All time</span
+          >
         </div>
         <div class="stat-content">
-          <h3 class="text-sm font-medium text-indigo-200 mb-1">Total Revenue</h3>
-          <p class="stat-number text-3xl md:text-4xl font-bold">{{ formatCurrency(dashboardStats.revenue.total) }}</p>
+          <h3 class="text-sm font-medium text-indigo-200 mb-1">
+            Total Revenue
+          </h3>
+          <p class="stat-number text-3xl md:text-4xl font-bold">
+            {{ formatCurrency(dashboardStats.revenue.total) }}
+          </p>
         </div>
       </div>
 
       <!-- Monthly Revenue Card -->
-      <div class="stat-card revenue bg-gradient-to-br from-orange-600 to-pink-700 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 animate-slide-up sm:col-span-2 lg:col-span-1 xl:col-span-2 border border-orange-500 border-opacity-20" style="animation-delay: 0.6s">
+      <div
+        class="stat-card revenue bg-gradient-to-br from-orange-600 to-pink-700 rounded-xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 animate-slide-up sm:col-span-2 lg:col-span-1 xl:col-span-2 border border-orange-500 border-opacity-20"
+        style="animation-delay: 0.6s"
+      >
         <div class="flex items-start justify-between mb-4">
-          <div class="stat-icon text-4xl bg-white bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center backdrop-blur-sm">📊</div>
-          <span class="stat-badge bg-orange-500 bg-opacity-30 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">This month</span>
+          <div
+            class="stat-icon text-4xl bg-white bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center backdrop-blur-sm"
+          >
+            📊
+          </div>
+          <span
+            class="stat-badge bg-orange-500 bg-opacity-30 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm"
+            >This month</span
+          >
         </div>
         <div class="stat-content">
-          <h3 class="text-sm font-medium text-orange-200 mb-1">Monthly Revenue</h3>
-          <p class="stat-number text-3xl md:text-4xl font-bold">{{ formatCurrency(dashboardStats.revenue.monthly) }}</p>
+          <h3 class="text-sm font-medium text-orange-200 mb-1">
+            Monthly Revenue
+          </h3>
+          <p class="stat-number text-3xl md:text-4xl font-bold">
+            {{ formatCurrency(dashboardStats.revenue.monthly) }}
+          </p>
         </div>
       </div>
     </div>
 
     <!-- Charts Grid -->
-    <div class="charts-grid grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
+    <div
+      class="charts-grid grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8"
+    >
       <!-- Revenue by Source -->
-      <div class="chart-card bg-gray-800 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 animate-slide-up border border-gray-700" style="animation-delay: 0.7s">
+      <div
+        class="chart-card bg-gray-800 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 animate-slide-up border border-gray-700"
+        style="animation-delay: 0.7s"
+      >
         <h3 class="text-lg font-semibold text-gray-100 mb-4 flex items-center">
           <span class="w-1 h-6 bg-purple-500 rounded-full mr-3"></span>
           Revenue by Source
@@ -126,7 +221,10 @@
       </div>
 
       <!-- Booking Status -->
-      <div class="chart-card bg-gray-800 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 animate-slide-up border border-gray-700" style="animation-delay: 0.8s">
+      <div
+        class="chart-card bg-gray-800 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 animate-slide-up border border-gray-700"
+        style="animation-delay: 0.8s"
+      >
         <h3 class="text-lg font-semibold text-gray-100 mb-4 flex items-center">
           <span class="w-1 h-6 bg-cyan-500 rounded-full mr-3"></span>
           Booking Status
@@ -137,7 +235,10 @@
       </div>
 
       <!-- Subscription Plans -->
-      <div class="chart-card bg-gray-800 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 animate-slide-up border border-gray-700" style="animation-delay: 0.9s">
+      <div
+        class="chart-card bg-gray-800 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 animate-slide-up border border-gray-700"
+        style="animation-delay: 0.9s"
+      >
         <h3 class="text-lg font-semibold text-gray-100 mb-4 flex items-center">
           <span class="w-1 h-6 bg-green-500 rounded-full mr-3"></span>
           Subscription Plans
@@ -148,7 +249,10 @@
       </div>
 
       <!-- User Fitness Goals -->
-      <div class="chart-card bg-gray-800 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 animate-slide-up border border-gray-700" style="animation-delay: 1s">
+      <div
+        class="chart-card bg-gray-800 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 animate-slide-up border border-gray-700"
+        style="animation-delay: 1s"
+      >
         <h3 class="text-lg font-semibold text-gray-100 mb-4 flex items-center">
           <span class="w-1 h-6 bg-pink-500 rounded-full mr-3"></span>
           User Fitness Goals
@@ -159,7 +263,10 @@
       </div>
 
       <!-- Monthly Revenue Trend -->
-      <div class="chart-card wide bg-gray-800 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 lg:col-span-2 animate-slide-up border border-gray-700" style="animation-delay: 1.1s">
+      <div
+        class="chart-card wide bg-gray-800 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 lg:col-span-2 animate-slide-up border border-gray-700"
+        style="animation-delay: 1.1s"
+      >
         <h3 class="text-lg font-semibold text-gray-100 mb-4 flex items-center">
           <span class="w-1 h-6 bg-indigo-500 rounded-full mr-3"></span>
           Monthly Revenue Trend
@@ -171,7 +278,7 @@
     </div>
 
     <!-- Top Trainers Table -->
-    <div class="table-card bg-gray-800 rounded-xl shadow-xl overflow-hidden animate-slide-up border border-gray-700" *ngIf="bookingAnalytics" style="animation-delay: 1.2s">
+    <!-- <div class="table-card bg-gray-800 rounded-xl shadow-xl overflow-hidden animate-slide-up border border-gray-700" *ngIf="bookingAnalytics" style="animation-delay: 1.2s">
       <div class="p-6 border-b border-gray-700">
         <h2 class="text-xl font-bold text-gray-100 flex items-center">
           <span class="w-1 h-8 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full mr-3"></span>
@@ -228,6 +335,6 @@
           </tbody>
         </table>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>
