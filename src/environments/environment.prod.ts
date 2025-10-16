@@ -8,4 +8,3 @@ export const environment = {
   adminId: '684c36b322e80a1b938b0a99',
   googleUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
 };
-  
