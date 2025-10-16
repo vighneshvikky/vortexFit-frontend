@@ -87,7 +87,7 @@
 
     <!-- Users Grid -->
     <div
-      class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 user-grid"
+      class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-6 user-grid"
       *ngIf="!isLoadingUsers"
     >
       <div
@@ -252,7 +252,7 @@
         <app-pagination
           [currentPage]="currentPage"
           [totalPages]="totalPages"
-          role = "admin"
+          role="admin"
           (pageChanged)="onPageChange($event)"
           class="flex items-center space-x-2"
         ></app-pagination>

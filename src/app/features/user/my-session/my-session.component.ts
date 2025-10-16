@@ -54,6 +54,8 @@ export class MySessionComponent {
   userData!: User;
   selectedBooking!: BookingSession;
   showModal = false;
+  showCancelModal = false;
+  bookingToCancel: string | null = null;
   loadingUserData = false;
   currentStatus: BookingStatus = BookingStatus.PENDING;
   currentPage: number = 1;
@@ -328,16 +330,37 @@ export class MySessionComponent {
     }
   }
 
-  cancelBooking(id: string) {
-    if (confirm('Are you sure you want to cancel this booking?')) {
-      this.bookingService.cancelBooking(id).subscribe({
-        next: () => {
+  openCancelModal(id: string): void {
+    this.bookingToCancel = id;
+    this.showCancelModal = true;
+  }
 
+  closeCancelModal(): void {
+    this.showCancelModal = false;
+    this.bookingToCancel = null;
+  }
+
+  confirmCancelBooking(): void {
+    if (this.bookingToCancel) {
+      this.bookingService.cancelBooking(this.bookingToCancel).subscribe({
+        next: () => {
           this.notify.showSuccess('Booking cancelled and refund initiated!');
           this.loadFilteredDataFromServer();
+          this.closeCancelModal();
         },
+        error: (error) => {
+          if(error){
+          this.notify.showError(error.error.message);
+          console.error('Error cancelling booking:', error);
+          }
+
+        }
       });
     }
+  }
+
+  canCancelBooking(status: string): boolean {
+    return status !== 'cancelled' && status !== 'completed';
   }
 
   onCallEnded(): void {
