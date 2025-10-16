@@ -16,7 +16,7 @@ export class SocketService {
   connect(
     namespace: string,
     userId: string,
-    serverUrl: string = environment.socketUrl
+    serverUrl: string = environment.api
   ): void {
     if (this.sockets[namespace]?.connected) return;
 
