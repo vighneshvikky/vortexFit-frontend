@@ -11,7 +11,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class ChatService {
-  private apiUrl = environment.api + API_ROUTES.CHAT.BASE;
+  private apiUrl = environment.socketUrl + API_ROUTES.CHAT.BASE;
   private CHAT = API_ROUTES.CHAT;
   private messageSubject = new Subject<ChatMessage>();
   private roomsSubject = new BehaviorSubject<ChatRoom[]>([]);
