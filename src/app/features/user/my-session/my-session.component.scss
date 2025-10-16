@@ -1,0 +1,168 @@
+.session-type-badge {
+  transition: all 0.2s ease;
+}
+
+/* Video Session - Blue Theme */
+.session-type-badge.bg-blue-100 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  color: #2563eb !important;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.session-type-badge.bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  color: #2563eb !important;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* In-Person Session - Orange Theme */
+.session-type-badge.bg-green-100,
+.session-type-badge.bg-purple-100,
+.session-type-badge.bg-emerald-100 {
+  background-color: rgba(249, 115, 22, 0.1) !important;
+  color: #ea580c !important;
+  border: 1px solid rgba(249, 115, 22, 0.2);
+}
+
+/* Status Badge Styles */
+.status-badge {
+  transition: all 0.2s ease;
+}
+
+/* Confirmed Status - Blue Theme */
+.status-badge.bg-green-100 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  color: #2563eb !important;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.status-badge.text-green-800 {
+  color: #2563eb !important;
+}
+
+/* Pending Status - Orange Theme */
+.status-badge.bg-yellow-100,
+.status-badge.bg-orange-100 {
+  background-color: rgba(249, 115, 22, 0.1) !important;
+  color: #ea580c !important;
+  border: 1px solid rgba(249, 115, 22, 0.2);
+}
+
+.status-badge.text-yellow-800,
+.status-badge.text-orange-800 {
+  color: #ea580c !important;
+}
+
+/* Cancelled Status - Gray Theme */
+.status-badge.bg-red-100 {
+  background-color: rgba(156, 163, 175, 0.15) !important;
+  color: #1f2937 !important;
+  border: 1px solid rgba(156, 163, 175, 0.3);
+}
+
+.status-badge.text-red-800 {
+  color: #1f2937 !important;
+}
+
+/* Completed Status - Dark Gray Theme */
+.status-badge.bg-purple-100 {
+  background-color: rgba(17, 24, 39, 0.1) !important;
+  color: #111827 !important;
+  border: 1px solid rgba(17, 24, 39, 0.2);
+}
+
+.status-badge.text-purple-800 {
+  color: #111827 !important;
+}
+
+/* Spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+.session-type-badge {
+  transition: all 0.2s ease;
+}
+
+/* Video Session - Blue Theme */
+.session-type-badge.bg-blue-100 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  color: #2563eb !important;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.session-type-badge.bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  color: #2563eb !important;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* In-Person Session - Orange Theme */
+.session-type-badge.bg-green-100,
+.session-type-badge.bg-purple-100,
+.session-type-badge.bg-emerald-100 {
+  background-color: rgba(249, 115, 22, 0.1) !important;
+  color: #ea580c !important;
+  border: 1px solid rgba(249, 115, 22, 0.2);
+}
+
+/* Status Badge Styles */
+.status-badge {
+  transition: all 0.2s ease;
+}
+
+/* Confirmed Status - Emerald Green Theme */
+.status-confirmed {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  color: #059669 !important;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Pending Status - Amber/Orange Theme */
+.status-pending {
+  background-color: rgba(251, 146, 60, 0.1) !important;
+  color: #ea580c !important;
+  border: 1px solid rgba(251, 146, 60, 0.3);
+}
+
+/* Cancelled Status - Red Theme */
+.status-cancelled {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  color: #dc2626 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Completed Status - Blue/Indigo Theme */
+.status-completed {
+  background-color: rgba(99, 102, 241, 0.1) !important;
+  color: #4f46e5 !important;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+/* Spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
