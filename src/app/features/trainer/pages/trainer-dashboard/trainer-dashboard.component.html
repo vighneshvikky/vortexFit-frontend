@@ -296,10 +296,21 @@
                 </span>
               </td>
               <td class="px-4 lg:px-6 py-5">
-                <span [class]="'px-3 py-1.5 rounded-full text-xs font-bold inline-flex items-center ' + getStatusClass(booking.status)">
-                  <span class="w-1.5 h-1.5 rounded-full mr-2" [class.bg-green-400]="booking.status === 'confirmed'" [class.bg-yellow-400]="booking.status === 'pending'" [class.bg-red-400]="booking.status === 'cancelled'"></span>
-                  {{ booking.status }}
-                </span>
+     <span
+  [class]="
+    'px-3 py-1.5 rounded-full text-xs font-bold inline-flex items-center text-white ' +
+    getStatusClass(booking.status)
+  "
+>
+  <span
+    class="w-1.5 h-1.5 rounded-full mr-2"
+    [class.bg-green-400]="booking.status === 'confirmed'"
+    [class.bg-yellow-400]="booking.status === 'pending'"
+    [class.bg-red-400]="booking.status === 'cancelled'"
+  ></span>
+  {{ booking.status }}
+</span>
+
               </td>
             </tr>
             <tr *ngIf="recentBookings.length === 0">

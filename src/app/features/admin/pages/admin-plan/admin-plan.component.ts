@@ -241,10 +241,9 @@ export class AdminPlanComponent implements OnInit {
 
   savePlan(): void {
     if (this.isSubmitting) {
-      return; 
+      return;
     }
 
-   
     if (this.newPlan.name) {
       this.newPlan.name = this.newPlan.name.trim();
     }
@@ -286,14 +285,12 @@ export class AdminPlanComponent implements OnInit {
     }
   }
 
-
-
   deletePlan(planId: string): void {
     this.adminPlanService.deletPlan(planId).subscribe((res) => {
-      if(res){
-        this.plans = this.plans.filter((plan) => plan._id !== planId)
+      if (res) {
+        this.plans = this.plans.filter((plan) => plan._id !== planId);
       }
-    })
+    });
   }
 
   addFeature(): void {
@@ -321,14 +318,15 @@ export class AdminPlanComponent implements OnInit {
     return role === 'user' ? 'user' : 'trainer';
   }
 
-getErrorMessage(field: string): string {
-  return field
-    .split('.')
-    .reduce((acc: any, key) => acc?.[key], this.validationErrors) || '';
-}
+  getErrorMessage(field: string): string {
+    return (
+      field
+        .split('.')
+        .reduce((acc: any, key) => acc?.[key], this.validationErrors) || ''
+    );
+  }
 
-hasError(field: string): boolean {
-  return !!this.getErrorMessage(field);
-}
-
+  hasError(field: string): boolean {
+    return !!this.getErrorMessage(field);
+  }
 }

@@ -77,13 +77,7 @@ export class TrainerVerificationComponent implements OnInit {
         '',
         [Validators.required, Validators.min(0), Validators.max(100)],
       ],
-      bio: [
-        '',
-        [
-          Validators.required,
-          this.minWords(2),
-        ],
-      ],
+      bio: ['', [Validators.required, this.minWords(2)]],
       oneToOneSessionPrice: [
         '',
         [Validators.required, Validators.min(0), Validators.max(100000)],
@@ -105,12 +99,26 @@ export class TrainerVerificationComponent implements OnInit {
     this.currentUser$
       .pipe(
         tap((user) => {
-          if (user && 'name' in user && '_id' in user) {
+          if (
+            user &&
+            'name' in user &&
+            '_id' in user &&
+            user &&
+            'phoneNumber' in user
+          ) {
+            console.log('user', user);
             this.trainerId = user._id;
 
             this.verificationForm.patchValue({
               name: user.name ?? null,
               email: user.email ?? null,
+              phoneNumber: user.phoneNumber ?? null,
+              bio: user.bio ?? null,
+              category: user.category ?? null,
+              experience: user.experience ?? null,
+              specializations: user.specialization ? [user.specialization] : [],
+              oneToOneSessionPrice: user.pricing.oneToOneSession,
+              workoutPlanPrice: user.pricing.workoutPlan,
             });
           }
         })
@@ -189,7 +197,7 @@ export class TrainerVerificationComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log('submitting')
+    console.log('submitting');
     if (this.verificationForm.valid && this.trainerId) {
       this.isLoading = true;
       const formValues = this.verificationForm.value;

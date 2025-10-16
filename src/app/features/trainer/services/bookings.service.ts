@@ -137,6 +137,7 @@ export class BookingService {
   }
 
   cancelBooking(bookingId: string): Observable<CancellationResponse> {
+    console.log('bookingId', bookingId)
     return this.http.patch<CancellationResponse>(
       `${this.apiUrl}${API_ROUTES.BOOKING.CANCEL_BOOKING(bookingId)}`,
       {}
