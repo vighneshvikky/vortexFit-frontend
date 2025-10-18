@@ -11,13 +11,7 @@
       <div class="plan-header">
         <div class="plan-title-section">
           <h3 class="plan-title">{{ plan.name }}</h3>
-          <span 
-            class="status-badge" 
-            [class.active]="plan.isActive" 
-            [class.inactive]="!plan.isActive"
-          >
-            {{ plan.isActive ? 'Active' : 'Inactive' }}
-          </span>
+
         </div>
         <span 
           class="role-badge"

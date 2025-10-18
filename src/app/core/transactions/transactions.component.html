@@ -1,7 +1,7 @@
 <div class="transactions-container" [attr.data-role]="role">
   <!-- Wallet Balance for Users -->
-  <div class="wallet-balance-section" *ngIf="role === Role.User">
-    <div class="wallet-card">
+  <div class="wallet-balance-section">
+    <div *ngIf="role === Role.User; else showEarnings" class="wallet-card">
       <div class="wallet-icon">💰</div>
       <div class="wallet-content">
         <h3>Wallet Balance</h3>
@@ -11,79 +11,38 @@
         <span>🔄</span>
       </button>
     </div>
-  </div>
 
-  <!-- Revenue Analytics for Admin/Trainer -->
-  <div class="revenue-section" *ngIf="canShowRevenue() && !loading">
-    <div class="revenue-header">
-      <h2>Revenue Analytics</h2>
-      <div class="period-selector">
-        <button
-          [class.active]="selectedPeriod === 'day'"
-          (click)="selectedPeriod = 'day'; onPeriodChange()"
-        >
-          Daily
-        </button>
-        <button
-          [class.active]="selectedPeriod === 'week'"
-          (click)="selectedPeriod = 'week'; onPeriodChange()"
-        >
-          Weekly
-        </button>
-        <button
-          [class.active]="selectedPeriod === 'month'"
-          (click)="selectedPeriod = 'month'; onPeriodChange()"
-        >
-          Monthly
-        </button>
-      </div>
-    </div>
-
-
-    <div class="revenue-breakdown" *ngIf="revenueByPeriod.length > 0">
-      <h3>Revenue Breakdown</h3>
-      <div class="breakdown-list">
-        <div
-          class="breakdown-item"
-          *ngFor="let item of revenueByPeriod"
-        >
-          <div class="breakdown-period">
-            <span class="period-label">{{ item.period }}</span>
-            <span class="period-count">{{ item.count }} transactions</span>
-          </div>
-          <div class="breakdown-amount">
-            {{ formatCurrency(item.amount) }}
-          </div>
+    <ng-template #showEarnings>
+      <div class="wallet-card">
+        <div class="wallet-icon">💵</div>
+        <div class="wallet-content">
+          <h3>Earnings</h3>
+          <p class="balance-amount">{{ formatCurrency(earnings) }}</p>
         </div>
+        <button class="refresh-btn" (click)="loadEarnings()">
+          <span>🔄</span>
+        </button>
       </div>
-    </div>
+    </ng-template>
   </div>
+
+
 
   <!-- Filters Section -->
-  <div class="filters-section" *ngIf="showFilters && !loading">
+  <div class="filters-section" *ngIf="showFilters">
     <div class="filters-header">
       <h3>Filters</h3>
-      <button class="reset-btn" (click)="resetFilters()">Reset</button>
+      <button class="reset-btn" (click)="resetFilters()">🔄 Reset</button>
     </div>
 
     <div class="filters-grid">
-      <div class="filter-group">
-        <label>Search</label>
-        <input
-          type="text"
-          [(ngModel)]="filterForm.searchTerm"
-          (ngModelChange)="onLocalFilterChange()"
-          placeholder="Search by name, type..."
-          class="filter-input"
-        />
-      </div>
-
       <div class="filter-group">
         <label>Type</label>
         <select
           [(ngModel)]="filterForm.sourceType"
           (ngModelChange)="onFilterChange()"
           class="filter-select"
+          [disabled]="loading"
         >
           <option value="ALL">All Types</option>
           <option value="BOOKING">Booking</option>
@@ -98,6 +57,8 @@
           [(ngModel)]="filterForm.fromDate"
           (ngModelChange)="onFilterChange()"
           class="filter-input"
+          [disabled]="loading"
+          [max]="filterForm.toDate || undefined"
         />
       </div>
 
@@ -108,6 +69,8 @@
           [(ngModel)]="filterForm.toDate"
           (ngModelChange)="onFilterChange()"
           class="filter-input"
+          [disabled]="loading"
+          [min]="filterForm.fromDate || undefined"
         />
       </div>
 
@@ -115,8 +78,9 @@
         <label>Sort By</label>
         <select
           [(ngModel)]="filterForm.sortBy"
-          (ngModelChange)="onLocalFilterChange()"
+          (ngModelChange)="onSortChange()"
           class="filter-select"
+          [disabled]="loading"
         >
           <option value="createdAt">Date</option>
           <option value="amount">Amount</option>
@@ -127,8 +91,9 @@
         <label>Order</label>
         <select
           [(ngModel)]="filterForm.sortOrder"
-          (ngModelChange)="onLocalFilterChange()"
+          (ngModelChange)="onSortChange()"
           class="filter-select"
+          [disabled]="loading"
         >
           <option value="desc">Descending</option>
           <option value="asc">Ascending</option>
@@ -137,7 +102,13 @@
     </div>
 
     <div class="filters-actions">
-      <button class="export-btn" (click)="exportTransactions()">
+      <button
+        class="export-btn"
+        (click)="exportTransactions()"
+        [disabled]="
+          loading || !transactionsData || transactionsData.length === 0
+        "
+      >
         📥 Export CSV
       </button>
     </div>
@@ -149,22 +120,36 @@
     <p>Loading transactions...</p>
   </div>
 
+  <!-- Error State -->
+  <div class="error-container" *ngIf="error && !loading">
+    <div class="error-icon">⚠️</div>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="loadTransactions()">Retry</button>
+  </div>
+
   <!-- Transactions Table -->
   <div class="transactions-table-container" *ngIf="!loading && !error">
     <!-- Empty State -->
-    <div class="empty-state" *ngIf="filteredTransactions.length === 0">
+    <div
+      class="empty-state"
+      *ngIf="!transactionsData || transactionsData.length === 0"
+    >
       <div class="empty-icon">📊</div>
       <h3>No Transactions Found</h3>
       <p>There are no transactions matching your criteria.</p>
+      <button class="reset-btn" (click)="resetFilters()">Reset Filters</button>
     </div>
 
     <!-- Transactions Table -->
-    <div class="table-wrapper" *ngIf="filteredTransactions.length > 0">
+    <div
+      class="table-wrapper"
+      *ngIf="transactionsData && transactionsData.length > 0"
+    >
       <div class="table-header">
         <h3>Transactions</h3>
-        <span class="table-count"
-          >{{ filteredTransactions.length }} total</span
-        >
+        <span class="table-count">
+          Showing {{ transactionsData.length }} of {{ totalTransactions }} total
+        </span>
       </div>
 
       <table class="transactions-table">
@@ -180,19 +165,19 @@
         </thead>
         <tbody>
           <tr
-            *ngFor="let transaction of getPaginatedTransactions()"
+            *ngFor="let transaction of transactionsData; let i = index"
             class="transaction-row"
+            [class.even]="i % 2 === 0"
           >
             <td class="date-cell">
               {{ formatDate(transaction.createdAt) }}
             </td>
             <td class="name-cell">
               <div class="user-info">
-                <!-- <div class="user-avatar">
-                  {{ transaction.fromUser.name || "U" }}
-                </div> -->
                 <span class="user-name">{{
-                  transaction.fromUser.name || "Unknown"
+                  role === Role.User
+                    ? transaction.toUser.name
+                    : transaction.fromUser.name
                 }}</span>
               </div>
             </td>
@@ -222,10 +207,21 @@
             <td class="status-cell">
               <span
                 class="status-badge"
-                [class.completed]="transaction.paymentSignature"
-                [class.pending]="!transaction.paymentSignature"
+                [class.completed]="
+                  !transaction.isCancelled && transaction.paymentSignature
+                "
+                [class.pending]="
+                  !transaction.isCancelled && !transaction.paymentSignature
+                "
+                [class.cancelled]="transaction.isCancelled"
               >
-                {{ transaction.isCancelled ? "Cancelled" : "Completed" }}
+                {{
+                  transaction.isCancelled
+                    ? "Cancelled"
+                    : transaction.paymentSignature
+                    ? "Completed"
+                    : "Pending"
+                }}
               </span>
             </td>
           </tr>
@@ -233,33 +229,13 @@
       </table>
 
       <!-- Pagination -->
-      <div class="pagination" *ngIf="totalPages > 1">
-        <button
-          class="pagination-btn"
-          (click)="previousPage()"
-          [disabled]="currentPage === 1"
-        >
-          ‹ Previous
-        </button>
-
-        <div class="pagination-numbers">
-          <button
-            *ngFor="let page of getPageNumbers()"
-            class="pagination-number"
-            [class.active]="page === currentPage"
-            (click)="goToPage(page)"
-          >
-            {{ page }}
-          </button>
-        </div>
-
-        <button
-          class="pagination-btn"
-          (click)="nextPage()"
-          [disabled]="currentPage === totalPages"
-        >
-          Next ›
-        </button>
+      <div class="pagination-container" *ngIf="totalPages > 1" class="flex justify-center">
+        <app-pagination
+          [currentPage]="currentPage"
+          [totalPages]="totalPages"
+          [role]="role"
+          (pageChanged)="onPageChange($event)"
+        ></app-pagination>
       </div>
     </div>
   </div>

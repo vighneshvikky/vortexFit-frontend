@@ -8,9 +8,7 @@ import {
   selectUnverifiedTrainers,
   selectUsersMeta,
 } from '../../../../store/admin/users/user.selector';
-import {
-  loadUnverifiedTrainers,
-} from '../../../../store/admin/users/users.actions';
+import { loadUnverifiedTrainers } from '../../../../store/admin/users/users.actions';
 import { AdminService } from '../../services/admin.service';
 import { NotyService } from '../../../../core/services/noty.service';
 import {
@@ -21,6 +19,7 @@ import { selectCurrentUser } from '../../../auth/store/selectors/auth.selectors'
 import { AppState } from '../../../../store/app.state';
 import { REJECTION_REASONS } from '../../../../shared/constants/filter-options';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-admin-trainer-verification',
@@ -52,15 +51,14 @@ export class AdminTrainerVerificationComponent implements OnInit {
     limit: number;
   }>;
 
-  readonly S3_BASE_URL =
-    'https://vortexfit-app-upload.s3.ap-south-1.amazonaws.com/';
+  private readonly S3_BASE_URL =  environment.S3_BASE_URL;
 
   constructor(
     private store: Store<AppState>,
     private adminService: AdminService,
     private notyService: NotyService
   ) {
-    // this.unverifiedTrainers$ = this.store.select(selectUnverifiedTrainers);
+
     this.usersMeta$ = this.store.select(selectUsersMeta);
   }
 
@@ -84,8 +82,7 @@ export class AdminTrainerVerificationComponent implements OnInit {
   openTrainerModal(trainer: Trainer): void {
     const formatKey = (key: string | undefined | null): string | undefined =>
       key
-        ? this.S3_BASE_URL + encodeURIComponent(key).replace(/%2F/g, '/')
-        : undefined;
+        ? `${this.S3_BASE_URL}${key}`: undefined
 
     this.selectedTrainer = {
       ...trainer,
@@ -124,24 +121,23 @@ export class AdminTrainerVerificationComponent implements OnInit {
     }
   }
 
-downloadIdProof(): void {
-  if (!this.selectedTrainer?.idProofUrl) return;
-  const filename = `${this.selectedTrainer.name}_idproof.jpg`;
-  const key = this.extractKey(this.selectedTrainer.idProofUrl);
-  this.downloadDocument(key, filename, 'idproof');
-}
+  downloadIdProof(): void {
+    if (!this.selectedTrainer?.idProofUrl) return;
+    const filename = `${this.selectedTrainer.name}_idproof.jpg`;
+    const key = this.extractKey(this.selectedTrainer.idProofUrl);
+    this.downloadDocument(key, filename, 'idproof');
+  }
 
-downloadCertification(): void {
-  if (!this.selectedTrainer?.certificationUrl) return;
-  const filename = `${this.selectedTrainer.name}_certification.jpg`;
-  const key = this.extractKey(this.selectedTrainer.certificationUrl);
-  this.downloadDocument(key, filename, 'certification');
-}
-private extractKey(url: string): string {
-  return url.replace(/^https?:\/\/[^/]+\/?/, '');
-}
-
-
+  downloadCertification(): void {
+    if (!this.selectedTrainer?.certificationUrl) return;
+    const filename = `${this.selectedTrainer.name}_certification.jpg`;
+    const key = this.extractKey(this.selectedTrainer.certificationUrl);
+    this.downloadDocument(key, filename, 'certification');
+  }
+  private extractKey(url: string): string {
+    const decodedUrl = decodeURIComponent(url);
+    return decodedUrl.replace(/^https?:\/\/[^/]+\/?/, '');
+  }
 
   closeTrainerModal(): void {
     this.selectedTrainer = null;
@@ -166,9 +162,6 @@ private extractKey(url: string): string {
         next: () => {
           this.notyService.showSuccess('Trainer approved successfully');
           this.closeTrainerModal();
-          // this.store.dispatch(
-          //   loadUnverifiedTrainers({ query: { page: 1, limit: 2 } })
-          // );
           this.unverifiedTrainers$ = this.unverifiedTrainers$.filter(
             (t) => t._id !== trainer._id
           );
@@ -188,8 +181,8 @@ private extractKey(url: string): string {
   }
 
   private extractS3Key(url: string): string {
-  return url.replace(/^https?:\/\/[^/]+\/?/, '');
-}
+    return url.replace(/^https?:\/\/[^/]+\/?/, '');
+  }
   isRejectionValid(): boolean {
     if (!this.selectedRejectionReason) return false;
 

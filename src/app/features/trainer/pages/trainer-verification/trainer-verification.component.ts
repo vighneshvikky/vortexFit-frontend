@@ -26,6 +26,7 @@ import {
   CATEGORIES,
   CATEGORY_TO_SPECIALIZATIONS,
 } from '../../../../shared/constants/filter-options';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-trainer-verification',
@@ -44,11 +45,18 @@ export class TrainerVerificationComponent implements OnInit {
   isLoading = false;
   uploadedFileNames: { [key in 'certification' | 'idProof']?: string } = {};
   availableSpecializations: string[] = [];
-
+  idProofUrl: string | null = null;
   categories = CATEGORIES;
+
+  certificationImageUrl: string | null = null;
+  idProofImageUrl: string | null = null;
+  showCertificationPreview = false;
+  showIdProofPreview = false;
 
   categoryToSpecializations: { [category: string]: string[] } =
     CATEGORY_TO_SPECIALIZATIONS;
+
+    private readonly S3_BASE_URL = environment.S3_BASE_URL;
 
   constructor(
     private fb: FormBuilder,
@@ -99,16 +107,11 @@ export class TrainerVerificationComponent implements OnInit {
     this.currentUser$
       .pipe(
         tap((user) => {
-          if (
-            user &&
-            'name' in user &&
-            '_id' in user &&
-            user &&
-            'phoneNumber' in user
-          ) {
-            console.log('user', user);
-            this.trainerId = user._id;
-
+          if (user && 'phoneNumber' in user) {
+            console.log('user spea', user.specialization);
+            this.availableSpecializations =
+              CATEGORY_TO_SPECIALIZATIONS[user.category];
+            console.log('after special', this.availableSpecializations);
             this.verificationForm.patchValue({
               name: user.name ?? null,
               email: user.email ?? null,
@@ -116,9 +119,22 @@ export class TrainerVerificationComponent implements OnInit {
               bio: user.bio ?? null,
               category: user.category ?? null,
               experience: user.experience ?? null,
-              specializations: user.specialization ? [user.specialization] : [],
+              specialization: user.specialization ?? null,
               oneToOneSessionPrice: user.pricing.oneToOneSession,
               workoutPlanPrice: user.pricing.workoutPlan,
+            });
+
+            if(user.certificationUrl){
+              this.certificationImageUrl = this.getFullImageUrl(user.certificationUrl);
+            }
+
+               if (user.idProofUrl) {
+              this.idProofImageUrl = this.getFullImageUrl(user.idProofUrl);
+            }
+          } else if (user && 'name' in user && '_id' in user) {
+            this.verificationForm.patchValue({
+              name: user.name ?? null,
+              email: user.email ?? null,
             });
           }
         })
@@ -130,10 +146,43 @@ export class TrainerVerificationComponent implements OnInit {
       ?.valueChanges.subscribe((selectedCategory) => {
         this.availableSpecializations =
           this.categoryToSpecializations[selectedCategory] || [];
-        this.verificationForm.get('specializations')?.setValue([]);
+        this.verificationForm.get('specialization')?.setValue([]);
       });
   }
 
+  openIdProofPreview(): void {
+    if (this.idProofImageUrl) {
+      this.showIdProofPreview = true;
+    }
+  }
+
+    openCertificationPreview(): void {
+    if (this.certificationImageUrl) {
+      this.showCertificationPreview = true;
+    }
+  }
+
+  closeCertificationPreview(): void {
+    this.showCertificationPreview = false;
+  }
+
+
+  closeIdProofPreview(): void {
+    this.showIdProofPreview = false;
+  }
+
+
+  private getFullImageUrl(path: string): string {
+    if (!path) return '';
+    
+   
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+    
+   
+    return `${this.S3_BASE_URL}${path}`;
+  }
   private minWords(min: number) {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) return null;
@@ -198,7 +247,9 @@ export class TrainerVerificationComponent implements OnInit {
 
   onSubmit(): void {
     console.log('submitting');
-    if (this.verificationForm.valid && this.trainerId) {
+    console.log('trainerId', this.trainerId);
+    console.log('formValue', this.verificationForm.value);
+    if (this.verificationForm.valid) {
       this.isLoading = true;
       const formValues = this.verificationForm.value;
 

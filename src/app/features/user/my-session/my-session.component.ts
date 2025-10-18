@@ -60,7 +60,8 @@ export class MySessionComponent {
   currentStatus: BookingStatus = BookingStatus.PENDING;
   currentPage: number = 1;
   totalPages: number = 1;
-  pageSize: number = 3;
+  totalRecords: number = 0;
+  pageSize: number = 4;
 
   useServerSideFiltering = true;
   filters = {
@@ -76,7 +77,6 @@ export class MySessionComponent {
   availableStatuses: string[] = Object.values(BookingStatus);
 
   private destroy$ = new Subject<void>();
-
   private filterSubject = new Subject<void>();
 
   constructor(
@@ -111,10 +111,11 @@ export class MySessionComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
-          console.log('intial', data);
+          console.log('initial', data);
           this.bookingData = data.bookings || [];
           this.filteredBookingData = [...this.bookingData];
-          this.totalPages = Math.ceil(data.totalRecords / this.pageSize) || 1;
+          this.totalRecords = data.totalRecords || 0;
+          this.totalPages = data.totalPages;
 
           if (!this.useServerSideFiltering) {
             this.extractFilterOptions();
@@ -126,6 +127,7 @@ export class MySessionComponent {
           console.error('Error loading booking data:', error);
           this.bookingData = [];
           this.filteredBookingData = [];
+          this.totalRecords = 0;
           this.totalPages = 1;
           this.loading = false;
         },
@@ -169,13 +171,17 @@ export class MySessionComponent {
       .subscribe({
         next: (data) => {
           console.log('data from the backend', data);
-          this.filteredBookingData = data.bookings;
-          this.totalPages = Math.ceil(data.totalRecords / this.pageSize);
+          this.filteredBookingData = data.bookings || [];
+          this.totalRecords = data.totalRecords || 0;
+          this.totalPages =
+            data.totalPages || Math.ceil(this.totalRecords / this.pageSize);
           this.filterLoading = false;
         },
         error: (error) => {
           console.error('Error loading filtered data:', error);
           this.filteredBookingData = [];
+          this.totalRecords = 0;
+          this.totalPages = 1;
           this.filterLoading = false;
         },
       });
@@ -193,6 +199,7 @@ export class MySessionComponent {
 
   applyFilters(): void {
     if (this.useServerSideFiltering) {
+      this.currentPage = 1; // Reset to first page
       this.loadFilteredDataFromServer();
     }
   }
@@ -214,6 +221,18 @@ export class MySessionComponent {
     this.loadFilteredDataFromServer();
   }
 
+  onPageChange(page: number): void {
+    console.log('Page changed to:', page);
+    if (this.hasActiveFilters() || this.filters.searchTerm) {
+      this.loadFilteredDataFromServer(page);
+    } else {
+      this.loadBookingData(page);
+    }
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   onFiltersCleared(): void {
     console.log('Filters cleared');
     this.filters = {
@@ -224,7 +243,7 @@ export class MySessionComponent {
       searchTerm: '',
     };
     this.currentPage = 1;
-    this.loadFilteredDataFromServer();
+    this.loadBookingData(); // Load unfiltered data
   }
 
   quickSearch(term: string): void {
@@ -235,6 +254,7 @@ export class MySessionComponent {
 
   clearSearchOnly(): void {
     this.filters.searchTerm = '';
+    this.currentPage = 1;
     this.loadFilteredDataFromServer();
   }
 
@@ -246,9 +266,10 @@ export class MySessionComponent {
       dateTo: '',
       searchTerm: '',
     };
+    this.currentPage = 1;
 
     if (this.useServerSideFiltering) {
-      this.loadFilteredDataFromServer();
+      this.loadBookingData(); // Load unfiltered data
     } else {
       this.filteredBookingData = [...this.bookingData];
     }
@@ -345,16 +366,20 @@ export class MySessionComponent {
       this.bookingService.cancelBooking(this.bookingToCancel).subscribe({
         next: () => {
           this.notify.showSuccess('Booking cancelled and refund initiated!');
-          this.loadFilteredDataFromServer();
+          // Reload current page with current filters
+          if (this.hasActiveFilters() || this.filters.searchTerm) {
+            this.loadFilteredDataFromServer(this.currentPage);
+          } else {
+            this.loadBookingData(this.currentPage);
+          }
           this.closeCancelModal();
         },
         error: (error) => {
-          if(error){
-          this.notify.showError(error.error.message);
-          console.error('Error cancelling booking:', error);
+          if (error) {
+            this.notify.showError(error.error.message);
+            console.error('Error cancelling booking:', error);
           }
-
-        }
+        },
       });
     }
   }

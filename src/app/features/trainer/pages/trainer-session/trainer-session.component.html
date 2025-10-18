@@ -1,15 +1,15 @@
 <div class="space-y-6">
   <app-filter
-[config]="filterConfig"
+    [config]="filterConfig"
     [entityOptions]="availableClients"
     [loading]="filterLoading"
     [autoApply]="true"
     (filtersApplied)="onFiltersApplied($event)"
     (filtersCleared)="onFiltersCleared()"
     (searchPerformed)="onSearchPerformed($event)">
-  >
   </app-filter>
 
+  <!-- Fixed Results Summary -->
   <div
     class="flex items-center justify-between text-sm text-gray-600"
     *ngIf="!loading"
@@ -20,7 +20,7 @@
         filteredBookingData.length
       }}</span>
       of
-      <span class="font-semibold text-gray-800">{{ bookingData.length }}</span>
+      <span class="font-semibold text-gray-800">{{ totalRecords }}</span>
       sessions
     </p>
   </div>
@@ -141,7 +141,7 @@
           </div>
 
           <!-- Actions -->
-          <div class="px-4 py-4 flex md:justify-end">
+          <div class="px-4 py-4 flex md:justify-end gap-2">
             <button
               class="group inline-flex items-center justify-center h-9 w-9 rounded-full bg-red-600 hover:bg-red-800 transition-colors shadow-sm"
               (click)="viewSession(booking._id, booking.userId._id)"
@@ -175,14 +175,13 @@
     </div>
   </div>
 
-  <!-- Pagination -->
+  <!-- Fixed Pagination -->
   <div *ngIf="totalPages > 1" class="flex justify-center">
     <app-pagination
       [currentPage]="currentPage"
       [totalPages]="totalPages"
-      [maxVisiblePages]="5"
       role="trainer"
-      (pageChanged)="loadFilteredDataFromServer($event)"
+      (pageChanged)="onPageChange($event)"
     >
     </app-pagination>
   </div>
@@ -368,5 +367,5 @@
   [isCallModalOpen]="isVideoCallOpen"
   [role]="'trainer'"
   (callEnded)="onCallEnded()"
-  >>
+>
 </app-video-call>

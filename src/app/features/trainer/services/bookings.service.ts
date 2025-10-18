@@ -26,15 +26,10 @@ export interface CancellationResponse {
 }
 
 export interface BookingResponse {
-  success: boolean;
-  data: BookingSession[] | string[];
-  message: string;
-  pagination?: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
+  bookings: BookingSession[];
+  totalRecords: number;
+  currentPage: number;
+  totalPages: number;
 }
 
 export interface BookingStats {
@@ -54,13 +49,13 @@ export class BookingService {
   getBooking(
     page: number = 1,
     limit: number = 5
-  ): Observable<{ bookings: BookingSession[]; totalRecords: number }> {
+  ): Observable<BookingResponse> {
     const params = {
       page: String(page),
       limit: String(limit),
     };
 
-    return this.http.get<{ bookings: BookingSession[]; totalRecords: number }>(
+    return this.http.get<BookingResponse>(
       `${this.apiUrl}${API_ROUTES.BOOKING.GET_BOOKINGS}`,
       { params }
     );
@@ -69,12 +64,12 @@ export class BookingService {
   getUserBooking(
     page: number = 1,
     limit: number = 5
-  ): Observable<{ bookings: BookingSession[]; totalRecords: number }> {
+  ): Observable<BookingResponse> {
     const params = {
       page: String(page),
       limit: String(limit),
     };
-    return this.http.get<{ bookings: BookingSession[]; totalRecords: number }>(
+    return this.http.get<BookingResponse>(
       `${this.apiUrl}${API_ROUTES.BOOKING.GET_USER_BOOKINGS}`,
       { params }
     );
@@ -94,7 +89,7 @@ export class BookingService {
     filters: BookingFilters,
     page: number = 1,
     limit: number = 5
-  ): Observable<{ bookings: BookingSession[]; totalRecords: number }> {
+  ): Observable<BookingResponse> {
     const params: Record<string, string> = {
       ...Object.keys(filters).reduce((acc, key) => {
         const value = filters[key as keyof BookingFilters];
@@ -107,7 +102,7 @@ export class BookingService {
       limit: String(limit),
     };
 
-    return this.http.get<{ bookings: BookingSession[]; totalRecords: number }>(
+    return this.http.get<BookingResponse>(
       `${this.apiUrl}${API_ROUTES.BOOKING.GET_BOOKINGS_BY_FILTER}`,
       { params }
     );
@@ -117,7 +112,7 @@ export class BookingService {
     filters: BookingFilters,
     page: number = 1,
     limit: number = 5
-  ): Observable<{ bookings: BookingSession[]; totalRecords: number }> {
+  ): Observable<BookingResponse> {
     const params: Record<string, string> = {
       ...Object.keys(filters).reduce((acc, key) => {
         const value = filters[key as keyof BookingFilters];
@@ -130,7 +125,7 @@ export class BookingService {
       limit: String(limit),
     };
 
-    return this.http.get<{ bookings: BookingSession[]; totalRecords: number }>(
+    return this.http.get<BookingResponse>(
       `${this.apiUrl}${API_ROUTES.BOOKING.GET_USER_BOOKINGS_BY_FILTER}`,
       { params }
     );

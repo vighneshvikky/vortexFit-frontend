@@ -213,9 +213,8 @@
     <app-pagination
       [currentPage]="currentPage"
       [totalPages]="totalPages"
-      [maxVisiblePages]="3"
       role="user"
-      (pageChanged)="loadFilteredDataFromServer($event)"
+      (pageChanged)="onPageChange($event)"
     >
     </app-pagination>
   </div>
