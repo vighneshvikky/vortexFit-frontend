@@ -47,10 +47,11 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
   currentStatus: BookingStatus = BookingStatus.PENDING;
   currentPage: number = 1;
   totalPages: number = 1;
-  pageSize: number = 3  ;
+  totalRecords: number = 0;
+  pageSize: number = 4;
 
   useServerSideFiltering = true;
-  
+
   filters = {
     client: null as { id: string; name: string } | null,
     status: '',
@@ -75,7 +76,6 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
   availableStatuses: string[] = Object.values(BookingStatus);
 
   private destroy$ = new Subject<void>();
-
   private filterSubject = new Subject<void>();
 
   constructor(
@@ -110,12 +110,12 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
-          console.log('intial', data);
+          console.log('initial', data);
           this.bookingData = data.bookings || [];
           this.filteredBookingData = [...this.bookingData];
-          this.totalPages = Math.ceil(data.totalRecords / this.pageSize) || 1;
+          this.totalRecords = data.totalRecords || 0;
+          this.totalPages = data.totalPages;
 
-          // this.loadClientNames();
           if (!this.useServerSideFiltering) {
             this.extractFilterOptions();
           }
@@ -126,6 +126,7 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
           console.error('Error loading booking data:', error);
           this.bookingData = [];
           this.filteredBookingData = [];
+          this.totalRecords = 0;
           this.totalPages = 1;
           this.loading = false;
         },
@@ -136,12 +137,10 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
     this.filterLoading = true;
     this.currentPage = page;
 
-    
     const filters: BookingFilters = {
       sortBy: 'createdAt',
       sortOrder: 'desc',
     };
-
 
     if (this.filters.client?.id) {
       filters.clientId = this.filters.client.id;
@@ -155,7 +154,6 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
     if (this.filters.dateTo) {
       filters.dateTo = this.filters.dateTo;
     }
-
     if (this.filters.searchTerm?.trim()) {
       filters.searchTerm = this.filters.searchTerm.trim();
     }
@@ -168,21 +166,28 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           console.log('Filtered data from backend:', data);
-          this.filteredBookingData = data.bookings;
-          this.totalPages = Math.ceil(data.totalRecords / this.pageSize);
+          this.filteredBookingData = data.bookings || [];
+          this.totalRecords = data.totalRecords || 0;
+          // Fixed: Calculate total pages correctly
+          this.totalPages =
+            data.totalPages ||
+            Math.ceil(this.totalRecords / this.pageSize) ||
+            1;
           this.filterLoading = false;
         },
         error: (error) => {
           console.error('Error loading filtered data:', error);
           this.filteredBookingData = [];
+          this.totalRecords = 0;
+          this.totalPages = 1;
           this.filterLoading = false;
         },
       });
   }
 
-
-   clearSearchOnly(): void {
+  clearSearchOnly(): void {
     this.filters.searchTerm = '';
+    this.currentPage = 1;
     this.loadFilteredDataFromServer();
   }
 
@@ -191,7 +196,6 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
     this.currentPage = 1;
     this.loadFilteredDataFromServer();
   }
-
 
   extractFilterOptions(): void {
     const uniqueUsers = new Map<string, string>();
@@ -205,43 +209,42 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
 
   applyFilters(): void {
     if (this.useServerSideFiltering) {
+      this.currentPage = 1; // Reset to first page
       this.loadFilteredDataFromServer();
     }
   }
 
-  
-onFiltersCleared(): void {
-
+  onFiltersCleared(): void {
+    console.log('Filters cleared');
     this.filters = {
       client: null,
       status: '',
       dateFrom: '',
       dateTo: '',
-      searchTerm: '', 
+      searchTerm: '',
     };
     this.currentPage = 1;
-    this.loadFilteredDataFromServer();
+    this.loadBookingData(); // Load unfiltered data
   }
 
-   onSearchPerformed(searchTerm: string): void {
+  onSearchPerformed(searchTerm: string): void {
     this.filters.searchTerm = searchTerm;
     this.currentPage = 1;
     this.loadFilteredDataFromServer();
   }
 
-
-
- clearFilters(): void {
+  clearFilters(): void {
     this.filters = {
       client: null as { id: string; name: string } | null,
       status: '',
       dateFrom: '',
       dateTo: '',
-      searchTerm: '', // Include search term in reset
+      searchTerm: '',
     };
+    this.currentPage = 1;
 
     if (this.useServerSideFiltering) {
-      this.loadFilteredDataFromServer();
+      this.loadBookingData(); // Load unfiltered data
     } else {
       this.filteredBookingData = [...this.bookingData];
     }
@@ -276,19 +279,35 @@ onFiltersCleared(): void {
           index === self.findIndex((c) => c.id === client.id)
       );
   }
+
   onFiltersApplied(filterValues: FilterValues): void {
     console.log('Filters applied:', filterValues);
-    
- 
+
     this.filters.client = filterValues.entity;
     this.filters.status = filterValues.status;
     this.filters.dateFrom = filterValues.dateFrom;
     this.filters.dateTo = filterValues.dateTo;
-    this.filters.searchTerm = filterValues.searchTerm || ''; 
+    this.filters.searchTerm = filterValues.searchTerm || '';
 
     this.currentPage = 1;
     this.loadFilteredDataFromServer();
   }
+
+  // Added: Handle page changes properly
+  onPageChange(page: number): void {
+    console.log('Page changed to:', page);
+
+    // Check if we have active filters
+    if (this.hasActiveFilters()) {
+      this.loadFilteredDataFromServer(page);
+    } else {
+      this.loadBookingData(page);
+    }
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   // Formatting methods
   formatDate(dateString: string): string {
     if (!dateString) return '';

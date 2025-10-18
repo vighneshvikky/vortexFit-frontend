@@ -13,7 +13,7 @@ export interface AdminLoginRequest {
 }
 
 export interface AdminLoginResponse {
-data: Admin
+  data: Admin;
 }
 
 export interface User {
@@ -43,7 +43,7 @@ export interface GetUsersParams {
   role?: 'user' | 'trainer';
   page?: number;
   limit?: number;
-  filter?: 'user' | 'trainer' | 'all' | 'blocked';
+  filter?: 'user' | 'trainer' | 'blocked';
 }
 
 export interface PaginatedResponse<T> {
@@ -75,6 +75,7 @@ export class AdminService {
     params: GetUsersParams
   ): Observable<PaginatedResponse<User | Trainer>> {
     let httpParams = new HttpParams();
+    console.log('params', params);
     Object.entries(params).forEach(([key, value]) => {
       if (value !== null && value !== undefined) {
         httpParams = httpParams.set(key, value.toString());
@@ -142,7 +143,7 @@ export class AdminService {
   }
 
   download(key: string, fileName: string) {
-    console.log('downloading', key, fileName)
+    console.log('downloading', key, fileName);
     return this.http.post<{ url: string }>(
       `${this.uploadUrl}${API_ROUTES.S3.BASE}${API_ROUTES.S3.GENERATE_DOWNLOAD_URL}`,
       { key, fileName }

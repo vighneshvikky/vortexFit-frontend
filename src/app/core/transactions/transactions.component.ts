@@ -4,23 +4,33 @@ import {
   Transaction,
   TransactionService,
 } from '../services/transaction.service';
-import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { WalletService } from '../services/wallet.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 interface RevenueData {
   period: string;
   amount: number;
   count: number;
 }
 interface TransactionFilters {
-  sourceType?: 'BOOKING' | 'SUBSCRIPTION';
+  sourceType?: 'BOOKING' | 'SUBSCRIPTION' | 'ALL';
   fromDate?: string;
   toDate?: string;
   userId?: string;
   sortBy?: 'createdAt' | 'amount';
   sortOrder?: 'asc' | 'desc';
+  page?: number;
+  limit?: number;
+}
+
+export interface transactionsData {
+  transactions: Transaction[];
+  total: number;
+  currentPage: number;
+  totalPages: number;
 }
 
 interface TransactionSummary {
@@ -31,7 +41,7 @@ interface TransactionSummary {
 
 @Component({
   selector: 'app-transactions',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PaginationComponent],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
 })
@@ -40,9 +50,7 @@ export class TransactionsComponent implements OnInit {
   @Input() filters: TransactionFilters = {};
   @Input() showSummary: boolean = true;
   @Input() showFilters: boolean = true;
-  @Input() pageSize: number = 3;
 
-  transactions: Transaction[] = [];
   filteredTransactions: Transaction[] = [];
   summary: TransactionSummary = {
     totalEarnings: 0,
@@ -50,18 +58,20 @@ export class TransactionsComponent implements OnInit {
     transactionCount: 0,
   };
   balance: number = 0;
-  loading = false;
   error: string | null = null;
-  currentPage = 1;
-  totalPages = 1;
-
-  filterForm = {
-    sourceType: 'ALL' as 'BOOKING' | 'SUBSCRIPTION' | 'ALL',
+  currentPage: number = 1;
+  totalPages: number = 1;
+  pageSize: number = 3;
+  totalTransactions: number = 0;
+  transactionsData: Transaction[] =  [];
+  earnings: number = 0;
+  loading: boolean = false;
+  filterForm: TransactionFilters = {
+    sourceType: 'ALL',
     fromDate: '',
     toDate: '',
-    searchTerm: '',
-    sortBy: 'createdAt' as 'createdAt' | 'amount',
-    sortOrder: 'desc' as 'asc' | 'desc',
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
   };
 
   revenueByPeriod: RevenueData[] = [];
@@ -87,11 +97,12 @@ export class TransactionsComponent implements OnInit {
       showEarnings: false,
       showExpenses: true,
       showRevenue: false,
-      defaultFilters: {},
+      defaultFilters: { sourceType: 'BOOKING' as const },
     },
   };
 
   private destroy$ = new Subject<void>();
+  private filterChange$ = new Subject<TransactionFilters>();
 
   constructor(
     private transactionService: TransactionService,
@@ -101,11 +112,23 @@ export class TransactionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.role = this.route.snapshot.data['role'];
-    this.initializeFilters();
+  this.filterChange$
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((filters) => {
+        console.log('Filter changed, loading transactions...', filters);
+        this.currentPage = 1;
+        this.loadTransactions();
+      });
     this.loadTransactions();
 
     if (this.role === Role.User) {
       this.loadWalletBalance();
+    }else{
+     this.loadEarnings()
     }
   }
 
@@ -114,17 +137,12 @@ export class TransactionsComponent implements OnInit {
     this.destroy$.complete();
   }
 
-  private initializeFilters(): void {
-    const config = this.roleConfig[this.role];
-    if (config.showRevenue) {
-      const now = new Date();
-
-      const oneMonthAgo = new Date();
-      oneMonthAgo.setMonth(now.getMonth() - 1);
-
-      this.filterForm.fromDate = oneMonthAgo.toISOString().split('T')[0];
-      this.filterForm.toDate = now.toISOString().split('T')[0];
-    }
+  loadEarnings(){
+    this.transactionService.getEarnings().subscribe({
+      next: (res) => {
+       this.earnings = Number(res)
+      }
+    })
   }
 
   loadWalletBalance(): void {
@@ -141,243 +159,141 @@ export class TransactionsComponent implements OnInit {
       });
   }
 
-  private loadTransactions(): void {
+   loadTransactions(): void {
     this.loading = true;
     this.error = null;
+    const params: any = {
+      page: this.currentPage,
+      limit: this.pageSize,
+    };
 
-    const config = this.roleConfig[this.role];
-    const mergedFilters = { ...config.defaultFilters, ...this.filters };
+    if (this.filterForm.sourceType && this.filterForm.sourceType !== 'ALL') {
+      params.sourceType = this.filterForm.sourceType;
+    }
 
     if (this.filterForm.fromDate) {
-      mergedFilters.fromDate = this.filterForm.fromDate;
+      params.fromDate = this.filterForm.fromDate;
     }
+
     if (this.filterForm.toDate) {
-      mergedFilters.toDate = this.filterForm.toDate;
-    }
-    if (this.filterForm.sourceType !== 'ALL') {
-      mergedFilters.sourceType = this.filterForm.sourceType;
+      params.toDate = this.filterForm.toDate;
     }
 
-    const transactionRequest = config.canViewAll
-      ? this.transactionService.getAllTransactions(mergedFilters)
-      : this.transactionService.getUserTransactions(mergedFilters);
-
-    transactionRequest.pipe(takeUntil(this.destroy$)).subscribe({
-      next: (transactions) => {
-        this.transactions = transactions;
-        this.applyLocalFilters();
-        this.updateSummary();
-        this.updatePagination();
-
-        if (config.showRevenue) {
-          this.calculateRevenueBrBreakdown();
-        }
-
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Failed to load transactions. Please try again.';
-        this.loading = false;
-        console.error('Error loading transactions:', err);
-      },
-    });
-  }
-
-  private applyLocalFilters(): void {
-    let filtered = [...this.transactions];
-    if (this.filterForm.searchTerm) {
-      const term = this.filterForm.searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        (t) =>
-          t.fromUser?.name?.toLowerCase().includes(term) ||
-          t.sourceType.toLowerCase().includes(term) ||
-          t.paymentId?.toLowerCase().includes(term)
-      );
+    if (this.filterForm.sortBy) {
+      params.sortBy = this.filterForm.sortBy;
     }
 
-    filtered.sort((a, b) => {
-      const aVal =
-        this.filterForm.sortBy === 'createdAt'
-          ? new Date(a.createdAt).getTime()
-          : a.amount;
-      const bVal =
-        this.filterForm.sortBy === 'createdAt'
-          ? new Date(b.createdAt).getTime()
-          : b.amount;
-
-      return this.filterForm.sortOrder === 'asc' ? aVal - bVal : bVal - aVal;
-    });
-
-    this.filteredTransactions = filtered;
-  }
-
-  private updateSummary(): void {}
-
-  private calculateRevenueBrBreakdown(): void {
-    const grouped = new Map<string, { amount: number; count: number }>();
-
-    this.transactions.forEach((transaction) => {
-      if (transaction.amount <= 0) return;
-
-      const date = new Date(transaction.createdAt);
-      let key: string;
-
-      switch (this.selectedPeriod) {
-        case 'day':
-          key = date.toISOString().split('T')[0];
-          break;
-        case 'week':
-          const weekStart = new Date(date);
-          weekStart.setDate(date.getDate() - date.getDay());
-          key = weekStart.toISOString().split('T')[0];
-          break;
-        case 'month':
-          key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-            2,
-            '0'
-          )}`;
-          break;
-      }
-
-      if (!grouped.has(key)) {
-        grouped.set(key, { amount: 0, count: 0 });
-      }
-
-      const data = grouped.get(key)!;
-      data.amount += transaction.amount;
-      data.count += 1;
-    });
-
-    this.revenueByPeriod = Array.from(grouped.entries())
-      .map(([period, data]) => ({
-        period: this.formatPeriodLabel(period),
-        amount: data.amount,
-        count: data.count,
-      }))
-      .sort((a, b) => a.period.localeCompare(b.period));
-  }
-
-  private formatPeriodLabel(period: string): string {
-    switch (this.selectedPeriod) {
-      case 'day':
-        return new Date(period).toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-        });
-      case 'week':
-        return `Week of ${new Date(period).toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-        })}`;
-      case 'month':
-        const [year, month] = period.split('-');
-        return new Date(+year, +month - 1).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-        });
-      default:
-        return period;
+    if (this.filterForm.sortOrder) {
+      params.sortOrder = this.filterForm.sortOrder;
     }
-  }
 
-  private updatePagination(): void {
-    this.totalPages = Math.ceil(
-      this.filteredTransactions.length / this.pageSize
-    );
-    this.currentPage = Math.min(this.currentPage, this.totalPages || 1);
+    console.log('Loading transactions with params:', params);
+
+    this.transactionService
+      .getUserTransactions(params)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: transactionsData) => {
+          this.transactionsData = response.transactions || [];
+          this.currentPage = response.currentPage;
+          this.totalPages = response.totalPages;
+          this.totalTransactions = response.total;
+          this.loading = false;
+
+          console.log('Transactions loaded:', response);
+        },
+        error: (err) => {
+       console.error('Error loading transactions:', err);
+          this.error = 'Failed to load transactions. Please try again.';
+          this.loading = false;
+          this.transactionsData = []; 
+          this.totalPages = 1;
+          this.totalTransactions = 0;
+        },
+      });
   }
 
   onFilterChange(): void {
+      console.log('Filter change triggered', this.filterForm);
+    this.filterChange$.next({ ...this.filterForm });
+  }
+
+  onSortChange(): void {
     this.currentPage = 1;
     this.loadTransactions();
   }
 
-  onLocalFilterChange(): void {
-    this.currentPage = 1;
-    this.applyLocalFilters();
-    this.updatePagination();
-  }
-
   onPeriodChange(): void {
-    this.calculateRevenueBrBreakdown();
+    // Implement revenue breakdown logic if needed
+    console.log('Period changed to:', this.selectedPeriod);
   }
-
   resetFilters(): void {
     this.filterForm = {
       sourceType: 'ALL',
       fromDate: '',
       toDate: '',
-      searchTerm: '',
       sortBy: 'createdAt',
       sortOrder: 'desc',
     };
-    this.initializeFilters();
+    this.currentPage = 1;
     this.loadTransactions();
   }
 
   exportTransactions(): void {
-    const csv = this.convertToCSV(this.filteredTransactions);
+    // Export current filtered data
+    const csv = this.convertToCSV(this.transactionsData);
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `transactions_${new Date().toISOString()}.csv`;
+    link.download = `transactions_${
+      new Date().toISOString().split('T')[0]
+    }.csv`;
     link.click();
+    window.URL.revokeObjectURL(url);
   }
 
   private convertToCSV(transactions: Transaction[]): string {
-    const headers = ['Date', 'Name', 'Type', 'Amount', 'Currency', 'Status'];
+    const headers = [
+      'Date',
+      'From User',
+      'To User',
+      'Type',
+      'Amount',
+      'Currency',
+      'Payment Method',
+      'Status',
+    ];
+
     const rows = transactions.map((t) => [
-      t.createdAt,
+      new Date(t.createdAt).toLocaleString(),
       t.fromUser?.name || 'N/A',
+      t.toUser?.name || 'N/A',
       t.sourceType,
       t.amount,
       t.currency,
-      t.paymentSignature ? 'Completed' : 'Pending',
+      t.bookingMethod || 'N/A',
+      t.isCancelled
+        ? 'Cancelled'
+        : t.paymentSignature
+        ? 'Completed'
+        : 'Pending',
     ]);
 
-    return [headers, ...rows].map((row) => row.join(',')).join('\n');
+    return [headers, ...rows]
+      .map((row) => row.map((cell) => `"${cell}"`).join(','))
+      .join('\n');
   }
 
-  // Pagination methods
-  getPaginatedTransactions(): Transaction[] {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    return this.filteredTransactions.slice(startIndex, endIndex);
-  }
-
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
+  private scrollToTable(): void {
+    const tableElement = document.querySelector(
+      '.transactions-table-container'
+    );
+    if (tableElement) {
+      tableElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
-  nextPage(): void {
-    this.goToPage(this.currentPage + 1);
-  }
-
-  previousPage(): void {
-    this.goToPage(this.currentPage - 1);
-  }
-
-  getPageNumbers(): number[] {
-    const pages: number[] = [];
-    const maxVisible = 5;
-    let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
-    let end = Math.min(this.totalPages, start + maxVisible - 1);
-
-    if (end - start < maxVisible - 1) {
-      start = Math.max(1, end - maxVisible + 1);
-    }
-
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-
-    return pages;
-  }
-
-  // Helper methods
   canShowEarnings(): boolean {
     return this.roleConfig[this.role].showEarnings;
   }
@@ -392,6 +308,11 @@ export class TransactionsComponent implements OnInit {
 
   canViewAllTransactions(): boolean {
     return this.roleConfig[this.role].canViewAll;
+  }
+
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.loadTransactions();
   }
 
   getTransactionTypeLabel(sourceType: string): string {

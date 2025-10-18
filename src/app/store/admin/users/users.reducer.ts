@@ -20,7 +20,7 @@ export const initialState: UsersState = {
   users: [],
   total: 0,
   page: 1,
-  limit: 2,
+  limit: 10,
   totalPages: 0,
   loading: false,
   loaded: false,

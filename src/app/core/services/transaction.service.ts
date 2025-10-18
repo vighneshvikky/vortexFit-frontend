@@ -3,15 +3,20 @@ import { environment } from '../../../environments/environment';
 import { API_ROUTES } from '../../app.routes.constants';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { transactionsData } from '../transactions/transactions.component';
 
 export interface Transaction {
   _id: string;
   fromUser: {
-    _id: string,
-    name: string,
-    email: string
+    _id: string;
+    name: string;
+    email: string;
   };
-  toUser: string;
+  toUser: {
+    _id: string;
+    name: string;
+    email: string;
+  };
   amount: number;
   sourceType: 'BOOKING' | 'SUBSCRIPTION';
   sourceId?: string;
@@ -22,7 +27,7 @@ export interface Transaction {
   createdAt: string;
   updatedAt: string;
   bookingMethod: string;
-  isCancelled: boolean
+  isCancelled: boolean;
 }
 
 @Injectable({
@@ -33,7 +38,8 @@ export class TransactionService {
 
   constructor(private http: HttpClient) {}
 
-  getUserTransactions(filters?: any): Observable<Transaction[]> {
+  getUserTransactions(filters?: any): Observable<transactionsData> {
+    console.log('fitler', filters)
     let params = new HttpParams();
 
     if (filters) {
@@ -44,11 +50,11 @@ export class TransactionService {
       });
     }
 
-    return this.http.get<Transaction[]>(`${this.api}/user`, { params });
+    return this.http.get<transactionsData>(`${this.api}/user`, { params });
   }
 
-  getEarnings(): Observable<{ total: number; transactions: Transaction[] }> {
-    return this.http.get<{ total: number; transactions: Transaction[] }>(
+  getEarnings() {
+    return this.http.get(
       `${this.api}/earnings`
     );
   }
@@ -58,8 +64,8 @@ export class TransactionService {
       `${this.api}/expenses`
     );
   }
-  getAllTransactions(filters?: any): Observable<Transaction[]> {
-    let params = new HttpParams();  
+  getAllTransactions(filters?: any): Observable<transactionsData> {
+    let params = new HttpParams();
     if (filters) {
       Object.keys(filters).forEach((key) => {
         if (filters[key] !== undefined && filters[key] !== null) {
@@ -67,6 +73,6 @@ export class TransactionService {
         }
       });
     }
-    return this.http.get<Transaction[]>(`${this.api}/user`, { params });
+    return this.http.get<transactionsData>(`${this.api}/user`, { params });
   }
 }

@@ -19,45 +19,45 @@ $user-text: #ffffff;
 $user-text-secondary: #9ca3af;
 $user-text-muted: #6b7280;
 
-// Trainer Theme (Reddish)
-$trainer-primary: #ef4444;
-$trainer-primary-dark: #dc2626;
-$trainer-primary-light: #f87171;
-$trainer-accent: #f59e0b;
-$trainer-accent-dark: #d97706;
-$trainer-bg: #0f0a0a;
-$trainer-bg-secondary: #1a1111;
-$trainer-bg-card: #2d1818;
-$trainer-border: #4a2525;
+
+$trainer-primary: #7f1d1d ;
+$trainer-primary-dark: #991b1b;
+$trainer-primary-light: #b91c1c;
+$trainer-accent: #22c55e;
+$trainer-accent-dark: #16a34a ;
+$trainer-bg: #7F1D1D;
+$trainer-bg-secondary: #7F1D1D;
+$trainer-bg-card: #531616;
+$trainer-border: #450a0a;
 $trainer-text: #ffffff;
-$trainer-text-secondary: #d1a9a9;
-$trainer-text-muted: #9f7a7a;
-
-// Primary colors
-$admin-primary: #dc2626;        // Crimson (red) for main highlights
-$admin-primary-dark: #b91c1c;   // Darker red for hover / active states
-$admin-primary-light: #ef4444;  // Lighter red for subtle highlights
-
-// Accent colors
-$admin-accent: #dc2626;         // Red accent
-$admin-accent-dark: #b91c1c;    // Darker red for emphasis
-
-// Backgrounds
-$admin-bg: #111827;              // Dark gray primary background (bg-gray-900)
-$admin-bg-secondary: #1f2937;    // Slightly lighter gray for panels / headers (bg-gray-800)
-$admin-bg-card: #374151;         // Card background (bg-gray-700)
-
-// Borders
-$admin-border: #4b5563;          // Gray borders consistent with secondary bg
-
-// Text
-$admin-text: #ffffff;             // White text on red backgrounds
-$admin-text-secondary: #9ca3af;  // Light gray text on dark backgrounds
-$admin-text-muted: #6b7280;      // Muted gray text for less important info
+$trainer-text-secondary: #fecaca;
+$trainer-text-muted: #fca5a5;
 
 
+$admin-primary: #dc2626;       
+$admin-primary-dark: #b91c1c;   
+$admin-primary-light: #ef4444;  
 
-// Mixins
+
+$admin-accent: #dc2626;        
+$admin-accent-dark: #b91c1c;    
+
+
+$admin-bg: #111827;            
+$admin-bg-secondary: #1f2937;   
+$admin-bg-card: #374151;       
+
+
+$admin-border: #4b5563;      
+
+
+$admin-text: #ffffff;            
+$admin-text-secondary: #9ca3af;  
+$admin-text-muted: #6b7280;      
+
+
+
+
 @mixin theme-colors(
   $primary,
   $primary-dark,

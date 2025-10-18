@@ -32,7 +32,7 @@ export class NotificationComponent implements OnInit {
     private store: Store<AppState>
   ) {}
 
-  ngOnInit(): void {
+    ngOnInit(): void {
     this.role = this.route.snapshot.data['role'];
 
     this.store
@@ -40,15 +40,36 @@ export class NotificationComponent implements OnInit {
       .pipe(take(1))
       .subscribe((userId) => {
         this.userId = userId;
-        console.log('userId', userId)
+        console.log('userId', userId);
         if (this.userId) {
           this.notificationService.connect(this.userId);
 
           const notifSub = this.notificationService
             .onNotifications()
-            .subscribe((notifications) => {
-              this.notifications = notifications;
-              this.unreadCount = notifications.filter(
+            .subscribe((newNotifications: Notification[] | Notification) => {
+              if (Array.isArray(newNotifications)) {
+            
+                newNotifications.forEach((newNotif) => {
+         
+                  const exists = this.notifications.some(
+                    (n) => n._id === newNotif._id
+                  );
+                  if (!exists) {
+
+                    this.notifications.unshift(newNotif);
+                  }
+                });
+              } else {
+          
+                const exists = this.notifications.some(
+                  (n) => n._id === newNotifications._id
+                );
+                if (!exists) {
+                  this.notifications.unshift(newNotifications);
+                }
+              }
+
+              this.unreadCount = this.notifications.filter(
                 (n) => n.status === 'unread'
               ).length;
             });

@@ -37,8 +37,7 @@ export class AdminUserListingComponent implements OnInit {
   isLoadingUsers = false;
   currentPage = 1;
   totalPages = 1;
-  limit = 6;
-  filter: 'all' | 'user' | 'trainer' | 'blocked' = 'all';
+  filter: 'user' | 'trainer' | 'blocked' = 'user';
 
   constructor(private store: Store, private adminService: AdminService) {
     this.setupSearch();
@@ -49,7 +48,6 @@ export class AdminUserListingComponent implements OnInit {
 
     this.store.select(selectUsersMeta).subscribe((meta) => {
       this.totalPages = meta.totalPages;
-      this.limit = meta.limit;
       this.currentPage = meta.page;
     });
     this.loadUsers(this.searchTerm, this.currentPage);
@@ -59,7 +57,8 @@ export class AdminUserListingComponent implements OnInit {
     this.searchSubject
       .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe((term) => {
-        this.loadUsers(term);
+        this.currentPage = 1;
+        this.loadUsers(term, 1);
       });
   }
 
@@ -68,21 +67,10 @@ export class AdminUserListingComponent implements OnInit {
     this.searchSubject.next(term);
   }
 
-//   onSearchFrontEnd(term: string){
-// console.log('term', term);
-// this.users$.subscribe((res) =>{
-//   console.log('res', res);
-// })
-
-//   }
-
-
-
   loadUsers(searchTerm: string = '', page: number = 1): void {
     this.currentPage = page;
     const params: GetUsersParams = {
       page,
-      limit: this.limit,
       search: searchTerm,
       filter: this.filter,
     };
@@ -100,7 +88,6 @@ export class AdminUserListingComponent implements OnInit {
   toggleBlockStatus(user: User | Trainer): void {
     const params: GetUsersParams = {
       page: this.currentPage,
-      limit: this.limit,
       search: this.searchTerm,
     };
 
@@ -115,11 +102,12 @@ export class AdminUserListingComponent implements OnInit {
 
   onFilterChange(event: Event) {
     const value = (event.target as HTMLSelectElement).value as
-      | 'all'
       | 'user'
       | 'trainer'
       | 'blocked';
+
     this.filter = value;
+    this.currentPage = 1;
     this.loadUsers(this.searchTerm, 1);
   }
 
