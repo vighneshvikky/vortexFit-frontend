@@ -168,7 +168,6 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
           console.log('Filtered data from backend:', data);
           this.filteredBookingData = data.bookings || [];
           this.totalRecords = data.totalRecords || 0;
-          // Fixed: Calculate total pages correctly
           this.totalPages =
             data.totalPages ||
             Math.ceil(this.totalRecords / this.pageSize) ||
@@ -293,22 +292,18 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
     this.loadFilteredDataFromServer();
   }
 
-  // Added: Handle page changes properly
   onPageChange(page: number): void {
     console.log('Page changed to:', page);
 
-    // Check if we have active filters
     if (this.hasActiveFilters()) {
       this.loadFilteredDataFromServer(page);
     } else {
       this.loadBookingData(page);
     }
 
-    // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Formatting methods
   formatDate(dateString: string): string {
     if (!dateString) return '';
 
@@ -377,14 +372,44 @@ export class TrainerSessionComponent implements OnInit, OnDestroy {
   startVideoCall(session: BookingSession): void {
     if (session.status === 'confirmed') {
       this.selectedSession = session;
+      this.selectedBooking = session;
       this.isVideoCallOpen = true;
     }
   }
 
-  onCallEnded(): void {
-    this.isVideoCallOpen = false;
-    this.selectedSession = null;
+onCallEnded(): void {
+  console.log('Closing Video calls');
+
+  if (this.selectedSession?._id) {
+    this.bookingService
+      .updateBookingStatus(this.selectedSession._id, BookingStatus.COMPLETED)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response) {
+           
+            this.filteredBookingData = this.filteredBookingData.map((b) =>
+              b._id === response._id ? response : b
+            );
+            this.bookingData = this.bookingData.map((b) =>
+              b._id === response._id ? response : b
+            );
+
+            console.log('Booking status updated to completed:', response);
+          } else {
+            console.error('Failed to update booking status');
+          }
+        },
+        error: (error) => {
+          console.error('Error updating status:', error);
+        },
+      });
   }
+
+  this.isVideoCallOpen = false;
+  this.selectedSession = null;
+}
+
 
   closeModal(): void {
     this.showModal = false;
