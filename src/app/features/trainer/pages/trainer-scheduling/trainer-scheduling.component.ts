@@ -9,12 +9,13 @@ import {
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { SchedulingService } from '../../services/scheduling.service';
-import {
-  SchedulingRule,
-  
-} from '../../models/scheduling.interface';
+import { SchedulingRule } from '../../models/scheduling.interface';
 import { NotyService } from '../../../../core/services/noty.service';
-import {  DAYSOFWEEK, SESSION_TYPES } from '../../../../shared/constants/filter-options';
+import {
+  DAYSOFWEEK,
+  SESSION_TYPES,
+} from '../../../../shared/constants/filter-options';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-trainer-scheduling',
@@ -32,16 +33,15 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
-
-
-    public sessionTypes = SESSION_TYPES;
+  public sessionTypes = SESSION_TYPES;
 
   daysOfWeek = DAYSOFWEEK;
 
   constructor(
     private fb: FormBuilder,
     private schedulingService: SchedulingService,
-    private notiservice: NotyService
+    private notiservice: NotyService,
+    private router: Router
   ) {
     this.schedulingForm = this.createForm();
   }
@@ -52,6 +52,15 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
         next: (res: SchedulingRule[]) => {
           console.log('res', res);
           this.scheduleData = res;
+        },
+        error: (err) => {
+          console.log('err', err);
+          if (
+            err.error.message ===
+            'No active subscription found. Please activate a plan to access your schedule.'
+          ) {
+            this.router.navigate(['/trainer/plans']);
+          }
         },
       })
     );
@@ -108,7 +117,6 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
     }
   }
 
-
   onDeleteRule(ruleId: string): void {
     this.schedulingService.deleteSchedule(ruleId).subscribe({
       next: () => {
@@ -143,8 +151,6 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
     control.updateValueAndValidity();
   }
 
-
-
   addExceptionalDay(): void {
     const inputControl = this.schedulingForm.get('exceptionalDayInput');
     const inputValue: string = inputControl?.value;
@@ -152,7 +158,6 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
     if (inputValue && inputValue.trim()) {
       const currentDays: string[] =
         this.schedulingForm.get('exceptionalDays')?.value || [];
-
 
       if (!currentDays.includes(inputValue)) {
         const updatedDays = [...currentDays, inputValue];
@@ -162,7 +167,6 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
           exceptionalDayInput: '',
         });
 
-        
         this.schedulingForm.get('exceptionalDays')?.markAsDirty();
       }
     }
@@ -233,7 +237,7 @@ export class TrainerSchedulingComponent implements OnInit, OnDestroy {
       slotDuration: 60,
       maxBookingsPerSlot: 1,
       exceptionalDays: [],
-      exceptionalDayInput: '', 
+      exceptionalDayInput: '',
     });
   }
 }

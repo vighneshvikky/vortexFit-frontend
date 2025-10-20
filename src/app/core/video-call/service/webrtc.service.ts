@@ -22,9 +22,7 @@ export class WebRTCService {
 
   constructor(private signalingService: SignalingService) {}
 
-  /**
-   * Initialize as caller (trainer)
-   */
+
   async initializeAsCaller(sessionId: string, targetUserId: string): Promise<void> {
     console.log('[WebRTC] Initializing as caller');
     
