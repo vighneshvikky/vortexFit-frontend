@@ -18,6 +18,33 @@ export class WebRTCService {
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
 
+      // Your own TURN server (UDP - primary)
+    {
+      urls: [
+        'turn:vortex-fit.space:3478',
+        'turn:vortex-fit.space:3478?transport=udp'
+      ],
+      username: 'webrtcuser',
+      credential: 'SecurePassword123!',
+    },
+    
+    // Your own TURN server (TCP - fallback)
+    {
+      urls: 'turn:vortex-fit.space:3478?transport=tcp',
+      username: 'webrtcuser',
+      credential: 'SecurePassword123!',
+    },
+    
+    // TURN over TLS (most reliable for restrictive networks)
+    {
+      urls: [
+        'turns:vortex-fit.space:5349',
+        'turns:vortex-fit.space:5349?transport=tcp'
+      ],
+      username: 'webrtcuser',
+      credential: 'SecurePassword123!',
+    },
+
   ];
 
   constructor(private signalingService: SignalingService) {}
