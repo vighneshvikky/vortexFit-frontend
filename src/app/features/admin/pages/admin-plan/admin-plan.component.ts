@@ -114,27 +114,27 @@ export class AdminPlanComponent implements OnInit {
     this.clearValidationErrors();
     let isValid = true;
 
-    if (!this.newPlan.name || this.newPlan.name.trim().length === 0) {
+    const name = this.newPlan.name?.trim() || '';
+    if (!name) {
       this.validationErrors.name = 'Plan name is required';
       isValid = false;
-    } else if (this.newPlan.name.trim().length < 2) {
+    } else if (name.length < 2) {
       this.validationErrors.name =
         'Plan name must be at least 2 characters long';
       isValid = false;
-    } else if (this.newPlan.name.trim().length > 50) {
-      this.validationErrors.name = 'Plan name must be less than 50 characters';
+    } else if (name.length > 20) {
+      this.validationErrors.name = 'Plan name must be less than 20 characters';
       isValid = false;
     } else {
       const namePattern = /^[A-Z\s_]+$/;
-      if (!namePattern.test(this.newPlan.name.trim())) {
+      if (!namePattern.test(name)) {
         this.validationErrors.name =
-          'Plan name must contain only capital letters and spaces';
+          'Plan name must contain only capital letters, spaces, or underscores';
         isValid = false;
       } else {
         const duplicateName = this.plans.find(
           (plan) =>
-            plan.name.toLowerCase() ===
-              this.newPlan.name!.trim().toLowerCase() &&
+            plan.name.toLowerCase() === name.toLowerCase() &&
             (!this.editingPlan || plan._id !== this.editingPlan._id)
         );
         if (duplicateName) {

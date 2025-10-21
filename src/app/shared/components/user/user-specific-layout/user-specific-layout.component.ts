@@ -44,7 +44,6 @@ export class UserSpecificLayoutComponent {
       label: 'My Sessions',
       route: '/user/my-sessions',
     },
-    { icon: 'fas fa-users', label: 'Trainers', route: '/user/trainers' },
     { icon: 'fas fa-file-contract', label: 'Plans', route: '/user/plans' },
     {
       icon: 'fas fa-credit-card',

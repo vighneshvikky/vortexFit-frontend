@@ -19,20 +19,14 @@
           <h3>Earnings</h3>
           <p class="balance-amount">{{ formatCurrency(earnings) }}</p>
         </div>
-        <button class="refresh-btn" (click)="loadEarnings()">
-          <span>🔄</span>
-        </button>
       </div>
     </ng-template>
   </div>
-
-
 
   <!-- Filters Section -->
   <div class="filters-section" *ngIf="showFilters">
     <div class="filters-header">
       <h3>Filters</h3>
-      <button class="reset-btn" (click)="resetFilters()">🔄 Reset</button>
     </div>
 
     <div class="filters-grid">
@@ -174,11 +168,13 @@
             </td>
             <td class="name-cell">
               <div class="user-info">
-                <span class="user-name">{{
-                  role === Role.User
-                    ? transaction.toUser.name
-                    : transaction.fromUser.name
-                }}</span>
+                <span class="user-name">
+                  {{
+                    role === Role.User
+                      ? transaction.toUser.name || transaction.fromUser.name
+                      : transaction.fromUser.name
+                  }}
+                </span>
               </div>
             </td>
             <td class="payment-method-cell">
@@ -229,7 +225,11 @@
       </table>
 
       <!-- Pagination -->
-      <div class="pagination-container" *ngIf="totalPages > 1" class="flex justify-center">
+      <div
+        class="pagination-container"
+        *ngIf="totalPages > 1"
+        class="flex justify-center"
+      >
         <app-pagination
           [currentPage]="currentPage"
           [totalPages]="totalPages"
