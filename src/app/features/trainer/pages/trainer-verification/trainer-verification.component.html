@@ -1,234 +1,144 @@
-<div
-  class="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-red-100 py-8 px-4 sm:px-6 lg:px-8"
->
-  <div class="max-w-4xl mx-auto">
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-red-950 to-red-900 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-5xl mx-auto">
     <!-- Header Card -->
-    <div
-      class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden mb-8 border border-red-200/50"
-    >
-      <div
-        class="bg-gradient-to-r from-red-600 via-red-700 to-orange-600 px-8 py-8"
-      >
-        <div class="flex items-center space-x-4">
-          <div
-            class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center"
-          >
-            <i class="fas fa-user-check text-2xl text-white"></i>
+    <div class="bg-gradient-to-r from-red-600 via-red-700 to-red-800 rounded-2xl shadow-2xl overflow-hidden mb-8 relative">
+      <div class="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent"></div>
+      <div class="relative px-8 py-10">
+        <div class="flex items-center space-x-6">
+          <div class="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg">
+            <i class="fas fa-user-check text-4xl text-white"></i>
           </div>
           <div>
-            <h2 class="text-3xl font-bold text-white tracking-tight">
+            <h2 class="text-4xl font-bold text-white tracking-tight mb-2">
               Trainer Verification
             </h2>
-            <p class="text-red-100 mt-2 text-lg">
+            <p class="text-red-100 text-lg">
               Complete your profile to become a verified trainer
             </p>
           </div>
         </div>
       </div>
+      <div class="h-1 bg-gradient-to-r from-red-400 via-orange-400 to-red-400"></div>
     </div>
 
     <!-- Form Card -->
-    <div
-      class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl border border-red-200/50 overflow-hidden"
-    >
-      <form
-        [formGroup]="verificationForm"
-        (ngSubmit)="onSubmit()"
-        class="p-8 space-y-8"
-      >
+    <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+      <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()" class="p-10 space-y-10">
+        
         <!-- Personal Information Section -->
         <div class="space-y-6">
-          <div
-            class="flex items-center space-x-3 pb-4 border-b border-red-200/50"
-          >
-            <div
-              class="w-8 h-8 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg flex items-center justify-center"
-            >
-              <i class="fas fa-user text-white text-sm"></i>
+          <div class="flex items-center space-x-4 pb-5 border-b-2 border-red-100">
+            <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center shadow-md">
+              <i class="fas fa-user text-white text-xl"></i>
             </div>
-            <h3 class="text-2xl font-bold text-gray-800">
-              Personal Information
-            </h3>
+            <h3 class="text-3xl font-bold text-gray-900">Personal Information</h3>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Name -->
-            <div class="space-y-3">
-              <label
-                for="name"
-                class="block text-sm font-semibold text-gray-700"
-              >
-                <i class="fas fa-user mr-2 text-red-500"></i>Full Name
+            <div class="space-y-2">
+              <label for="name" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <i class="fas fa-user text-red-600"></i>
+                Full Name
               </label>
               <input
                 type="text"
                 id="name"
+                readonly
                 formControlName="name"
-                class="w-full px-4 py-3 bg-white border border-red-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 placeholder-gray-400 transition-all duration-200 hover:border-red-300"
+                class="w-full px-4 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 placeholder-gray-400 transition-all duration-200 font-medium"
                 placeholder="Enter your full name"
                 [ngClass]="{
-                  'border-red-600 ring-2 ring-red-600 bg-red-50':
-                    name?.invalid && name?.touched
+                  'border-red-500 ring-2 ring-red-200 bg-red-50': name?.invalid && name?.touched
                 }"
               />
-              <div
-                *ngIf="name?.invalid && name?.touched"
-                class="text-red-600 text-sm flex items-start bg-red-50 p-2 rounded-lg border border-red-200"
-              >
-                <i
-                  class="fas fa-exclamation-circle mr-2 mt-0.5 flex-shrink-0"
-                ></i>
+              <div *ngIf="name?.invalid && name?.touched" class="text-red-600 text-sm flex items-start gap-2 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+                <i class="fas fa-exclamation-circle mt-0.5 flex-shrink-0"></i>
                 <span *ngIf="name?.errors?.['required']">Name is required</span>
-                <span *ngIf="name?.errors?.['pattern']"
-                  >Only letters and spaces are allowed</span
-                >
-                <span *ngIf="name?.errors?.['minlength']"
-                  >Name must be at least 2 characters</span
-                >
-                <span *ngIf="name?.errors?.['maxlength']"
-                  >Name must not exceed 50 characters</span
-                >
+                <span *ngIf="name?.errors?.['pattern']">Only letters and spaces are allowed</span>
+                <span *ngIf="name?.errors?.['minlength']">Name must be at least 2 characters</span>
+                <span *ngIf="name?.errors?.['maxlength']">Name must not exceed 50 characters</span>
               </div>
             </div>
 
             <!-- Email -->
-            <div class="space-y-3">
-              <label
-                for="email"
-                class="block text-sm font-semibold text-gray-700"
-              >
-                <i class="fas fa-envelope mr-2 text-red-500"></i>Email Address
+            <div class="space-y-2">
+              <label for="email" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <i class="fas fa-envelope text-red-600"></i>
+                Email Address
               </label>
               <input
                 type="email"
                 id="email"
+                readonly
                 formControlName="email"
-                class="w-full px-4 py-3 bg-white border border-red-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 placeholder-gray-400 transition-all duration-200 hover:border-red-300"
+                class="w-full px-4 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 placeholder-gray-400 transition-all duration-200 font-medium"
                 placeholder="Enter your email address"
                 [ngClass]="{
-                  'border-red-600 ring-2 ring-red-600 bg-red-50':
-                    email?.invalid && email?.touched
+                  'border-red-500 ring-2 ring-red-200 bg-red-50': email?.invalid && email?.touched
                 }"
               />
-              <div
-                *ngIf="email?.invalid && email?.touched"
-                class="text-red-600 text-sm flex items-start bg-red-50 p-2 rounded-lg border border-red-200"
-              >
-                <i
-                  class="fas fa-exclamation-circle mr-2 mt-0.5 flex-shrink-0"
-                ></i>
-                <span *ngIf="email?.errors?.['required']"
-                  >Email is required</span
-                >
-                <span *ngIf="email?.errors?.['email']"
-                  >Please enter a valid email address</span
-                >
+              <div *ngIf="email?.invalid && email?.touched" class="text-red-600 text-sm flex items-start gap-2 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+                <i class="fas fa-exclamation-circle mt-0.5 flex-shrink-0"></i>
+                <span *ngIf="email?.errors?.['required']">Email is required</span>
+                <span *ngIf="email?.errors?.['email']">Please enter a valid email address</span>
               </div>
             </div>
 
             <!-- Phone Number -->
-            <div class="space-y-3">
-              <label
-                for="phoneNumber"
-                class="block text-sm font-semibold text-gray-700"
-              >
-                <i class="fas fa-phone mr-2 text-red-500"></i>Phone Number
+            <div class="space-y-2">
+              <label for="phoneNumber" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <i class="fas fa-phone text-red-600"></i>
+                Phone Number
               </label>
               <input
                 type="tel"
                 id="phoneNumber"
                 formControlName="phoneNumber"
-                class="w-full px-4 py-3 bg-white border border-red-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 placeholder-gray-400 transition-all duration-200 hover:border-red-300"
+                class="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 placeholder-gray-400 transition-all duration-200 hover:border-red-300 font-medium"
                 placeholder="Enter 10-digit phone number"
                 [ngClass]="{
-                  'border-red-600 ring-2 ring-red-600 bg-red-50':
-                    phoneNumber?.invalid && phoneNumber?.touched
+                  'border-red-500 ring-2 ring-red-200 bg-red-50': phoneNumber?.invalid && phoneNumber?.touched
                 }"
               />
-              <div
-                *ngIf="phoneNumber?.invalid && phoneNumber?.touched"
-                class="text-red-600 text-sm flex items-start bg-red-50 p-2 rounded-lg border border-red-200"
-              >
-                <i
-                  class="fas fa-exclamation-circle mr-2 mt-0.5 flex-shrink-0"
-                ></i>
-                <span *ngIf="phoneNumber?.errors?.['required']"
-                  >Phone number is required</span
-                >
-                <span *ngIf="phoneNumber?.errors?.['pattern']"
-                  >Please enter a valid 10-digit phone number</span
-                >
+              <div *ngIf="phoneNumber?.invalid && phoneNumber?.touched" class="text-red-600 text-sm flex items-start gap-2 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+                <i class="fas fa-exclamation-circle mt-0.5 flex-shrink-0"></i>
+                <span *ngIf="phoneNumber?.errors?.['required']">Phone number is required</span>
+                <span *ngIf="phoneNumber?.errors?.['pattern']">Please enter a valid 10-digit phone number</span>
               </div>
             </div>
 
             <!-- Years of Experience Dropdown -->
-            <div class="space-y-3">
-              <label
-                for="experience"
-                class="block text-sm font-semibold text-gray-700"
-              >
-                <i class="fas fa-clock mr-2 text-red-500"></i>Years of
-                Experience
+            <div class="space-y-2">
+              <label for="experience" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <i class="fas fa-clock text-red-600"></i>
+                Years of Experience
               </label>
               <select
                 id="experience"
                 formControlName="experience"
-                class="w-full px-4 py-3 bg-white border border-red-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 transition-all duration-200 hover:border-red-300 appearance-none cursor-pointer"
+                class="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 transition-all duration-200 hover:border-red-300 appearance-none cursor-pointer font-medium bg-no-repeat bg-right pr-10"
+                style="background-image: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 12 12%27%3E%3Cpath fill=%27%23dc2626%27 d=%27M6 9L1 4h10z%27/%3E%3C/svg%3E'); background-position: right 1rem center;"
                 [ngClass]="{
-                  'border-red-600 ring-2 ring-red-600 bg-red-50':
-                    experience?.invalid && experience?.touched
+                  'border-red-500 ring-2 ring-red-200 bg-red-50': experience?.invalid && experience?.touched
                 }"
               >
-                <option
-                  value=""
-                  disabled
-                  selected
-                  class="bg-white text-gray-800"
-                >
-                  Select years of experience
-                </option>
-                <option value="0" class="bg-white text-gray-800">
-                  Less than 1 year
-                </option>
-                <option value="1" class="bg-white text-gray-800">1 year</option>
-                <option value="2" class="bg-white text-gray-800">
-                  2 years
-                </option>
-                <option value="3" class="bg-white text-gray-800">
-                  3 years
-                </option>
-                <option value="4" class="bg-white text-gray-800">
-                  4 years
-                </option>
-                <option value="5" class="bg-white text-gray-800">
-                  5 years
-                </option>
-                <option value="6" class="bg-white text-gray-800">
-                  6 years
-                </option>
-                <option value="7" class="bg-white text-gray-800">
-                  7 years
-                </option>
-                <option value="8" class="bg-white text-gray-800">
-                  8 years
-                </option>
-                <option value="9" class="bg-white text-gray-800">
-                  9 years
-                </option>
-                <option value="10" class="bg-white text-gray-800">
-                  10+ years
-                </option>
+                <option value="" disabled selected>Select years of experience</option>
+                <option value="0">Less than 1 year</option>
+                <option value="1">1 year</option>
+                <option value="2">2 years</option>
+                <option value="3">3 years</option>
+                <option value="4">4 years</option>
+                <option value="5">5 years</option>
+                <option value="6">6 years</option>
+                <option value="7">7 years</option>
+                <option value="8">8 years</option>
+                <option value="9">9 years</option>
+                <option value="10">10+ years</option>
               </select>
-              <div
-                *ngIf="experience?.invalid && experience?.touched"
-                class="text-red-600 text-sm flex items-start bg-red-50 p-2 rounded-lg border border-red-200"
-              >
-                <i
-                  class="fas fa-exclamation-circle mr-2 mt-0.5 flex-shrink-0"
-                ></i>
-                <span *ngIf="experience?.errors?.['required']"
-                  >Experience is required</span
-                >
+              <div *ngIf="experience?.invalid && experience?.touched" class="text-red-600 text-sm flex items-start gap-2 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+                <i class="fas fa-exclamation-circle mt-0.5 flex-shrink-0"></i>
+                <span *ngIf="experience?.errors?.['required']">Experience is required</span>
               </div>
             </div>
           </div>
@@ -236,225 +146,147 @@
 
         <!-- Professional Information Section -->
         <div class="space-y-6">
-          <div
-            class="flex items-center space-x-3 pb-4 border-b border-red-200/50"
-          >
-            <div
-              class="w-8 h-8 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg flex items-center justify-center"
-            >
-              <i class="fas fa-dumbbell text-white text-sm"></i>
+          <div class="flex items-center space-x-4 pb-5 border-b-2 border-red-100">
+            <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center shadow-md">
+              <i class="fas fa-dumbbell text-white text-xl"></i>
             </div>
-            <h3 class="text-2xl font-bold text-gray-800">
-              Professional Information
-            </h3>
+            <h3 class="text-3xl font-bold text-gray-900">Professional Information</h3>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Category -->
-            <div class="space-y-3">
-              <label
-                for="category"
-                class="block text-sm font-semibold text-gray-700"
-              >
-                <i class="fas fa-tag mr-2 text-red-500"></i>Category
+            <div class="space-y-2">
+              <label for="category" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <i class="fas fa-tag text-red-600"></i>
+                Category
               </label>
               <select
                 id="category"
                 formControlName="category"
-                class="w-full px-4 py-3 bg-white border border-red-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 transition-all duration-200 hover:border-red-300 appearance-none cursor-pointer"
+                class="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 transition-all duration-200 hover:border-red-300 appearance-none cursor-pointer font-medium bg-no-repeat bg-right pr-10"
+                style="background-image: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 12 12%27%3E%3Cpath fill=%27%23dc2626%27 d=%27M6 9L1 4h10z%27/%3E%3C/svg%3E'); background-position: right 1rem center;"
                 [ngClass]="{
-                  'border-red-600 ring-2 ring-red-600 bg-red-50':
-                    category?.invalid && category?.touched
+                  'border-red-500 ring-2 ring-red-200 bg-red-50': category?.invalid && category?.touched
                 }"
               >
-                <option
-                  value=""
-                  disabled
-                  selected
-                  class="bg-white text-gray-800"
-                >
-                  Select a category
-                </option>
-                <option
-                  *ngFor="let cat of categories"
-                  [value]="cat.value"
-                  class="bg-white text-gray-800"
-                >
+                <option value="" disabled selected>Select a category</option>
+                <option *ngFor="let cat of categories" [value]="cat.value">
                   {{ cat.label }}
                 </option>
               </select>
-              <div
-                *ngIf="category?.invalid && category?.touched"
-                class="text-red-600 text-sm flex items-start bg-red-50 p-2 rounded-lg border border-red-200"
-              >
-                <i
-                  class="fas fa-exclamation-circle mr-2 mt-0.5 flex-shrink-0"
-                ></i>
-                <span *ngIf="category?.errors?.['required']"
-                  >Category is required</span
-                >
+              <div *ngIf="category?.invalid && category?.touched" class="text-red-600 text-sm flex items-start gap-2 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+                <i class="fas fa-exclamation-circle mt-0.5 flex-shrink-0"></i>
+                <span *ngIf="category?.errors?.['required']">Category is required</span>
               </div>
             </div>
 
             <!-- Specialization -->
-            <div class="space-y-3">
-              <label
-                for="specialization"
-                class="block text-sm font-semibold text-gray-700"
-              >
-                <i class="fas fa-star mr-2 text-red-500"></i>Specialization
+            <div class="space-y-2">
+              <label for="specialization" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <i class="fas fa-star text-red-600"></i>
+                Specialization
               </label>
               <select
                 id="specialization"
                 formControlName="specialization"
-                class="w-full px-4 py-3 bg-white border border-red-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 transition-all duration-200 hover:border-red-300 appearance-none cursor-pointer"
+                class="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 transition-all duration-200 hover:border-red-300 appearance-none cursor-pointer font-medium bg-no-repeat bg-right pr-10"
+                style="background-image: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 12 12%27%3E%3Cpath fill=%27%23dc2626%27 d=%27M6 9L1 4h10z%27/%3E%3C/svg%3E'); background-position: right 1rem center;"
                 [ngClass]="{
-                  'border-red-600 ring-2 ring-red-600 bg-red-50':
-                    specialization?.invalid && specialization?.touched
+                  'border-red-500 ring-2 ring-red-200 bg-red-50': specialization?.invalid && specialization?.touched
                 }"
               >
-                <option value="" class="bg-white text-gray-800">
-                  Select your specialization
-                </option>
-                <option
-                  *ngFor="let spec of availableSpecializations"
-                  [value]="spec"
-                  class="bg-white text-gray-800"
-                >
+                <option value="">Select your specialization</option>
+                <option *ngFor="let spec of availableSpecializations" [value]="spec">
                   {{ spec }}
                 </option>
               </select>
-              <div
-                *ngIf="specialization?.invalid && specialization?.touched"
-                class="text-red-600 text-sm flex items-start bg-red-50 p-2 rounded-lg border border-red-200"
-              >
-                <i
-                  class="fas fa-exclamation-circle mr-2 mt-0.5 flex-shrink-0"
-                ></i>
-                <span *ngIf="specialization?.errors?.['required']"
-                  >Please select a specialization</span
-                >
+              <div *ngIf="specialization?.invalid && specialization?.touched" class="text-red-600 text-sm flex items-start gap-2 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+                <i class="fas fa-exclamation-circle mt-0.5 flex-shrink-0"></i>
+                <span *ngIf="specialization?.errors?.['required']">Please select a specialization</span>
               </div>
             </div>
           </div>
 
           <!-- Bio -->
-          <div class="space-y-3">
-            <label for="bio" class="block text-sm font-semibold text-gray-700">
-              <i class="fas fa-quote-left mr-2 text-red-500"></i>Bio
+          <div class="space-y-2">
+            <label for="bio" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+              <i class="fas fa-quote-left text-red-600"></i>
+              Bio
             </label>
             <textarea
               id="bio"
               formControlName="bio"
-              rows="4"
-              class="w-full px-4 py-3 bg-white border border-red-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 placeholder-gray-400 transition-all duration-200 hover:border-red-300 resize-none"
+              rows="5"
+              class="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 placeholder-gray-400 transition-all duration-200 hover:border-red-300 resize-vertical font-medium leading-relaxed"
               placeholder="Tell us about your experience, achievements, and training philosophy..."
               [ngClass]="{
-                'border-red-600 ring-2 ring-red-600 bg-red-50':
-                  bio?.invalid && bio?.touched
+                'border-red-500 ring-2 ring-red-200 bg-red-50': bio?.invalid && bio?.touched
               }"
             ></textarea>
-            <div
-              *ngIf="bio?.invalid && bio?.touched"
-              class="text-red-600 text-sm flex items-start bg-red-50 p-2 rounded-lg border border-red-200"
-            >
-              <i
-                class="fas fa-exclamation-circle mr-2 mt-0.5 flex-shrink-0"
-              ></i>
+            <div *ngIf="bio?.invalid && bio?.touched" class="text-red-600 text-sm flex items-start gap-2 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+              <i class="fas fa-exclamation-circle mt-0.5 flex-shrink-0"></i>
               <span *ngIf="bio?.errors?.['required']">Bio is required</span>
-              <span *ngIf="bio?.errors?.['minlength']"
-                >Bio must be at least 2 characters</span
-              >
-              <span *ngIf="bio?.errors?.['maxlength']"
-                >Bio must not exceed 10 characters</span
-              >
-              <span *ngIf="bio?.errors?.['minWords']"
-                >Bio must contain at least 2 words</span
-              >
+              <span *ngIf="bio?.errors?.['minlength']">Bio must be at least 2 characters</span>
+              <span *ngIf="bio?.errors?.['maxlength']">Bio must not exceed 10 characters</span>
+              <span *ngIf="bio?.errors?.['minWords']">Bio must contain at least 2 words</span>
             </div>
           </div>
         </div>
 
         <!-- Pricing Section -->
         <div class="space-y-6">
-          <div
-            class="flex items-center space-x-3 pb-4 border-b border-red-200/50"
-          >
-            <div
-              class="w-8 h-8 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg flex items-center justify-center"
-            >
-              <i class="fas fa-rupee-sign text-white text-sm"></i>
+          <div class="flex items-center space-x-4 pb-5 border-b-2 border-red-100">
+            <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center shadow-md">
+              <i class="fas fa-rupee-sign text-white text-xl"></i>
             </div>
-            <h3 class="text-2xl font-bold text-gray-800">Pricing</h3>
+            <h3 class="text-3xl font-bold text-gray-900">Pricing</h3>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- One-to-One Session Price -->
-            <div class="space-y-3">
-              <label
-                for="oneToOneSessionPrice"
-                class="block text-sm font-semibold text-gray-700"
-              >
-                <i class="fas fa-user-friends mr-2 text-red-500"></i>One-to-One
-                Session Price (₹)
+            <div class="space-y-2">
+              <label for="oneToOneSessionPrice" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <i class="fas fa-user-friends text-red-600"></i>
+                One-to-One Session Price (₹)
               </label>
               <input
                 type="number"
                 id="oneToOneSessionPrice"
                 formControlName="oneToOneSessionPrice"
-                class="w-full px-4 py-3 bg-white border border-red-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 placeholder-gray-400 transition-all duration-200 hover:border-red-300"
+                class="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 placeholder-gray-400 transition-all duration-200 hover:border-red-300 font-medium"
                 placeholder="e.g., 1000"
                 [ngClass]="{
-                  'border-red-600 ring-2 ring-red-600 bg-red-50':
+                  'border-red-500 ring-2 ring-red-200 bg-red-50':
                     verificationForm.get('oneToOneSessionPrice')?.invalid &&
                     verificationForm.get('oneToOneSessionPrice')?.touched
                 }"
               />
-              <div
-                *ngIf="
-                  verificationForm.get('oneToOneSessionPrice')?.invalid &&
-                  verificationForm.get('oneToOneSessionPrice')?.touched
-                "
-                class="text-red-600 text-sm flex items-start bg-red-50 p-2 rounded-lg border border-red-200"
-              >
-                <i
-                  class="fas fa-exclamation-circle mr-2 mt-0.5 flex-shrink-0"
-                ></i>
+              <div *ngIf="verificationForm.get('oneToOneSessionPrice')?.invalid && verificationForm.get('oneToOneSessionPrice')?.touched" class="text-red-600 text-sm flex items-start gap-2 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+                <i class="fas fa-exclamation-circle mt-0.5 flex-shrink-0"></i>
                 Please enter a valid price
               </div>
             </div>
 
             <!-- Workout Plan Price -->
-            <div class="space-y-3">
-              <label
-                for="workoutPlanPrice"
-                class="block text-sm font-semibold text-gray-700"
-              >
-                <i class="fas fa-dumbbell mr-2 text-red-500"></i>Workout Plan
-                Price (₹)
+            <div class="space-y-2">
+              <label for="workoutPlanPrice" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <i class="fas fa-dumbbell text-red-600"></i>
+                Workout Plan Price (₹)
               </label>
               <input
                 type="number"
                 id="workoutPlanPrice"
                 formControlName="workoutPlanPrice"
-                class="w-full px-4 py-3 bg-white border border-red-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 placeholder-gray-400 transition-all duration-200 hover:border-red-300"
+                class="w-full px-4 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-800 placeholder-gray-400 transition-all duration-200 hover:border-red-300 font-medium"
                 placeholder="e.g., 500"
                 [ngClass]="{
-                  'border-red-600 ring-2 ring-red-600 bg-red-50':
+                  'border-red-500 ring-2 ring-red-200 bg-red-50':
                     verificationForm.get('workoutPlanPrice')?.invalid &&
                     verificationForm.get('workoutPlanPrice')?.touched
                 }"
               />
-              <div
-                *ngIf="
-                  verificationForm.get('workoutPlanPrice')?.invalid &&
-                  verificationForm.get('workoutPlanPrice')?.touched
-                "
-                class="text-red-600 text-sm flex items-start bg-red-50 p-2 rounded-lg border border-red-200"
-              >
-                <i
-                  class="fas fa-exclamation-circle mr-2 mt-0.5 flex-shrink-0"
-                ></i>
+              <div *ngIf="verificationForm.get('workoutPlanPrice')?.invalid && verificationForm.get('workoutPlanPrice')?.touched" class="text-red-600 text-sm flex items-start gap-2 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+                <i class="fas fa-exclamation-circle mt-0.5 flex-shrink-0"></i>
                 Please enter a valid price
               </div>
             </div>
@@ -463,23 +295,19 @@
 
         <!-- Documents Section -->
         <div class="space-y-6">
-          <div
-            class="flex items-center space-x-3 pb-4 border-b border-red-200/50"
-          >
-            <div
-              class="w-8 h-8 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg flex items-center justify-center"
-            >
-              <i class="fas fa-file-upload text-white text-sm"></i>
+          <div class="flex items-center space-x-4 pb-5 border-b-2 border-red-100">
+            <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center shadow-md">
+              <i class="fas fa-file-upload text-white text-xl"></i>
             </div>
-            <h3 class="text-2xl font-bold text-gray-800">Documents</h3>
+            <h3 class="text-3xl font-bold text-gray-900">Documents</h3>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Certificate -->
-            <div class="space-y-3">
-              <label class="block text-sm font-semibold text-gray-700">
-                <i class="fas fa-certificate mr-2 text-red-500"></i
-                >Certification Document
+            <div class="space-y-2">
+              <label class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <i class="fas fa-certificate text-red-600"></i>
+                Certification Document
               </label>
               <div class="relative">
                 <input
@@ -492,34 +320,27 @@
                 <button
                   type="button"
                   (click)="triggerFileInput('certification')"
-                  class="w-full px-4 py-3 bg-gradient-to-r from-red-500 to-orange-500 border border-red-500 rounded-xl text-white hover:from-red-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 flex items-center justify-center font-medium"
+                  class="w-full px-4 py-3.5 bg-gradient-to-r from-red-600 to-red-700 border-2 border-red-600 rounded-xl text-white hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200 flex items-center justify-center font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                 >
                   <i class="fas fa-upload mr-2"></i>
                   Upload Certification
                 </button>
               </div>
-              <div
-                *ngIf="uploadedFileNames.certification"
-                class="text-green-600 text-sm flex items-center bg-green-50 p-2 rounded-lg border border-green-200"
-              >
-                <i class="fas fa-check-circle mr-2"></i>
+              <div *ngIf="uploadedFileNames.certification" class="text-green-700 text-sm flex items-center gap-2 bg-green-50 px-3 py-2 rounded-lg border-2 border-green-200">
+                <i class="fas fa-check-circle"></i>
                 {{ uploadedFileNames.certification }}
               </div>
-              <div
-                *ngIf="certification?.invalid && certification?.touched"
-                class="text-red-600 text-sm flex items-start bg-red-50 p-2 rounded-lg border border-red-200"
-              >
-                <i
-                  class="fas fa-exclamation-circle mr-2 mt-0.5 flex-shrink-0"
-                ></i>
+              <div *ngIf="certification?.invalid && certification?.touched" class="text-red-600 text-sm flex items-start gap-2 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+                <i class="fas fa-exclamation-circle mt-0.5 flex-shrink-0"></i>
                 Certification document is required
               </div>
             </div>
-            <img src="" alt="" />
+
             <!-- ID Proof -->
-            <div class="space-y-3">
-              <label class="block text-sm font-semibold text-gray-700">
-                <i class="fas fa-id-card mr-2 text-red-500"></i>ID Proof
+            <div class="space-y-2">
+              <label class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <i class="fas fa-id-card text-red-600"></i>
+                ID Proof
               </label>
               <div class="relative">
                 <input
@@ -532,137 +353,98 @@
                 <button
                   type="button"
                   (click)="triggerFileInput('idProof')"
-                  class="w-full px-4 py-3 bg-gradient-to-r from-red-500 to-orange-500 border border-red-500 rounded-xl text-white hover:from-red-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 flex items-center justify-center font-medium"
+                  class="w-full px-4 py-3.5 bg-gradient-to-r from-red-600 to-red-700 border-2 border-red-600 rounded-xl text-white hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200 flex items-center justify-center font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                 >
                   <i class="fas fa-upload mr-2"></i>
                   Upload ID Proof
                 </button>
               </div>
-              <div
-                *ngIf="uploadedFileNames.idProof"
-                class="text-green-600 text-sm flex items-center bg-green-50 p-2 rounded-lg border border-green-200"
-              >
-                <i class="fas fa-check-circle mr-2"></i>
+              <div *ngIf="uploadedFileNames.idProof" class="text-green-700 text-sm flex items-center gap-2 bg-green-50 px-3 py-2 rounded-lg border-2 border-green-200">
+                <i class="fas fa-check-circle"></i>
                 {{ uploadedFileNames.idProof }}
               </div>
-              <div
-                *ngIf="idProof?.invalid && idProof?.touched"
-                class="text-red-600 text-sm flex items-start bg-red-50 p-2 rounded-lg border border-red-200"
-              >
-                <i
-                  class="fas fa-exclamation-circle mr-2 mt-0.5 flex-shrink-0"
-                ></i>
+              <div *ngIf="idProof?.invalid && idProof?.touched" class="text-red-600 text-sm flex items-start gap-2 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+                <i class="fas fa-exclamation-circle mt-0.5 flex-shrink-0"></i>
                 ID proof document is required
               </div>
             </div>
           </div>
         </div>
 
-        <div class="uploaded-documents-section">
-          <h3 class="section-title">Uploaded Documents</h3>
+        <!-- Uploaded Documents Preview -->
+        <div class="uploaded-documents-section" *ngIf="certificationImageUrl || idProofImageUrl">
+          <div class="flex items-center space-x-4 pb-5 border-b-2 border-red-100 mb-6">
+            <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center shadow-md">
+              <i class="fas fa-images text-white text-xl"></i>
+            </div>
+            <h3 class="text-3xl font-bold text-gray-900">Uploaded Documents</h3>
+          </div>
 
-          <div class="documents-grid">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Certification Preview Card -->
-            <div class="document-card" *ngIf="certificationImageUrl">
-              <div class="document-header">
-                <h4>Certification</h4>
-                <span class="badge badge-success">Uploaded</span>
+            <div class="bg-gradient-to-br from-gray-50 to-red-50 rounded-2xl overflow-hidden border-2 border-red-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-red-300" *ngIf="certificationImageUrl">
+              <div class="bg-white px-4 py-3 border-b-2 border-red-100 flex items-center justify-between">
+                <h4 class="font-bold text-gray-900 text-lg">Certification</h4>
+                <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full border border-green-300">Uploaded</span>
               </div>
 
-              <div
-                class="document-preview"
-                (click)="openCertificationPreview()"
-              >
+              <div class="relative h-56 cursor-pointer overflow-hidden group" (click)="openCertificationPreview()">
                 <img
                   [src]="certificationImageUrl"
                   alt="Certification"
-                  class="preview-image"
+                  class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   loading="lazy"
                 />
-                <div class="preview-overlay">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                  >
-                    <path
-                      d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4m-10-9l5-5m0 0l5 5m-5-5v12"
-                    />
-                  </svg>
-                  <span>Click to view</span>
+                <div class="absolute inset-0 bg-gradient-to-t from-red-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <div class="text-center text-white">
+                    <i class="fas fa-expand text-3xl mb-2"></i>
+                    <p class="font-semibold">Click to view</p>
+                  </div>
                 </div>
               </div>
 
-              <div class="document-actions">
+              <div class="p-4 bg-white">
                 <button
                   type="button"
-                  class="btn btn-outline btn-sm"
+                  class="w-full px-4 py-2.5 bg-white border-2 border-red-600 text-red-600 rounded-xl hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 flex items-center justify-center gap-2 font-semibold"
                   (click)="openCertificationPreview()"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="icon-sm"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                  >
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                  View
+                  <i class="fas fa-eye"></i>
+                  View Document
                 </button>
               </div>
             </div>
 
             <!-- ID Proof Preview Card -->
-            <div class="document-card" *ngIf="idProofImageUrl">
-              <div class="document-header">
-                <h4>ID Proof</h4>
-                <span class="badge badge-success">Uploaded</span>
+            <div class="bg-gradient-to-br from-gray-50 to-red-50 rounded-2xl overflow-hidden border-2 border-red-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-red-300" *ngIf="idProofImageUrl">
+              <div class="bg-white px-4 py-3 border-b-2 border-red-100 flex items-center justify-between">
+                <h4 class="font-bold text-gray-900 text-lg">ID Proof</h4>
+                <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full border border-green-300">Uploaded</span>
               </div>
 
-              <div class="document-preview" (click)="openIdProofPreview()">
+              <div class="relative h-56 cursor-pointer overflow-hidden group" (click)="openIdProofPreview()">
                 <img
                   [src]="idProofImageUrl"
                   alt="ID Proof"
-                  class="preview-image"
+                  class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   loading="lazy"
                 />
-                <div class="preview-overlay">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                  >
-                    <path
-                      d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4m-10-9l5-5m0 0l5 5m-5-5v12"
-                    />
-                  </svg>
-                  <span>Click to view</span>
+                <div class="absolute inset-0 bg-gradient-to-t from-red-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <div class="text-center text-white">
+                    <i class="fas fa-expand text-3xl mb-2"></i>
+                    <p class="font-semibold">Click to view</p>
+                  </div>
                 </div>
               </div>
 
-              <div class="document-actions">
+              <div class="p-4 bg-white">
                 <button
                   type="button"
-                  class="btn btn-outline btn-sm"
+                  class="w-full px-4 py-2.5 bg-white border-2 border-red-600 text-red-600 rounded-xl hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 flex items-center justify-center gap-2 font-semibold"
                   (click)="openIdProofPreview()"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="icon-sm"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                  >
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                  View
+                  <i class="fas fa-eye"></i>
+                  View Document
                 </button>
               </div>
             </div>
@@ -670,69 +452,47 @@
         </div>
 
         <!-- Certification Preview Modal -->
-        <div
-          class="image-preview-modal"
-          *ngIf="showCertificationPreview"
-          (click)="closeCertificationPreview()"
-        >
-          <div class="modal-backdrop"></div>
-          <div class="modal-content" (click)="$event.stopPropagation()">
-            <div class="modal-header">
-              <h3>Certification Document</h3>
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4" *ngIf="showCertificationPreview" (click)="closeCertificationPreview()">
+          <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+          <div class="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden" (click)="$event.stopPropagation()">
+            <div class="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4 flex items-center justify-between">
+              <h3 class="text-2xl font-bold text-white">Certification Document</h3>
               <button
-                class="close-btn"
+                class="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-xl text-white transition-all duration-200 flex items-center justify-center"
                 (click)="closeCertificationPreview()"
                 type="button"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="18" y1="6" x2="6" y2="18" />
                   <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </button>
             </div>
-            <div class="modal-body">
-              <img
-                [src]="certificationImageUrl"
-                alt="Certification"
-                class="full-image"
-              />
+            <div class="p-6 overflow-auto max-h-[calc(90vh-80px)]">
+              <img [src]="certificationImageUrl" alt="Certification" class="w-full h-auto rounded-xl shadow-lg" />
             </div>
           </div>
         </div>
 
         <!-- ID Proof Preview Modal -->
-        <div
-          class="image-preview-modal"
-          *ngIf="showIdProofPreview"
-          (click)="closeIdProofPreview()"
-        >
-          <div class="modal-backdrop"></div>
-          <div class="modal-content" (click)="$event.stopPropagation()">
-            <div class="modal-header">
-              <h3>ID Proof Document</h3>
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4" *ngIf="showIdProofPreview" (click)="closeIdProofPreview()">
+          <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+          <div class="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden" (click)="$event.stopPropagation()">
+            <div class="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4 flex items-center justify-between">
+              <h3 class="text-2xl font-bold text-white">ID Proof Document</h3>
               <button
-                class="close-btn"
+                class="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-xl text-white transition-all duration-200 flex items-center justify-center"
                 (click)="closeIdProofPreview()"
                 type="button"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="18" y1="6" x2="6" y2="18" />
                   <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </button>
             </div>
-            <div class="modal-body">
-              <img [src]="idProofImageUrl" alt="ID Proof" class="full-image" />
+            <div class="p-6 overflow-auto max-h-[calc(90vh-80px)]">
+              <img [src]="idProofImageUrl" alt="ID Proof" class="w-full h-auto rounded-xl shadow-lg" />
             </div>
           </div>
         </div>
@@ -742,7 +502,7 @@
           <button
             type="submit"
             [disabled]="verificationForm.invalid"
-            class="inline-flex items-center justify-center px-12 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-gradient-to-r from-red-600 via-red-700 to-orange-600 hover:from-red-700 hover:via-red-800 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-xl min-w-[250px] shadow-lg"
+            class="inline-flex items-center justify-center px-12 py-4 border-2 border-transparent text-lg font-bold rounded-xl text-white bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:from-red-700 hover:via-red-800 hover:to-red-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:-translate-y-1 hover:shadow-2xl min-w-[280px] shadow-xl"
           >
             <i class="fas fa-spinner fa-spin mr-3" *ngIf="isLoading"></i>
             <i class="fas fa-paper-plane mr-3" *ngIf="!isLoading"></i>
