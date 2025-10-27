@@ -6,22 +6,25 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout the repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2️⃣ Setup Node
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # ✅ Create both environment files dynamically using secrets
+      # 4️⃣ Create environment files securely
       - name: Create environment files
         run: |
           mkdir -p src/environments
@@ -35,7 +38,7 @@ jobs:
             googleUrl: '${{ secrets.GOOGLE_URL }}',
             S3_BASE_URL: '${{ secrets.S3_BASE_URL }}'
           };" > src/environments/environment.ts
-          
+
           echo "export const environment = {
             production: true,
             api: '${{ secrets.API_URL }}',
@@ -47,10 +50,29 @@ jobs:
             S3_BASE_URL: '${{ secrets.S3_BASE_URL }}'
           };" > src/environments/environment.prod.ts
 
+      # 5️⃣ Build the Angular app
       - name: Build Angular app
         run: npm run build -- --configuration production
 
-      # 🔹 Example deploy step (adjust for your server)
+      # 6️⃣ Deploy to EC2 via SSH
       - name: Deploy to EC2
-        run: |
-          echo "Build complete — add your deploy script here."
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "🚀 Starting Frontend Deployment..."
+            cd /home/ubuntu/vortexFit-frontend
+            git pull origin main
+            npm install
+            npm run build -- --configuration production
+
+            # Copy new build to Nginx root
+            sudo rm -rf /var/www/angular/browser/*
+            sudo cp -r dist/second-project-frontend/browser/* /var/www/angular/browser/
+
+            # Restart Nginx to apply changes
+            sudo systemctl restart nginx
+
+            echo "✅ Frontend Deployment Completed Successfully!"
