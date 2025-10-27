@@ -6,10 +6,8 @@ import { CommonModule } from '@angular/common';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, CommonModule],
-  template: `
-    <router-outlet />
-  `,
-  styles: []
+  template: ` <router-outlet /> `,
+  styles: [],
 })
 export class AppComponent {
   title = 'vortexfit';
