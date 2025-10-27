@@ -6,11 +6,11 @@ on:
       - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup Node.js
@@ -19,25 +19,23 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
+      # 👇 Step 1: Create environment.prod.ts using GitHub Secret
+      - name: Create environment.prod.ts
+        run: |
+          mkdir -p src/environments
+          echo "export const environment = {
+            production: true,
+            apiUrl: '${{ secrets.API_URL }}'
+          };" > src/environments/environment.prod.ts
+
+      # 👇 Step 2: Build Angular App
       - name: Build Angular app
-        run: npm run build --prod
+        run: npm run build --configuration 
 
-      - name: Deploy to EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "dist/second-project-frontend/browser/*"
-          target: "/var/www/angular/browser/"
-
-      - name: Reload Nginx
-        uses: appleboy/ssh-action@v0.1.6
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo systemctl reload nginx
+      # 👇 Step 3: Deploy (example for S3 / or your hosting target)
+      # Replace this with your actual deploy command
+      - name: Deploy to Server
+        run: |
+          echo "Deploy step here (e.g., upload dist/ to your hosting)"
