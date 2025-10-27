@@ -36,7 +36,7 @@ jobs:
           };" > src/environments/environment.prod.ts
 
       - name: Build Angular app
-        run: npm run build --configuration production
+        run: npm run build -- --configuration production
 
       # 🔹 Example deploy step (replace with your real one)
       - name: Deploy to EC2
