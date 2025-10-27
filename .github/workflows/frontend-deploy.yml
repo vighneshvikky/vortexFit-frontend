@@ -21,21 +21,24 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # 👇 Step 1: Create environment.prod.ts using GitHub Secret
-      - name: Create environment.prod.ts
+      # ✅ Create both environment files dynamically
+      - name: Create environment files
         run: |
           mkdir -p src/environments
+          echo "export const environment = {
+            production: false,
+            apiUrl: '${{ secrets.API_URL }}'
+          };" > src/environments/environment.ts
+          
           echo "export const environment = {
             production: true,
             apiUrl: '${{ secrets.API_URL }}'
           };" > src/environments/environment.prod.ts
 
-      # 👇 Step 2: Build Angular App
       - name: Build Angular app
-        run: npm run build --configuration 
+        run: npm run build --configuration production
 
-      # 👇 Step 3: Deploy (example for S3 / or your hosting target)
-      # Replace this with your actual deploy command
-      - name: Deploy to Server
+      # 🔹 Example deploy step (replace with your real one)
+      - name: Deploy to EC2
         run: |
-          echo "Deploy step here (e.g., upload dist/ to your hosting)"
+          echo "Build complete — add your deploy script here."
