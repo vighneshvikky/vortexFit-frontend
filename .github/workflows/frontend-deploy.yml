@@ -21,37 +21,36 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # ✅ Create both environment files dynamically (using GitHub Secrets)
+      # ✅ Create both environment files dynamically using secrets
       - name: Create environment files
         run: |
           mkdir -p src/environments
           echo "export const environment = {
             production: false,
-            api: '${{ secrets.DEV_API_URL }}',
-            socketUrl: '${{ secrets.DEV_SOCKET_URL }}'
+            api: 'http://localhost:3000',
+            socketUrl: 'http://localhost:3000',
+            googleClientId: '${{ secrets.GOOGLE_CLIENT_ID }}',
+            razorpayKey: '${{ secrets.RAZORPAY_KEY }}',
+            adminId: '${{ secrets.ADMIN_ID }}',
+            googleUrl: '${{ secrets.GOOGLE_URL }}',
+            S3_BASE_URL: '${{ secrets.S3_BASE_URL }}'
           };" > src/environments/environment.ts
           
           echo "export const environment = {
             production: true,
-            api: '${{ secrets.PROD_API_URL }}',
-            socketUrl: '${{ secrets.PROD_SOCKET_URL }}'
+            api: '${{ secrets.API_URL }}',
+            socketUrl: '${{ secrets.SOCKET_URL }}',
+            googleClientId: '${{ secrets.GOOGLE_CLIENT_ID }}',
+            razorpayKey: '${{ secrets.RAZORPAY_KEY }}',
+            adminId: '${{ secrets.ADMIN_ID }}',
+            googleUrl: '${{ secrets.GOOGLE_URL }}',
+            S3_BASE_URL: '${{ secrets.S3_BASE_URL }}'
           };" > src/environments/environment.prod.ts
 
       - name: Build Angular app
         run: npm run build -- --configuration production
 
-      # ✅ Deploy to EC2
+      # 🔹 Example deploy step (adjust for your server)
       - name: Deploy to EC2
-        env:
-          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          HOST: ${{ secrets.EC2_HOST }}
-          USER: ubuntu
         run: |
-          echo "$PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-
-          # Copy dist folder to EC2
-          scp -i private_key.pem -r dist/second-project-frontend/browser/* ${USER}@${HOST}:/var/www/angular/browser/
-
-          # Restart nginx
-          ssh -i private_key.pem ${USER}@${HOST} "sudo systemctl restart nginx"
+          echo "Build complete — add your deploy script here."
