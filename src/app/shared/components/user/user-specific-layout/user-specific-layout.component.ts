@@ -79,12 +79,10 @@ export class UserSpecificLayoutComponent {
     this.checkScreenSize();
   }
 
-  @HostListener('window:resize', ['$event'])
-
   checkScreenSize(): void {
-    this.isDesktop = window.innerWidth >= 1024; // lg breakpoint
+    this.isDesktop = window.innerWidth >= 1024;
     if (this.isDesktop) {
-      this.isSidebarOpen = false; // Always closed on desktop since it's always visible
+      this.isSidebarOpen = false;
     }
   }
 
@@ -98,14 +96,13 @@ export class UserSpecificLayoutComponent {
 
   onLogout(): void {
     this.store.dispatch(logout());
-    this.closeSidebar(); // Close sidebar after logout
+    this.closeSidebar();
   }
 
   onMobileSidebarClose(): void {
     this.closeSidebar();
   }
 
-  // Method to update message badge count (you can call this from your messaging service)
   updateMessageBadge(count: number): void {
     const messagesItem = this.navItems.find(
       (item) => item.route === '/user/messages'
@@ -115,7 +112,6 @@ export class UserSpecificLayoutComponent {
     }
   }
 
-  // Method to update user stats (you can call this from your user service)
   updateUserStats(stats: UserStats): void {
     this.userStats = { ...this.userStats, ...stats };
   }

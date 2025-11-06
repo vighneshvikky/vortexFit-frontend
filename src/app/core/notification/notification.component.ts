@@ -32,7 +32,7 @@ export class NotificationComponent implements OnInit {
     private store: Store<AppState>
   ) {}
 
-    ngOnInit(): void {
+  ngOnInit(): void {
     this.role = this.route.snapshot.data['role'];
 
     this.store
@@ -44,23 +44,30 @@ export class NotificationComponent implements OnInit {
         if (this.userId) {
           this.notificationService.connect(this.userId);
 
+          this.notificationService.markAllAsRead(this.userId).subscribe({
+            next: () => {
+              this.unreadCount = 0;
+              this.notifications.forEach((n) => (n.status = 'read'));
+            },
+            error: (err) => console.error('Failed to mark as read', err),
+          });
+
+          this.notificationService.setUnreadCount(0);
+
+
           const notifSub = this.notificationService
             .onNotifications()
             .subscribe((newNotifications: Notification[] | Notification) => {
               if (Array.isArray(newNotifications)) {
-            
                 newNotifications.forEach((newNotif) => {
-         
                   const exists = this.notifications.some(
                     (n) => n._id === newNotif._id
                   );
                   if (!exists) {
-
                     this.notifications.unshift(newNotif);
                   }
                 });
               } else {
-          
                 const exists = this.notifications.some(
                   (n) => n._id === newNotifications._id
                 );
@@ -82,7 +89,7 @@ export class NotificationComponent implements OnInit {
   }
 
   loadNotifications() {
-    console.log('loading notification')
+    console.log('loading notification');
     this.loading = true;
     this.notificationService.getNotifications().subscribe({
       next: (res) => {

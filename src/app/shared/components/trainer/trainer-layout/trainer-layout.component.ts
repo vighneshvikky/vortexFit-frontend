@@ -36,7 +36,7 @@ export class TrainerLayoutComponent {
       route: '/trainer/scheduling',
     },
 
-        {
+    {
       icon: 'fas fa-message',
       label: 'Messages',
       route: '/trainer/chat',
@@ -46,6 +46,7 @@ export class TrainerLayoutComponent {
       icon: 'fas fa-bell',
       label: 'Notifications',
       route: '/trainer/notifications',
+      isCustomComponent: true,
     },
     {
       icon: 'fas fa-dollar-sign',
@@ -59,12 +60,10 @@ export class TrainerLayoutComponent {
     this.checkScreenSize();
   }
 
-  @HostListener('window:resize', ['$event'])
-
   checkScreenSize(): void {
     this.isDesktop = window.innerWidth >= 1024;
     if (this.isDesktop) {
-      this.isSidebarOpen = false; 
+      this.isSidebarOpen = false;
     }
   }
 
@@ -78,7 +77,7 @@ export class TrainerLayoutComponent {
 
   onLogout(): void {
     this.store.dispatch(logout());
-    this.closeSidebar(); // Close sidebar after logout
+    this.closeSidebar();
   }
 
   onMobileSidebarClose(): void {

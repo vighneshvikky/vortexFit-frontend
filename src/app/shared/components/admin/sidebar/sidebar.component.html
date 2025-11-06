@@ -13,7 +13,11 @@
         <span class="logo-text" *ngIf="sidebarOpen">VortexFit</span>
       </div>
       <button class="toggle-btn" (click)="onToggleSidebar()">
-        <i class="fas" [class.fa-chevron-left]="sidebarOpen" [class.fa-chevron-right]="!sidebarOpen"></i>
+        <i
+          class="fas"
+          [class.fa-chevron-left]="sidebarOpen"
+          [class.fa-chevron-right]="!sidebarOpen"
+        ></i>
       </button>
     </div>
 
@@ -24,12 +28,24 @@
           *ngFor="let item of menuItems"
           [routerLink]="'/admin/' + item.id"
           routerLinkActive="active"
-          class="nav-item"
+          class="nav-item flex items-center justify-between"
           (click)="onMenuItemClick(item.id)"
         >
-          <i [class]="'fas ' + item.icon"></i>
-          <span class="item-label" *ngIf="sidebarOpen">{{ item.label }}</span>
-        
+          <div class="flex items-center gap-2">
+            <!-- if it's a custom component like Notification -->
+            <ng-container *ngIf="item.isCustomComponent; else normalIcon">
+              <app-notification-icon
+                [userId]="userId | async"
+              ></app-notification-icon>
+            </ng-container>
+
+            <!-- fallback for normal items -->
+            <ng-template #normalIcon>
+              <i [class]="'fas ' + item.icon"></i>
+            </ng-template>
+
+            <span class="item-label" *ngIf="sidebarOpen">{{ item.label }}</span>
+          </div>
         </a>
       </div>
     </nav>

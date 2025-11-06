@@ -1,0 +1,16 @@
+<div class="relative cursor-pointer">
+  <button></button>
+  <span
+    (click)="redirectToNotification(); notifications = []"
+    class="material-icons text-3xl"
+  >
+    notifications
+  </span>
+
+  <span
+    *ngIf="unreadCount > 0"
+    class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5"
+  >
+    {{ unreadCount }}
+  </span>
+</div>

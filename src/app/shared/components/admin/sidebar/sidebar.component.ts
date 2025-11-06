@@ -1,12 +1,18 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AppState } from '../../../../store/app.state';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { selectCurrentUserId } from '../../../../features/auth/store/selectors/auth.selectors';
+import { NotificationIconComponent } from '../../notification-icon/notification-icon.component';
 
 export interface SidebarMenuItem {
   id: string;
   label: string;
   icon: string;
   badge?: number;
+  isCustomComponent?: boolean;
 }
 
 export interface GetUsersQuery {
@@ -17,11 +23,13 @@ export interface GetUsersQuery {
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NotificationIconComponent],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
+  userId!: Observable<string | undefined>;
+  constructor(private state: Store<AppState>) {}
   @Input() sidebarOpen = true;
   @Input() activeMenuItem = 'dashboard';
   @Input() userInfo = {
@@ -36,13 +44,20 @@ export class SidebarComponent {
     { id: 'plans', label: 'Plans', icon: 'fa-list-alt' },
     { id: 'transactions', label: 'Earnings', icon: 'fa-dollar-sign' },
     {
-      id: 'notifications', label: 'Notifications', icon: 'fa-bell '
-    }
+      id: 'notifications',
+      label: 'Notifications',
+      icon: 'fa-bell',
+      isCustomComponent: true,
+    },
   ];
 
   @Output() menuItemClick = new EventEmitter<string>();
   @Output() toggleSidebar = new EventEmitter<void>();
   @Output() logout = new EventEmitter<void>();
+
+  ngOnInit(): void {
+    this.userId = this.state.select(selectCurrentUserId);
+  }
 
   onMenuItemClick(itemId: string): void {
     this.activeMenuItem = itemId;

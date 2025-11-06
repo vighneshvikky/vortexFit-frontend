@@ -4,28 +4,31 @@ import { SearchService } from '../../../../features/user/services/search.service
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/app.state';
-import { selectCurrentUser } from '../../../../features/auth/store/selectors/auth.selectors';
+import { selectCurrentUser, selectCurrentUserId } from '../../../../features/auth/store/selectors/auth.selectors';
 import { Observable } from 'rxjs';
 import { AuthenticatedUser } from '../../../../features/auth/store/actions/auth.actions';
 import { onImageError } from '../../../methods/image-checker';
 import { AsyncPipe } from '@angular/common';
+import { NotificationIconComponent } from "../../notification-icon/notification-icon.component";
 
 @Component({
   selector: 'app-user-navbar',
-  imports: [RouterModule, FormsModule, AsyncPipe, RouterModule],
+  imports: [RouterModule, FormsModule, AsyncPipe, RouterModule, NotificationIconComponent],
   templateUrl: './user-navbar.component.html',
   styleUrl: './user-navbar.component.scss'
 })
 export class UserNavbarComponent implements OnInit{
  searchTerm: string = '';
  $currentUser!: Observable<AuthenticatedUser | null>;
+ userId$!: Observable<string | undefined | null>;
   
   private searchService = inject(SearchService);
   private router = inject(Router);
   private store = inject(Store<AppState>);
 
   ngOnInit(): void {
-    this.$currentUser = this.store.select(selectCurrentUser)
+    this.$currentUser = this.store.select(selectCurrentUser);
+    this.userId$ = this.store.select(selectCurrentUserId)
   }
 
   onSearch(): void {

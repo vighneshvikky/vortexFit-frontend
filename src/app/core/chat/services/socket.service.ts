@@ -19,7 +19,7 @@ export class SocketService {
     serverUrl: string = environment.socketUrl
   ): void {
     if (this.sockets[namespace]?.connected) return;
-   console.log('socket url', `${serverUrl}/${namespace}`)
+    console.log('socket url', `${serverUrl}/${namespace}`);
     const url = `${serverUrl}/${namespace}`;
     const socket = io(url, {
       transports: ['websocket'],
@@ -82,7 +82,7 @@ export class SocketService {
   }
 
   getSocketErrors(): Observable<{ namespace: string; message: string }> {
-    console.log('getting socket error')
+    console.log('getting socket error');
     return this.error$.asObservable();
   }
 }
