@@ -28,6 +28,7 @@ export class NotificationIconComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    console.log('This is from notificaiton icon component')
     this.store.select(selectCurrentUser).subscribe((user) => {
       if (user) {
         this.role = user.role;
@@ -35,6 +36,7 @@ export class NotificationIconComponent implements OnInit, OnDestroy {
     });
 
     if (this.userId) {
+      console.log('userId from notification icon', this.userId)
       this.notificationService.connect(this.userId);
 
       this.notificationService.getUnreadCountFromApi(this.userId).subscribe({
@@ -43,9 +45,11 @@ export class NotificationIconComponent implements OnInit, OnDestroy {
       });
     }
 
-    // Subscribe to reactive unread count
+    
     this.notificationService.getUnreadCount().subscribe((count) => {
+      console.log('count', count);
       this.unreadCount = count;
+      
     });
   }
 

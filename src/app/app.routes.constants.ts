@@ -40,7 +40,7 @@ export const API_ROUTES = {
     GET_BOOKINGS_BY_FILTER: '/getFilteredBookings',
     GET_CLIENTS: '/getClients',
     GET_STATS: '/stats',
-    GET_USER_BOOKINGS_BY_FILTER: '/getUserFilteredBookings',
+    GET_USER_BOOKINGS_BY_FILTER: '/user',
     CANCEL_BOOKING: (id: string) => `/${id}/cancel`
   },
 
