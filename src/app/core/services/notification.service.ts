@@ -31,21 +31,28 @@ export class NotificationService {
     this.socketService.connect(this.namespace, userId, environment.api);
     this.socketService.emit(this.namespace, 'joinRoom', userId);
 
-    this.socketService
-      .on<Notification>(this.namespace, 'newNotification')
-      .subscribe((notification) => {
-        const current = this.notifications$.value;
-        const exists = current.some((n) => n._id === notification._id);
+this.socketService
+  .on<Notification>(this.namespace, 'newNotification')
+  .subscribe((notification) => {
+    console.log('🔔 Received new notification:', notification);
+    
+    const current = this.notifications$.value;
+    console.log('Current notifications before update:', current);
 
-        if (!exists) {
-                  const updated = [notification, ...current];
-        this.notifications$.next(updated);
+    const exists = current.some((n) => n._id === notification._id);
+    console.log('Already exists?', exists);
 
+    if (!exists) {
+      const updated = [notification, ...current];
+      this.notifications$.next(updated);
 
-        const unread = updated.filter((n) => n.status === 'unread').length;
-        this.unreadCount$.next(unread);
-        }
-      });
+      const unread = updated.filter((n) => n.status === 'unread').length;
+      console.log('🔢 Updated unread count:', unread);
+
+      this.unreadCount$.next(unread);
+    }
+  });
+
   }
 
   loadInitialNotifications(): Observable<Notification[]> {
@@ -56,25 +63,24 @@ export class NotificationService {
     return this.http.delete<Notification>(`${this.api}/${id}`);
   }
 
-setInitialNotifications(list: Notification[]) {
-  this.notifications$.next(list);
-  const unread = list.filter((n) => n.status === 'unread').length;
-  this.unreadCount$.next(unread);
-}
-
+  setInitialNotifications(list: Notification[]) {
+    this.notifications$.next(list);
+    const unread = list.filter((n) => n.status === 'unread').length;
+    this.unreadCount$.next(unread);
+  }
 
   onNotifications(): Observable<Notification[]> {
     return this.notifications$.asObservable();
   }
 
   onNewNotification() {
+    console.log('getNewNotifications hello');
     return this.socketService.on<any>(this.namespace, 'newNotification');
   }
 
   getUnreadCountFromApi(userId: string): Observable<number> {
-  return this.http.get<number>(`${this.api}/unread-count/${userId}`);
-}
-
+    return this.http.get<number>(`${this.api}/unread-count/${userId}`);
+  }
 
   getNotifications(): Observable<Notification[]> {
     console.log('getNotification');
@@ -82,29 +88,26 @@ setInitialNotifications(list: Notification[]) {
   }
 
   setUnreadCount(count: number) {
-  this.unreadCount$.next(count);
-}
+    this.unreadCount$.next(count);
+  }
 
-getUnreadCount(): Observable<number> {
-  return this.unreadCount$.asObservable();
-}
+  getUnreadCount(): Observable<number> {
+    return this.unreadCount$.asObservable();
+  }
 
   markAsRead(id: string): Observable<Notification> {
     return this.http.patch<Notification>(`${this.api}/${id}/read`, {});
   }
 
-markAllAsRead(userId: string) {
-  return this.http.patch(`${this.api}/mark-all-read/${userId}`, {}).pipe(
-    tap(() => {
-      this.unreadCount$.next(0);
-    })
-  );
-}
+  markAllAsRead(userId: string) {
+    return this.http.patch(`${this.api}/mark-all-read/${userId}`, {}).pipe(
+      tap(() => {
+        this.unreadCount$.next(0);
+      })
+    );
+  }
 
-
-
-
-    disconnect() {
+  disconnect() {
     if (this.socketService) this.socketService.disconnect(this.namespace);
   }
 }
