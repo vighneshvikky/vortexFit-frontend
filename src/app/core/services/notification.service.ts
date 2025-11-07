@@ -28,7 +28,7 @@ export class NotificationService {
   constructor(private http: HttpClient, private socketService: SocketService) {}
 
   connect(userId: string) {
-    this.socketService.connect(this.namespace, userId, environment.api);
+    this.socketService.connect(this.namespace, userId, environment.socketUrl);
     this.socketService.emit(this.namespace, 'joinRoom', userId);
 
     this.socketService
