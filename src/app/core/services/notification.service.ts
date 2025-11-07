@@ -55,7 +55,7 @@ export class NotificationService {
   }
 
   loadInitialNotifications(): Observable<Notification[]> {
-    console.log('hai');
+  
     return this.http.get<Notification[]>(`${this.api}`);
   }
   deleteNotification(id: string): Observable<Notification> {
