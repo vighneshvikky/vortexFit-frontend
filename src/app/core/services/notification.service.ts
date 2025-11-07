@@ -31,28 +31,27 @@ export class NotificationService {
     this.socketService.connect(this.namespace, userId, environment.api);
     this.socketService.emit(this.namespace, 'joinRoom', userId);
 
-this.socketService
-  .on<Notification>(this.namespace, 'newNotification')
-  .subscribe((notification) => {
-    console.log('🔔 Received new notification:', notification);
-    
-    const current = this.notifications$.value;
-    console.log('Current notifications before update:', current);
+    this.socketService
+      .on<Notification>(this.namespace, 'newNotification')
+      .subscribe((notification) => {
+        console.log('🔔 Received new notification:', notification);
 
-    const exists = current.some((n) => n._id === notification._id);
-    console.log('Already exists?', exists);
+        const current = this.notifications$.value;
+        console.log('Current notifications before update:', current);
 
-    if (!exists) {
-      const updated = [notification, ...current];
-      this.notifications$.next(updated);
+        const exists = current.some((n) => n._id === notification._id);
+        console.log('Already exists?', exists);
 
-      const unread = updated.filter((n) => n.status === 'unread').length;
-      console.log('🔢 Updated unread count:', unread);
+        if (!exists) {
+          const updated = [notification, ...current];
+          this.notifications$.next(updated);
 
-      this.unreadCount$.next(unread);
-    }
-  });
+          const unread = updated.filter((n) => n.status === 'unread').length;
+          console.log('🔢 Updated unread count:', unread);
 
+          this.unreadCount$.next(unread);
+        }
+      });
   }
 
   loadInitialNotifications(): Observable<Notification[]> {
