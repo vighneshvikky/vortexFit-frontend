@@ -1,4 +1,4 @@
-import { Component, inject, HostListener } from '@angular/core';
+import { Component, inject, HostListener, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/app.state';
@@ -26,7 +26,7 @@ export interface UserStats {
   templateUrl: './user-specific-layout.component.html',
   styleUrl: './user-specific-layout.component.scss',
 })
-export class UserSpecificLayoutComponent {
+export class UserSpecificLayoutComponent implements OnDestroy {
   private store = inject(Store<AppState>);
 
   // Responsive properties
@@ -79,40 +79,70 @@ export class UserSpecificLayoutComponent {
     this.checkScreenSize();
   }
 
+  // Listen to window resize events
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.checkScreenSize();
+  }
+
+  // Check screen size and update responsive properties
   checkScreenSize(): void {
+    const wasDesktop = this.isDesktop;
     this.isDesktop = window.innerWidth >= 1024;
-    if (this.isDesktop) {
+    
+    // Close sidebar when switching from mobile to desktop
+    if (!wasDesktop && this.isDesktop) {
       this.isSidebarOpen = false;
     }
   }
 
+  // Toggle sidebar visibility (mobile only)
   toggleSidebar(): void {
     this.isSidebarOpen = !this.isSidebarOpen;
+    
+    // Prevent body scroll when sidebar is open on mobile
+    if (this.isSidebarOpen && !this.isDesktop) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
   }
 
+  // Close sidebar
   closeSidebar(): void {
     this.isSidebarOpen = false;
+    document.body.style.overflow = '';
   }
 
+  // Handle logout
   onLogout(): void {
     this.store.dispatch(logout());
     this.closeSidebar();
   }
 
+  // Handle mobile sidebar close
   onMobileSidebarClose(): void {
     this.closeSidebar();
   }
 
+  // Update message badge count
   updateMessageBadge(count: number): void {
     const messagesItem = this.navItems.find(
-      (item) => item.route === '/user/messages'
+      (item) => item.route === '/user/chat'
     );
     if (messagesItem) {
       messagesItem.badge = count > 0 ? count : undefined;
     }
   }
 
+  // Update user stats
   updateUserStats(stats: UserStats): void {
     this.userStats = { ...this.userStats, ...stats };
+  }
+
+  // Cleanup on component destroy
+  ngOnDestroy(): void {
+    // Restore body scroll
+    document.body.style.overflow = '';
   }
 }
