@@ -5,12 +5,6 @@
   <div
     class="p-3 sm:p-4 lg:p-6 border-b border-gray-700 flex items-center justify-between"
   >
-    <!-- Logo/Brand -->
-    <div class="flex items-center space-x-2 flex-1">
-      <i class="fas fa-dumbbell text-orange-500 text-lg sm:text-xl"></i>
-      <h1 class="text-base sm:text-lg font-bold text-white">VortexFit</h1>
-    </div>
-    
     <!-- Close button for mobile -->
     <button
       class="lg:hidden text-gray-400 hover:text-white p-1.5 rounded-md hover:bg-gray-700 transition-colors"
@@ -44,9 +38,10 @@
             "
             routerLinkActive="text-white"
           ></i>
-          <span class="text-xs sm:text-sm lg:text-base font-medium truncate flex-1">{{
-            item.label
-          }}</span>
+          <span
+            class="text-xs sm:text-sm lg:text-base font-medium truncate flex-1"
+            >{{ item.label }}</span
+          >
 
           <!-- Badge for notifications (optional) -->
           @if (item.badge && item.badge > 0) {
@@ -64,7 +59,9 @@
     <div
       class="mt-4 sm:mt-6 lg:mt-8 p-2.5 sm:p-3 lg:p-4 bg-gray-700 bg-opacity-50 rounded-lg border border-gray-600"
     >
-      <h4 class="text-[10px] sm:text-xs lg:text-sm font-semibold text-orange-400 mb-1.5 sm:mb-2">
+      <h4
+        class="text-[10px] sm:text-xs lg:text-sm font-semibold text-orange-400 mb-1.5 sm:mb-2"
+      >
         Quick Stats
       </h4>
       <div class="space-y-0.5 sm:space-y-1">
@@ -84,7 +81,9 @@
     </div>
 
     <!-- Logout Section -->
-    <div class="pt-4 sm:pt-6 lg:pt-8 mt-4 sm:mt-6 lg:mt-8 border-t border-gray-700">
+    <div
+      class="pt-4 sm:pt-6 lg:pt-8 mt-4 sm:mt-6 lg:mt-8 border-t border-gray-700"
+    >
       <button
         (click)="onLogout()"
         class="w-full flex items-center px-2.5 sm:px-3 lg:px-4 py-2 sm:py-2.5 lg:py-3 text-gray-300 hover:bg-red-600 hover:text-white rounded-lg transition-colors group"

@@ -4,6 +4,7 @@ export interface Admin {
   role: 'admin';
     verificationStatus?: 'not_submitted' | 'pending' | 'rejected' | 'approved';
     rejectionReason?: string;
+    image?: string
 }
 
 export interface AdminLoginDto {

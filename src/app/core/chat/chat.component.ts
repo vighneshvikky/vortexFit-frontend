@@ -19,6 +19,8 @@ import { Trainer } from '../../features/trainer/models/trainer.interface';
 import { generateRoomId } from './utils/room.util';
 import { SocketService } from './services/socket.service';
 import { NotyService } from '../services/noty.service';
+import { AuthenticatedUser } from '../../features/auth/store/actions/auth.actions';
+import { isTrainer, isUser } from '../guards/user-type-guards';
 
 export interface UserRole {
   isTrainer: boolean;
@@ -48,6 +50,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   userData!: User | Trainer | null;
   conversationsList: LastMessages[] = [];
   currentUserRole: UserRole = { isTrainer: false, isUser: false };
+  currentUser!: AuthenticatedUser | null;
   pageTitle = '';
   currentUserId: string | undefined = '';
   sender: string = '';
@@ -72,7 +75,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.checkScreenSize();
   }
 
-
   onResize() {
     this.checkScreenSize();
   }
@@ -88,9 +90,13 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.checkScreenSize();
-console.log('chat component')
+    console.log('chat component');
     this.store.select(selectCurrentUser).subscribe((currentUser) => {
       this.currentUserRole = { isTrainer: false, isUser: false };
+      // if(isUser(currentUser) || isTrainer(currentUser)){
+      //   this.currentUser= currentUser;
+      // }
+      this.currentUser = currentUser;
 
       if (currentUser?.role === 'trainer') {
         this.sender = 'user';
@@ -120,7 +126,7 @@ console.log('chat component')
           }
         }
       });
-      console.log('sub errors', this.sub);
+    console.log('sub errors', this.sub);
     this.loadChatData();
   }
 
@@ -211,12 +217,11 @@ console.log('chat component')
 
   selectConversation(conversation: LastMessages) {
     console.log('Conversation selected:', conversation);
-    if(this.currentUserRole.isUser){
-this.router.navigate(['/user/chat', conversation.participantId]);
-    }else{
+    if (this.currentUserRole.isUser) {
+      this.router.navigate(['/user/chat', conversation.participantId]);
+    } else {
       this.router.navigate(['/trainer/chat', conversation.participantId]);
     }
-    
   }
 
   trackMessage(index: number, message: ChatMessage): any {
