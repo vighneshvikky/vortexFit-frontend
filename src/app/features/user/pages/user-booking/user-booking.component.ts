@@ -7,7 +7,6 @@ import { NotyService } from '../../../../core/services/noty.service';
 import { SchedulingRule } from '../../../trainer/models/scheduling.interface';
 import { PaymentService } from '../../services/payment.service';
 
-
 import {
   CalendarDay,
   PaymentSuccessResponse,
@@ -375,7 +374,6 @@ export class UserBookingComponent implements OnInit {
       next: (res) => {
         console.log('Slot locked successfully:', res);
 
-       
         const bookingData: SessionBookingRequest = {
           trainerId: this.trainerId,
           amount: this.selectedPrice,
@@ -504,23 +502,9 @@ export class UserBookingComponent implements OnInit {
       reason: response.error.description,
     };
 
-    this.ngZone.run(() => {
-      this.walletService.addFailedPayment(payload).subscribe({
-        next: (res: WalletResponse) => {
-          console.log('res', res);
-          if (res && res.wallet.balance !== undefined) {
-            this.balance = res.wallet.balance;
-          }
-
-          this.notyf.showSuccess('Payment failed, money added to your wallet');
-          this.router.navigate([`/user/booking/${this.trainerId}`]);
-        },
-        error: () => {
-          this.notyf.showError(
-            'Could not update wallet, please contact support'
-          );
-        },
-      });
+    this.ngZone.run(() => { 
+      this.notyf.showError('Payment failed. Please try again.');
+      this.router.navigate([`/user/booking/${this.trainerId}`]);
     });
   }
   private verifyPaymentInBackground(response: PaymentSuccessResponse) {
