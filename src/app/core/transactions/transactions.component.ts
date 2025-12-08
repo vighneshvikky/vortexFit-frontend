@@ -240,7 +240,7 @@ export class TransactionsComponent implements OnInit {
   }
 
   exportTransactions(): void {
-    // Export current filtered data
+    
     const csv = this.convertToCSV(this.transactionsData);
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
