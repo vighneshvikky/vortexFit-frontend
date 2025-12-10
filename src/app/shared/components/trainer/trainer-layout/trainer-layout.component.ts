@@ -1,4 +1,4 @@
-import { Component, inject, HostListener } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TrainerSidebarComponent } from '../trainer-sidebar/trainer-sidebar.component';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 export class TrainerLayoutComponent {
   private store = inject(Store<AppState>);
 
-  // Responsive properties
+ 
   isSidebarOpen = false;
   isDesktop = true;
 

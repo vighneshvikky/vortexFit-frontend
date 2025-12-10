@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, HostListener } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -20,7 +20,7 @@ import { generateRoomId } from './utils/room.util';
 import { SocketService } from './services/socket.service';
 import { NotyService } from '../services/noty.service';
 import { AuthenticatedUser } from '../../features/auth/store/actions/auth.actions';
-import { isTrainer, isUser } from '../guards/user-type-guards';
+
 
 export interface UserRole {
   isTrainer: boolean;

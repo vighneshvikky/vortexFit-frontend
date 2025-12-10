@@ -483,7 +483,7 @@ export class UserBookingComponent implements OnInit {
 
     rzp.on('payment.failed', (response: RazorpayPaymentFailedResponse) => {
       console.error('Payment failed:', response);
-      this.handleFailedPayment(response, order.amount);
+      this.handleFailedPayment();
 
       this.notyf.showError('Payment failed: ' + response.error.description);
     });
@@ -492,15 +492,15 @@ export class UserBookingComponent implements OnInit {
   }
 
   private handleFailedPayment(
-    response: RazorpayPaymentFailedResponse,
-    amount: number
+    // response: RazorpayPaymentFailedResponse,
+    // amount: number
   ) {
-    const payload = {
-      orderId: response.error.metadata.order_id,
-      paymentId: response.error.metadata.payment_id,
-      amount: amount,
-      reason: response.error.description,
-    };
+    // const payload = {
+    //   orderId: response.error.metadata.order_id,
+    //   paymentId: response.error.metadata.payment_id,
+    //   amount: amount,
+    //   reason: response.error.description,
+    // };
 
     this.ngZone.run(() => { 
       this.notyf.showError('Payment failed. Please try again.');

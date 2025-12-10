@@ -1,4 +1,4 @@
-import { Component, inject, HostListener, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/app.state';
@@ -80,10 +80,10 @@ export class UserSpecificLayoutComponent implements OnDestroy {
   }
 
   // Listen to window resize events
-  @HostListener('window:resize', ['$event'])
-  onResize(event: Event): void {
-    this.checkScreenSize();
-  }
+  // @HostListener('window:resize', ['$event'])
+  // onResize(event: Event): void {
+  //   this.checkScreenSize();
+  // }
 
   // Check screen size and update responsive properties
   checkScreenSize(): void {
