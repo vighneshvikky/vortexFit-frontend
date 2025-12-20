@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, HostListener } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../../store/app.state';
@@ -31,7 +31,7 @@ export class UserSpecificLayoutComponent implements OnDestroy {
 
   // Responsive properties
   isSidebarOpen = false;
-  isDesktop = true;
+  isDesktop = false;
 
   navItems: NavItem[] = [
     {
@@ -67,7 +67,6 @@ export class UserSpecificLayoutComponent implements OnDestroy {
     },
   ];
 
-  // User statistics (you can fetch this from your store/service)
   userStats: UserStats = {
     workouts: 25,
     streak: 7,
@@ -80,10 +79,10 @@ export class UserSpecificLayoutComponent implements OnDestroy {
   }
 
   // Listen to window resize events
-  // @HostListener('window:resize', ['$event'])
-  // onResize(event: Event): void {
-  //   this.checkScreenSize();
-  // }
+  @HostListener('window:resize')
+  onResize(): void {
+    this.checkScreenSize();
+  }
 
   // Check screen size and update responsive properties
   checkScreenSize(): void {
@@ -93,25 +92,29 @@ export class UserSpecificLayoutComponent implements OnDestroy {
     // Close sidebar when switching from mobile to desktop
     if (!wasDesktop && this.isDesktop) {
       this.isSidebarOpen = false;
+      document.body.style.overflow = '';
     }
   }
 
   // Toggle sidebar visibility (mobile only)
   toggleSidebar(): void {
     this.isSidebarOpen = !this.isSidebarOpen;
-    
-    // Prevent body scroll when sidebar is open on mobile
-    if (this.isSidebarOpen && !this.isDesktop) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    this.updateBodyScroll();
   }
 
   // Close sidebar
   closeSidebar(): void {
     this.isSidebarOpen = false;
-    document.body.style.overflow = '';
+    this.updateBodyScroll();
+  }
+
+  // Update body scroll based on sidebar state
+  private updateBodyScroll(): void {
+    if (this.isSidebarOpen && !this.isDesktop) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
   }
 
   // Handle logout
@@ -142,7 +145,6 @@ export class UserSpecificLayoutComponent implements OnDestroy {
 
   // Cleanup on component destroy
   ngOnDestroy(): void {
-    // Restore body scroll
     document.body.style.overflow = '';
   }
 }

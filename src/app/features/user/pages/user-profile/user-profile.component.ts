@@ -40,7 +40,7 @@ export class UserProfileComponent implements OnInit {
   originalFormValues: Record<string, unknown> = {};
 
   readonly S3_BASE_URL =
-    'https://vortexfit-app-upload.s3.ap-south-1.amazonaws.com/';
+    'https://vortexfit-app-upload-new.s3.ap-south-1.amazonaws.com/';
   imagePreviewUrl?: string;
 
   // Form options

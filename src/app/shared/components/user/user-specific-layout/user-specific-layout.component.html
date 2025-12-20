@@ -1,18 +1,16 @@
 <div class="flex min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
   <!-- Mobile Overlay for Sidebar -->
   <div
-    class="fixed inset-0 bg-black/50 z-30 lg:hidden transition-opacity duration-300"
-    [class.hidden]="!isSidebarOpen"
-    [class.opacity-0]="!isSidebarOpen"
-    [class.opacity-100]="isSidebarOpen"
+    *ngIf="isSidebarOpen && !isDesktop"
+    class="fixed inset-0 bg-black/50 z-30 lg:hidden animate-fade-in"
     (click)="closeSidebar()"
   ></div>
 
   <!-- Sidebar -->
   <aside
-    class="fixed inset-y-0 left-0 z-40 w-[85vw] sm:w-72 lg:w-64 h-screen transform bg-white shadow-lg transition-transform duration-300 ease-in-out lg:static lg:h-auto lg:shadow-none"
-    [class.-translate-x-full]="!isSidebarOpen && !isDesktop"
-    [class.translate-x-0]="isSidebarOpen || isDesktop"
+    class="fixed inset-y-0 left-0 z-40 w-[85vw] sm:w-72 lg:w-64 h-screen bg-white shadow-lg transition-transform duration-300 ease-in-out lg:static lg:h-auto lg:shadow-none"
+    [class.-translate-x-full]="!isDesktop && !isSidebarOpen"
+    [class.translate-x-0]="isDesktop || isSidebarOpen"
   >
     <app-profile-sidebar
       [navItems]="navItems"
@@ -24,7 +22,7 @@
 
   <!-- Main Content -->
   <div class="flex-1 min-h-screen flex flex-col w-full lg:w-auto">
-    <!-- Mobile Header (shown only on mobile) -->
+    <!-- Mobile Header -->
     <header
       class="lg:hidden bg-white/90 backdrop-blur-md border-b border-blue-200 sticky top-0 z-20 shadow-sm"
     >
@@ -34,7 +32,11 @@
           class="text-blue-600 hover:text-blue-800 p-1.5 sm:p-2 rounded-md hover:bg-blue-50 transition-colors"
           [attr.aria-label]="isSidebarOpen ? 'Close menu' : 'Open menu'"
         >
-          <i class="fas fa-bars text-lg sm:text-xl"></i>
+          <i 
+            class="text-lg sm:text-xl transition-transform duration-200"
+            [class.fa-bars]="!isSidebarOpen"
+            [class.fa-times]="isSidebarOpen"
+          ></i>
         </button>
 
         <div class="flex items-center">
@@ -43,14 +45,12 @@
             VortexFit
           </h1>
         </div>
-
       </div>
     </header>
 
     <!-- Routed Content Wrapper -->
     <main class="flex-1 overflow-y-auto bg-gray-900">
       <div class="max-w-7xl mx-auto w-full px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6">
-        <!-- Router Outlet -->
         <div
           class="bg-gray-800 rounded-lg sm:rounded-xl shadow-lg border border-gray-700 min-h-[calc(100vh-8rem)] sm:min-h-[calc(100vh-10rem)] lg:min-h-[calc(100vh-12rem)]"
         >

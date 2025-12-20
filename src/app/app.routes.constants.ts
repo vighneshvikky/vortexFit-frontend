@@ -30,7 +30,7 @@ export const API_ROUTES = {
     VERIFY_PAYMENT: '/verify-payment',
     CREATE_SUBSCRIPTION_PAYMENT: '/create-subscription-order',
     VERIFY_SUBSCRIPTION_PAYMENT: '/verify-subscription-payment',
-    LOCK_SLOT: '/lock-slot'
+    LOCK_SLOT: '/lock-slot',
   },
   BOOKING: {
     BASE: '/bookings',
@@ -41,7 +41,7 @@ export const API_ROUTES = {
     GET_CLIENTS: '/getClients',
     GET_STATS: '/stats',
     GET_USER_BOOKINGS_BY_FILTER: '/user',
-    CANCEL_BOOKING: (id: string) => `/${id}/cancel`
+    CANCEL_BOOKING: (id: string) => `/${id}/cancel`,
   },
 
   PLANS: {
@@ -52,7 +52,7 @@ export const API_ROUTES = {
     },
     UPDATE: (planId: string) => `/${planId}`,
     GET_USER_SPECIFIC_PLAN: '/userPlan',
-    DELETE: (id: string) =>`/${id}`
+    DELETE: (id: string) => `/${id}`,
   },
   CHAT: {
     BASE: '/chat',
@@ -87,21 +87,20 @@ export const API_ROUTES = {
     EXPENSES: '/expenses',
   },
 
-  WALLET:{
-BASE:'/wallet',
-FAILED_PAYMENT: '/failed-payment',
-BALANCE: '/balance',
-PAY: '/pay'
+  WALLET: {
+    BASE: '/wallet',
+    FAILED_PAYMENT: '/failed-payment',
+    BALANCE: '/balance',
+    PAY: '/pay',
   },
 
   NOTIFICATION: {
-    BASE:'/notifications'
+    BASE: '/notifications',
   },
-  AI:{
+  AI: {
     BASE: '/ai/chat',
-  
   },
-  ADMIN_DASHBOARD:{
-    BASE: '/adminDashboard'
-  }
+  ADMIN_DASHBOARD: {
+    BASE: '/adminDashboard',
+  },
 };
