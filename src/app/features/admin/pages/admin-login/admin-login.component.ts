@@ -9,10 +9,9 @@ import {
 import { Router } from '@angular/router';
 import { AdminService } from '../../services/admin.service';
 import { NotyService } from '../../../../core/services/noty.service';
-import { select, Store } from '@ngrx/store';
-import { login } from '../../../auth/store/actions/auth.actions';
-import { Subject, takeUntil } from 'rxjs';
-import { selectAuthError, selectCurrentUser } from '../../../auth/store/selectors/auth.selectors';
+import { Store } from '@ngrx/store';
+import { loginSuccess } from '../../../auth/store/actions/auth.actions';
+import { Subject } from 'rxjs';
 import { AppState } from '../../../../store/app.state';
 import { environment } from '../../../../../environments/environment';
 
@@ -23,8 +22,8 @@ import { environment } from '../../../../../environments/environment';
   templateUrl: './admin-login.component.html',
   styleUrls: ['./admin-login.component.scss'],
 })
-export class AdminLoginComponent implements OnDestroy{
-   private destroy$ = new Subject<void>();
+export class AdminLoginComponent implements OnDestroy {
+  private destroy$ = new Subject<void>();
   loginForm: FormGroup;
   isSubmitting = false;
   loginError: string | null = null;
@@ -36,31 +35,12 @@ export class AdminLoginComponent implements OnDestroy{
     private adminService: AdminService,
     private router: Router,
     private notyService: NotyService,
-
   ) {
-
-    this.store.pipe(select(selectAuthError), takeUntil(this.destroy$)).subscribe(error => {
-      if (error) {
-        this.isSubmitting = false;
-        this.loginError = error;
-      }
-    });
-
-    
-    this.store.pipe(select(selectCurrentUser), takeUntil(this.destroy$)).subscribe(auth => {
-      if (auth) {
-        this.isSubmitting = false;
-      }
-    });
-
-    
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       remember: [false],
     });
-
-
   }
 
   get email() {
@@ -71,25 +51,42 @@ export class AdminLoginComponent implements OnDestroy{
     return this.loginForm.get('password');
   }
 
-    ngOnDestroy() {
+  ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-onSubmit(): void {
-  if (this.loginForm.valid) {
+  onSubmit(): void {
+    if (this.loginForm.invalid) return;
+
     this.isSubmitting = true;
     this.loginError = null;
-   console.log('hai for admin login')
+    
     const { email, password } = this.loginForm.value;
-    this.store.dispatch(
-      login({
-        email,
-        password,
-        role: 'admin',
-        _id: environment.adminId
-      })
-    );
+
+    // Admin login - no MFA required
+    this.adminService.login({ email, password }).subscribe({
+      next: (response) => {
+        // Create admin user object
+        const admin = {
+          _id: response.data._id,
+          email: response.data.email,
+          role: 'admin' as const,
+        };
+
+        // Dispatch loginSuccess to store
+        this.store.dispatch(loginSuccess({ user: admin }));
+        
+        this.notyService.showSuccess('Login successful');
+        this.isSubmitting = false;
+        
+        // Navigation will be handled by redirectAfterLogin$ effect
+      },
+      error: (error) => {
+        this.isSubmitting = false;
+        this.loginError = error.error?.message || 'Admin login failed. Please try again.';
+        this.notyService.showError('Admin login failed. Please try again.');
+      }
+    });
   }
-}
 }

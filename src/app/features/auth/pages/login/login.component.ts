@@ -19,7 +19,9 @@ import { NotyService } from '../../../../core/services/noty.service';
 import { ActivatedRoute } from '@angular/router';
 import { AppState } from '../../../../store/app.state';
 import { environment } from '../../../../../environments/environment';
-
+import { AuthService } from '../../../../core/services/auth.service';
+import { loginSuccess } from '../../store/actions/auth.actions';
+import { AdminService } from '../../../admin/services/admin.service';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +34,8 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
+  loading = false;
+  errorMessage: string | null = null;
   role: 'user' | 'trainer' = 'user';
 
   constructor(
@@ -39,7 +43,9 @@ export class LoginComponent implements OnInit {
     private store: Store<AppState>,
     private router: Router,
     private notyService: NotyService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private adminService: AdminService
   ) {
     const roleParam = this.route.snapshot.queryParamMap.get('role');
     this.role = roleParam === 'trainer' ? 'trainer' : 'user';
@@ -79,12 +85,41 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      this.store.dispatch(
-        AuthActions.login({ email, password, role: this.role, _id: environment.adminId })
-      );
-    }
+    if (this.loginForm.invalid) return;
+
+    this.loading = true;
+    this.errorMessage = null;
+
+    const { email, password } = this.loginForm.value;
+    const role = this.role;
+
+    this.authService.login({ email, password, role }).subscribe({
+      next: (response) => {
+        this.loading = false;
+        console.log('response for login', response);
+        if (response.mfaRequired) {
+          this.router.navigate(['/auth/mfa-verify'], {
+            queryParams: { userId: response.userId, role: this.role },
+          });
+          return;
+        }
+
+        if (response.mfaSetupRequired) {
+          this.router.navigate(['/auth/mfa-setup'], {
+            queryParams: { userId: response.userId, role: this.role },
+          });
+          return;
+        }
+
+        this.errorMessage = 'Unexpected response from server';
+      },
+      error: (error) => {
+        this.loading = false;
+        this.errorMessage =
+          error.error?.message || 'Login failed. Please try again.';
+        this.notyService.showError(this.errorMessage!);
+      },
+    });
   }
 
   navigateToForgotPassword(): void {
@@ -94,11 +129,12 @@ export class LoginComponent implements OnInit {
   }
 
   onGoogleLogin() {
-    console.log('hai')
+    console.log('hai');
     this.store.dispatch(AuthActions.googleLogin({ role: this.role }));
   }
-  redirectTosignup(){
-    this.router.navigate(['/auth/signup'], {queryParams: {role: this.role}})
+  redirectTosignup() {
+    this.router.navigate(['/auth/signup'], {
+      queryParams: { role: this.role },
+    });
   }
-
 }

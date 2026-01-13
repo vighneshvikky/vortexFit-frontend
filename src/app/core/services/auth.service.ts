@@ -14,19 +14,36 @@ import { Trainer } from '../../features/trainer/models/trainer.interface';
 import { User } from '../../features/admin/services/admin.service';
 import { environment } from '../../../environments/environment';
 
+export interface MfaLoginResponse {
+  mfaRequired?: boolean;
+  mfaSetupRequired?: boolean;
+  userId: string;
+  message: string;
+}
+
+export interface MfaSetupResponse {
+  qrCode: string;
+  manualKey: string;
+}
+
+export interface MfaVerifyResponse {
+  message: string;
+  recoveryCodes?: string[];
+  user?: User | Trainer;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private api = `${environment.api}/auth`;
 
-
   constructor(private http: HttpClient) {}
   private userSubject = new BehaviorSubject<User | Trainer | null>(null);
   public user$ = this.userSubject.asObservable();
   registerUser(data: SignupRequest): Observable<ApiResponse<SignupResponse>> {
     console.log('`${environment.api}/auth`', `${environment.api}/auth`);
-    console.log('Testing')
+    console.log('Testing');
     return this.http
       .post<ApiResponse<SignupResponse>>(`${this.api}/signup`, data)
       .pipe(
@@ -50,11 +67,49 @@ export class AuthService {
     );
   }
 
-  login(credentials: LoginRequest): Observable<LoginResponse> {
+  login(credentials: LoginRequest): Observable<MfaLoginResponse> {
+    console.log(credentials);
     return this.http
-      .post<ApiResponse<LoginResponse>>(`${this.api}/login`, credentials, {
+      .post<ApiResponse<MfaLoginResponse>>(`${this.api}/login`, credentials, {
         withCredentials: true,
       })
+      .pipe(map((res) => res.data));
+  }
+
+  // MFA Setup - Get QR Code
+  setupMfa(userId: string, role: string): Observable<any> {
+    return this.http
+      .post<ApiResponse<any>>(`${this.api}/mfa/setup`, { userId, role })
+      .pipe(map((res) => res.data));
+  }
+
+  // MFA Verify Setup - First time setup with OTP
+  verifyMfaSetup(
+    userId: string,
+    otp: string,
+    role: string
+  ): Observable<MfaVerifyResponse> {
+    return this.http
+      .post<ApiResponse<MfaVerifyResponse>>(`${this.api}/mfa/verify-setup`, {
+        userId,
+        otp,
+        role,
+      })
+      .pipe(map((res) => res.data));
+  }
+
+  // MFA Verify Login - For returning users
+  verifyMfaLogin(
+    userId: string,
+    otp: string,
+    role: string
+  ): Observable<LoginResponse> {
+    return this.http
+      .post<ApiResponse<LoginResponse>>(
+        `${this.api}/mfa/verify-login`,
+        { userId, otp, role },
+        { withCredentials: true }
+      )
       .pipe(map((res) => res.data));
   }
 

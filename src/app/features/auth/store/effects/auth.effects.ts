@@ -7,9 +7,7 @@ import {
   AdminLoginResponse,
 } from '../../../admin/services/admin.service';
 import {
-  login,
   loginSuccess,
-  loginFailure,
   googleLogin,
   logout,
   logoutSuccess,
@@ -19,14 +17,9 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
 import { Admin } from '../../../admin/models/admin.interface';
-
 import { NotyService } from '../../../../core/services/noty.service';
 import { Trainer } from '../../../trainer/models/trainer.interface';
 import { environment } from '../../../../../environments/environment';
-
-
-//hai
-
 
 type UserRole = 'user' | 'trainer' | 'admin';
 
@@ -38,67 +31,16 @@ export class AuthEffects {
   private router = inject(Router);
   private notyService = inject(NotyService);
 
-  login$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(login),
-      switchMap((action) => {
-        const { email, password, role } = action;
-        if (role === 'admin') {
-          return this.adminService.login({ email, password }).pipe(
-            map((response: AdminLoginResponse) => {
-              console.log('response', response);
-              const admin: Admin = {
-                _id: response.data._id,
-                email: response.data.email,
-                role: 'admin',
-              };
-              console.log('admin data from backend', admin);
-              return loginSuccess({ user: admin });
-            }),
-            catchError((error) => {
-              let errorMsg = 'Admin login failed';
-              if (error.error?.message) {
-                errorMsg = error.error.message;
-              } else if (error.message) {
-                errorMsg = error.message;
-              }
-              this.notyService.showError(errorMsg);
-              return of(loginFailure({ error: errorMsg }));
-            })
-          );
-        }
-
-        return this.authService
-          .login({ email, password, role: role as 'user' | 'trainer' })
-          .pipe(
-            map((response) => {
-              if (!response) {
-                throw new Error('No response received');
-              }
-              return loginSuccess({ user: response.user });
-            }),
-            catchError((error) => {
-              let errorMsg = 'Login failed';
-              if (error.error?.message) {
-                errorMsg = error.error.message;
-              } else if (error.message) {
-                errorMsg = error.message;
-              }
-              this.notyService.showError(errorMsg);
-              return of(loginFailure({ error: errorMsg }));
-            })
-          );
-      })
-    )
-  );
-
   googleLogin$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(googleLogin),
         tap(({ role }) => {
-          console.log('role', role)
-          console.log('${environment.api}/auth/google/redirect?role=${role}', `${environment.api}/auth/google/redirect?role=${role}`);
+          console.log('role', role);
+          console.log(
+            'Redirecting to:',
+            `${environment.api}/auth/google/redirect?role=${role}`
+          );
           window.location.href = `${environment.api}/auth/google/redirect?role=${role}`;
         })
       ),

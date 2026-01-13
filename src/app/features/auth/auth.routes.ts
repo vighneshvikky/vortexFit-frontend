@@ -10,16 +10,46 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
 import { UserDetailsComponent } from '../user/pages/user-details/user-details.component';
 import { TrainerVerificationComponent } from '../trainer/pages/trainer-verification/trainer-verification.component';
 import { TrainerStatusComponent } from '../trainer/pages/trainer-status/trainer-status.component';
+import { MfaSetupComponent } from './mfa/mfasetup.component';
+import { MfaVerifyComponent } from './mfa/mfaverify.component';
+import { RecoveryCodesComponent } from './mfa/mfaRecovery.component';
 
 export const authRoutes: Routes = [
-  { path: 'role', component: RoleSelectionComponent, canActivate: [UnauthenticatedGuard] },
-  { path: 'signup', component: SignupComponent, canActivate: [UnauthenticatedGuard] },
+  {
+    path: 'role',
+    component: RoleSelectionComponent,
+    canActivate: [UnauthenticatedGuard],
+  },
+  {
+    path: 'signup',
+    component: SignupComponent,
+    canActivate: [UnauthenticatedGuard],
+  },
   { path: 'otp', component: OtpComponent },
-  { path: 'login', component: LoginComponent, canActivate: [UnauthenticatedGuard] },
+  {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [UnauthenticatedGuard],
+  },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'callback', component: LoginComponent },
-  { path: 'trainer-requests', component: TrainerVerificationComponent, canActivate: [UnauthenticatedGuard] },
-  { path: 'user-details', component: UserDetailsComponent, canActivate: [UnauthenticatedGuard] },
-  { path: 'trainer-status', component: TrainerStatusComponent, canActivate: [UnauthenticatedGuard] },
+  {
+    path: 'trainer-requests',
+    component: TrainerVerificationComponent,
+    canActivate: [UnauthenticatedGuard],
+  },
+  { path: 'mfa-setup', component: MfaSetupComponent },
+  { path: 'mfa-verify', component: MfaVerifyComponent },
+  { path: 'recovery-codes', component: RecoveryCodesComponent },
+  {
+    path: 'user-details',
+    component: UserDetailsComponent,
+    canActivate: [UnauthenticatedGuard],
+  },
+  {
+    path: 'trainer-status',
+    component: TrainerStatusComponent,
+    canActivate: [UnauthenticatedGuard],
+  },
 ];
