@@ -50,8 +50,7 @@ export class AuthInterceptor implements HttpInterceptor {
     });
     return next.handle(clonedRequest).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.log('error from the backend', error);
-        console.log('error status', error.status);
+
 
         if (error.status === HttpStatusCode.BadRequest) {
           this.notify.showError(error.error?.message || 'Bad request');
