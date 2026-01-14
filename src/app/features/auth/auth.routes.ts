@@ -10,9 +10,8 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
 import { UserDetailsComponent } from '../user/pages/user-details/user-details.component';
 import { TrainerVerificationComponent } from '../trainer/pages/trainer-verification/trainer-verification.component';
 import { TrainerStatusComponent } from '../trainer/pages/trainer-status/trainer-status.component';
-import { MfaSetupComponent } from './mfa/mfasetup.component';
-import { MfaVerifyComponent } from './mfa/mfaverify.component';
-import { RecoveryCodesComponent } from './mfa/mfaRecovery.component';
+import { MfaSetupComponent } from './mfa/mfa-setup.component';
+import { MfaVerifyComponent } from './mfa/mfa-verify.component';
 
 export const authRoutes: Routes = [
   {
@@ -41,7 +40,7 @@ export const authRoutes: Routes = [
   },
   { path: 'mfa-setup', component: MfaSetupComponent },
   { path: 'mfa-verify', component: MfaVerifyComponent },
-  { path: 'recovery-codes', component: RecoveryCodesComponent },
+
   {
     path: 'user-details',
     component: UserDetailsComponent,

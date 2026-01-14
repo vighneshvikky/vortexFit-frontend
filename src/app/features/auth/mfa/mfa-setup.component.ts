@@ -158,12 +158,14 @@ export class MfaSetupComponent implements OnInit {
 
     this.authService.verifyMfaSetup(this.userId, otp, this.role).subscribe({
       next: (response) => {
-        this.notyService.showSuccess('MFA enabled successfully!');
-        this.router.navigate(['/auth/recovery-codes'], {
-          state: { recoveryCodes: response.recoveryCodes },
+        this.notyService.showSuccess(
+          'MFA setup completed. Re-login required to verify MFA.'
+        );
+
+        this.router.navigate(['/auth/login'], {
           queryParams: {
             role: this.role,
-            provider: this.provider, // ✅ Pass provider to recovery codes
+            provider: this.provider,
           },
         });
       },

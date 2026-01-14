@@ -28,7 +28,6 @@ export interface MfaSetupResponse {
 
 export interface MfaVerifyResponse {
   message: string;
-  recoveryCodes?: string[];
   user?: User | Trainer;
 }
 
