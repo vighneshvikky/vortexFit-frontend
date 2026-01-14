@@ -27,7 +27,6 @@ type UserRole = 'user' | 'trainer' | 'admin';
 export class AuthEffects {
   private actions$ = inject(Actions);
   private authService = inject(AuthService);
-  private adminService = inject(AdminService);
   private router = inject(Router);
   private notyService = inject(NotyService);
 
