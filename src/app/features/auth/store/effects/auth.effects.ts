@@ -36,11 +36,6 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(googleLogin),
         tap(({ role }) => {
-          console.log('role', role);
-          console.log(
-            'Redirecting to:',
-            `${environment.api}/auth/google/redirect?role=${role}`
-          );
           window.location.href = `${environment.api}/auth/google/redirect?role=${role}`;
         })
       ),

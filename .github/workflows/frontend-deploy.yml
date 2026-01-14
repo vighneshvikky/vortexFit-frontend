@@ -63,7 +63,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "🚀 Started Frontend Deployment..."
-            cd /home/ubuntu/vortexFit-frontend
+            cd /home/ec2-user/vortexFit-frontend
             git pull origin main
             npm install
             npm run build -- --configuration production
