@@ -58,7 +58,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }
 
         if (error.status === HttpStatusCode.Unauthorized) {
-          console.log('calling hangle');
+  
           return this.handle401Error(clonedRequest, next);
         }
         if (error.status === HttpStatusCode.Conflict) {
