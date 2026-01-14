@@ -93,7 +93,7 @@ import { NotyService } from '../../../core/services/noty.service';
 export class MfaSetupComponent implements OnInit {
   userId!: string;
   role!: string;
-  provider!: string; // ✅ Track if it's Google or local auth
+  provider!: string; 
   qrCode: string | null = null;
   manualKey: string | null = null;
   showOtpForm = false;

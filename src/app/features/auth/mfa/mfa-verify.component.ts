@@ -1,18 +1,25 @@
-import { CommonModule } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { AuthService } from "../../../core/services/auth.service";
-import { Store } from "@ngrx/store";
-import { NotyService } from "../../../core/services/noty.service";
-import { loginSuccess } from "../store/actions/auth.actions";
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
+import { Store } from '@ngrx/store';
+import { NotyService } from '../../../core/services/noty.service';
+import { loginSuccess } from '../store/actions/auth.actions';
 
 @Component({
   selector: 'app-mfa-verify',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
-    <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
+    <div
+      class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4"
+    >
       <div class="max-w-md w-full space-y-8">
         <div>
           <h2 class="text-center text-3xl font-extrabold text-gray-900">
@@ -40,7 +47,10 @@ import { loginSuccess } from "../store/actions/auth.actions";
               />
             </div>
 
-            <div *ngIf="errorMessage" class="mb-4 p-3 bg-red-50 text-red-800 rounded-md text-sm">
+            <div
+              *ngIf="errorMessage"
+              class="mb-4 p-3 bg-red-50 text-red-800 rounded-md text-sm"
+            >
               {{ errorMessage }}
             </div>
 
@@ -60,7 +70,7 @@ import { loginSuccess } from "../store/actions/auth.actions";
 export class MfaVerifyComponent implements OnInit {
   userId!: string;
   role!: string;
-  provider!: string; // ✅ Track provider
+  provider!: string; 
   otpForm: FormGroup;
   loading = false;
   errorMessage: string | null = null;
@@ -88,7 +98,7 @@ export class MfaVerifyComponent implements OnInit {
     this.userId = this.route.snapshot.queryParams['userId'];
     this.role = this.route.snapshot.queryParams['role'];
     this.provider = this.route.snapshot.queryParams['provider'] || 'local'; // ✅ Get provider
-    
+
     if (!this.userId) {
       this.router.navigate(['/auth/login']);
     }
@@ -103,13 +113,12 @@ export class MfaVerifyComponent implements OnInit {
 
     this.authService.verifyMfaLogin(this.userId, otp, this.role).subscribe({
       next: (response) => {
-        // ✅ Dispatch loginSuccess - works for both local and Google auth
         this.store.dispatch(loginSuccess({ user: response.user }));
         this.notyService.showSuccess('Login successful!');
-        // redirectAfterLogin$ effect handles navigation
       },
       error: (error) => {
-        this.errorMessage = error.error?.message || 'Invalid OTP. Please try again.';
+        this.errorMessage =
+          error.error?.message || 'Invalid OTP. Please try again.';
         this.loading = false;
         this.otpForm.reset();
       },
